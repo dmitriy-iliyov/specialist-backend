@@ -1,0 +1,20 @@
+FROM debian:bullseye-slim AS jbr-base
+
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    curl \
+    unzip \
+    ca-certificates \
+    gnupg2 \
+    && apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN curl -fL -o jbr.tar.gz https://cache-redirector.jetbrains.com/intellij-jbr/jbr_jcef-17.0.11-linux-x64-b1312.2.tar.gz && \
+    mkdir -p /opt/jbr && \
+    tar -xzf jbr.tar.gz --strip-components=1 -C /opt/jbr && \
+    rm jbr.tar.gz
+
+ENV JAVA_HOME=/opt/jbr
+ENV PATH="$JAVA_HOME/bin:$PATH"
+
+WORKDIR /app

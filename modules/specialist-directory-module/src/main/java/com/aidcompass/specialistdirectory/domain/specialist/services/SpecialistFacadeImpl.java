@@ -1,8 +1,8 @@
-package com.aidcompass.domain.specialist.services;
+package com.aidcompass.specialistdirectory.domain.specialist.services;
 
-import com.aidcompass.domain.specialist.models.dtos.SpecialistResponseDto;
-import com.aidcompass.exceptions.OwnershipException;
-import com.aidcompass.domain.specialist.models.dtos.SpecialistUpdateDto;
+import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
+import com.aidcompass.specialistdirectory.exceptions.OwnershipException;
+import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

@@ -1,10 +1,10 @@
-package com.aidcompass.domain.specialist;
+package com.aidcompass.specialistdirectory.domain.specialist;
 
-import com.aidcompass.PrincipalDetails;
-import com.aidcompass.domain.specialist.models.dtos.SpecialistCreateDto;
-import com.aidcompass.domain.specialist.models.dtos.SpecialistUpdateDto;
-import com.aidcompass.domain.specialist.services.SpecialistService;
-import com.aidcompass.utils.validation.ValidUuid;
+import com.aidcompass.contracts.PrincipalDetails;
+import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
+import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
+import com.aidcompass.specialistdirectory.domain.specialist.services.SpecialistService;
+import com.aidcompass.specialistdirectory.utils.validation.ValidUuid;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

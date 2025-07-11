@@ -1,0 +1,55 @@
+package com.aidcompass.specialistdirectory.domain.review.models;
+
+import com.aidcompass.specialistdirectory.domain.specialist.models.SpecialistEntity;
+import com.aidcompass.core.general.utils.uuid.UuidFactory;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+import java.time.Instant;
+import java.util.UUID;
+
+@Entity
+@Table(name = "speecialist_reviews")
+@Data
+@AllArgsConstructor
+public class ReviewEntity {
+
+    @Id
+    private UUID id;
+
+    @Column(name = "creator_id", nullable = false)
+    private UUID creatorId;
+
+    @Column(nullable = false, length = 1000)
+    private String description;
+
+    @Column(nullable = false)
+    private long rating;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "specialist_id", nullable = false, updatable = false)
+    private SpecialistEntity specialist;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Instant createdAt;
+
+    @Column(name = "updated_at", nullable = false)
+    private Instant updatedAt;
+
+
+    public ReviewEntity() {
+        this.id = UuidFactory.generate();
+    }
+
+    @PrePersist
+    public void prePersist() {
+        createdAt = Instant.now();
+        updatedAt = createdAt;
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        updatedAt = Instant.now();
+    }
+}

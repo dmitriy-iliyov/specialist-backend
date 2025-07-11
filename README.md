@@ -1,2 +1,1 @@
-# specialist-backend
-spring boot
+# aid-compass-backend

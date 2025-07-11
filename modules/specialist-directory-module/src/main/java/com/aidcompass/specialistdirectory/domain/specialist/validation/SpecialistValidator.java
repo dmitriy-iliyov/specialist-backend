@@ -1,0 +1,65 @@
+package com.aidcompass.specialistdirectory.domain.specialist.validation;
+
+import com.aidcompass.specialistdirectory.domain.contact.ContactType;
+import com.aidcompass.specialistdirectory.domain.contact.ContactValidator;
+import com.aidcompass.specialistdirectory.domain.specialist.markers.SpecialistMarker;
+import com.aidcompass.specialistdirectory.domain.specialist_type.services.TypeConstants;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
+
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+public class SpecialistValidator implements ConstraintValidator<Specialist, SpecialistMarker> {
+
+    private final Map<ContactType, ContactValidator> contactValidators;
+
+
+    public SpecialistValidator(List<ContactValidator> contactValidators) {
+        this.contactValidators = contactValidators.stream().collect(Collectors.toMap(ContactValidator::getType, Function.identity()));
+    }
+
+    @Override
+    public boolean isValid(SpecialistMarker dto, ConstraintValidatorContext constraintValidatorContext) {
+        boolean hasErrors = false;
+
+        constraintValidatorContext.disableDefaultConstraintViolation();
+
+        ContactValidator contactValidator = contactValidators.get(dto.getContactType());
+        if (contactValidator == null) {
+            hasErrors = true;
+            constraintValidatorContext.buildConstraintViolationWithTemplate("Unsupported contact type.")
+                    .addPropertyNode("contact_type")
+                    .addConstraintViolation();
+        } else {
+            if (!contactValidator.validate(dto.getContact())) {
+                hasErrors = true;
+                constraintValidatorContext.buildConstraintViolationWithTemplate("Contact should be valid.")
+                        .addPropertyNode("contact")
+                        .addConstraintViolation();
+            }
+        }
+
+        if (dto.getTypeId().equals(TypeConstants.OTHER_TYPE_ID)) {
+            if (dto.getAnotherType() == null) {
+                hasErrors = true;
+                constraintValidatorContext.buildConstraintViolationWithTemplate("Another type is required.")
+                        .addPropertyNode("another_type")
+                        .addConstraintViolation();
+            } else {
+                if (dto.getAnotherType().isBlank()) {
+                    hasErrors = true;
+                    constraintValidatorContext.buildConstraintViolationWithTemplate("Another type is required.")
+                            .addPropertyNode("another_type")
+                            .addConstraintViolation();
+                }
+            }
+        }
+
+        System.out.println("Errors present? " + hasErrors);
+
+        return !hasErrors;
+    }
+}

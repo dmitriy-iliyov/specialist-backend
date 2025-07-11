@@ -1,6 +1,6 @@
-package com.aidcompass.domain.specialist;
+package com.aidcompass.specialistdirectory.domain.specialist;
 
-import com.aidcompass.domain.contact.ContactType;
+import com.aidcompass.specialistdirectory.domain.contact.ContactType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

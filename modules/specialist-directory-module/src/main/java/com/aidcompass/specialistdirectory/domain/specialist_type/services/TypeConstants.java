@@ -1,7 +1,7 @@
-package com.aidcompass.domain.specialist_type.services;
+package com.aidcompass.specialistdirectory.domain.specialist_type.services;
 
-import com.aidcompass.domain.specialist_type.TypeRepository;
-import com.aidcompass.exceptions.SpecialistTypeEntityNotFoundByTypeException;
+import com.aidcompass.specialistdirectory.domain.specialist_type.TypeRepository;
+import com.aidcompass.specialistdirectory.exceptions.SpecialistTypeEntityNotFoundByTypeException;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 

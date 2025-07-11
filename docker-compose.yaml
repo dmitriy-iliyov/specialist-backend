@@ -1,0 +1,29 @@
+version: "3.8"
+services:
+  aid-compass-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8443:8443"
+    image: aid-compass-api
+    env_file:
+      - .docker-env
+
+  postgresql:
+    image: postgres:16.1-alpine3.19
+    networks:
+      - default
+    environment:
+      POSTGRES_PASSWORD: root
+      POSTGRES_USER: admin
+      POSTGRES_DB: aid_compass_database
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis
+    networks:
+      - default
+    ports:
+      - "6379:6379"

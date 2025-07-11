@@ -1,6 +1,6 @@
-package com.aidcompass.domain.specialist_type.services;
+package com.aidcompass.specialistdirectory.domain.specialist_type.services;
 
-import com.aidcompass.domain.specialist.services.SpecialistService;
+import com.aidcompass.specialistdirectory.domain.specialist.services.SpecialistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

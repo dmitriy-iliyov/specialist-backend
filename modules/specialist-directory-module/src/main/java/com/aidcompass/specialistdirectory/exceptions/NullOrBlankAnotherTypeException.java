@@ -1,7 +1,7 @@
-package com.aidcompass.exceptions;
+package com.aidcompass.specialistdirectory.exceptions;
 
-import com.aidcompass.general.exceptions.models.BaseInvalidInputException;
-import com.aidcompass.general.exceptions.models.dto.ErrorDto;
+import com.aidcompass.core.general.exceptions.models.BaseInvalidInputException;
+import com.aidcompass.core.general.exceptions.models.dto.ErrorDto;
 
 public class NullOrBlankAnotherTypeException extends BaseInvalidInputException {
     @Override

@@ -1,4 +1,4 @@
-package com.aidcompass.utils;
+package com.aidcompass.specialistdirectory.utils;
 
 public record PageRequest(
         int page,
