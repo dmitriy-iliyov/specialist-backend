@@ -3,6 +3,7 @@ package com.aidcompass.specialistdirectory.domain.review;
 import com.aidcompass.contracts.PrincipalDetails;
 import com.aidcompass.specialistdirectory.domain.review.models.dtos.ReviewCreateDto;
 import com.aidcompass.specialistdirectory.domain.review.models.dtos.ReviewUpdateDto;
+import com.aidcompass.specialistdirectory.domain.review.services.ReviewFacade;
 import com.aidcompass.specialistdirectory.domain.review.services.ReviewService;
 import com.aidcompass.specialistdirectory.utils.validation.ValidUuid;
 import jakarta.validation.Valid;
@@ -17,13 +18,14 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/specialists/{specialist_id}/reviews")
-@PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
 @RequiredArgsConstructor
 public class ReviewController {
 
     private final ReviewService service;
+    private final ReviewFacade facade;
 
 
+    @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
     @PostMapping
     public ResponseEntity<?> create(@AuthenticationPrincipal PrincipalDetails principal,
                                     @PathVariable("specialist_id") @ValidUuid UUID specialistId,
@@ -35,6 +37,7 @@ public class ReviewController {
                 .body(service.save(dto));
     }
 
+    @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@AuthenticationPrincipal PrincipalDetails principal,
                                     @PathVariable("specialist_id") @ValidUuid UUID specialistId,
@@ -46,6 +49,7 @@ public class ReviewController {
                 .body(service.update(dto));
     }
 
+    @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@AuthenticationPrincipal PrincipalDetails principal,
                                     @PathVariable("specialist_id") @ValidUuid UUID specialistId,

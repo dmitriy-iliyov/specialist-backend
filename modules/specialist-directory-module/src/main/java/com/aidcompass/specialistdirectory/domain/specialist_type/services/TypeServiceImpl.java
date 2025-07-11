@@ -43,10 +43,10 @@ public class TypeServiceImpl implements TypeService {
     @Override
     public Long saveSuggested(TypeCreateDto dto) {
         System.out.println(dto);
-        if (dto.title() == null || dto.title().isBlank()) {
+        if (dto.getTitle() == null || dto.getTitle().isBlank()) {
             throw new NullOrBlankAnotherTypeException();
         }
-        Optional<TypeEntity> existedEntity = repository.findByTitle(dto.title().toUpperCase());
+        Optional<TypeEntity> existedEntity = repository.findByTitle(dto.getTitle().toUpperCase());
         if (existedEntity.isEmpty()) {
             TypeEntity entity = mapper.toEntity(dto);
             entity.setApproved(false);

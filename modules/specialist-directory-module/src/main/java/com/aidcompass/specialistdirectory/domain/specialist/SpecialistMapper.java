@@ -9,6 +9,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.MappingTarget;
 
+import java.util.List;
+
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface SpecialistMapper {
 
@@ -17,6 +19,8 @@ public interface SpecialistMapper {
 
     @Mapping(target = "typeTitle", source = "type.title")
     SpecialistResponseDto toResponseDto(SpecialistEntity entity);
+
+    List<SpecialistResponseDto> toResponseDtoList(List<SpecialistEntity> content);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "type", ignore = true)

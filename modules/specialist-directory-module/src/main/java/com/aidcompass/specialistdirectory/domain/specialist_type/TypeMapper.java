@@ -18,7 +18,7 @@ import java.util.List;
 )
 public interface TypeMapper {
 
-    @Mapping(target = "title", expression = "java(dto.title().toUpperCase())")
+    @Mapping(target = "title", expression = "java(dto.getTitle().toUpperCase())")
     TypeEntity toEntity(TypeCreateDto dto);
 
     @Mapping(target = "createdAt", source = "createdAt")

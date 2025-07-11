@@ -1,15 +1,16 @@
 package com.aidcompass.specialistdirectory.domain.specialist.services;
 
-import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
-import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
-import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
+import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.*;
+import com.aidcompass.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
+import com.aidcompass.specialistdirectory.domain.specialist.models.filters.SpecialistFilter;
+import com.aidcompass.specialistdirectory.utils.PageRequest;
+import com.aidcompass.specialistdirectory.utils.PageResponse;
 
 import java.util.UUID;
 
 public interface SpecialistService {
     SpecialistResponseDto save(SpecialistCreateDto dto);
 
-    //@Transactional(readOnly = true)
     UUID getCreatorIdById(UUID id);
 
     SpecialistResponseDto findById(UUID creatorId, UUID id);
@@ -20,5 +21,13 @@ public interface SpecialistService {
 
     void updateAllByTypeIdPair(Long oldTypeId, Long newTypeId);
 
-    void delete(UUID id);
+    void deleteById(UUID id);
+
+    PageResponse<SpecialistResponseDto> findAllByRatingDesc(PageRequest page);
+
+    PageResponse<SpecialistResponseDto> findAllByFilter(SpecialistFilter filter);
+
+    PageResponse<SpecialistResponseDto> findAllByCreatorId(UUID creatorId, PageRequest page);
+
+    PageResponse<SpecialistResponseDto> findAllByCreatorIdAndFilter(UUID creatorId, ExtendedSpecialistFilter filter);
 }

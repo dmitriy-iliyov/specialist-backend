@@ -1,8 +1,8 @@
 package com.aidcompass.specialistdirectory.domain.specialist.models.dtos;
 
 import com.aidcompass.specialistdirectory.domain.contact.ContactType;
-import com.aidcompass.specialistdirectory.domain.specialist.markers.SpecialistMarker;
-import com.aidcompass.specialistdirectory.domain.specialist.validation.Specialist;
+import com.aidcompass.specialistdirectory.domain.specialist.models.markers.SpecialistMarker;
+import com.aidcompass.specialistdirectory.domain.specialist.validation.annotation.Specialist;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.*;

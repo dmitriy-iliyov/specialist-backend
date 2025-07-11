@@ -1,9 +1,10 @@
-package com.aidcompass.specialistdirectory.domain.specialist;
+package com.aidcompass.specialistdirectory.domain.specialist.repositories;
 
+import com.aidcompass.specialistdirectory.utils.SpecificationRepository;
 import com.aidcompass.specialistdirectory.domain.specialist.models.SpecialistEntity;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -11,7 +12,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface SpecialistRepository extends JpaRepository<SpecialistEntity, UUID> {
+public interface SpecialistRepository extends JpaRepository<SpecialistEntity, UUID>,
+                                              JpaSpecificationExecutor<SpecialistEntity>,
+                                              SpecificationRepository<SpecialistEntity> {
 
     @Query("""
         SELECT s FROM SpecialistEntity s
@@ -36,4 +39,13 @@ public interface SpecialistRepository extends JpaRepository<SpecialistEntity, UU
         WHERE id = :id
     """, nativeQuery = true)
     Optional<UUID> findCreatorIdById(@Param("id") UUID id);
+
+    @Query(value = """
+        SELECT s FROM SpecialistEntity s
+        JOIN FETCH s.type
+        ORDER BY s.totalRating DESC
+    """)
+    Slice<SpecialistEntity> findAllByRatingDesc(Pageable pageable);
+
+    long countByCreatorId(UUID creatorId);
 }

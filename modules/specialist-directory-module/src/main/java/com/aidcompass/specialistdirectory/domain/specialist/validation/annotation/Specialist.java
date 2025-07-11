@@ -1,5 +1,6 @@
-package com.aidcompass.specialistdirectory.domain.specialist.validation;
+package com.aidcompass.specialistdirectory.domain.specialist.validation.annotation;
 
+import com.aidcompass.specialistdirectory.domain.specialist.validation.SpecialistValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 

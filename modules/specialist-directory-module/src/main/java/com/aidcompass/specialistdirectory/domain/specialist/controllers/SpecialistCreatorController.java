@@ -1,10 +1,13 @@
-package com.aidcompass.specialistdirectory.domain.specialist;
+package com.aidcompass.specialistdirectory.domain.specialist.controllers;
 
 import com.aidcompass.contracts.PrincipalDetails;
+import com.aidcompass.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
+import com.aidcompass.specialistdirectory.domain.specialist.services.SpecialistCountServiceImpl;
 import com.aidcompass.specialistdirectory.domain.specialist.services.SpecialistService;
 import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
 import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
 import com.aidcompass.specialistdirectory.domain.specialist.services.SpecialistFacade;
+import com.aidcompass.specialistdirectory.utils.PageRequest;
 import com.aidcompass.specialistdirectory.utils.validation.ValidUuid;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,14 +21,15 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/specialists")
+@PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
 @RequiredArgsConstructor
-public class SpecialistController {
+public class SpecialistCreatorController {
 
     private final SpecialistService service;
-    private final SpecialistFacade orchestrator;
+    private final SpecialistFacade facade;
+    private final SpecialistCountServiceImpl countService;
 
 
-    @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
     @PostMapping
     public ResponseEntity<?> create(@AuthenticationPrincipal PrincipalDetails principal,
                                     @RequestBody @Valid SpecialistCreateDto dto) {
@@ -35,7 +39,6 @@ public class SpecialistController {
                 .body(service.save(dto));
     }
 
-    @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
     @GetMapping("/{id}")
     public ResponseEntity<?> get(@AuthenticationPrincipal PrincipalDetails principal,
                                  @PathVariable("id") @ValidUuid String id) {
@@ -44,7 +47,6 @@ public class SpecialistController {
                 .body(service.findById(principal.getUserId(), UUID.fromString(id)));
     }
 
-    @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@AuthenticationPrincipal PrincipalDetails principal,
                                     @PathVariable("id") @ValidUuid String id,
@@ -53,38 +55,39 @@ public class SpecialistController {
         dto.setId(UUID.fromString(id));
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(orchestrator.update(dto));
+                .body(facade.update(dto));
     }
 
-    @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@AuthenticationPrincipal PrincipalDetails principal,
                                     @PathVariable("id") @ValidUuid String id) {
 
-        orchestrator.delete(principal.getUserId(), UUID.fromString(id));
+        facade.delete(principal.getUserId(), UUID.fromString(id));
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
     }
 
-    @GetMapping("/filter/city")
-    public ResponseEntity<?> getAllByCity(){
+    @GetMapping("/created")
+    public ResponseEntity<?> getAllCreated(@AuthenticationPrincipal PrincipalDetails principal,
+                                           @ModelAttribute @Valid PageRequest page) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(null);
+                .body(service.findAllByCreatorId(principal.getUserId(), page));
     }
 
-    @GetMapping("/filter/type")
-    public ResponseEntity<?> getAllByType(){
+    @GetMapping("/created/filter")
+    public ResponseEntity<?> getAllCreatedByFilter(@AuthenticationPrincipal PrincipalDetails principal,
+                                                   @ModelAttribute @Valid ExtendedSpecialistFilter filter) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(null);
+                .body(service.findAllByCreatorIdAndFilter(principal.getUserId(), filter));
     }
 
-    @GetMapping("/filter/rating")
-    public ResponseEntity<?> getAllByRating() {
+    @GetMapping("/created/count")
+    public ResponseEntity<?> countByCreatorId(@AuthenticationPrincipal PrincipalDetails principal){
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(null);
+                .body(countService.countByCreatorId(principal.getUserId()));
     }
 }

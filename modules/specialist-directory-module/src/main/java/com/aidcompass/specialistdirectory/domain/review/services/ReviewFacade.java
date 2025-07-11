@@ -5,7 +5,7 @@ import com.aidcompass.specialistdirectory.domain.review.models.dtos.ReviewUpdate
 
 import java.util.UUID;
 
-public interface ReviewOrchestrator {
+public interface ReviewFacade {
     void delete(UUID creatorId, UUID id);
 
     ReviewResponseDto update(ReviewUpdateDto dto);

@@ -24,12 +24,12 @@ public class SpecialistFacadeImpl implements SpecialistFacade {
     @Override
     public void delete(UUID creatorId, UUID id) {
         assertOwnership(creatorId, id);
-        specialistService.delete(id);
+        specialistService.deleteById(id);
     }
 
     private void assertOwnership(UUID creatorId, UUID id) {
-        SpecialistResponseDto dto = specialistService.findById(creatorId, id);
-        if (!dto.getCreatorId().equals(creatorId)) {
+        UUID realCreatorId = specialistService.getCreatorIdById(id);
+        if (!realCreatorId.equals(creatorId)) {
             throw new OwnershipException();
         }
     }

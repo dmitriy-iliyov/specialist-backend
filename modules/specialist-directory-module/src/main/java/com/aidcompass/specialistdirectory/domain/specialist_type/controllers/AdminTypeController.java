@@ -1,5 +1,6 @@
-package com.aidcompass.specialistdirectory.domain.specialist_type;
+package com.aidcompass.specialistdirectory.domain.specialist_type.controllers;
 
+import com.aidcompass.contracts.PrincipalDetails;
 import com.aidcompass.specialistdirectory.domain.specialist_type.services.ApproveTypeOrchestrator;
 import com.aidcompass.specialistdirectory.domain.specialist_type.services.TypeService;
 import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.TypeCreateDto;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,7 +26,9 @@ public class AdminTypeController {
 
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody @Valid TypeCreateDto dto) {
+    public ResponseEntity<?> create(@AuthenticationPrincipal PrincipalDetails principal,
+                                    @RequestBody @Valid TypeCreateDto dto) {
+        dto.setCreatorId(principal.getUserId());
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(service.save(dto));

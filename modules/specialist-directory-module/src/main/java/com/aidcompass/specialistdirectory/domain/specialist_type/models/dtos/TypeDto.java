@@ -4,9 +4,13 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public record TypeDto(
         Long id,
+
+        @JsonProperty("creator_id")
+        UUID creatorId,
 
         String title,
 

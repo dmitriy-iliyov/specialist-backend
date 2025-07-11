@@ -1,8 +1,11 @@
 package com.aidcompass.specialistdirectory.domain.specialist.models.dtos;
 
 import com.aidcompass.specialistdirectory.domain.contact.ContactType;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 import java.util.UUID;
@@ -49,4 +52,36 @@ public class SpecialistResponseDto {
 
         @JsonProperty("reviews_count")
         private final long reviewsCount;
+
+
+        @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+        public SpecialistResponseDto(@JsonProperty("id") UUID id,
+                                     @JsonProperty("creator_id") UUID creatorId,
+                                     @JsonProperty("first_name") String firstName,
+                                     @JsonProperty("second_name") String secondName,
+                                     @JsonProperty("last_name") String lastName,
+                                     @JsonProperty("type_title") String typeTitle,
+                                     @JsonProperty("another_type") String anotherType,
+                                     @JsonProperty("house_number_and_street") String houseNumberAndStreet,
+                                     @JsonProperty("city_title") String cityTitle,
+                                     @JsonProperty("contact_type") ContactType contactType,
+                                     @JsonProperty("contact") String contact,
+                                     @JsonProperty("site") String site,
+                                     @JsonProperty("total_rating") double totalRating,
+                                     @JsonProperty("reviews_count") long reviewsCount) {
+                this.id = id;
+                this.creatorId = creatorId;
+                this.firstName = firstName;
+                this.secondName = secondName;
+                this.lastName = lastName;
+                this.typeTitle = typeTitle;
+                this.anotherType = anotherType;
+                this.houseNumberAndStreet = houseNumberAndStreet;
+                this.cityTitle = cityTitle;
+                this.contactType = contactType;
+                this.contact = contact;
+                this.site = site;
+                this.totalRating = totalRating;
+                this.reviewsCount = reviewsCount;
+        }
 }

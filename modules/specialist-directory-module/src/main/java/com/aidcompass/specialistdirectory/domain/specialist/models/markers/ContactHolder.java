@@ -1,4 +1,4 @@
-package com.aidcompass.specialistdirectory.domain.specialist.markers;
+package com.aidcompass.specialistdirectory.domain.specialist.models.markers;
 
 import com.aidcompass.specialistdirectory.domain.contact.ContactType;
 

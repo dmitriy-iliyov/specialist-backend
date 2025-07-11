@@ -1,4 +1,4 @@
-package com.aidcompass.specialistdirectory.domain.specialist_type;
+package com.aidcompass.specialistdirectory.domain.specialist_type.controllers;
 
 import com.aidcompass.specialistdirectory.domain.specialist_type.services.TypeService;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.aidcompass.specialistdirectory.domain.specialist;
+package com.aidcompass.specialistdirectory.domain.specialist.controllers;
 
 import com.aidcompass.contracts.PrincipalDetails;
 import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
@@ -19,7 +19,7 @@ import java.util.UUID;
 @RequestMapping("/api/admin/v1/specialists")
 @PreAuthorize("hasAuthority('ROLE_ADMIN')")
 @RequiredArgsConstructor
-public class AdminSpecialistController {
+public class SpecialistAdminController {
 
     private final SpecialistService service;
 
@@ -52,7 +52,7 @@ public class AdminSpecialistController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") @ValidUuid String id) {
 
-        service.delete(UUID.fromString(id));
+        service.deleteById(UUID.fromString(id));
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();

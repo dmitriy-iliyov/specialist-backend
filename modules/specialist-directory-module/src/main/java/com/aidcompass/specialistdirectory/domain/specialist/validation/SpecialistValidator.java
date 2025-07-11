@@ -2,7 +2,8 @@ package com.aidcompass.specialistdirectory.domain.specialist.validation;
 
 import com.aidcompass.specialistdirectory.domain.contact.ContactType;
 import com.aidcompass.specialistdirectory.domain.contact.ContactValidator;
-import com.aidcompass.specialistdirectory.domain.specialist.markers.SpecialistMarker;
+import com.aidcompass.specialistdirectory.domain.specialist.models.markers.SpecialistMarker;
+import com.aidcompass.specialistdirectory.domain.specialist.validation.annotation.Specialist;
 import com.aidcompass.specialistdirectory.domain.specialist_type.services.TypeConstants;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
@@ -57,8 +58,6 @@ public class SpecialistValidator implements ConstraintValidator<Specialist, Spec
                 }
             }
         }
-
-        System.out.println("Errors present? " + hasErrors);
 
         return !hasErrors;
     }

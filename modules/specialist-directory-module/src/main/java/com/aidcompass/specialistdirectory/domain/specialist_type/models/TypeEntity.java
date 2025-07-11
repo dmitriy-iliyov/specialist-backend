@@ -19,8 +19,8 @@ public class TypeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @Column(name = "creator_id", nullable = false, updatable = false)
-//    private UUID creatorId;
+    @Column(name = "creator_id", nullable = false, updatable = false)
+    private UUID creatorId;
 
     @Column(nullable = false, unique = true)
     private String title;

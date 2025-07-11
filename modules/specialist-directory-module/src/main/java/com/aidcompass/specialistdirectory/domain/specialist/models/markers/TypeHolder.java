@@ -1,4 +1,4 @@
-package com.aidcompass.specialistdirectory.domain.specialist.markers;
+package com.aidcompass.specialistdirectory.domain.specialist.models.markers;
 
 public interface TypeHolder {
     Long getTypeId();

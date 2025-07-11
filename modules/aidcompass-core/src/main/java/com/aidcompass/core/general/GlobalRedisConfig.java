@@ -132,6 +132,12 @@ public class GlobalRedisConfig {
                 .withCacheConfiguration("specialists:types:suggested:id", defaultConfig)
                 .withCacheConfiguration("specialists:types:suggested", defaultConfig)
                 .withCacheConfiguration("specialists:types:approved:all", defaultConfig)
+                .withCacheConfiguration("specialists", defaultConfig.entryTtl(Duration.ofSeconds(120)))
+                .withCacheConfiguration("specialists:ownership", defaultConfig.entryTtl(Duration.ofSeconds(300)))
+                .withCacheConfiguration("specialists:all", defaultConfig.entryTtl(Duration.ofSeconds(2400)))
+                .withCacheConfiguration("specialists:filter", defaultConfig.entryTtl(Duration.ofSeconds(300)))
+                .withCacheConfiguration("specialists:count:total", defaultConfig.entryTtl(Duration.ofSeconds(1200)))
+                .withCacheConfiguration("specialists:count:filter", defaultConfig.entryTtl(Duration.ofSeconds(600)))
                 .build();
     }
 }
