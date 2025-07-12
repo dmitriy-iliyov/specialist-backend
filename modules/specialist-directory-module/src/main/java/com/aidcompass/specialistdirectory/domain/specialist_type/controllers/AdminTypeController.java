@@ -1,7 +1,7 @@
 package com.aidcompass.specialistdirectory.domain.specialist_type.controllers;
 
 import com.aidcompass.contracts.PrincipalDetails;
-import com.aidcompass.specialistdirectory.domain.specialist_type.services.ApproveTypeOrchestrator;
+import com.aidcompass.specialistdirectory.domain.specialist_type.services.TypeApproveOrchestrator;
 import com.aidcompass.specialistdirectory.domain.specialist_type.services.TypeService;
 import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.TypeCreateDto;
 import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.TypeUpdateDto;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 public class AdminTypeController {
 
     private final TypeService service;
-    private final ApproveTypeOrchestrator orchestrator;
+    private final TypeApproveOrchestrator orchestrator;
 
 
     @PostMapping

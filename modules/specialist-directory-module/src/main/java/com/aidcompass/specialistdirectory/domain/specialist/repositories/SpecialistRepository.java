@@ -1,13 +1,15 @@
 package com.aidcompass.specialistdirectory.domain.specialist.repositories;
 
-import com.aidcompass.specialistdirectory.utils.SpecificationRepository;
+import com.aidcompass.specialistdirectory.utils.pagination.SpecificationRepository;
 import com.aidcompass.specialistdirectory.domain.specialist.models.SpecialistEntity;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 

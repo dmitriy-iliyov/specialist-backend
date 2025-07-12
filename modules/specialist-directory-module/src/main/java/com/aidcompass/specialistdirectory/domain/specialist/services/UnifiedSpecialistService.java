@@ -4,35 +4,35 @@ import com.aidcompass.specialistdirectory.domain.specialist.SpecialistMapper;
 import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.*;
 import com.aidcompass.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
 import com.aidcompass.specialistdirectory.domain.specialist.models.filters.SpecialistFilter;
-import com.aidcompass.specialistdirectory.domain.specialist.models.markers.PageableFilter;
 import com.aidcompass.specialistdirectory.domain.specialist.repositories.SpecialistRepository;
 import com.aidcompass.specialistdirectory.domain.specialist.models.SpecialistEntity;
 import com.aidcompass.specialistdirectory.domain.specialist.repositories.SpecialistSpecification;
-import com.aidcompass.specialistdirectory.domain.specialist.repositories.SpecificationFabric;
+import com.aidcompass.specialistdirectory.utils.pagination.PaginationUtils;
 import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.TypeCreateDto;
 import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.TypeDto;
 import com.aidcompass.specialistdirectory.domain.specialist_type.services.TypeService;
 import com.aidcompass.specialistdirectory.domain.specialist_type.services.TypeConstants;
-import com.aidcompass.specialistdirectory.exceptions.SpecialistEntityNotFoundByIdException;
-import com.aidcompass.specialistdirectory.utils.PageRequest;
-import com.aidcompass.specialistdirectory.utils.PageResponse;
+import com.aidcompass.specialistdirectory.exceptions.SpecialistNotFoundByIdException;
+import com.aidcompass.specialistdirectory.utils.pagination.PageRequest;
+import com.aidcompass.specialistdirectory.utils.pagination.PageResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class SpecialistServiceImpl implements SpecialistService {
+public class UnifiedSpecialistService implements SpecialistService, SystemSpecialistService {
 
     private final SpecialistRepository specialistRepository;
     private final SpecialistCountService countService;
@@ -65,7 +65,7 @@ public class SpecialistServiceImpl implements SpecialistService {
     @Transactional
     @Override
     public SpecialistResponseDto update(SpecialistUpdateDto dto) {
-        SpecialistEntity entity = specialistRepository.findWithTypeById(dto.getId()).orElseThrow(SpecialistEntityNotFoundByIdException::new);
+        SpecialistEntity entity = specialistRepository.findWithTypeById(dto.getId()).orElseThrow(SpecialistNotFoundByIdException::new);
         // compare and early return ?
         Long inputTypeId = dto.getTypeId();
         Long existedTypeId = entity.getType().getId();
@@ -96,19 +96,19 @@ public class SpecialistServiceImpl implements SpecialistService {
     @Transactional(readOnly = true)
     @Override
     public UUID getCreatorIdById(UUID id) {
-        return specialistRepository.findCreatorIdById(id).orElseThrow(SpecialistEntityNotFoundByIdException::new);
+        return specialistRepository.findCreatorIdById(id).orElseThrow(SpecialistNotFoundByIdException::new);
     }
 
-    @Cacheable(value = "specialists", key = "#id + ':' + #userId")
+    @Cacheable(value = "specialists", key = "#id + ':' + #creatorId")
     @Transactional(readOnly = true)
     @Override
-    public SpecialistResponseDto findById(UUID userId, UUID id) {
+    public SpecialistResponseDto findByCreatorIdAndId(UUID creatorId, UUID id) {
         SpecialistEntity entity = specialistRepository.findWithTypeById(id).orElseThrow(
-                SpecialistEntityNotFoundByIdException::new
+                SpecialistNotFoundByIdException::new
         );
         SpecialistResponseDto dto = mapper.toResponseDto(entity);
         if (entity.getSuggestedTypeId() != null) {
-            if (!entity.getCreatorId().equals(userId)) {
+            if (!entity.getCreatorId().equals(creatorId)) {
                 dto.setAnotherType(null);
             } else {
                 dto.setAnotherType(typeService.findSuggestedById(entity.getSuggestedTypeId()).title());
@@ -121,13 +121,25 @@ public class SpecialistServiceImpl implements SpecialistService {
     @Override
     public SpecialistResponseDto findById(UUID id) {
         SpecialistEntity entity = specialistRepository.findWithTypeById(id).orElseThrow(
-                SpecialistEntityNotFoundByIdException::new
+                SpecialistNotFoundByIdException::new
         );
         SpecialistResponseDto dto = mapper.toResponseDto(entity);
         if (entity.getSuggestedTypeId() != null) {
             dto.setAnotherType(typeService.findSuggestedById(entity.getSuggestedTypeId()).title());
         }
         return dto;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public SpecialistEntity findEntityById(UUID id) {
+        return specialistRepository.findById(id).orElseThrow(SpecialistNotFoundByIdException::new);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public SpecialistEntity getReferenceById(UUID id) {
+        return specialistRepository.getReferenceById(id);
     }
 
     @Transactional
@@ -149,14 +161,14 @@ public class SpecialistServiceImpl implements SpecialistService {
 //        cache = cacheManager.getCache("specialists:created:all");
     }
 
-    //@Cacheable(value = "specialists:all", condition = "#page.number() < 3")
+    //@Cacheable(value = "specialists:all", condition = "#page.pageNumber() < 3")
     @Transactional(readOnly = true)
     @Override
     public PageResponse<SpecialistResponseDto> findAllByRatingDesc(PageRequest page) {
-        Slice<SpecialistEntity> slice = specialistRepository.findAllByRatingDesc(Pageable.ofSize(page.size()).withPage(page.number()));
+        Slice<SpecialistEntity> slice = specialistRepository.findAllByRatingDesc(Pageable.ofSize(page.pageSize()).withPage(page.pageNumber()));
         return new PageResponse<>(
                 mapper.toResponseDtoList(slice.getContent()),
-                countService.countAll()
+                (countService.countAll() + page.pageSize() - 1) / page.pageSize()
         );
     }
 
@@ -164,16 +176,17 @@ public class SpecialistServiceImpl implements SpecialistService {
     @Transactional(readOnly = true)
     @Override
     public PageResponse<SpecialistResponseDto> findAllByFilter(SpecialistFilter filter) {
-        Slice<SpecialistEntity> slice = specialistRepository.findAllBySpecification(
-                SpecificationFabric.generateSpecification(filter), this.generatePageable(filter)
+        Slice<SpecialistEntity> slice = specialistRepository.findAll(
+                PaginationUtils.generateSpecification(filter), PaginationUtils.generatePageable(filter)
         );
         return new PageResponse<>(
                 mapper.toResponseDtoList(slice.getContent()),
-                countService.countByFilter(filter)
+                (countService.countByFilter(filter) + filter.pageSize() - 1) / filter.pageSize()
+
         );
     }
 
-    //@Cacheable(value = "specialists:created:all", key = "#creatorId + ':' + #page.cacheKey()", condition = "#page.number() < 2")
+    //@Cacheable(value = "specialists:created:all", key = "#creatorId + ':' + #page.cacheKey()", condition = "#page.pageNumber() < 2")
     @Transactional(readOnly = true)
     @Override
     public PageResponse<SpecialistResponseDto> findAllByCreatorId(UUID creatorId, PageRequest page) {
@@ -181,20 +194,13 @@ public class SpecialistServiceImpl implements SpecialistService {
         Specification<SpecialistEntity> specification = Specification
                 .where(SpecialistSpecification.filterByCreatorId(creatorId));
 
-        Pageable pageable;
-        if (page.asc()) {
-            pageable = org.springframework.data.domain.PageRequest
-                    .of(page.number(), page.size(), Sort.by("rating").ascending());
-        } else {
-            pageable = org.springframework.data.domain.PageRequest
-                    .of(page.number(), page.size(), Sort.by("rating").descending());
-        }
-
-        Slice<SpecialistEntity> slice = specialistRepository.findAllBySpecification(specification, pageable);
+        Slice<SpecialistEntity> slice = specialistRepository.findAll(
+                specification, PaginationUtils.generatePageable(page)
+        );
 
         return new PageResponse<>(
                 mapper.toResponseDtoList(slice.getContent()),
-                countService.countByCreatorId(creatorId)
+                (countService.countByCreatorId(creatorId) + page.pageSize() - 1) / page.pageSize()
         );
     }
 
@@ -203,31 +209,39 @@ public class SpecialistServiceImpl implements SpecialistService {
     @Override
     public PageResponse<SpecialistResponseDto> findAllByCreatorIdAndFilter(UUID creatorId, ExtendedSpecialistFilter filter) {
 
-        Specification<SpecialistEntity> specification = SpecificationFabric.generateSpecification(filter)
-                .and(SpecialistSpecification.filterByCreatorId(creatorId))
-                .and(SpecialistSpecification.filterByFirstName(filter.firstName()))
-                .and(SpecialistSpecification.filterBySecondName(filter.secondName()))
-                .and(SpecialistSpecification.filterByLastName(filter.lastName()));
+        Specification<SpecialistEntity> specification = PaginationUtils.generateSpecification(filter)
+                .and(SpecialistSpecification.filterByCreatorId(creatorId));
 
-        Slice<SpecialistEntity> slice = specialistRepository.findAllBySpecification(
-                specification, this.generatePageable(filter)
+        Slice<SpecialistEntity> slice = specialistRepository.findAll(
+                specification, PaginationUtils.generatePageable(filter)
         );
 
         return new PageResponse<>(
                 mapper.toResponseDtoList(slice.getContent()),
-                countService.countByCreatorIdAndFilter(creatorId, filter)
+                (countService.countByCreatorIdAndFilter(creatorId, filter) + filter.pageSize() - 1) / filter.pageSize()
         );
     }
 
-    private Pageable generatePageable(PageableFilter filter) {
-        Pageable pageable;
-        if (filter.asc()) {
-            pageable = org.springframework.data.domain.PageRequest
-                    .of(filter.pageNumber(), filter.pageSize(), Sort.by("rating").ascending());
-        } else {
-            pageable = org.springframework.data.domain.PageRequest
-                    .of(filter.pageNumber(), filter.pageSize(), Sort.by("rating").descending());
-        }
-        return pageable;
+    @Transactional(readOnly = true)
+    @Override
+    public PageResponse<SpecialistResponseDto> findAllByFilterIn(ExtendedSpecialistFilter filter, List<UUID> ids) {
+        Specification<SpecialistEntity> specification = PaginationUtils.generateSpecification(filter)
+                .and(SpecialistSpecification.filterByIdIn(ids));
+
+        Page<SpecialistEntity> page = specialistRepository.findAll(
+                specification, PaginationUtils.generatePageable(filter)
+        );
+
+        return new PageResponse<>(mapper.toResponseDtoList(page.getContent()), page.getTotalPages());
+    }
+
+    @Override
+    public SpecialistResponseDto toResponseDto(SpecialistEntity entity) {
+        return mapper.toResponseDto(entity);
+    }
+
+    @Override
+    public List<SpecialistResponseDto> toResponseDtoList(List<SpecialistEntity> entityList) {
+        return mapper.toResponseDtoList(entityList);
     }
 }

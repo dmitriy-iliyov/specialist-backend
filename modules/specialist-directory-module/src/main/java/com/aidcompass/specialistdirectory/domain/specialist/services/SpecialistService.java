@@ -3,8 +3,8 @@ package com.aidcompass.specialistdirectory.domain.specialist.services;
 import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.*;
 import com.aidcompass.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
 import com.aidcompass.specialistdirectory.domain.specialist.models.filters.SpecialistFilter;
-import com.aidcompass.specialistdirectory.utils.PageRequest;
-import com.aidcompass.specialistdirectory.utils.PageResponse;
+import com.aidcompass.specialistdirectory.utils.pagination.PageRequest;
+import com.aidcompass.specialistdirectory.utils.pagination.PageResponse;
 
 import java.util.UUID;
 
@@ -13,7 +13,7 @@ public interface SpecialistService {
 
     UUID getCreatorIdById(UUID id);
 
-    SpecialistResponseDto findById(UUID creatorId, UUID id);
+    SpecialistResponseDto findByCreatorIdAndId(UUID creatorId, UUID id);
 
     SpecialistResponseDto update(SpecialistUpdateDto dto);
 

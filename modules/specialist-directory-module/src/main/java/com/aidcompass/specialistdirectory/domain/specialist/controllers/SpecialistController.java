@@ -1,10 +1,9 @@
 package com.aidcompass.specialistdirectory.domain.specialist.controllers;
 
-import com.aidcompass.specialistdirectory.domain.contact.ContactType;
 import com.aidcompass.specialistdirectory.domain.specialist.models.filters.SpecialistFilter;
-import com.aidcompass.specialistdirectory.domain.specialist.services.SpecialistCountServiceImpl;
+import com.aidcompass.specialistdirectory.domain.specialist.services.SpecialistCountService;
 import com.aidcompass.specialistdirectory.domain.specialist.services.SpecialistService;
-import com.aidcompass.specialistdirectory.utils.PageRequest;
+import com.aidcompass.specialistdirectory.utils.pagination.PageRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class SpecialistController {
 
     private final SpecialistService service;
-    private final SpecialistCountServiceImpl countService;
+    private final SpecialistCountService countService;
 
 
     @GetMapping
@@ -49,12 +48,5 @@ public class SpecialistController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(countService.countByFilter(filter));
-    }
-
-    @GetMapping("/info/contact-types")
-    public ResponseEntity<?> getContactType() {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(ContactType.values());
     }
 }

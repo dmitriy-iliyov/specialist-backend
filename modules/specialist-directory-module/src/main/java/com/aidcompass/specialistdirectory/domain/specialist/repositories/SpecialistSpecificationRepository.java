@@ -1,7 +1,7 @@
 package com.aidcompass.specialistdirectory.domain.specialist.repositories;
 
 import com.aidcompass.specialistdirectory.domain.specialist.models.SpecialistEntity;
-import com.aidcompass.specialistdirectory.utils.SpecificationRepository;
+import com.aidcompass.specialistdirectory.utils.pagination.SpecificationRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
@@ -23,7 +23,7 @@ public class SpecialistSpecificationRepository implements SpecificationRepositor
 
 
     @Override
-    public Slice<SpecialistEntity> findAllBySpecification(Specification<SpecialistEntity> specification, Pageable pageable) {
+    public Slice<SpecialistEntity> findAll(Specification<SpecialistEntity> specification, Pageable pageable) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<SpecialistEntity> q = cb.createQuery(SpecialistEntity.class);
         Root<SpecialistEntity> r = q.from(SpecialistEntity.class);

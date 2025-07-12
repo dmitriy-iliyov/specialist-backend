@@ -1,13 +1,13 @@
 package com.aidcompass.specialistdirectory.domain.specialist.controllers;
 
 import com.aidcompass.contracts.PrincipalDetails;
-import com.aidcompass.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
-import com.aidcompass.specialistdirectory.domain.specialist.services.SpecialistCountServiceImpl;
-import com.aidcompass.specialistdirectory.domain.specialist.services.SpecialistService;
 import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
 import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
+import com.aidcompass.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
+import com.aidcompass.specialistdirectory.domain.specialist.services.SpecialistCountService;
 import com.aidcompass.specialistdirectory.domain.specialist.services.SpecialistFacade;
-import com.aidcompass.specialistdirectory.utils.PageRequest;
+import com.aidcompass.specialistdirectory.domain.specialist.services.SpecialistService;
+import com.aidcompass.specialistdirectory.utils.pagination.PageRequest;
 import com.aidcompass.specialistdirectory.utils.validation.ValidUuid;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class SpecialistCreatorController {
 
     private final SpecialistService service;
     private final SpecialistFacade facade;
-    private final SpecialistCountServiceImpl countService;
+    private final SpecialistCountService countService;
 
 
     @PostMapping
@@ -36,15 +36,16 @@ public class SpecialistCreatorController {
         dto.setCreatorId(principal.getUserId());
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(service.save(dto));
+                .body(facade.save(dto));
     }
 
+    //?
     @GetMapping("/{id}")
     public ResponseEntity<?> get(@AuthenticationPrincipal PrincipalDetails principal,
-                                 @PathVariable("id") @ValidUuid String id) {
+                                 @PathVariable("id") UUID id) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(service.findById(principal.getUserId(), UUID.fromString(id)));
+                .body(service.findByCreatorIdAndId(principal.getUserId(), id));
     }
 
     @PutMapping("/{id}")

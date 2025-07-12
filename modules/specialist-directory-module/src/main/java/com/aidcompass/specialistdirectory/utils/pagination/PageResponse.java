@@ -1,4 +1,4 @@
-package com.aidcompass.specialistdirectory.utils;
+package com.aidcompass.specialistdirectory.utils.pagination;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

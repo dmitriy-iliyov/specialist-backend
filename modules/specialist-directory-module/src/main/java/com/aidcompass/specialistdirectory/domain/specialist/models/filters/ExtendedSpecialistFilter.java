@@ -1,7 +1,7 @@
 package com.aidcompass.specialistdirectory.domain.specialist.models.filters;
 
 import com.aidcompass.specialistdirectory.domain.specialist.models.markers.BaseSpecialistFilter;
-import com.aidcompass.specialistdirectory.domain.specialist.models.markers.PageableFilter;
+import com.aidcompass.specialistdirectory.utils.pagination.PageDataHolder;
 import com.aidcompass.specialistdirectory.domain.specialist.validation.annotation.Rating;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.*;
@@ -40,12 +40,12 @@ public record ExtendedSpecialistFilter(
         String lastName,
 
         @JsonProperty("page_number")
-        @PositiveOrZero(message = "Page number should be positive or zero.")
+        @PositiveOrZero(message = "Page pageNumber should be positive or zero.")
         int pageNumber,
 
         @JsonProperty("page_size")
-        @Min(value = 10, message = "Min page size is 10.")
-        int pageSize) implements BaseSpecialistFilter, PageableFilter {
+        @Min(value = 10, message = "Min page pageSize is 10.")
+        int pageSize) implements BaseSpecialistFilter, PageDataHolder {
 
         public String cacheKey() {
                 return ":c:" + city + ":t:" + typeId + ":mir:" + minRating + ":mar:" + maxRating +

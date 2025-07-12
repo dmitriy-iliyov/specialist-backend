@@ -4,8 +4,10 @@ import com.aidcompass.core.general.exceptions.BaseControllerAdvice;
 import com.aidcompass.core.general.exceptions.mapper.ExceptionMapper;
 import com.aidcompass.core.general.exceptions.models.*;
 import com.aidcompass.core.general.exceptions.models.Exception;
+import com.aidcompass.core.general.exceptions.models.dto.ErrorDto;
 import com.aidcompass.core.general.utils.ErrorUtils;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.github.f4b6a3.uuid.exception.InvalidUuidException;
 import io.lettuce.core.RedisConnectionException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.context.MessageSource;
@@ -24,6 +26,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -132,5 +135,16 @@ public class SpecialistDirectoryControllerAdvice extends BaseControllerAdvice {
     @ExceptionHandler(BaseInternalServerException.class)
     public ResponseEntity<?> handleBaseInternalServiceException(BaseInternalServerException e, Locale locale) {
         return super.handleBaseInternalServiceException(e, locale);
+    }
+
+    @ExceptionHandler(InvalidUuidException.class)
+    public ResponseEntity<?> handleInvalidUuidException(InvalidUuidException e, Locale locale) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST,
+                getMessageSource().getMessage("400", null, "error.400", locale));
+        String [] em = e.getMessage().split(":");
+        problemDetail.setProperty("properties", List.of(new ErrorDto(em[0], em[1])));
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(problemDetail);
     }
 }

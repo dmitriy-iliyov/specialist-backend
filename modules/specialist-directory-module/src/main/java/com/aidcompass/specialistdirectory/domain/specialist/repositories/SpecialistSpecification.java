@@ -3,6 +3,7 @@ package com.aidcompass.specialistdirectory.domain.specialist.repositories;
 import com.aidcompass.specialistdirectory.domain.specialist.models.SpecialistEntity;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.util.List;
 import java.util.UUID;
 
 public class SpecialistSpecification {
@@ -37,5 +38,9 @@ public class SpecialistSpecification {
 
     public static Specification<SpecialistEntity> filterByLastName(String lastName) {
         return (r, q, cb) -> lastName == null ? null : cb.like(cb.lower(r.get("lastName")), lastName.toLowerCase());
+    }
+
+    public static Specification<SpecialistEntity> filterByIdIn(List<UUID> ids) {
+        return (r, q, cb) -> ids.isEmpty() ? null : r.get("id").in(ids);
     }
 }

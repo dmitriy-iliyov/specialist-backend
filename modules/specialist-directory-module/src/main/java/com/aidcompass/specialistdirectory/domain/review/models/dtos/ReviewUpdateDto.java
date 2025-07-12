@@ -1,6 +1,7 @@
 package com.aidcompass.specialistdirectory.domain.review.models.dtos;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -21,8 +22,10 @@ public class ReviewUpdateDto {
     @NotBlank(message = "Description is required.")
     private final String description;
 
-    @NotNull(message = "Rating is required.")
-    private final Long rating;
 
+    @NotNull(message = "Rating is required.")
+    private final Integer rating;
+
+    @JsonProperty("specialist_id")
     private UUID specialistId;
 }

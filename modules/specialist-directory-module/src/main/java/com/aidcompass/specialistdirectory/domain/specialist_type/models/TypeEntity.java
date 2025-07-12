@@ -36,6 +36,7 @@ public class TypeEntity {
 
 
     public TypeEntity(String title, boolean isApproved) {
+        this.creatorId = UUID.fromString("aa772379-dbeb-45ce-ab67-b34a249e09c8");
         this.title = title;
         this.isApproved = isApproved;
     }

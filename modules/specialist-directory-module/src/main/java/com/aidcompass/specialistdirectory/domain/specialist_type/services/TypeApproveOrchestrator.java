@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class ApproveTypeOrchestrator {
+public class TypeApproveOrchestrator {
 
     private final SpecialistService specialistService;
     private final TypeService typeService;

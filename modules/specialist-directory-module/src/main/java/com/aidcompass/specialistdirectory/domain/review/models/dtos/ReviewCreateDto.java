@@ -20,7 +20,7 @@ public class ReviewCreateDto {
     private final String description;
 
     @NotNull(message = "Rating is required.")
-    private final Long rating;
+    private final Integer rating;
 
     @JsonProperty("specialist_id")
     private UUID specialistId;

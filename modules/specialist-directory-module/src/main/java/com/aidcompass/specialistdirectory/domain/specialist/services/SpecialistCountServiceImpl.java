@@ -5,9 +5,8 @@ import com.aidcompass.specialistdirectory.domain.specialist.models.filters.Exten
 import com.aidcompass.specialistdirectory.domain.specialist.models.filters.SpecialistFilter;
 import com.aidcompass.specialistdirectory.domain.specialist.repositories.SpecialistRepository;
 import com.aidcompass.specialistdirectory.domain.specialist.repositories.SpecialistSpecification;
-import com.aidcompass.specialistdirectory.domain.specialist.repositories.SpecificationFabric;
+import com.aidcompass.specialistdirectory.utils.pagination.PaginationUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +20,7 @@ public class SpecialistCountServiceImpl implements SpecialistCountService {
     private final SpecialistRepository repository;
 
 
-    @Cacheable(value = "specialists:count:total")
+    //@Cacheable(value = "specialists:count:total")
     @Transactional(readOnly = true)
     @Override
     public long countAll() {
@@ -32,21 +31,21 @@ public class SpecialistCountServiceImpl implements SpecialistCountService {
     @Transactional(readOnly = true)
     @Override
     public long countByFilter(SpecialistFilter filter) {
-        return repository.count(SpecificationFabric.generateSpecification(filter));
+        return repository.count(PaginationUtils.generateSpecification(filter));
     }
 
     //@Cacheable(value = "specialists:count:created:total", key = "#creatorId")
-    @Override
     @Transactional(readOnly = true)
+    @Override
     public long countByCreatorId(UUID creatorId) {
         return repository.countByCreatorId(creatorId);
     }
 
     //@Cacheable(value = "specialists:count:created", key = "#creatorId + ':' + #filter.cacheKey()")
-    @Override
     @Transactional(readOnly = true)
+    @Override
     public long countByCreatorIdAndFilter(UUID creatorId, ExtendedSpecialistFilter filter) {
-        Specification<SpecialistEntity> specification = SpecificationFabric
+        Specification<SpecialistEntity> specification = PaginationUtils
                 .generateSpecification(filter)
                 .and(SpecialistSpecification.filterByCreatorId(creatorId));
         return repository.count(specification);

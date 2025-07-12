@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.UUID;
 
-@RequiredArgsConstructor
 @Data
 public class SpecialistResponseDto {
 

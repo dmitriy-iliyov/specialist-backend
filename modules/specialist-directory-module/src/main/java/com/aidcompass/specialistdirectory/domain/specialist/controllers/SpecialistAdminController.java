@@ -34,10 +34,10 @@ public class SpecialistAdminController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> get(@PathVariable("id") @ValidUuid String id) {
+    public ResponseEntity<?> get(@PathVariable("id") UUID id) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(service.findById(UUID.fromString(id)));
+                .body(service.findById(id));
     }
 
     @PutMapping("/{id}")

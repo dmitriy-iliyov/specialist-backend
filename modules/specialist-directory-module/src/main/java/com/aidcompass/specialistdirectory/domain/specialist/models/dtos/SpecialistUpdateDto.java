@@ -46,8 +46,8 @@ public class SpecialistUpdateDto implements SpecialistMarker {
     private final String anotherType;
 
     @JsonProperty("house_number_and_street")
-    @NotBlank(message = "House number and street are required.")
-    @Size(min = 2, max = 20, message = "House number and street must be between 2 and 20 characters.")
+    @NotBlank(message = "House pageNumber and street are required.")
+    @Size(min = 2, max = 20, message = "House pageNumber and street must be between 2 and 20 characters.")
     private final String houseNumberAndStreet;
 
     @JsonProperty("city_title")
