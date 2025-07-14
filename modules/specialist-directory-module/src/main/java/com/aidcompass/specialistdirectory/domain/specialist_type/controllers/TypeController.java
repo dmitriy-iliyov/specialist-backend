@@ -1,6 +1,6 @@
 package com.aidcompass.specialistdirectory.domain.specialist_type.controllers;
 
-import com.aidcompass.specialistdirectory.domain.specialist_type.services.TypeService;
+import com.aidcompass.specialistdirectory.domain.specialist_type.services.interfases.TypeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

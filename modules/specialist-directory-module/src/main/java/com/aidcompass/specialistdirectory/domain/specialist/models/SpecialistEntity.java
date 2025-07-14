@@ -66,6 +66,9 @@ public class SpecialistEntity {
 
     private String site;
 
+    @Column(name = "summary_rating", nullable = false)
+    private long summaryRating;
+
     @Column(name = "total_rating", nullable = false)
     private double totalRating;
 
@@ -77,6 +80,9 @@ public class SpecialistEntity {
 
     @OneToMany(mappedBy = "specialist", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<BookmarkEntity> bookmarks;
+
+    @Version
+    private Long version;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;

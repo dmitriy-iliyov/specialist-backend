@@ -26,6 +26,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -104,6 +105,7 @@ public class SpecialistDirectoryControllerAdvice extends BaseControllerAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException e, Locale locale) {
+        System.out.println();
         return super.handleMethodArgumentNotValidException(e, locale);
     }
 
@@ -142,6 +144,8 @@ public class SpecialistDirectoryControllerAdvice extends BaseControllerAdvice {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST,
                 getMessageSource().getMessage("400", null, "error.400", locale));
         String [] em = e.getMessage().split(":");
+        System.out.println(e);
+        System.out.println("em" + Arrays.toString(em));
         problemDetail.setProperty("properties", List.of(new ErrorDto(em[0], em[1])));
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)

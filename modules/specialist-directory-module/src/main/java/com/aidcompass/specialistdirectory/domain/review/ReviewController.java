@@ -3,8 +3,8 @@ package com.aidcompass.specialistdirectory.domain.review;
 import com.aidcompass.contracts.PrincipalDetails;
 import com.aidcompass.specialistdirectory.domain.review.models.dtos.ReviewCreateDto;
 import com.aidcompass.specialistdirectory.domain.review.models.dtos.ReviewUpdateDto;
-import com.aidcompass.specialistdirectory.domain.review.services.ReviewFacade;
-import com.aidcompass.specialistdirectory.domain.review.services.ReviewService;
+import com.aidcompass.specialistdirectory.domain.review.services.interfases.ReviewOrchestrator;
+import com.aidcompass.specialistdirectory.domain.review.services.interfases.ReviewService;
 import com.aidcompass.specialistdirectory.utils.validation.ValidUuid;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,28 +22,30 @@ import java.util.UUID;
 public class ReviewController {
 
     private final ReviewService service;
-    private final ReviewFacade facade;
+    private final ReviewOrchestrator orchestrator;
 
 
     @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
     @PostMapping
     public ResponseEntity<?> create(@AuthenticationPrincipal PrincipalDetails principal,
-                                    @PathVariable("specialist_id") UUID specialistId,
+                                    @PathVariable("specialist_id")
+                                    @ValidUuid(paramName = "specialist_id") String specialistId,
                                     @RequestBody @Valid ReviewCreateDto dto) {
         dto.setCreatorId(principal.getUserId());
-        dto.setSpecialistId(specialistId);
+        dto.setSpecialistId(UUID.fromString(specialistId));
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(service.save(dto));
+                .body(orchestrator.save(dto));
     }
 
     @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@AuthenticationPrincipal PrincipalDetails principal,
-                                    @PathVariable("specialist_id") UUID specialistId,
+                                    @PathVariable("specialist_id") @ValidUuid(paramName = "specialist_id")
+                                    String specialistId,
                                     @RequestBody @Valid ReviewUpdateDto dto) {
         dto.setCreatorId(principal.getUserId());
-        dto.setSpecialistId(specialistId);
+        dto.setSpecialistId(UUID.fromString(specialistId));
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(service.update(dto));
@@ -52,9 +54,10 @@ public class ReviewController {
     @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@AuthenticationPrincipal PrincipalDetails principal,
-                                    @PathVariable("specialist_id") UUID specialistId,
-                                    @PathVariable("id") @ValidUuid UUID id) {
-        service.delete(principal.getUserId(), specialistId, id);
+                                    @PathVariable("specialist_id") @ValidUuid(paramName = "specialist_id")
+                                    String specialistId,
+                                    @PathVariable("id") @ValidUuid(paramName = "id") String id) {
+        orchestrator.delete(principal.getUserId(), UUID.fromString(specialistId), UUID.fromString(id));
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();

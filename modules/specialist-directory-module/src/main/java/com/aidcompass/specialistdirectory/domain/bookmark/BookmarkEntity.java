@@ -10,7 +10,10 @@ import lombok.NoArgsConstructor;
 import java.util.UUID;
 
 @Entity
-@Table(name = "bookmarks")
+@Table(
+        name = "bookmarks",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"owner_id", "specialist_id"})
+)
 @NoArgsConstructor
 @AllArgsConstructor
 @Data

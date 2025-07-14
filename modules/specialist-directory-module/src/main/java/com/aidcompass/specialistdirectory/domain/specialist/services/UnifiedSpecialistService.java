@@ -7,41 +7,54 @@ import com.aidcompass.specialistdirectory.domain.specialist.models.filters.Speci
 import com.aidcompass.specialistdirectory.domain.specialist.repositories.SpecialistRepository;
 import com.aidcompass.specialistdirectory.domain.specialist.models.SpecialistEntity;
 import com.aidcompass.specialistdirectory.domain.specialist.repositories.SpecialistSpecification;
+import com.aidcompass.specialistdirectory.domain.specialist.services.interfaces.SpecialistCacheService;
+import com.aidcompass.specialistdirectory.domain.specialist.services.interfaces.SpecialistCountService;
+import com.aidcompass.specialistdirectory.domain.specialist.services.interfaces.SpecialistService;
+import com.aidcompass.specialistdirectory.domain.specialist.services.interfaces.SystemSpecialistService;
+import com.aidcompass.specialistdirectory.exceptions.SpecialistCreatorIdNotFoundByIdException;
 import com.aidcompass.specialistdirectory.utils.pagination.PaginationUtils;
 import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.TypeCreateDto;
 import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.TypeDto;
-import com.aidcompass.specialistdirectory.domain.specialist_type.services.TypeService;
+import com.aidcompass.specialistdirectory.domain.specialist_type.services.interfases.TypeService;
 import com.aidcompass.specialistdirectory.domain.specialist_type.services.TypeConstants;
 import com.aidcompass.specialistdirectory.exceptions.SpecialistNotFoundByIdException;
 import com.aidcompass.specialistdirectory.utils.pagination.PageRequest;
 import com.aidcompass.specialistdirectory.utils.pagination.PageResponse;
+import jakarta.persistence.OptimisticLockException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.Cache;
-import org.springframework.cache.CacheManager;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UnifiedSpecialistService implements SpecialistService, SystemSpecialistService {
 
     private final SpecialistRepository specialistRepository;
     private final SpecialistCountService countService;
     private final SpecialistMapper mapper;
+    private final SpecialistCacheService cacheService;
     private final TypeService typeService;
-    private final CacheManager cacheManager;
 
 
-    @CachePut(value = "specialists", key = "#result.id + ':' + #result.creatorId")
+    @Caching(
+            evict = {@CacheEvict(value = "specialists:created:count:total", key = "#result.creatorId")},
+            put = {@CachePut(value = "specialists", key = "#result.id + ':' + #result.creatorId")}
+    )
     @Transactional
     @Override
     public SpecialistResponseDto save(SpecialistCreateDto dto) {
@@ -51,17 +64,18 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
             saveSuggestedType(entity, dto.getCreatorId(), dto.getAnotherType());
         }
         entity.setType(typeService.getReferenceById(typeId));
+        entity.setSummaryRating(0);
         entity.setTotalRating(0.0);
         entity.setReviewsCount(0);
         entity = specialistRepository.save(entity);
-        Cache cache = cacheManager.getCache("specialists:ownership");
-        if (cache != null) {
-            cache.put(entity.getId().toString(), entity.getCreatorId().toString());
-        }
+        cacheService.putCreatorId(entity.getId(), entity.getCreatorId());
         return mapper.toResponseDto(entity);
     }
 
-    @CachePut(value = "specialists", key = "#result.id + ':' + #result.creatorId")
+    @Caching(
+            evict = {@CacheEvict(value = "specialists:created:count:total", key = "#result.creatorId")},
+            put = {@CachePut(value = "specialists", key = "#result.id + ':' + #result.creatorId")}
+    )
     @Transactional
     @Override
     public SpecialistResponseDto update(SpecialistUpdateDto dto) {
@@ -92,11 +106,11 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
         entity.setSuggestedTypeId(id);
     }
 
-    @Cacheable(value = "specialists:ownership", key = "#id")
+    @Cacheable(value = "specialists:creator_id", key = "#id")
     @Transactional(readOnly = true)
     @Override
     public UUID getCreatorIdById(UUID id) {
-        return specialistRepository.findCreatorIdById(id).orElseThrow(SpecialistNotFoundByIdException::new);
+        return specialistRepository.findCreatorIdById(id).orElseThrow(SpecialistCreatorIdNotFoundByIdException::new);
     }
 
     @Cacheable(value = "specialists", key = "#id + ':' + #creatorId")
@@ -148,31 +162,47 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
         specialistRepository.updateAllByTypeTitle(oldTypeId, newTypeId);
     }
 
-    // invalidate specialists ?
-    @Cacheable(value = "specialists:ownership", key = "#id")
+    @Transactional
+    @Override
+    public void updateRatingById(UUID id, long rating) {
+        SpecialistEntity entity = specialistRepository.findById(id).orElseThrow(SpecialistNotFoundByIdException::new);
+        long summaryRating = entity.getSummaryRating() + rating;
+        long reviewRating = entity.getReviewsCount() + 1;
+        double totalRating = (double) summaryRating / reviewRating;
+        entity.setSummaryRating(summaryRating);
+        entity.setReviewsCount(reviewRating);
+        entity.setTotalRating(totalRating);
+        specialistRepository.save(entity);
+    }
+
+    @CacheEvict(value = "specialists:creator_id", key = "#id")
     @Transactional
     @Override
     public void deleteById(UUID id) {
+        UUID creatorId = cacheService.getCreatorId(id);
+        if (creatorId == null) {
+            creatorId = specialistRepository.findCreatorIdById(id).orElseThrow(
+                    SpecialistCreatorIdNotFoundByIdException::new
+            );
+        }
         specialistRepository.deleteById(id);
-//        Cache cache = cacheManager.getCache("specialists");
-//        if (cache != null) {
-//            cache.evict();
-//        }
-//        cache = cacheManager.getCache("specialists:created:all");
+        cacheService.evictSpecialist(id, creatorId);
+        cacheService.evictTotalCreatedCount(creatorId);
+        cacheService.evictCreatedCountByFilter(creatorId);
     }
 
-    //@Cacheable(value = "specialists:all", condition = "#page.pageNumber() < 3")
+    @Cacheable(value = "specialists:all", condition = "#page.pageNumber() < 3")
     @Transactional(readOnly = true)
     @Override
     public PageResponse<SpecialistResponseDto> findAllByRatingDesc(PageRequest page) {
-        Slice<SpecialistEntity> slice = specialistRepository.findAllByRatingDesc(Pageable.ofSize(page.pageSize()).withPage(page.pageNumber()));
+        Slice<SpecialistEntity> slice = specialistRepository.findAll(PaginationUtils.generatePageable(page));
         return new PageResponse<>(
                 mapper.toResponseDtoList(slice.getContent()),
                 (countService.countAll() + page.pageSize() - 1) / page.pageSize()
         );
     }
 
-    //@Cacheable(value = "specialists:filter", key = "#filter.cacheKey()", condition = "#filter.pageNumber() < 2")
+    @Cacheable(value = "specialists:filter", key = "#filter.cacheKey()", condition = "#filter.pageNumber() < 2")
     @Transactional(readOnly = true)
     @Override
     public PageResponse<SpecialistResponseDto> findAllByFilter(SpecialistFilter filter) {
@@ -186,7 +216,6 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
         );
     }
 
-    //@Cacheable(value = "specialists:created:all", key = "#creatorId + ':' + #page.cacheKey()", condition = "#page.pageNumber() < 2")
     @Transactional(readOnly = true)
     @Override
     public PageResponse<SpecialistResponseDto> findAllByCreatorId(UUID creatorId, PageRequest page) {
@@ -204,7 +233,6 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
         );
     }
 
-    //@Cacheable(value = "specialists:created:filter", key = "#creatorId + ':' + #filter.cacheKey()")
     @Transactional(readOnly = true)
     @Override
     public PageResponse<SpecialistResponseDto> findAllByCreatorIdAndFilter(UUID creatorId, ExtendedSpecialistFilter filter) {

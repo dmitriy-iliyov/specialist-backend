@@ -105,7 +105,10 @@ public class UserSecurityChainConfig {
                                          "/api/v1/days/**", "/api/v1/timetable/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/avatars/**").permitAll()
                         .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers("/api/v1/specialists").hasAuthority("ROLE_CUSTOMER")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/specialists").permitAll()
+                        .requestMatchers("/api/v1/specialists", "/api/v1/specialists/filter",
+                                         "/api/v1/specialists/count/**").permitAll()
+                        .requestMatchers("/api/v1/specialists/**").hasAuthority("ROLE_CUSTOMER")
                         .anyRequest().authenticated())
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)

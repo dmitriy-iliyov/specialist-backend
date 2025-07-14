@@ -1,4 +1,4 @@
-package com.aidcompass.specialistdirectory.domain.specialist_type.services;
+package com.aidcompass.specialistdirectory.domain.specialist_type.services.interfases;
 
 import com.aidcompass.specialistdirectory.domain.specialist_type.models.TypeEntity;
 import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.ShortTypeDto;
@@ -20,6 +20,8 @@ public interface TypeService {
 
     TypeDto update(TypeUpdateDto dto);
 
+    boolean existsByTitleIgnoreCase(String title);
+
     TypeEntity getReferenceById(Long id);
 
     List<ShortTypeDto> findAllApprovedAsJson();
@@ -31,4 +33,8 @@ public interface TypeService {
     void deleteById(Long id);
 
     TypeDto findSuggestedById(Long id);
+
+    ShortTypeDto findByTitle(String title);
+
+    List<TypeDto> findAll();
 }

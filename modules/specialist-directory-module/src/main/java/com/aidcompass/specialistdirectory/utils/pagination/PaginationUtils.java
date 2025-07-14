@@ -28,14 +28,11 @@ public class PaginationUtils {
     }
 
     public static Pageable generatePageable(PageDataHolder holder) {
-        Pageable pageable;
-        if (holder.asc()) {
-            pageable = org.springframework.data.domain.PageRequest
-                    .of(holder.pageNumber(), holder.pageSize(), Sort.by("rating").ascending());
-        } else {
-            pageable = org.springframework.data.domain.PageRequest
-                    .of(holder.pageNumber(), holder.pageSize(), Sort.by("rating").descending());
+        if (holder.asc() != null) {
+            return org.springframework.data.domain.PageRequest
+                    .of(holder.pageNumber(), holder.pageSize(), Sort.by("totalRating").ascending());
         }
-        return pageable;
+        return org.springframework.data.domain.PageRequest
+                .of(holder.pageNumber(), holder.pageSize(), Sort.by("totalRating").descending());
     }
 }

@@ -1,7 +1,7 @@
 package com.aidcompass.specialistdirectory.domain.specialist_type.services;
 
 import com.aidcompass.specialistdirectory.domain.specialist_type.TypeRepository;
-import com.aidcompass.specialistdirectory.exceptions.SpecialistTypeEntityNotFoundByTypeException;
+import com.aidcompass.specialistdirectory.exceptions.SpecialistTypeEntityNotFoundByTitleException;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +20,7 @@ public class TypeConstants {
     @PostConstruct
     public void init() {
         OTHER_TYPE_ID = repository.findByTitle(OTHER_TYPE)
-                .orElseThrow(SpecialistTypeEntityNotFoundByTypeException::new)
+                .orElseThrow(SpecialistTypeEntityNotFoundByTitleException::new)
                 .getId();
     }
 

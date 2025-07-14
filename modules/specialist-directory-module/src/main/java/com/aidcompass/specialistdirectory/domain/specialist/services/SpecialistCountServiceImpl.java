@@ -5,8 +5,10 @@ import com.aidcompass.specialistdirectory.domain.specialist.models.filters.Exten
 import com.aidcompass.specialistdirectory.domain.specialist.models.filters.SpecialistFilter;
 import com.aidcompass.specialistdirectory.domain.specialist.repositories.SpecialistRepository;
 import com.aidcompass.specialistdirectory.domain.specialist.repositories.SpecialistSpecification;
+import com.aidcompass.specialistdirectory.domain.specialist.services.interfaces.SpecialistCountService;
 import com.aidcompass.specialistdirectory.utils.pagination.PaginationUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,28 +22,28 @@ public class SpecialistCountServiceImpl implements SpecialistCountService {
     private final SpecialistRepository repository;
 
 
-    //@Cacheable(value = "specialists:count:total")
+    @Cacheable(value = "specialists:count:total")
     @Transactional(readOnly = true)
     @Override
     public long countAll() {
         return repository.count();
     }
 
-    //@Cacheable(value = "specialists:count:filter", key = "#filter.cacheKey()")
+    @Cacheable(value = "specialists:count:filter", key = "#filter.cacheKey()")
     @Transactional(readOnly = true)
     @Override
     public long countByFilter(SpecialistFilter filter) {
         return repository.count(PaginationUtils.generateSpecification(filter));
     }
 
-    //@Cacheable(value = "specialists:count:created:total", key = "#creatorId")
+    @Cacheable(value = "specialists:created:count:total", key = "#creatorId")
     @Transactional(readOnly = true)
     @Override
     public long countByCreatorId(UUID creatorId) {
         return repository.countByCreatorId(creatorId);
     }
 
-    //@Cacheable(value = "specialists:count:created", key = "#creatorId + ':' + #filter.cacheKey()")
+    @Cacheable(value = "specialists:created:count:filter", key = "#creatorId + ':' + #filter.cacheKey()")
     @Transactional(readOnly = true)
     @Override
     public long countByCreatorIdAndFilter(UUID creatorId, ExtendedSpecialistFilter filter) {

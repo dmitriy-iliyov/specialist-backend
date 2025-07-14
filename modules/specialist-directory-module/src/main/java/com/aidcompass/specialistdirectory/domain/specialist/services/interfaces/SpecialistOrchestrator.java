@@ -1,4 +1,4 @@
-package com.aidcompass.specialistdirectory.domain.specialist.services;
+package com.aidcompass.specialistdirectory.domain.specialist.services.interfaces;
 
 import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
 import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
@@ -6,8 +6,10 @@ import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.Speciali
 
 import java.util.UUID;
 
-public interface SpecialistFacade {
+public interface SpecialistOrchestrator {
     SpecialistResponseDto update(SpecialistUpdateDto dto);
+
+    void updateRatingById(UUID id, long rating);
 
     void delete(UUID creatorId, UUID id);
 

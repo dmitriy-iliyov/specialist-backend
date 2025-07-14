@@ -1,4 +1,4 @@
-package com.aidcompass.specialistdirectory.domain.specialist.services;
+package com.aidcompass.specialistdirectory.domain.specialist.services.interfaces;
 
 import com.aidcompass.specialistdirectory.domain.specialist.models.SpecialistEntity;
 import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;

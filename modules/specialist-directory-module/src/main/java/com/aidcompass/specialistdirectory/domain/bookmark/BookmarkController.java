@@ -1,8 +1,9 @@
 package com.aidcompass.specialistdirectory.domain.bookmark;
 
 import com.aidcompass.contracts.PrincipalDetails;
-import com.aidcompass.specialistdirectory.domain.bookmark.services.BookmarkCountService;
-import com.aidcompass.specialistdirectory.domain.bookmark.services.BookmarkService;
+import com.aidcompass.specialistdirectory.domain.bookmark.services.interfases.BookmarkCountService;
+import com.aidcompass.specialistdirectory.domain.bookmark.services.interfases.BookmarkPersistOrchestrator;
+import com.aidcompass.specialistdirectory.domain.bookmark.services.interfases.BookmarkService;
 import com.aidcompass.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
 import com.aidcompass.specialistdirectory.utils.pagination.PageRequest;
 import com.aidcompass.specialistdirectory.utils.validation.ValidUuid;
@@ -23,23 +24,25 @@ import java.util.UUID;
 public class BookmarkController {
 
     private final BookmarkService service;
+    private final BookmarkPersistOrchestrator persistOrchestrator;
     private final BookmarkCountService countService;
 
 
     @PostMapping("/bookmarks/{specialists_id}")
     public ResponseEntity<?> add(@AuthenticationPrincipal PrincipalDetails principal,
-                                 @PathVariable("specialists_id") @ValidUuid String specialistsId) {
+                                 @PathVariable("specialists_id")
+                                 @ValidUuid(paramName = "specialist_id") String specialistsId) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(service.save(principal.getUserId(), UUID.fromString(specialistsId)));
+                .body(persistOrchestrator.save(principal.getUserId(), UUID.fromString(specialistsId)));
     }
 
-    @DeleteMapping("/bookmarks/{specialists_id}")
+    @DeleteMapping("/bookmarks/{id}")
     public ResponseEntity<?> delete(@AuthenticationPrincipal PrincipalDetails principal,
-                                    @PathVariable("specialists_id") @ValidUuid String specialistsId) {
-        service.deleteBySpecialistId(principal.getUserId(), UUID.fromString(specialistsId));
+                                    @PathVariable("id") @ValidUuid(paramName = "id") String id) {
+        service.deleteById(principal.getUserId(), UUID.fromString(id));
         return ResponseEntity
-                .status(HttpStatus.CREATED)
+                .status(HttpStatus.NO_CONTENT)
                 .build();
     }
 

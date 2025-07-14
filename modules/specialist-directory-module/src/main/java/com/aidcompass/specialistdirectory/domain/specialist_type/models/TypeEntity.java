@@ -1,11 +1,14 @@
 package com.aidcompass.specialistdirectory.domain.specialist_type.models;
 
+import com.aidcompass.specialistdirectory.domain.specialist.models.SpecialistEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -13,6 +16,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = {"type"})
 public class TypeEntity {
 
     @Id
@@ -33,6 +37,9 @@ public class TypeEntity {
 
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "type", cascade = CascadeType.REMOVE)
+    private List<SpecialistEntity> specialists;
 
 
     public TypeEntity(String title, boolean isApproved) {

@@ -3,7 +3,7 @@ package com.aidcompass.specialistdirectory.domain.specialist.controllers;
 import com.aidcompass.contracts.PrincipalDetails;
 import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
 import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
-import com.aidcompass.specialistdirectory.domain.specialist.services.SpecialistService;
+import com.aidcompass.specialistdirectory.domain.specialist.services.interfaces.SpecialistService;
 import com.aidcompass.specialistdirectory.utils.validation.ValidUuid;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -34,14 +34,14 @@ public class SpecialistAdminController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> get(@PathVariable("id") UUID id) {
+    public ResponseEntity<?> get(@PathVariable("id") @ValidUuid(paramName = "id") String id) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(service.findById(id));
+                .body(service.findById(UUID.fromString(id)));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") @ValidUuid String id,
+    public ResponseEntity<?> update(@PathVariable("id") @ValidUuid(paramName = "id") String id,
                                     @RequestBody @Valid SpecialistUpdateDto dto) {
         dto.setId(UUID.fromString(id));
         return ResponseEntity
@@ -50,8 +50,7 @@ public class SpecialistAdminController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") @ValidUuid String id) {
-
+    public ResponseEntity<?> delete(@PathVariable("id") @ValidUuid(paramName = "id") String id) {
         service.deleteById(UUID.fromString(id));
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)

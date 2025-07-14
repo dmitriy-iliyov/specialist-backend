@@ -4,9 +4,9 @@ import com.aidcompass.contracts.PrincipalDetails;
 import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
 import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
 import com.aidcompass.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
-import com.aidcompass.specialistdirectory.domain.specialist.services.SpecialistCountService;
-import com.aidcompass.specialistdirectory.domain.specialist.services.SpecialistFacade;
-import com.aidcompass.specialistdirectory.domain.specialist.services.SpecialistService;
+import com.aidcompass.specialistdirectory.domain.specialist.services.interfaces.SpecialistCountService;
+import com.aidcompass.specialistdirectory.domain.specialist.services.interfaces.SpecialistOrchestrator;
+import com.aidcompass.specialistdirectory.domain.specialist.services.interfaces.SpecialistService;
 import com.aidcompass.specialistdirectory.utils.pagination.PageRequest;
 import com.aidcompass.specialistdirectory.utils.validation.ValidUuid;
 import jakarta.validation.Valid;
@@ -26,7 +26,7 @@ import java.util.UUID;
 public class SpecialistCreatorController {
 
     private final SpecialistService service;
-    private final SpecialistFacade facade;
+    private final SpecialistOrchestrator facade;
     private final SpecialistCountService countService;
 
 
@@ -42,15 +42,15 @@ public class SpecialistCreatorController {
     //?
     @GetMapping("/{id}")
     public ResponseEntity<?> get(@AuthenticationPrincipal PrincipalDetails principal,
-                                 @PathVariable("id") UUID id) {
+                                 @PathVariable("id") @ValidUuid(paramName = "id") String id) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(service.findByCreatorIdAndId(principal.getUserId(), id));
+                .body(service.findByCreatorIdAndId(principal.getUserId(), UUID.fromString(id)));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@AuthenticationPrincipal PrincipalDetails principal,
-                                    @PathVariable("id") @ValidUuid String id,
+                                    @PathVariable("id") @ValidUuid(paramName = "id") String id,
                                     @RequestBody @Valid SpecialistUpdateDto dto) {
         dto.setCreatorId(principal.getUserId());
         dto.setId(UUID.fromString(id));
@@ -61,8 +61,7 @@ public class SpecialistCreatorController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@AuthenticationPrincipal PrincipalDetails principal,
-                                    @PathVariable("id") @ValidUuid String id) {
-
+                                    @PathVariable("id") @ValidUuid(paramName = "id") String id) {
         facade.delete(principal.getUserId(), UUID.fromString(id));
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)

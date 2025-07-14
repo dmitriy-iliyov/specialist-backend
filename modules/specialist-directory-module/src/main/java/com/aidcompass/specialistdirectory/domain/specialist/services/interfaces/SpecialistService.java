@@ -1,4 +1,4 @@
-package com.aidcompass.specialistdirectory.domain.specialist.services;
+package com.aidcompass.specialistdirectory.domain.specialist.services.interfaces;
 
 import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.*;
 import com.aidcompass.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
@@ -16,6 +16,8 @@ public interface SpecialistService {
     SpecialistResponseDto findByCreatorIdAndId(UUID creatorId, UUID id);
 
     SpecialistResponseDto update(SpecialistUpdateDto dto);
+
+    void updateRatingById(UUID id, long rating);
 
     SpecialistResponseDto findById(UUID id);
 

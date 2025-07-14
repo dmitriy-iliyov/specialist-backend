@@ -13,6 +13,7 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = UuidValidator.class)
 public @interface ValidUuid {
     String message() default "Invalid UUID format";
+    String paramName() default "uuid";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

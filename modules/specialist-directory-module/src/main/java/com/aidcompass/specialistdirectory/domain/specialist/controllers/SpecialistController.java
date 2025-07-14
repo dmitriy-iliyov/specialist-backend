@@ -1,8 +1,8 @@
 package com.aidcompass.specialistdirectory.domain.specialist.controllers;
 
 import com.aidcompass.specialistdirectory.domain.specialist.models.filters.SpecialistFilter;
-import com.aidcompass.specialistdirectory.domain.specialist.services.SpecialistCountService;
-import com.aidcompass.specialistdirectory.domain.specialist.services.SpecialistService;
+import com.aidcompass.specialistdirectory.domain.specialist.services.interfaces.SpecialistCountService;
+import com.aidcompass.specialistdirectory.domain.specialist.services.interfaces.SpecialistService;
 import com.aidcompass.specialistdirectory.utils.pagination.PageRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -41,12 +41,5 @@ public class SpecialistController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(countService.countAll());
-    }
-
-    @GetMapping("/count/filter")
-    public ResponseEntity<?> countByFilter(@ModelAttribute @Valid SpecialistFilter filter){
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(countService.countByFilter(filter));
     }
 }

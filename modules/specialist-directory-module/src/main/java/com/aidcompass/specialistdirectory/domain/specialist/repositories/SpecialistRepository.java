@@ -42,12 +42,5 @@ public interface SpecialistRepository extends JpaRepository<SpecialistEntity, UU
     """, nativeQuery = true)
     Optional<UUID> findCreatorIdById(@Param("id") UUID id);
 
-    @Query(value = """
-        SELECT s FROM SpecialistEntity s
-        JOIN FETCH s.type
-        ORDER BY s.totalRating DESC
-    """)
-    Slice<SpecialistEntity> findAllByRatingDesc(Pageable pageable);
-
     long countByCreatorId(UUID creatorId);
 }

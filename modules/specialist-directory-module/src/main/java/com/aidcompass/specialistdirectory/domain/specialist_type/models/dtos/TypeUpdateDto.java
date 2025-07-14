@@ -1,5 +1,6 @@
 package com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos;
 
+import com.aidcompass.specialistdirectory.domain.specialist_type.validate.UniqueType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -9,15 +10,14 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Data
+@UniqueType
 public class TypeUpdateDto {
 
-    @NotNull(message = "Id is required.")
-    @Positive(message = "Id should be positive.")
     private Long id;
 
     @NotBlank(message = "Title is required.")
-    private String title;
+    private final String title;
 
     @JsonProperty("is_approved")
-    private boolean isApproved;
+    private final boolean isApproved;
 }

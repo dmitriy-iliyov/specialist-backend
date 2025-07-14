@@ -1,4 +1,4 @@
-package com.aidcompass.specialistdirectory.domain.bookmark.services;
+package com.aidcompass.specialistdirectory.domain.bookmark.services.interfases;
 
 import java.util.List;
 import java.util.UUID;

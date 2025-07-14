@@ -14,14 +14,13 @@ import java.util.UUID;
 
 @Repository
 public interface BookmarkRepository extends JpaRepository<BookmarkEntity, UUID> {
-    long countByOwnerId(UUID ownerId);
 
-    void deleteBySpecialist(SpecialistEntity entity);
+    boolean existsByOwnerIdAndSpecialistId(UUID ownerId, UUID specialistId);
+
+    long countByOwnerId(UUID ownerId);
 
     @EntityGraph(attributePaths = {"specialist", "specialist.type"})
     Slice<BookmarkEntity> findAllByOwnerId(UUID ownerId, Pageable pageable);
-
-    void deleteAllByOwnerId(UUID ownerId);
 
     @Query("""
         SELECT s.id FROM BookmarkEntity b
@@ -29,4 +28,8 @@ public interface BookmarkRepository extends JpaRepository<BookmarkEntity, UUID> 
         WHERE b.ownerId = :owner_id
     """)
     List<UUID> findAllSpecialistIdByOwnerId(@Param("owner_id") UUID ownerId);
+
+    void deleteBySpecialist(SpecialistEntity entity);
+
+    void deleteAllByOwnerId(UUID ownerId);
 }

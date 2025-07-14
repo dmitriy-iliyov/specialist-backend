@@ -10,6 +10,8 @@ import java.util.Optional;
 @Repository
 public interface TypeRepository extends JpaRepository<TypeEntity, Long> {
 
+    boolean existsByTitleIgnoreCase(String title);
+
     Optional<TypeEntity> findByTitle(String title);
 
     List<TypeEntity> findAllByIsApproved(boolean isApproved);
