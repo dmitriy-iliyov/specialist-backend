@@ -10,23 +10,26 @@ public class TypeValidator {
     private final static Pattern ONLY_NON_WORDS = Pattern.compile("^[^\\w]+$");
 
 
-    public static void validate(String typeTitle, ConstraintValidatorContext context) {
-        if (typeTitle.length() < 3) {
-            context.buildConstraintViolationWithTemplate("Type is to short.")
+    public static boolean validate(String typeTitle, ConstraintValidatorContext context) {
+
+        boolean hasErrors = false;
+
+        context.disableDefaultConstraintViolation();
+
+        if (REPEATABLE_LETTERS.matcher(typeTitle).find()) {
+            hasErrors = true;
+            context.buildConstraintViolationWithTemplate("Type cannot contain 3 or more consecutive identical characters.")
                     .addPropertyNode("another_type")
                     .addConstraintViolation();
         }
 
-        if (typeTitle.length() > 30) {
-            context.buildConstraintViolationWithTemplate("Type is to long.")
+        if (ONLY_NON_WORDS.matcher(typeTitle).matches()) {
+            hasErrors = true;
+            context.buildConstraintViolationWithTemplate("Type must contain at least one letter or digit.")
                     .addPropertyNode("another_type")
                     .addConstraintViolation();
         }
 
-        if (REPEATABLE_LETTERS.matcher(typeTitle).matches() || ONLY_NON_WORDS.matcher(typeTitle).matches()) {
-            context.buildConstraintViolationWithTemplate("Type contains invalid characters.")
-                    .addPropertyNode("another_type")
-                    .addConstraintViolation();
-        }
+        return !hasErrors;
     }
 }

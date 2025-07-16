@@ -67,7 +67,7 @@ public class SpecialistValidator implements ConstraintValidator<Specialist, Spec
                             .addPropertyNode("another_type")
                             .addConstraintViolation();
                 } else {
-                    TypeValidator.validate(dto.getAnotherType(), constraintValidatorContext);
+                    hasErrors = TypeValidator.validate(dto.getAnotherType(), constraintValidatorContext);
                 }
             }
         }
