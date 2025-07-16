@@ -49,4 +49,27 @@ public class SpecialistSpecificationRepository implements SpecificationRepositor
 
         return new SliceImpl<>(content, pageable, hasNext);
     }
+
+    @Override
+    public Slice<SpecialistEntity> findAll(Pageable pageable) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<SpecialistEntity> q = cb.createQuery(SpecialistEntity.class);
+        Root<SpecialistEntity> r = q.from(SpecialistEntity.class);
+
+        q.orderBy(QueryUtils.toOrders(pageable.getSort(), r, cb));
+
+        r.fetch("type", JoinType.LEFT);
+
+        TypedQuery<SpecialistEntity> tq = entityManager.createQuery(q);
+        tq.setFirstResult((int) pageable.getOffset());
+        tq.setMaxResults(pageable.getPageSize() + 1);
+
+        List<SpecialistEntity> result = tq.getResultList();
+
+        boolean hasNext = result.size() > pageable.getPageSize();
+
+        List<SpecialistEntity> content = hasNext ? result.subList(0, pageable.getPageSize()) : result;
+
+        return new SliceImpl<>(content, pageable, hasNext);
+    }
 }

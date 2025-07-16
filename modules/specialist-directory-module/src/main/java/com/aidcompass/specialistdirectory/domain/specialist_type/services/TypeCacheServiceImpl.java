@@ -50,4 +50,12 @@ public class TypeCacheServiceImpl implements TypeCacheService {
             typesCache.evict(id.toString());
         }
     }
+
+    @Override
+    public void putToExists(Long id) {
+        Cache cache = cacheManager.getCache("specialists:exists");
+        if (cache != null) {
+            cache.put(id, Boolean.TRUE);
+        }
+    }
 }

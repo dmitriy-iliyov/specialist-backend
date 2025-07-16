@@ -1,11 +1,11 @@
 package com.aidcompass.specialistdirectory.domain.specialist_type.controllers;
 
 import com.aidcompass.contracts.PrincipalDetails;
+import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.TypeCreateDto;
+import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.TypeUpdateDto;
 import com.aidcompass.specialistdirectory.domain.specialist_type.services.interfases.TypeApproveOrchestrator;
 import com.aidcompass.specialistdirectory.domain.specialist_type.services.interfases.TypeOrchestrator;
 import com.aidcompass.specialistdirectory.domain.specialist_type.services.interfases.TypeService;
-import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.TypeCreateDto;
-import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.TypeUpdateDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;

@@ -20,7 +20,7 @@ import com.aidcompass.specialistdirectory.domain.specialist_type.services.TypeCo
 import com.aidcompass.specialistdirectory.exceptions.SpecialistNotFoundByIdException;
 import com.aidcompass.specialistdirectory.utils.pagination.PageRequest;
 import com.aidcompass.specialistdirectory.utils.pagination.PageResponse;
-import jakarta.persistence.OptimisticLockException;
+import com.aidcompass.specialistdirectory.utils.pagination.SpecificationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -31,11 +31,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -44,7 +41,8 @@ import java.util.UUID;
 @Slf4j
 public class UnifiedSpecialistService implements SpecialistService, SystemSpecialistService {
 
-    private final SpecialistRepository specialistRepository;
+    private final SpecialistRepository repository;
+    private final SpecificationRepository<SpecialistEntity> specificationRepository;
     private final SpecialistCountService countService;
     private final SpecialistMapper mapper;
     private final SpecialistCacheService cacheService;
@@ -67,19 +65,17 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
         entity.setSummaryRating(0);
         entity.setTotalRating(0.0);
         entity.setReviewsCount(0);
-        entity = specialistRepository.save(entity);
+        entity = repository.save(entity);
         cacheService.putCreatorId(entity.getId(), entity.getCreatorId());
+        cacheService.evictCreatedCountByFilter(entity.getCreatorId());
         return mapper.toResponseDto(entity);
     }
 
-    @Caching(
-            evict = {@CacheEvict(value = "specialists:created:count:total", key = "#result.creatorId")},
-            put = {@CachePut(value = "specialists", key = "#result.id + ':' + #result.creatorId")}
-    )
+    @CachePut(value = "specialists", key = "#result.id + ':' + #result.creatorId")
     @Transactional
     @Override
     public SpecialistResponseDto update(SpecialistUpdateDto dto) {
-        SpecialistEntity entity = specialistRepository.findWithTypeById(dto.getId()).orElseThrow(SpecialistNotFoundByIdException::new);
+        SpecialistEntity entity = repository.findWithTypeById(dto.getId()).orElseThrow(SpecialistNotFoundByIdException::new);
         // compare and early return ?
         Long inputTypeId = dto.getTypeId();
         Long existedTypeId = entity.getType().getId();
@@ -97,7 +93,8 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
             }
         }
         mapper.updateEntityFromDto(dto, entity);
-        entity = specialistRepository.save(entity);
+        entity = repository.save(entity);
+        cacheService.evictCreatedCountByFilter(entity.getCreatorId());
         return mapper.toResponseDto(entity);
     }
 
@@ -110,14 +107,14 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
     @Transactional(readOnly = true)
     @Override
     public UUID getCreatorIdById(UUID id) {
-        return specialistRepository.findCreatorIdById(id).orElseThrow(SpecialistCreatorIdNotFoundByIdException::new);
+        return repository.findCreatorIdById(id).orElseThrow(SpecialistCreatorIdNotFoundByIdException::new);
     }
 
     @Cacheable(value = "specialists", key = "#id + ':' + #creatorId")
     @Transactional(readOnly = true)
     @Override
     public SpecialistResponseDto findByCreatorIdAndId(UUID creatorId, UUID id) {
-        SpecialistEntity entity = specialistRepository.findWithTypeById(id).orElseThrow(
+        SpecialistEntity entity = repository.findWithTypeById(id).orElseThrow(
                 SpecialistNotFoundByIdException::new
         );
         SpecialistResponseDto dto = mapper.toResponseDto(entity);
@@ -134,7 +131,7 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
     @Transactional(readOnly = true)
     @Override
     public SpecialistResponseDto findById(UUID id) {
-        SpecialistEntity entity = specialistRepository.findWithTypeById(id).orElseThrow(
+        SpecialistEntity entity = repository.findWithTypeById(id).orElseThrow(
                 SpecialistNotFoundByIdException::new
         );
         SpecialistResponseDto dto = mapper.toResponseDto(entity);
@@ -147,32 +144,34 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
     @Transactional(readOnly = true)
     @Override
     public SpecialistEntity findEntityById(UUID id) {
-        return specialistRepository.findById(id).orElseThrow(SpecialistNotFoundByIdException::new);
+        return repository.findById(id).orElseThrow(SpecialistNotFoundByIdException::new);
     }
 
     @Transactional(readOnly = true)
     @Override
     public SpecialistEntity getReferenceById(UUID id) {
-        return specialistRepository.getReferenceById(id);
+        return repository.getReferenceById(id);
     }
 
     @Transactional
     @Override
     public void updateAllByTypeIdPair(Long oldTypeId, Long newTypeId) {
-        specialistRepository.updateAllByTypeTitle(oldTypeId, newTypeId);
+        repository.updateAllByTypeTitle(oldTypeId, newTypeId);
     }
 
     @Transactional
     @Override
     public void updateRatingById(UUID id, long rating) {
-        SpecialistEntity entity = specialistRepository.findById(id).orElseThrow(SpecialistNotFoundByIdException::new);
+        SpecialistEntity entity = repository.findById(id).orElseThrow(SpecialistNotFoundByIdException::new);
         long summaryRating = entity.getSummaryRating() + rating;
         long reviewRating = entity.getReviewsCount() + 1;
         double totalRating = (double) summaryRating / reviewRating;
         entity.setSummaryRating(summaryRating);
         entity.setReviewsCount(reviewRating);
         entity.setTotalRating(totalRating);
-        specialistRepository.save(entity);
+        repository.save(entity);
+
+        cacheService.evictCreatedCountByFilter(entity.getCreatorId());
     }
 
     @CacheEvict(value = "specialists:creator_id", key = "#id")
@@ -181,21 +180,19 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
     public void deleteById(UUID id) {
         UUID creatorId = cacheService.getCreatorId(id);
         if (creatorId == null) {
-            creatorId = specialistRepository.findCreatorIdById(id).orElseThrow(
-                    SpecialistCreatorIdNotFoundByIdException::new
-            );
+            creatorId = repository.findCreatorIdById(id).orElseThrow(SpecialistCreatorIdNotFoundByIdException::new);
         }
-        specialistRepository.deleteById(id);
+        repository.deleteById(id);
         cacheService.evictSpecialist(id, creatorId);
         cacheService.evictTotalCreatedCount(creatorId);
         cacheService.evictCreatedCountByFilter(creatorId);
     }
 
-    @Cacheable(value = "specialists:all", condition = "#page.pageNumber() < 3")
+    @Cacheable(value = "specialists:all", key = "#page.cacheKey()", condition = "#page.pageNumber() < 3")
     @Transactional(readOnly = true)
     @Override
-    public PageResponse<SpecialistResponseDto> findAllByRatingDesc(PageRequest page) {
-        Slice<SpecialistEntity> slice = specialistRepository.findAll(PaginationUtils.generatePageable(page));
+    public PageResponse<SpecialistResponseDto> findAll(PageRequest page) {
+        Slice<SpecialistEntity> slice = specificationRepository.findAll(PaginationUtils.generatePageable(page));
         return new PageResponse<>(
                 mapper.toResponseDtoList(slice.getContent()),
                 (countService.countAll() + page.pageSize() - 1) / page.pageSize()
@@ -206,7 +203,7 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
     @Transactional(readOnly = true)
     @Override
     public PageResponse<SpecialistResponseDto> findAllByFilter(SpecialistFilter filter) {
-        Slice<SpecialistEntity> slice = specialistRepository.findAll(
+        Slice<SpecialistEntity> slice = specificationRepository.findAll(
                 PaginationUtils.generateSpecification(filter), PaginationUtils.generatePageable(filter)
         );
         return new PageResponse<>(
@@ -223,7 +220,7 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
         Specification<SpecialistEntity> specification = Specification
                 .where(SpecialistSpecification.filterByCreatorId(creatorId));
 
-        Slice<SpecialistEntity> slice = specialistRepository.findAll(
+        Slice<SpecialistEntity> slice = specificationRepository.findAll(
                 specification, PaginationUtils.generatePageable(page)
         );
 
@@ -240,7 +237,7 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
         Specification<SpecialistEntity> specification = PaginationUtils.generateSpecification(filter)
                 .and(SpecialistSpecification.filterByCreatorId(creatorId));
 
-        Slice<SpecialistEntity> slice = specialistRepository.findAll(
+        Slice<SpecialistEntity> slice = specificationRepository.findAll(
                 specification, PaginationUtils.generatePageable(filter)
         );
 
@@ -252,11 +249,11 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
 
     @Transactional(readOnly = true)
     @Override
-    public PageResponse<SpecialistResponseDto> findAllByFilterIn(ExtendedSpecialistFilter filter, List<UUID> ids) {
+    public PageResponse<SpecialistResponseDto> findAllByFilterAndIdIn(ExtendedSpecialistFilter filter, List<UUID> ids) {
         Specification<SpecialistEntity> specification = PaginationUtils.generateSpecification(filter)
                 .and(SpecialistSpecification.filterByIdIn(ids));
 
-        Page<SpecialistEntity> page = specialistRepository.findAll(
+        Page<SpecialistEntity> page = repository.findAll(
                 specification, PaginationUtils.generatePageable(filter)
         );
 

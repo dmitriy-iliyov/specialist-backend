@@ -12,6 +12,10 @@ public class SpecialistSpecification {
         return (r, q, cb) -> city == null ? null : cb.equal(cb.lower(r.get("cityTitle")), city.toLowerCase());
     }
 
+    public static Specification<SpecialistEntity> filterByCityCode(String cityCode) {
+        return (r, q, cb) -> cityCode == null ? null : cb.equal(cb.lower(r.get("cityCode")), cityCode.toLowerCase());
+    }
+
     public static Specification<SpecialistEntity> filterByType(Long typeId) {
         return (r, q, cb) -> typeId == null ? null : cb.equal(r.get("type").get("id"), typeId);
     }

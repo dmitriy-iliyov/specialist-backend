@@ -74,7 +74,7 @@ public class BookmarkServiceImpl implements BookmarkService {
     @Transactional(readOnly = true)
     @Override
     public PageResponse<SpecialistResponseDto> findAllByOwnerIdAndFilter(UUID ownerId, ExtendedSpecialistFilter filter) {
-        return specialistService.findAllByFilterIn(filter, bookmarkCountService.findAllSpecialistIdByOwnerId(ownerId));
+        return specialistService.findAllByFilterAndIdIn(filter, bookmarkCountService.findAllSpecialistIdByOwnerId(ownerId));
     }
 
     @Caching(evict = {

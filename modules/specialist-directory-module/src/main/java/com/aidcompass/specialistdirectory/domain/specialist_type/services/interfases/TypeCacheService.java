@@ -10,4 +10,6 @@ public interface TypeCacheService {
     void evictSuggestedTypeId(String title, boolean isApproved);
 
     void totalEvictSuggestedType(Long id);
+
+    void putToExists(Long id);
 }

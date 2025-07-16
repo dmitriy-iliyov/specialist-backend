@@ -1,6 +1,6 @@
 package com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos;
 
-import com.aidcompass.specialistdirectory.domain.specialist_type.validate.UniqueType;
+import com.aidcompass.specialistdirectory.domain.specialist_type.validation.UniqueType;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotBlank;

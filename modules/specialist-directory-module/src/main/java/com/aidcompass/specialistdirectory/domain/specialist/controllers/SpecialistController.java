@@ -26,7 +26,7 @@ public class SpecialistController {
     public ResponseEntity<?> getAll(@ModelAttribute @Valid PageRequest page){
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(service.findAllByRatingDesc(page));
+                .body(service.findAll(page));
     }
 
     @GetMapping("/filter")

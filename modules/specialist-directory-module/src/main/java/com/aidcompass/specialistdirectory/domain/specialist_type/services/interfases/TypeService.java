@@ -28,6 +28,8 @@ public interface TypeService {
 
     Map<Long, String> findAllApprovedAsMap();
 
+    boolean existsById(Long id);
+
     List<TypeDto> findAllUnapproved();
 
     void deleteById(Long id);

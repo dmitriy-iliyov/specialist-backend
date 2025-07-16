@@ -1,4 +1,4 @@
-package com.aidcompass.specialistdirectory.domain.specialist_type.validate;
+package com.aidcompass.specialistdirectory.domain.specialist_type.validation;
 
 import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.TypeCreateDto;
 import com.aidcompass.specialistdirectory.domain.specialist_type.services.interfases.TypeService;

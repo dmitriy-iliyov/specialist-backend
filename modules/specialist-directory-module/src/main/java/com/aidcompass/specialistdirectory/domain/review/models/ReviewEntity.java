@@ -1,7 +1,7 @@
 package com.aidcompass.specialistdirectory.domain.review.models;
 
-import com.aidcompass.specialistdirectory.domain.specialist.models.SpecialistEntity;
 import com.aidcompass.core.general.utils.uuid.UuidFactory;
+import com.aidcompass.specialistdirectory.domain.specialist.models.SpecialistEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,7 +18,7 @@ public class ReviewEntity {
     @Id
     private UUID id;
 
-    @Column(name = "creator_id", nullable = false)
+    @Column(name = "creator_id", nullable = false, updatable = false)
     private UUID creatorId;
 
     @Column(nullable = false, length = 1000)

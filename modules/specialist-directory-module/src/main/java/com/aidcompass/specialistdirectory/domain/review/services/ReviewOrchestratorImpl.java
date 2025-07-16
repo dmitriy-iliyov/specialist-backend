@@ -1,9 +1,10 @@
 package com.aidcompass.specialistdirectory.domain.review.services;
 
-import com.aidcompass.specialistdirectory.domain.review.models.NextOperation;
 import com.aidcompass.specialistdirectory.domain.review.models.dtos.ReviewCreateDto;
 import com.aidcompass.specialistdirectory.domain.review.models.dtos.ReviewResponseDto;
 import com.aidcompass.specialistdirectory.domain.review.models.dtos.ReviewUpdateDto;
+import com.aidcompass.specialistdirectory.domain.review.models.enums.NextOperation;
+import com.aidcompass.specialistdirectory.domain.review.models.enums.ReviewAge;
 import com.aidcompass.specialistdirectory.domain.review.services.interfases.ReviewOrchestrator;
 import com.aidcompass.specialistdirectory.domain.review.services.interfases.ReviewService;
 import com.aidcompass.specialistdirectory.domain.specialist.services.interfaces.SpecialistOrchestrator;
@@ -12,7 +13,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -26,18 +27,18 @@ public class ReviewOrchestratorImpl implements ReviewOrchestrator {
     @Transactional
     @Override
     public ReviewResponseDto save(ReviewCreateDto dto) {
-        ReviewResponseDto responseDto = reviewService.save(dto);
+        ReviewResponseDto resultDto = reviewService.save(dto);
         specialistOrchestrator.updateRatingById(dto.getSpecialistId(), dto.getRating());
-        return responseDto;
+        return resultDto;
     }
 
     @Transactional
     @Override
     public ReviewResponseDto update(ReviewUpdateDto dto) {
-        Pair<NextOperation, List<ReviewResponseDto>> resultPair = reviewService.update(dto);
-        ReviewResponseDto newDto = resultPair.getRight().get(1);
+        Pair<NextOperation, Map<ReviewAge, ReviewResponseDto>> resultPair = reviewService.update(dto);
+        ReviewResponseDto newDto = resultPair.getRight().get(ReviewAge.NEW);
         if (resultPair.getLeft().equals(NextOperation.UPDATE_RATING)) {
-            ReviewResponseDto oldDto = resultPair.getRight().get(0);
+            ReviewResponseDto oldDto = resultPair.getRight().get(ReviewAge.OLD);
             long resultRating = newDto.rating() - oldDto.rating();
             specialistOrchestrator.updateRatingById(dto.getSpecialistId(), resultRating);
         }
@@ -47,9 +48,14 @@ public class ReviewOrchestratorImpl implements ReviewOrchestrator {
     @Transactional
     @Override
     public void delete(UUID creatorId, UUID specialistId, UUID id) {
-        ReviewResponseDto dto = reviewService.deleteByCreatorIdAndId(creatorId, id);
+        ReviewResponseDto dto = reviewService.deleteById(creatorId, specialistId, id);
         specialistOrchestrator.updateRatingById(dto.id(), -dto.rating());
     }
 
-    private void assertOwnerShip() {}
+    @Transactional
+    @Override
+    public void adminDelete(UUID specialistId, UUID id) {
+        ReviewResponseDto dto = reviewService.deleteById(specialistId, id);
+        specialistOrchestrator.updateRatingById(dto.id(), -dto.rating());
+    }
 }

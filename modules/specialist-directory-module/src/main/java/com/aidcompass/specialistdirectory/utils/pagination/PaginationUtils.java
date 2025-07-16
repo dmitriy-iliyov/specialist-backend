@@ -12,6 +12,7 @@ public class PaginationUtils {
 
     public static Specification<SpecialistEntity> generateSpecification(BaseSpecialistFilter filter) {
         return Specification.where(SpecialistSpecification.filterByCity(filter.city()))
+                .and(SpecialistSpecification.filterByCityCode(filter.cityCode()))
                 .and(SpecialistSpecification.filterByType(filter.typeId()))
                 .and(SpecialistSpecification.filerByMinRating(filter.minRating()))
                 .and(SpecialistSpecification.filterByMaxRating(filter.maxRating()));
@@ -19,6 +20,7 @@ public class PaginationUtils {
 
     public static Specification<SpecialistEntity> generateSpecification(ExtendedSpecialistFilter filter) {
         return Specification.where(SpecialistSpecification.filterByCity(filter.city()))
+                .and(SpecialistSpecification.filterByCityCode(filter.cityCode()))
                 .and(SpecialistSpecification.filterByType(filter.typeId()))
                 .and(SpecialistSpecification.filerByMinRating(filter.minRating()))
                 .and(SpecialistSpecification.filterByMaxRating(filter.maxRating()))

@@ -1,15 +1,18 @@
 package com.aidcompass.specialistdirectory.domain.specialist.models.filters;
 
 import com.aidcompass.specialistdirectory.domain.specialist.models.markers.BaseSpecialistFilter;
+import com.aidcompass.specialistdirectory.domain.specialist.validation.annotation.SpecialistFilter;
 import com.aidcompass.specialistdirectory.utils.pagination.PageDataHolder;
-import com.aidcompass.specialistdirectory.domain.specialist.validation.annotation.Rating;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.*;
 
-@Rating
+@SpecialistFilter
 public record ExtendedSpecialistFilter(
-        @NotBlank(message = "City is required.")
+
+        @Size(max = 30, message = "City title lengths should be less 30 characters.")
         String city,
+
+        @Pattern(regexp = "\\d{5}", message = "City code should be exactly 5 digits.")
+        String cityCode,
 
         @Positive(message = "Type id should be positive.")
         Long typeId,

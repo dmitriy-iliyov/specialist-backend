@@ -15,8 +15,7 @@ import java.util.UUID;
 
 @Repository
 public interface SpecialistRepository extends JpaRepository<SpecialistEntity, UUID>,
-                                              JpaSpecificationExecutor<SpecialistEntity>,
-                                              SpecificationRepository<SpecialistEntity> {
+                                              JpaSpecificationExecutor<SpecialistEntity> {
 
     @Query("""
         SELECT s FROM SpecialistEntity s

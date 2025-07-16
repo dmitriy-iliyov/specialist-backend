@@ -25,7 +25,7 @@ public interface SpecialistService {
 
     void deleteById(UUID id);
 
-    PageResponse<SpecialistResponseDto> findAllByRatingDesc(PageRequest page);
+    PageResponse<SpecialistResponseDto> findAll(PageRequest page);
 
     PageResponse<SpecialistResponseDto> findAllByFilter(SpecialistFilter filter);
 

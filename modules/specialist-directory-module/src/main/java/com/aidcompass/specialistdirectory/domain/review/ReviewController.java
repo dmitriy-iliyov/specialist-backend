@@ -3,8 +3,9 @@ package com.aidcompass.specialistdirectory.domain.review;
 import com.aidcompass.contracts.PrincipalDetails;
 import com.aidcompass.specialistdirectory.domain.review.models.dtos.ReviewCreateDto;
 import com.aidcompass.specialistdirectory.domain.review.models.dtos.ReviewUpdateDto;
+import com.aidcompass.specialistdirectory.domain.review.models.filters.ReviewSort;
+import com.aidcompass.specialistdirectory.domain.review.services.interfases.ReviewAggregator;
 import com.aidcompass.specialistdirectory.domain.review.services.interfases.ReviewOrchestrator;
-import com.aidcompass.specialistdirectory.domain.review.services.interfases.ReviewService;
 import com.aidcompass.specialistdirectory.utils.validation.ValidUuid;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +22,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ReviewController {
 
-    private final ReviewService service;
     private final ReviewOrchestrator orchestrator;
+    private final ReviewAggregator aggregator;
 
 
     @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
@@ -48,7 +49,7 @@ public class ReviewController {
         dto.setSpecialistId(UUID.fromString(specialistId));
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(service.update(dto));
+                .body(orchestrator.update(dto));
     }
 
     @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
@@ -61,5 +62,14 @@ public class ReviewController {
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getAll(@PathVariable("specialist_id") @ValidUuid(paramName = "specialist_id")
+                                    String specialistId,
+                                    @ModelAttribute @Valid ReviewSort sort) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(aggregator.findAllWithSortBySpecialistId(UUID.fromString(specialistId), sort));
     }
 }

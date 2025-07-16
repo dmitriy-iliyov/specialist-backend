@@ -1,4 +1,4 @@
-package com.aidcompass.specialistdirectory.domain.specialist_type.validate;
+package com.aidcompass.specialistdirectory.domain.specialist_type.validation;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;

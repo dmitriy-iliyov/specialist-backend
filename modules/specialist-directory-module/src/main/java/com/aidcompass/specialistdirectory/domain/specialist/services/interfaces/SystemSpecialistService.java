@@ -16,7 +16,7 @@ public interface SystemSpecialistService {
 
     SpecialistEntity getReferenceById(UUID id);
 
-    PageResponse<SpecialistResponseDto> findAllByFilterIn(ExtendedSpecialistFilter filter, List<UUID> ids);
+    PageResponse<SpecialistResponseDto> findAllByFilterAndIdIn(ExtendedSpecialistFilter filter, List<UUID> ids);
 
     List<SpecialistResponseDto> toResponseDtoList(List<SpecialistEntity> entityList);
 }

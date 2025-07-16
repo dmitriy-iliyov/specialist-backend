@@ -56,7 +56,7 @@ public class SpecialistUpdateDto implements SpecialistMarker {
     private final String cityTitle;
 
     @JsonProperty("city_code")
-    @Size(min = 2, max = 10, message = "City code must be between 2 and 10 characters.")
+    @Pattern(regexp = "\\d{5}", message = "City code should be exactly 5 digits.")
     private final String cityCode;
 
     @JsonProperty("contact_type")

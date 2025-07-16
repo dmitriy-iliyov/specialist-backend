@@ -13,10 +13,7 @@ import com.aidcompass.specialistdirectory.exceptions.NullOrBlankAnotherTypeExcep
 import com.aidcompass.specialistdirectory.exceptions.SpecialistTypeEntityNotFoundByIdException;
 import com.aidcompass.specialistdirectory.exceptions.SpecialistTypeEntityNotFoundByTitleException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.Cache;
-import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
@@ -42,7 +39,9 @@ public class TypeServiceImpl implements TypeService {
     public TypeDto save(TypeCreateDto dto) {
         TypeEntity entity = mapper.toEntity(dto);
         entity.setApproved(true);
-        return mapper.toDto(repository.save(entity));
+        TypeDto resultDto = mapper.toDto(repository.save(entity));
+        cacheService.putToExists(resultDto.id());
+        return resultDto;
     }
 
     @Cacheable(value = "specialists:types:suggested:id", key = "#dto.getTitle()")
@@ -53,20 +52,31 @@ public class TypeServiceImpl implements TypeService {
             throw new NullOrBlankAnotherTypeException();
         }
         Optional<TypeEntity> existedEntity = repository.findByTitle(dto.getTitle().toUpperCase());
+        Long id;
         if (existedEntity.isEmpty()) {
             TypeEntity entity = mapper.toEntity(dto);
             entity.setApproved(false);
             entity = repository.save(entity);
             cacheService.putToSuggestedType(mapper.toDto(entity));
-            return entity.getId();
+            id = entity.getId();
+            cacheService.putToExists(id);
+            return id;
         }
-        return existedEntity.get().getId();
+        id = existedEntity.get().getId();
+        cacheService.putToExists(id);
+        return id;
     }
 
     @Transactional(readOnly = true)
     @Override
     public boolean existsByTitleIgnoreCase(String title) {
         return repository.existsByTitleIgnoreCase(title);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public TypeEntity getReferenceById(Long id) {
+        return repository.getReferenceById(id);
     }
 
     @Cacheable(value = "specialists:types:suggested", key = "#id")
@@ -79,7 +89,7 @@ public class TypeServiceImpl implements TypeService {
     @Transactional(readOnly = true)
     @Override
     public ShortTypeDto findByTitle(String title) {
-        return mapper.toShortDto(repository.findByTitle(title).orElseThrow(
+        return mapper.toShortDto(repository.findByTitle(title.toUpperCase()).orElseThrow(
                 SpecialistTypeEntityNotFoundByTitleException::new)
         );
     }
@@ -88,12 +98,6 @@ public class TypeServiceImpl implements TypeService {
     @Override
     public List<TypeDto> findAll() {
         return mapper.toDtoList(repository.findAll());
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public TypeEntity getReferenceById(Long id) {
-        return repository.getReferenceById(id);
     }
 
     @Cacheable(value = "specialists:types:approved:all", key = "'json'")
@@ -111,6 +115,13 @@ public class TypeServiceImpl implements TypeService {
     public Map<Long, String> findAllApprovedAsMap() {
         return repository.findAllByIsApproved(true).stream()
                 .collect(Collectors.toMap(TypeEntity::getId, TypeEntity::getTitle));
+    }
+
+    @Cacheable(value = "specialists:exists", key = "#id")
+    @Transactional(readOnly = true)
+    @Override
+    public boolean existsById(Long id) {
+        return repository.existsById(id);
     }
 
     @Transactional(readOnly = true)
@@ -148,7 +159,10 @@ public class TypeServiceImpl implements TypeService {
         return resultDto;
     }
 
-    @CacheEvict(value = "specialists:types:approved:all", allEntries = true)
+    @Caching(evict = {
+            @CacheEvict(value = "specialists:types:approved:all", allEntries = true),
+            @CacheEvict(value = "specialists:exists", key = "#id")}
+    )
     @Transactional
     @Override
     public void deleteById(Long id) {

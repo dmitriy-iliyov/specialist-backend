@@ -38,7 +38,7 @@ public class SpecialistOrchestratorImpl implements SpecialistOrchestrator {
 
     @Override
     public SpecialistResponseDto update(SpecialistUpdateDto dto) {
-        assertOwnership(dto.getCreatorId(), dto.getId());
+        this.assertOwnership(dto.getCreatorId(), dto.getId());
         return specialistService.update(dto);
     }
 

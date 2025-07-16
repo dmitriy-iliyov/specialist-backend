@@ -1,6 +1,6 @@
 package com.aidcompass.specialistdirectory.domain.specialist.validation.annotation;
 
-import com.aidcompass.specialistdirectory.domain.specialist.validation.RatingValidator;
+import com.aidcompass.specialistdirectory.domain.specialist.validation.SpecialistFilterValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
@@ -11,9 +11,9 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = RatingValidator.class)
-public @interface Rating {
-    String message() default "Invalid filter.";
+@Constraint(validatedBy = SpecialistFilterValidator.class)
+public @interface SpecialistFilter {
+    String message() default "Filter should contains city or city code.";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

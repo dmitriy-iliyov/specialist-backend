@@ -5,6 +5,8 @@ import com.aidcompass.specialistdirectory.domain.contact.ContactValidator;
 import com.aidcompass.specialistdirectory.domain.specialist.models.markers.SpecialistMarker;
 import com.aidcompass.specialistdirectory.domain.specialist.validation.annotation.Specialist;
 import com.aidcompass.specialistdirectory.domain.specialist_type.services.TypeConstants;
+import com.aidcompass.specialistdirectory.domain.specialist_type.services.interfases.TypeService;
+import com.aidcompass.specialistdirectory.domain.specialist_type.validation.TypeValidator;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
@@ -16,10 +18,12 @@ import java.util.stream.Collectors;
 public class SpecialistValidator implements ConstraintValidator<Specialist, SpecialistMarker> {
 
     private final Map<ContactType, ContactValidator> contactValidators;
+    private final TypeService typeService;
 
 
-    public SpecialistValidator(List<ContactValidator> contactValidators) {
+    public SpecialistValidator(List<ContactValidator> contactValidators, TypeService typeService) {
         this.contactValidators = contactValidators.stream().collect(Collectors.toMap(ContactValidator::getType, Function.identity()));
+        this.typeService = typeService;
     }
 
     @Override
@@ -43,6 +47,13 @@ public class SpecialistValidator implements ConstraintValidator<Specialist, Spec
             }
         }
 
+        if(!typeService.existsById(dto.getTypeId())) {
+            hasErrors = true;
+            constraintValidatorContext.buildConstraintViolationWithTemplate("Non-existent type id.")
+                    .addPropertyNode("type_id")
+                    .addConstraintViolation();
+        }
+
         if (dto.getTypeId().equals(TypeConstants.OTHER_TYPE_ID)) {
             if (dto.getAnotherType() == null) {
                 hasErrors = true;
@@ -55,6 +66,8 @@ public class SpecialistValidator implements ConstraintValidator<Specialist, Spec
                     constraintValidatorContext.buildConstraintViolationWithTemplate("Another type is required.")
                             .addPropertyNode("another_type")
                             .addConstraintViolation();
+                } else {
+                    TypeValidator.validate(dto.getAnotherType(), constraintValidatorContext);
                 }
             }
         }

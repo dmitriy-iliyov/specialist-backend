@@ -22,7 +22,6 @@ public class ReviewUpdateDto {
     @NotBlank(message = "Description is required.")
     private final String description;
 
-
     @NotNull(message = "Rating is required.")
     private final Integer rating;
 
