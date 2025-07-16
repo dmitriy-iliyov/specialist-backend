@@ -6,6 +6,7 @@ import com.aidcompass.core.general.exceptions.models.*;
 import com.aidcompass.core.general.exceptions.models.Exception;
 import com.aidcompass.core.general.exceptions.models.dto.ErrorDto;
 import com.aidcompass.core.general.utils.ErrorUtils;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.github.f4b6a3.uuid.exception.InvalidUuidException;
 import io.lettuce.core.RedisConnectionException;
@@ -26,10 +27,8 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.lang.reflect.Field;
+import java.util.*;
 
 @RestControllerAdvice(basePackages = "com.aidcompass.specialistdirectory")
 public class SpecialistDirectoryControllerAdvice extends BaseControllerAdvice {
@@ -105,8 +104,33 @@ public class SpecialistDirectoryControllerAdvice extends BaseControllerAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException e, Locale locale) {
-        System.out.println();
-        return super.handleMethodArgumentNotValidException(e, locale);
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST,
+                getMessageSource().getMessage("400", null, "error.400", locale));
+        List<ErrorDto> errors = new ArrayList<>();
+        Object o = e.getBindingResult().getTarget();
+        Class<?> targetClass = o != null ? o.getClass() : null;
+        if (targetClass != null) {
+            e.getBindingResult().getFieldErrors().forEach(fieldError -> {
+                if (!Objects.requireNonNull(fieldError.getDefaultMessage()).isBlank()) {
+                    String fieldName;
+                    try {
+                        Field field = targetClass.getDeclaredField(fieldError.getField());
+                        JsonProperty annotation = field.getAnnotation(JsonProperty.class);
+                        fieldName = annotation != null ? annotation.value() : fieldError.getField();
+                    } catch (NoSuchFieldException nse) {
+                        fieldName = fieldError.getField();
+                    }
+                    errors.add(new ErrorDto(fieldName, Objects.requireNonNull(fieldError.getDefaultMessage())));
+                }
+            });
+            Collections.reverse(errors);
+            problemDetail.setProperty("properties", Map.of("errors", errors));
+        } else {
+            problemDetail.setProperty("properties", Map.of("errors", ErrorUtils.toErrorDtoList(e.getBindingResult())));
+        }
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(problemDetail);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)

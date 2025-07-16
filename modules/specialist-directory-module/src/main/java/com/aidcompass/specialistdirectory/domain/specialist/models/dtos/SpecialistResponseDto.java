@@ -36,6 +36,9 @@ public class SpecialistResponseDto {
         @JsonProperty("city_title")
         private final String cityTitle;
 
+        @JsonProperty("city_code")
+        private final String cityCode;
+
         @JsonProperty("contact_type")
         private final ContactType contactType;
 
@@ -60,6 +63,7 @@ public class SpecialistResponseDto {
                                      @JsonProperty("another_type") String anotherType,
                                      @JsonProperty("house_number_and_street") String houseNumberAndStreet,
                                      @JsonProperty("city_title") String cityTitle,
+                                     @JsonProperty("city_code") String cityCode,
                                      @JsonProperty("contact_type") ContactType contactType,
                                      @JsonProperty("contact") String contact,
                                      @JsonProperty("site") String site,
@@ -74,6 +78,7 @@ public class SpecialistResponseDto {
                 this.anotherType = anotherType;
                 this.houseNumberAndStreet = houseNumberAndStreet;
                 this.cityTitle = cityTitle;
+                this.cityCode = cityCode;
                 this.contactType = contactType;
                 this.contact = contact;
                 this.site = site;

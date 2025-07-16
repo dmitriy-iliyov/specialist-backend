@@ -1,5 +1,6 @@
 package com.aidcompass.specialistdirectory.domain.specialist.services.interfaces;
 
+import com.aidcompass.specialistdirectory.domain.specialist.models.SpecialistEntity;
 import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.*;
 import com.aidcompass.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
 import com.aidcompass.specialistdirectory.domain.specialist.models.filters.SpecialistFilter;

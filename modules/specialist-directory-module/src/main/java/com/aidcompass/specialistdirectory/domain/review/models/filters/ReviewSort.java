@@ -1,10 +1,12 @@
 package com.aidcompass.specialistdirectory.domain.review.models.filters;
 
+import com.aidcompass.specialistdirectory.domain.review.models.enums.SortType;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 
 public record ReviewSort(
+
         SortType sortBy,
 
         Boolean asc,

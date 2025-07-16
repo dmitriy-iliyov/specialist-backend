@@ -14,6 +14,5 @@ public interface ReviewOrchestrator {
 
     void delete(UUID creatorId, UUID specialistId, UUID id);
 
-    @Transactional
     void adminDelete(UUID specialistId, UUID id);
 }

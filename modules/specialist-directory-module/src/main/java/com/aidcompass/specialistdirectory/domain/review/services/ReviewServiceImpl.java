@@ -10,6 +10,9 @@ import com.aidcompass.specialistdirectory.domain.review.models.enums.NextOperati
 import com.aidcompass.specialistdirectory.domain.review.models.enums.ReviewAge;
 import com.aidcompass.specialistdirectory.domain.review.models.filters.ReviewSort;
 import com.aidcompass.specialistdirectory.domain.review.services.interfases.ReviewService;
+import com.aidcompass.specialistdirectory.domain.specialist.SpecialistMapper;
+import com.aidcompass.specialistdirectory.domain.specialist.services.interfaces.SpecialistService;
+import com.aidcompass.specialistdirectory.domain.specialist.services.interfaces.SystemSpecialistService;
 import com.aidcompass.specialistdirectory.exceptions.NotAffiliatedToSpecialistException;
 import com.aidcompass.specialistdirectory.exceptions.OwnershipException;
 import com.aidcompass.specialistdirectory.exceptions.ReviewNotFoundByIdException;
@@ -33,12 +36,14 @@ public class ReviewServiceImpl implements ReviewService {
 
     private final ReviewRepository repository;
     private final ReviewMapper mapper;
+    private final SystemSpecialistService specialistService;
 
 
     @Transactional
     @Override
     public ReviewResponseDto save(ReviewCreateDto dto) {
         ReviewEntity entity = mapper.toEntity(dto);
+        entity.setSpecialist(specialistService.getReferenceById(dto.getSpecialistId()));
         return mapper.toDto(repository.save(entity));
     }
 

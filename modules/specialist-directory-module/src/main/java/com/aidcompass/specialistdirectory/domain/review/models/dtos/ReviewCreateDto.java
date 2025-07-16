@@ -2,8 +2,10 @@ package com.aidcompass.specialistdirectory.domain.review.models.dtos;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
@@ -20,8 +22,10 @@ public class ReviewCreateDto {
     private final String description;
 
     @NotNull(message = "Rating is required.")
+    @PositiveOrZero(message = "Rating should be positive.")
+    @Max(value = 5, message = "Max rating value is 5.")
     private final Integer rating;
 
-    @JsonProperty("specialist_id")
+    @JsonIgnore
     private UUID specialistId;
 }

@@ -35,7 +35,7 @@ public class SpecialistEntity {
     @Column(name = "first_name", nullable = false, length = 20)
     private String firstName;
 
-    @Column(name = "second_name", nullable = false, length = 20)
+    @Column(name = "second_name", length = 20)
     private String secondName;
 
     @Column(name = "last_name", nullable = false, length = 20)
