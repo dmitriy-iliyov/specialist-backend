@@ -41,6 +41,9 @@ public class TypeEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "type", cascade = CascadeType.REMOVE)
     private List<SpecialistEntity> specialists;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "type", cascade = CascadeType.REMOVE)
+    private List<TypeTranslateEntity> translates;
+
 
     public TypeEntity(String title, boolean isApproved) {
         this.creatorId = UUID.fromString("aa772379-dbeb-45ce-ab67-b34a249e09c8");

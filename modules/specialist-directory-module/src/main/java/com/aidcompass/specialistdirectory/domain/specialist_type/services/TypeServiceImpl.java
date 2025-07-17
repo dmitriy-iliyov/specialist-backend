@@ -1,7 +1,7 @@
 package com.aidcompass.specialistdirectory.domain.specialist_type.services;
 
 import com.aidcompass.specialistdirectory.domain.specialist_type.TypeMapper;
-import com.aidcompass.specialistdirectory.domain.specialist_type.TypeRepository;
+import com.aidcompass.specialistdirectory.domain.specialist_type.repositories.TypeRepository;
 import com.aidcompass.specialistdirectory.domain.specialist_type.models.TypeEntity;
 import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.ShortTypeDto;
 import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.TypeCreateDto;
@@ -12,6 +12,7 @@ import com.aidcompass.specialistdirectory.domain.specialist_type.services.interf
 import com.aidcompass.specialistdirectory.exceptions.NullOrBlankAnotherTypeException;
 import com.aidcompass.specialistdirectory.exceptions.SpecialistTypeEntityNotFoundByIdException;
 import com.aidcompass.specialistdirectory.exceptions.SpecialistTypeEntityNotFoundByTitleException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -67,6 +68,13 @@ public class TypeServiceImpl implements TypeService {
         return id;
     }
 
+    @Cacheable(value = "specialists:types:exists", key = "#id")
+    @Transactional(readOnly = true)
+    @Override
+    public boolean existsById(Long id) {
+        return repository.existsById(id);
+    }
+
     @Transactional(readOnly = true)
     @Override
     public boolean existsByTitleIgnoreCase(String title) {
@@ -100,28 +108,11 @@ public class TypeServiceImpl implements TypeService {
         return mapper.toDtoList(repository.findAll());
     }
 
-    @Cacheable(value = "specialists:types:approved:all", key = "'json'")
+    @Cacheable(value = "specialists:types:approved:all", key = "'ids'")
     @Transactional(readOnly = true)
     @Override
-    public List<ShortTypeDto> findAllApprovedAsJson() {
-        return repository.findAllByIsApproved(true).stream()
-                .map(type -> new ShortTypeDto(type.getId(), type.getTitle()))
-                .toList();
-    }
-
-    @Cacheable(value = "specialists:types:approved:all", key = "'map'")
-    @Transactional(readOnly = true)
-    @Override
-    public Map<Long, String> findAllApprovedAsMap() {
-        return repository.findAllByIsApproved(true).stream()
-                .collect(Collectors.toMap(TypeEntity::getId, TypeEntity::getTitle));
-    }
-
-    @Cacheable(value = "specialists:exists", key = "#id")
-    @Transactional(readOnly = true)
-    @Override
-    public boolean existsById(Long id) {
-        return repository.existsById(id);
+    public List<Long> findAllApprovedIds() {
+        return repository.findAllIdByIsApproved(true);
     }
 
     @Transactional(readOnly = true)
@@ -161,7 +152,7 @@ public class TypeServiceImpl implements TypeService {
 
     @Caching(evict = {
             @CacheEvict(value = "specialists:types:approved:all", allEntries = true),
-            @CacheEvict(value = "specialists:exists", key = "#id")}
+            @CacheEvict(value = "specialists:types:exists", key = "#id")}
     )
     @Transactional
     @Override

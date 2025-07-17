@@ -1,6 +1,6 @@
 package com.aidcompass.specialistdirectory.db_initializers;
 
-import com.aidcompass.specialistdirectory.domain.specialist_type.TypeRepository;
+import com.aidcompass.specialistdirectory.domain.specialist_type.repositories.TypeRepository;
 import com.aidcompass.specialistdirectory.domain.specialist_type.models.TypeEntity;
 import com.aidcompass.specialistdirectory.domain.specialist_type.services.TypeConstants;
 import jakarta.annotation.PostConstruct;

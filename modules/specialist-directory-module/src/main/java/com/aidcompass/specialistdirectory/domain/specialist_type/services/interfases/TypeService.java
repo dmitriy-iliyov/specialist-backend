@@ -7,7 +7,6 @@ import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.Typ
 import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.TypeUpdateDto;
 
 import java.util.List;
-import java.util.Map;
 
 
 public interface TypeService {
@@ -24,9 +23,7 @@ public interface TypeService {
 
     TypeEntity getReferenceById(Long id);
 
-    List<ShortTypeDto> findAllApprovedAsJson();
-
-    Map<Long, String> findAllApprovedAsMap();
+    List<Long> findAllApprovedIds();
 
     boolean existsById(Long id);
 

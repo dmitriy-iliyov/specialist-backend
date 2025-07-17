@@ -129,7 +129,7 @@ public class GlobalRedisConfig {
                 .withCacheConfiguration("avatars:url", defaultConfig.entryTtl(Duration.ofSeconds(7200)))
                 .withCacheConfiguration("avatars:url:map", defaultConfig.entryTtl(Duration.ofSeconds(120)))
 
-                .withCacheConfiguration("specialists:exists", defaultConfig)
+                .withCacheConfiguration("specialists:types:exists", defaultConfig)
                 .withCacheConfiguration("specialists:types:suggested:id", defaultConfig)
                 .withCacheConfiguration("specialists:types:suggested", defaultConfig)
                 .withCacheConfiguration("specialists:types:approved:all", defaultConfig)
