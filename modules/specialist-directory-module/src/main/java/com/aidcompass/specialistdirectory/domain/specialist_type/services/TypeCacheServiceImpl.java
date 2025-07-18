@@ -1,6 +1,6 @@
 package com.aidcompass.specialistdirectory.domain.specialist_type.services;
 
-import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.TypeDto;
+import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.TypeResponseDto;
 import com.aidcompass.specialistdirectory.domain.specialist_type.services.interfases.TypeCacheService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.Cache;
@@ -15,7 +15,7 @@ public class TypeCacheServiceImpl implements TypeCacheService {
 
 
     @Override
-    public void putToSuggestedType(TypeDto dto) {
+    public void putToSuggestedType(TypeResponseDto dto) {
         Cache cache = cacheManager.getCache("specialists:types:suggested");
         if (cache != null) {
             cache.put(dto.id(), dto);
@@ -43,7 +43,7 @@ public class TypeCacheServiceImpl implements TypeCacheService {
         Cache typesCache = cacheManager.getCache("specialists:types:suggested");
         Cache typesIdsCache = cacheManager.getCache("specialists:types:suggested:id");
         if (typesCache != null && typesIdsCache != null) {
-            TypeDto dto = typesCache.get(id, TypeDto.class);
+            TypeResponseDto dto = typesCache.get(id, TypeResponseDto.class);
             if (dto != null && dto.title() != null) {
                 typesIdsCache.evict(dto.title());
             }

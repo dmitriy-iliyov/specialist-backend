@@ -1,18 +1,17 @@
 package com.aidcompass.specialistdirectory.domain.specialist_type.services;
 
-import com.aidcompass.specialistdirectory.domain.specialist_type.TypeMapper;
+import com.aidcompass.specialistdirectory.domain.specialist_type.mappers.TypeMapper;
+import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.TypeResponseDto;
 import com.aidcompass.specialistdirectory.domain.specialist_type.repositories.TypeRepository;
 import com.aidcompass.specialistdirectory.domain.specialist_type.models.TypeEntity;
-import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.ShortTypeDto;
+import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.ShortTypeResponseDto;
 import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.TypeCreateDto;
-import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.TypeDto;
 import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.TypeUpdateDto;
 import com.aidcompass.specialistdirectory.domain.specialist_type.services.interfases.TypeCacheService;
 import com.aidcompass.specialistdirectory.domain.specialist_type.services.interfases.TypeService;
 import com.aidcompass.specialistdirectory.exceptions.NullOrBlankAnotherTypeException;
 import com.aidcompass.specialistdirectory.exceptions.SpecialistTypeEntityNotFoundByIdException;
 import com.aidcompass.specialistdirectory.exceptions.SpecialistTypeEntityNotFoundByTitleException;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -21,9 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -37,10 +34,10 @@ public class TypeServiceImpl implements TypeService {
     @CacheEvict(value = "specialists:types:approved:all", allEntries = true)
     @Transactional
     @Override
-    public TypeDto save(TypeCreateDto dto) {
+    public TypeResponseDto save(TypeCreateDto dto) {
         TypeEntity entity = mapper.toEntity(dto);
         entity.setApproved(true);
-        TypeDto resultDto = mapper.toDto(repository.save(entity));
+        TypeResponseDto resultDto = mapper.toDto(repository.save(entity));
         cacheService.putToExists(resultDto.id());
         return resultDto;
     }
@@ -90,13 +87,13 @@ public class TypeServiceImpl implements TypeService {
     @Cacheable(value = "specialists:types:suggested", key = "#id")
     @Transactional(readOnly = true)
     @Override
-    public TypeDto findSuggestedById(Long id) {
+    public TypeResponseDto findSuggestedById(Long id) {
         return mapper.toDto(repository.findByIdAndIsApproved(id, false).orElseThrow(SpecialistTypeEntityNotFoundByIdException::new));
     }
 
     @Transactional(readOnly = true)
     @Override
-    public ShortTypeDto findByTitle(String title) {
+    public ShortTypeResponseDto findByTitle(String title) {
         return mapper.toShortDto(repository.findByTitle(title.toUpperCase()).orElseThrow(
                 SpecialistTypeEntityNotFoundByTitleException::new)
         );
@@ -104,7 +101,7 @@ public class TypeServiceImpl implements TypeService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<TypeDto> findAll() {
+    public List<TypeResponseDto> findAll() {
         return mapper.toDtoList(repository.findAll());
     }
 
@@ -117,7 +114,7 @@ public class TypeServiceImpl implements TypeService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<TypeDto> findAllUnapproved() {
+    public List<TypeResponseDto> findAllUnapproved() {
         return mapper.toDtoList(repository.findAllByIsApproved(false));
     }
 
@@ -141,11 +138,11 @@ public class TypeServiceImpl implements TypeService {
     )
     @Transactional
     @Override
-    public TypeDto update(TypeUpdateDto dto) {
+    public TypeResponseDto update(TypeUpdateDto dto) {
         TypeEntity entity = repository.findById(dto.getId()).orElseThrow(SpecialistTypeEntityNotFoundByIdException::new);
         String previousTitle = entity.getTitle();
         mapper.updateEntityFromDto(dto, entity);
-        TypeDto resultDto = mapper.toDto(repository.save(entity));
+        TypeResponseDto resultDto = mapper.toDto(repository.save(entity));
         cacheService.evictSuggestedTypeId(previousTitle, resultDto.isApproved());
         return resultDto;
     }

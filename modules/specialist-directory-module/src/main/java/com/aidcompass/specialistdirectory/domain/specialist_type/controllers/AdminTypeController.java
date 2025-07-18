@@ -1,6 +1,8 @@
 package com.aidcompass.specialistdirectory.domain.specialist_type.controllers;
 
 import com.aidcompass.contracts.PrincipalDetails;
+import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.FullTypeCreateDto;
+import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.FullTypeUpdateDto;
 import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.TypeCreateDto;
 import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.TypeUpdateDto;
 import com.aidcompass.specialistdirectory.domain.specialist_type.services.interfases.TypeApproveOrchestrator;
@@ -22,26 +24,25 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AdminTypeController {
 
-    private final TypeService service;
     private final TypeOrchestrator orchestrator;
     private final TypeApproveOrchestrator approveOrchestrator;
 
 
     @PostMapping
     public ResponseEntity<?> create(@AuthenticationPrincipal PrincipalDetails principal,
-                                    @RequestBody @Valid TypeCreateDto dto) {
-        dto.setCreatorId(principal.getUserId());
+                                    @RequestBody @Valid FullTypeCreateDto dto) {
+        dto.type().setCreatorId(principal.getUserId());
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(service.save(dto));
+                .body(orchestrator.save(dto));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable("id")
                                     @NotNull(message = "Id is required.")
                                     @Positive(message = "Id should be positive.") Long id,
-                                    @RequestBody TypeUpdateDto dto) {
-        dto.setId(id);
+                                    @RequestBody FullTypeUpdateDto dto) {
+        dto.type().setId(id);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(orchestrator.update(dto));
@@ -61,7 +62,7 @@ public class AdminTypeController {
     public ResponseEntity<?> delete(@PathVariable("id")
                                     @NotNull(message = "Id is required.")
                                     @Positive(message = "Id should be positive.") Long id) {
-        service.deleteById(id);
+        orchestrator.deleteById(id);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
@@ -71,13 +72,13 @@ public class AdminTypeController {
     public ResponseEntity<?> getAll() {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(service.findAll());
+                .body(orchestrator.findAll());
     }
 
     @GetMapping("/unapproved")
     public ResponseEntity<?> getAllUnapproved() {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(service.findAllUnapproved());
+                .body(orchestrator.findAllUnapproved());
     }
 }

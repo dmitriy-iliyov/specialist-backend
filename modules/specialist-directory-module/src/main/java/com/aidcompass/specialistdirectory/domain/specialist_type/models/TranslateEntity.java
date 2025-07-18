@@ -14,7 +14,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString(exclude = "type")
-public class TypeTranslateEntity {
+public class TranslateEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,10 +24,10 @@ public class TypeTranslateEntity {
     @JoinColumn(name = "type_id", nullable = false)
     private TypeEntity type;
 
-    @Column(nullable = false)
-    private String translate;
-
     @Convert(converter = LanguageConverter.class)
     @Column(nullable = false)
     private Language language;
+
+    @Column(nullable = false)
+    private String translate;
 }

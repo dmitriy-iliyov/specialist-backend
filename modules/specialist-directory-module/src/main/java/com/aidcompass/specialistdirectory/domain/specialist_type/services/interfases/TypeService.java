@@ -1,9 +1,9 @@
 package com.aidcompass.specialistdirectory.domain.specialist_type.services.interfases;
 
 import com.aidcompass.specialistdirectory.domain.specialist_type.models.TypeEntity;
-import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.ShortTypeDto;
+import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.ShortTypeResponseDto;
 import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.TypeCreateDto;
-import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.TypeDto;
+import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.TypeResponseDto;
 import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.TypeUpdateDto;
 
 import java.util.List;
@@ -11,13 +11,13 @@ import java.util.List;
 
 public interface TypeService {
 
-    TypeDto save(TypeCreateDto dto);
+    TypeResponseDto save(TypeCreateDto dto);
 
     Long saveSuggested(TypeCreateDto dto);
 
     String approve(Long id);
 
-    TypeDto update(TypeUpdateDto dto);
+    TypeResponseDto update(TypeUpdateDto dto);
 
     boolean existsByTitleIgnoreCase(String title);
 
@@ -27,13 +27,13 @@ public interface TypeService {
 
     boolean existsById(Long id);
 
-    List<TypeDto> findAllUnapproved();
+    List<TypeResponseDto> findAllUnapproved();
 
     void deleteById(Long id);
 
-    TypeDto findSuggestedById(Long id);
+    TypeResponseDto findSuggestedById(Long id);
 
-    ShortTypeDto findByTitle(String title);
+    ShortTypeResponseDto findByTitle(String title);
 
-    List<TypeDto> findAll();
+    List<TypeResponseDto> findAll();
 }

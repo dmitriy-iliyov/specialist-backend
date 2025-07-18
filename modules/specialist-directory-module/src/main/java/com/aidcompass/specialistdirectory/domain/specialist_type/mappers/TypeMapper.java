@@ -1,9 +1,9 @@
-package com.aidcompass.specialistdirectory.domain.specialist_type;
+package com.aidcompass.specialistdirectory.domain.specialist_type.mappers;
 
 import com.aidcompass.specialistdirectory.domain.specialist_type.models.TypeEntity;
-import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.ShortTypeDto;
+import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.ShortTypeResponseDto;
 import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.TypeCreateDto;
-import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.TypeDto;
+import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.TypeResponseDto;
 import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.TypeUpdateDto;
 import com.aidcompass.specialistdirectory.utils.converters.InstantToLocalDataTimeConverter;
 import org.mapstruct.Mapper;
@@ -19,19 +19,19 @@ import java.util.List;
 )
 public interface TypeMapper {
 
-    @Mapping(target = "title", expression = "java(dto.getTitle().toUpperCase())")
+    @Mapping(target = "title", expression = "java(type.getTitle().toUpperCase())")
     TypeEntity toEntity(TypeCreateDto dto);
 
     @Mapping(target = "isApproved", source = "approved")
     @Mapping(target = "createdAt", source = "createdAt")
     @Mapping(target = "updatedAt", source = "updatedAt")
-    TypeDto toDto(TypeEntity entity);
+    TypeResponseDto toDto(TypeEntity entity);
 
-    List<TypeDto> toDtoList(List<TypeEntity> entityList);
+    List<TypeResponseDto> toDtoList(List<TypeEntity> entityList);
 
-    @Mapping(target = "title", expression = "java(dto.getTitle().toUpperCase())")
+    @Mapping(target = "title", expression = "java(type.getTitle().toUpperCase())")
     @Mapping(target = "approved", source = "approved")
     void updateEntityFromDto(TypeUpdateDto dto, @MappingTarget TypeEntity entity);
 
-    ShortTypeDto toShortDto(TypeEntity typeEntity);
+    ShortTypeResponseDto toShortDto(TypeEntity typeEntity);
 }

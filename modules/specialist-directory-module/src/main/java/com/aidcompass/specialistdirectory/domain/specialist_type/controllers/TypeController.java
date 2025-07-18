@@ -1,7 +1,7 @@
 package com.aidcompass.specialistdirectory.domain.specialist_type.controllers;
 
 import com.aidcompass.specialistdirectory.domain.language.Language;
-import com.aidcompass.specialistdirectory.domain.specialist_type.services.interfases.TypeTranslateService;
+import com.aidcompass.specialistdirectory.domain.specialist_type.services.interfases.TranslateService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,7 +17,7 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public class TypeController {
 
-    private final TypeTranslateService service;
+    private final TranslateService service;
 
 
     @GetMapping("/json")

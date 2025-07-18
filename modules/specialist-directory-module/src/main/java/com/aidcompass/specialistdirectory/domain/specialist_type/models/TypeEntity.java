@@ -16,7 +16,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = {"type"})
+@ToString(exclude = {"specialists", "translates"})
 public class TypeEntity {
 
     @Id
@@ -42,7 +42,7 @@ public class TypeEntity {
     private List<SpecialistEntity> specialists;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "type", cascade = CascadeType.REMOVE)
-    private List<TypeTranslateEntity> translates;
+    private List<TranslateEntity> translates;
 
 
     public TypeEntity(String title, boolean isApproved) {

@@ -1,7 +1,7 @@
 package com.aidcompass.specialistdirectory.domain.specialist_type.validation;
 
 import com.aidcompass.core.general.exceptions.models.BaseNotFoundException;
-import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.ShortTypeDto;
+import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.ShortTypeResponseDto;
 import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.TypeUpdateDto;
 import com.aidcompass.specialistdirectory.domain.specialist_type.services.interfases.TypeService;
 import jakarta.validation.ConstraintValidator;
@@ -17,7 +17,7 @@ public class UniqueTypeUpdateValidator implements ConstraintValidator<UniqueType
     @Override
     public boolean isValid(TypeUpdateDto typeUpdateDto, ConstraintValidatorContext constraintValidatorContext) {
         try {
-            ShortTypeDto dto = service.findByTitle(typeUpdateDto.getTitle());
+            ShortTypeResponseDto dto = service.findByTitle(typeUpdateDto.getTitle());
             if (!dto.id().equals(typeUpdateDto.getId())) {
                 constraintValidatorContext.disableDefaultConstraintViolation();
                 constraintValidatorContext.buildConstraintViolationWithTemplate("Type already exists.")

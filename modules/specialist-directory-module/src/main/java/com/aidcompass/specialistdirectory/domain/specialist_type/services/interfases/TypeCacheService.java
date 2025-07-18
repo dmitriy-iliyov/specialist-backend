@@ -1,9 +1,9 @@
 package com.aidcompass.specialistdirectory.domain.specialist_type.services.interfases;
 
-import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.TypeDto;
+import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.TypeResponseDto;
 
 public interface TypeCacheService {
-    void putToSuggestedType(TypeDto dto);
+    void putToSuggestedType(TypeResponseDto dto);
 
     void evictSuggestedType(Long id);
 

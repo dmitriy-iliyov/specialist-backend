@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public record TypeDto(
+public record TypeResponseDto(
         Long id,
 
         @JsonProperty("creator_id")

@@ -14,7 +14,7 @@ import com.aidcompass.specialistdirectory.domain.specialist.services.interfaces.
 import com.aidcompass.specialistdirectory.exceptions.SpecialistCreatorIdNotFoundByIdException;
 import com.aidcompass.specialistdirectory.utils.pagination.PaginationUtils;
 import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.TypeCreateDto;
-import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.TypeDto;
+import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.TypeResponseDto;
 import com.aidcompass.specialistdirectory.domain.specialist_type.services.interfases.TypeService;
 import com.aidcompass.specialistdirectory.domain.specialist_type.services.TypeConstants;
 import com.aidcompass.specialistdirectory.exceptions.SpecialistNotFoundByIdException;
@@ -87,7 +87,7 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
             }
             entity.setType(typeService.getReferenceById(inputTypeId));
         } else if (existedTypeId.equals(TypeConstants.OTHER_TYPE_ID)) {
-            TypeDto typeDto = typeService.findSuggestedById(entity.getSuggestedTypeId());
+            TypeResponseDto typeDto = typeService.findSuggestedById(entity.getSuggestedTypeId());
             if (!typeDto.title().equalsIgnoreCase(dto.getAnotherType())) {
                 saveSuggestedType(entity, dto.getCreatorId(), dto.getAnotherType());
             }
