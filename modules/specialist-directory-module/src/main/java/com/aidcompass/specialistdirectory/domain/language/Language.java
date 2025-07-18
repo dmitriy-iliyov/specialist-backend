@@ -1,6 +1,7 @@
 package com.aidcompass.specialistdirectory.domain.language;
 
 import com.aidcompass.specialistdirectory.exceptions.UnsupportedLanguageException;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Getter;
 
 import java.util.Arrays;
@@ -20,6 +21,14 @@ public enum Language {
     public static Language fromCode(int code) {
         return Arrays.stream(Language.values())
                 .filter(language -> language.getCode() == code)
+                .findFirst()
+                .orElseThrow(UnsupportedLanguageException::new);
+    }
+
+    @JsonCreator
+    public static Language fromJson(String language) {
+        return Arrays.stream(Language.values())
+                .filter(l -> l.name().equalsIgnoreCase(language))
                 .findFirst()
                 .orElseThrow(UnsupportedLanguageException::new);
     }

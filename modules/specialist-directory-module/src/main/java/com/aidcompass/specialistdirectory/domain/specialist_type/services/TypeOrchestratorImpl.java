@@ -1,10 +1,9 @@
 package com.aidcompass.specialistdirectory.domain.specialist_type.services;
 
-import com.aidcompass.specialistdirectory.domain.specialist_type.models.TypeEntity;
 import com.aidcompass.specialistdirectory.domain.specialist_type.models.dtos.*;
+import com.aidcompass.specialistdirectory.domain.specialist_type.services.interfases.TranslateService;
 import com.aidcompass.specialistdirectory.domain.specialist_type.services.interfases.TypeOrchestrator;
 import com.aidcompass.specialistdirectory.domain.specialist_type.services.interfases.TypeService;
-import com.aidcompass.specialistdirectory.domain.specialist_type.services.interfases.TranslateService;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;

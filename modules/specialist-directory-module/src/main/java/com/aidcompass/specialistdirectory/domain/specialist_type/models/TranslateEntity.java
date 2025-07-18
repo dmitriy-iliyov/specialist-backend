@@ -21,7 +21,7 @@ public class TranslateEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "type_id", nullable = false)
+    @JoinColumn(name = "type_id", nullable = false, updatable = false)
     private TypeEntity type;
 
     @Convert(converter = LanguageConverter.class)

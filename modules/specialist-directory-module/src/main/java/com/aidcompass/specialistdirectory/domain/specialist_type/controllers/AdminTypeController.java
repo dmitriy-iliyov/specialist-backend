@@ -41,7 +41,7 @@ public class AdminTypeController {
     public ResponseEntity<?> update(@PathVariable("id")
                                     @NotNull(message = "Id is required.")
                                     @Positive(message = "Id should be positive.") Long id,
-                                    @RequestBody FullTypeUpdateDto dto) {
+                                    @RequestBody @Valid FullTypeUpdateDto dto) {
         dto.type().setId(id);
         return ResponseEntity
                 .status(HttpStatus.OK)

@@ -11,7 +11,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/v1/language")
+@RequestMapping("/api/v1/languages")
 @RequiredArgsConstructor
 public class LanguageController {
 
