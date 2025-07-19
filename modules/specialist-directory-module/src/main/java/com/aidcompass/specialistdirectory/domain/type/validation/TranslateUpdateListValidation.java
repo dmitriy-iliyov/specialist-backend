@@ -1,7 +1,6 @@
 package com.aidcompass.specialistdirectory.domain.type.validation;
 
 import com.aidcompass.specialistdirectory.domain.translate.models.dtos.CompositeTranslateUpdateDto;
-import com.aidcompass.specialistdirectory.domain.translate.models.dtos.TranslateUpdateDto;
 import com.aidcompass.specialistdirectory.domain.type.validation.annotation.TranslateList;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
@@ -22,7 +21,8 @@ public class TranslateUpdateListValidation implements ConstraintValidator<Transl
             context.buildConstraintViolationWithTemplate("Some of element isn't unique.")
                     .addPropertyNode("translates")
                     .addConstraintViolation();
+            return false;
         }
-        return false;
+        return true;
     }
 }

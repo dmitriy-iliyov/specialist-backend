@@ -12,6 +12,6 @@ public record FullTypeCreateDto(
         @Valid TypeCreateDto type,
 
         @TranslateList
-        @NotNull(message = "At least translate is required.")
+        @NotNull(message = "At least one translate is required.")
         @Valid List<CompositeTranslateCreateDto> translates
 ) { }

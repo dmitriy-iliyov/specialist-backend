@@ -19,7 +19,7 @@ import java.util.List;
 )
 public interface TypeMapper {
 
-    @Mapping(target = "title", expression = "java(type.getTitle().toUpperCase())")
+    @Mapping(target = "title", expression = "java(dto.getTitle().toUpperCase())")
     TypeEntity toEntity(TypeCreateDto dto);
 
     @Mapping(target = "isApproved", source = "approved")
@@ -29,8 +29,7 @@ public interface TypeMapper {
 
     List<TypeResponseDto> toDtoList(List<TypeEntity> entityList);
 
-    @Mapping(target = "title", expression = "java(type.getTitle().toUpperCase())")
-    @Mapping(target = "approved", source = "approved")
+    @Mapping(target = "title", expression = "java(dto.getTitle().toUpperCase())")
     void updateEntityFromDto(TypeUpdateDto dto, @MappingTarget TypeEntity entity);
 
     ShortTypeResponseDto toShortDto(TypeEntity typeEntity);
