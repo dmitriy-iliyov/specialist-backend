@@ -3,7 +3,6 @@ package com.aidcompass.specialistdirectory.domain.review.services.interfases;
 import com.aidcompass.specialistdirectory.domain.review.models.dtos.ReviewCreateDto;
 import com.aidcompass.specialistdirectory.domain.review.models.dtos.ReviewResponseDto;
 import com.aidcompass.specialistdirectory.domain.review.models.dtos.ReviewUpdateDto;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 

@@ -1,9 +1,9 @@
 package com.aidcompass.specialistdirectory.domain.specialist;
 
-import com.aidcompass.specialistdirectory.domain.specialist.models.SpecialistEntity;
 import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
-import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
 import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
+import com.aidcompass.specialistdirectory.domain.specialist.models.SpecialistEntity;
+import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;

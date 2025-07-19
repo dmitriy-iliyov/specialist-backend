@@ -2,10 +2,10 @@ package com.aidcompass.specialistdirectory.domain.specialist.services;
 
 import com.aidcompass.specialistdirectory.domain.bookmark.services.interfases.BookmarkPersistOrchestrator;
 import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
+import com.aidcompass.specialistdirectory.domain.specialist.services.interfaces.SpecialistService;
 import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
 import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
 import com.aidcompass.specialistdirectory.domain.specialist.services.interfaces.SpecialistOrchestrator;
-import com.aidcompass.specialistdirectory.domain.specialist.services.interfaces.SpecialistService;
 import com.aidcompass.specialistdirectory.exceptions.OwnershipException;
 import jakarta.persistence.OptimisticLockException;
 import lombok.RequiredArgsConstructor;

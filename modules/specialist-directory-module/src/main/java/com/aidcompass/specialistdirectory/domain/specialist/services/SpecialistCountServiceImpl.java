@@ -1,7 +1,7 @@
 package com.aidcompass.specialistdirectory.domain.specialist.services;
 
-import com.aidcompass.specialistdirectory.domain.specialist.models.SpecialistEntity;
 import com.aidcompass.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
+import com.aidcompass.specialistdirectory.domain.specialist.models.SpecialistEntity;
 import com.aidcompass.specialistdirectory.domain.specialist.models.filters.SpecialistFilter;
 import com.aidcompass.specialistdirectory.domain.specialist.repositories.SpecialistRepository;
 import com.aidcompass.specialistdirectory.domain.specialist.repositories.SpecialistSpecification;

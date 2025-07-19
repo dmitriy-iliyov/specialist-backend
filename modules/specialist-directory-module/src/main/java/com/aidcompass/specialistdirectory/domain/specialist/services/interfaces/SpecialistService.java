@@ -1,9 +1,10 @@
 package com.aidcompass.specialistdirectory.domain.specialist.services.interfaces;
 
-import com.aidcompass.specialistdirectory.domain.specialist.models.SpecialistEntity;
-import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.*;
+import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
+import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
 import com.aidcompass.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
 import com.aidcompass.specialistdirectory.domain.specialist.models.filters.SpecialistFilter;
+import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
 import com.aidcompass.specialistdirectory.utils.pagination.PageRequest;
 import com.aidcompass.specialistdirectory.utils.pagination.PageResponse;
 

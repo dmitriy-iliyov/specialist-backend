@@ -1,0 +1,20 @@
+package com.aidcompass.specialistdirectory.domain.type.services.interfaces;
+
+import com.aidcompass.specialistdirectory.domain.type.models.dtos.FullTypeCreateDto;
+import com.aidcompass.specialistdirectory.domain.type.models.dtos.FullTypeResponseDto;
+import com.aidcompass.specialistdirectory.domain.type.models.dtos.FullTypeUpdateDto;
+
+import java.util.List;
+import java.util.UUID;
+
+public interface TypeOrchestrator {
+    FullTypeResponseDto save(UUID creatorId, FullTypeCreateDto dto);
+
+    FullTypeResponseDto update(Long typeId, FullTypeUpdateDto dto);
+
+    void deleteById(Long id);
+
+    List<FullTypeResponseDto> findAll();
+
+    List<FullTypeResponseDto> findAllUnapproved();
+}

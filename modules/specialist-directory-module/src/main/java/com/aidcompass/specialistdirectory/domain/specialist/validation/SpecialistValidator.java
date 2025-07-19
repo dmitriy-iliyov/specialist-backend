@@ -4,16 +4,15 @@ import com.aidcompass.specialistdirectory.domain.contact.ContactType;
 import com.aidcompass.specialistdirectory.domain.contact.ContactValidator;
 import com.aidcompass.specialistdirectory.domain.specialist.models.markers.SpecialistMarker;
 import com.aidcompass.specialistdirectory.domain.specialist.validation.annotation.Specialist;
-import com.aidcompass.specialistdirectory.domain.specialist_type.services.TypeConstants;
-import com.aidcompass.specialistdirectory.domain.specialist_type.services.interfases.TypeService;
-import com.aidcompass.specialistdirectory.domain.specialist_type.validation.TypeValidator;
+import com.aidcompass.specialistdirectory.domain.type.services.TypeConstants;
+import com.aidcompass.specialistdirectory.domain.type.services.interfaces.TypeService;
+import com.aidcompass.specialistdirectory.domain.type.validation.TypeValidator;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class SpecialistValidator implements ConstraintValidator<Specialist, SpecialistMarker> {
