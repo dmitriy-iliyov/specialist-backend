@@ -19,6 +19,10 @@
     </properties>
 
     <dependencies>
-
+        <dependency>
+            <groupId>com.aidcompass</groupId>
+            <artifactId>aidcompass-core</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 </project>

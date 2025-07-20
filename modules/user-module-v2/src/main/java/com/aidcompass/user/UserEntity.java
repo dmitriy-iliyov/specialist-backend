@@ -1,22 +1,21 @@
-package com.specialist.auth.domain.member;
+package com.aidcompass.user;
 
 import java.time.Instant;
 import java.util.UUID;
 
-public class MemberEntity {
+public class UserEntity {
 
     private UUID id;
 
+    private String fullName;
+
     private String email;
 
-    private String password;
+    private String avatarUrl;
+
+    private double creatorRating;
 
     private Instant createdAt;
 
     private Instant updatedAt;
-
-
-    public MemberEntity() {
-        //this.id = UuidFa
-    }
 }
