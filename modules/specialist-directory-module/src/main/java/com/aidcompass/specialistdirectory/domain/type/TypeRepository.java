@@ -1,6 +1,8 @@
 package com.aidcompass.specialistdirectory.domain.type;
 
 import com.aidcompass.specialistdirectory.domain.type.models.TypeEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,7 +18,7 @@ public interface TypeRepository extends JpaRepository<TypeEntity, Long> {
 
     Optional<TypeEntity> findByTitle(String title);
 
-    List<TypeEntity> findAllByIsApproved(boolean isApproved);
+    Page<TypeEntity> findAllByIsApproved(boolean isApproved, Pageable pageable);
 
     Optional<TypeEntity> findByIdAndIsApproved(Long id, boolean isApproved);
 

@@ -1,4 +1,4 @@
-package com.aidcompass.specialistdirectory.domain.review;
+package com.aidcompass.specialistdirectory.domain.review.controllers;
 
 import com.aidcompass.specialistdirectory.domain.review.services.interfases.ReviewOrchestrator;
 import com.aidcompass.specialistdirectory.utils.validation.ValidUuid;

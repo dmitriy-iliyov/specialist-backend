@@ -5,6 +5,8 @@ import com.aidcompass.specialistdirectory.domain.translate.models.dtos.Translate
 import com.aidcompass.specialistdirectory.domain.type.services.interfaces.TypeService;
 import com.aidcompass.specialistdirectory.domain.translate.services.interfaces.TranslateService;
 import com.aidcompass.specialistdirectory.domain.type.services.interfaces.TypeOrchestrator;
+import com.aidcompass.specialistdirectory.utils.pagination.PageRequest;
+import com.aidcompass.specialistdirectory.utils.pagination.PageResponse;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
@@ -61,16 +63,22 @@ public class TypeOrchestratorImpl implements TypeOrchestrator {
 
     @Transactional(readOnly = true)
     @Override
-    public List<FullTypeResponseDto> findAll() {
-        List<TypeResponseDto> types = service.findAll();
-        return toFullDto(types);
+    public PageResponse<FullTypeResponseDto> findAll(PageRequest page) {
+        PageResponse<TypeResponseDto> typesPage = service.findAll(page);
+        return new PageResponse<>(
+                toFullDto(typesPage.data()),
+                typesPage.totalPage()
+        );
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<FullTypeResponseDto> findAllUnapproved() {
-        List<TypeResponseDto> types = service.findAllUnapproved();
-        return toFullDto(types);
+    public PageResponse<FullTypeResponseDto> findAllUnapproved(PageRequest page) {
+        PageResponse<TypeResponseDto> typesPage = service.findAllUnapproved(page);
+        return new PageResponse<>(
+                toFullDto(typesPage.data()),
+                typesPage.totalPage()
+        );
     }
 
     private List<FullTypeResponseDto> toFullDto(List<TypeResponseDto> types) {

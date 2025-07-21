@@ -5,6 +5,8 @@ import com.aidcompass.specialistdirectory.domain.type.models.dtos.ShortTypeRespo
 import com.aidcompass.specialistdirectory.domain.type.models.dtos.TypeCreateDto;
 import com.aidcompass.specialistdirectory.domain.type.models.dtos.TypeResponseDto;
 import com.aidcompass.specialistdirectory.domain.type.models.dtos.TypeUpdateDto;
+import com.aidcompass.specialistdirectory.utils.pagination.PageRequest;
+import com.aidcompass.specialistdirectory.utils.pagination.PageResponse;
 
 import java.util.List;
 
@@ -27,7 +29,7 @@ public interface TypeService {
 
     boolean existsById(Long id);
 
-    List<TypeResponseDto> findAllUnapproved();
+    PageResponse<TypeResponseDto> findAllUnapproved(PageRequest page);
 
     void deleteById(Long id);
 
@@ -35,5 +37,5 @@ public interface TypeService {
 
     ShortTypeResponseDto findByTitle(String title);
 
-    List<TypeResponseDto> findAll();
+    PageResponse<TypeResponseDto> findAll(PageRequest page);
 }

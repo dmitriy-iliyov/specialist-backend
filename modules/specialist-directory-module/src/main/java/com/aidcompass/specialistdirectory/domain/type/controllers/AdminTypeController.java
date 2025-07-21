@@ -1,10 +1,11 @@
-package com.aidcompass.specialistdirectory.domain.type;
+package com.aidcompass.specialistdirectory.domain.type.controllers;
 
 import com.aidcompass.contracts.PrincipalDetails;
 import com.aidcompass.specialistdirectory.domain.type.services.interfaces.ApproveTypeOrchestrator;
 import com.aidcompass.specialistdirectory.domain.type.services.interfaces.TypeOrchestrator;
 import com.aidcompass.specialistdirectory.domain.type.models.dtos.FullTypeCreateDto;
 import com.aidcompass.specialistdirectory.domain.type.models.dtos.FullTypeUpdateDto;
+import com.aidcompass.specialistdirectory.utils.pagination.PageRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -61,16 +62,16 @@ public class AdminTypeController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getAll() {
+    public ResponseEntity<?> getAll(@ModelAttribute @Valid PageRequest page) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(orchestrator.findAll());
+                .body(orchestrator.findAll(page));
     }
 
     @GetMapping("/unapproved")
-    public ResponseEntity<?> getAllUnapproved() {
+    public ResponseEntity<?> getAllUnapproved(@ModelAttribute @Valid PageRequest page) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(orchestrator.findAllUnapproved());
+                .body(orchestrator.findAllUnapproved(page));
     }
 }

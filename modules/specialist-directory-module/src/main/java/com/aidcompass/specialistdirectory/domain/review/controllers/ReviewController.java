@@ -1,4 +1,4 @@
-package com.aidcompass.specialistdirectory.domain.review;
+package com.aidcompass.specialistdirectory.domain.review.controllers;
 
 import com.aidcompass.contracts.PrincipalDetails;
 import com.aidcompass.specialistdirectory.domain.review.models.dtos.ReviewCreateDto;

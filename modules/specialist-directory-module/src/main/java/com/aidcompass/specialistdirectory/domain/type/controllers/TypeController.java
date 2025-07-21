@@ -1,4 +1,4 @@
-package com.aidcompass.specialistdirectory.domain.translate.controllers;
+package com.aidcompass.specialistdirectory.domain.type.controllers;
 
 import com.aidcompass.specialistdirectory.domain.translate.services.interfaces.TypeTranslateOrchestrator;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/types")
 @RequiredArgsConstructor
-public class TypeTranslateController {
+public class TypeController {
 
     private final TypeTranslateOrchestrator orchestrator;
 
