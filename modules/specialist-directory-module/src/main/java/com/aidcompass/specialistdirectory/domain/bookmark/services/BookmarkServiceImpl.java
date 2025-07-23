@@ -1,11 +1,13 @@
 package com.aidcompass.specialistdirectory.domain.bookmark.services;
 
-import com.aidcompass.specialistdirectory.domain.bookmark.BookmarkEntity;
+import com.aidcompass.specialistdirectory.domain.bookmark.models.BookmarkCreateDto;
+import com.aidcompass.specialistdirectory.domain.bookmark.models.BookmarkEntity;
 import com.aidcompass.specialistdirectory.domain.bookmark.BookmarkRepository;
+import com.aidcompass.specialistdirectory.domain.bookmark.models.BookmarkResponseDto;
+import com.aidcompass.specialistdirectory.domain.bookmark.models.BookmarkIdPair;
 import com.aidcompass.specialistdirectory.domain.bookmark.services.interfases.BookmarkCountService;
 import com.aidcompass.specialistdirectory.domain.bookmark.services.interfases.BookmarkService;
 import com.aidcompass.specialistdirectory.domain.specialist.models.SpecialistEntity;
-import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
 import com.aidcompass.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
 import com.aidcompass.specialistdirectory.domain.specialist.services.interfaces.SystemSpecialistService;
 import com.aidcompass.specialistdirectory.utils.pagination.PageRequest;
@@ -13,12 +15,15 @@ import com.aidcompass.specialistdirectory.utils.pagination.PageResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Caching;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,15 +35,15 @@ public class BookmarkServiceImpl implements BookmarkService {
 
 
     @Caching(evict = {
-            @CacheEvict(value = "specialists:bookmarks:count:total", key = "#ownerId"),
-            @CacheEvict(value = "specialists:bookmarks:specialist_ids", key = "#ownerId")}
+            @CacheEvict(value = "specialists:bookmarks:count:total", key = "#dto.getOwnerId()"),
+            @CacheEvict(value = "specialists:bookmarks:specialist_ids", key = "#dto.getOwnerId()")}
     )
     @Transactional
     @Override
-    public SpecialistResponseDto save(UUID ownerId, UUID specialistId) {
-        SpecialistEntity specialistEntity = specialistService.findEntityById(specialistId);
-        bookmarkRepository.save(new BookmarkEntity(ownerId, specialistEntity));
-        return specialistService.toResponseDto(specialistEntity);
+    public BookmarkResponseDto save(BookmarkCreateDto dto) {
+        SpecialistEntity specialistEntity = specialistService.findEntityById(dto.getSpecialistId());
+        BookmarkEntity bookmarkEntity = bookmarkRepository.save(new BookmarkEntity(dto.getOwnerId(), specialistEntity));
+        return new BookmarkResponseDto(bookmarkEntity.getId(), specialistService.toResponseDto(specialistEntity));
     }
 
     @Transactional(readOnly = true)
@@ -54,27 +59,42 @@ public class BookmarkServiceImpl implements BookmarkService {
     @Transactional
     @Override
     public void deleteById(UUID ownerId, UUID id) {
-        bookmarkRepository.deleteBySpecialist(specialistService.getReferenceById(id));
+        bookmarkRepository.deleteById(id);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public PageResponse<SpecialistResponseDto> findAllByOwnerId(UUID ownerId, PageRequest page) {
-        List<SpecialistEntity> entityList = bookmarkRepository
+    public PageResponse<BookmarkResponseDto> findAllByOwnerId(UUID ownerId, PageRequest page) {
+        List<BookmarkResponseDto> dtoPage = bookmarkRepository
                 .findAllByOwnerId(ownerId, Pageable.ofSize(page.pageSize()).withPage(page.pageNumber()))
                 .getContent().stream()
-                .map(BookmarkEntity::getSpecialist)
+                .map(entity -> new BookmarkResponseDto(
+                        entity.getId(), specialistService.toResponseDto(entity.getSpecialist()))
+                )
                 .toList();
         return new PageResponse<>(
-                specialistService.toResponseDtoList(entityList),
+                dtoPage,
                 (bookmarkCountService.countByOwnerId(ownerId) + page.pageSize() - 1) / page.pageSize()
         );
     }
 
     @Transactional(readOnly = true)
     @Override
-    public PageResponse<SpecialistResponseDto> findAllByOwnerIdAndFilter(UUID ownerId, ExtendedSpecialistFilter filter) {
-        return specialistService.findAllByFilterAndIdIn(filter, bookmarkCountService.findAllSpecialistIdByOwnerId(ownerId));
+    public PageResponse<BookmarkResponseDto> findAllByOwnerIdAndFilter(UUID ownerId, ExtendedSpecialistFilter filter) {
+        Map<UUID, UUID> idsMap = bookmarkCountService.findAllIdPairByOwnerId(ownerId).stream()
+                .collect(Collectors.toMap(BookmarkIdPair::specialistId, BookmarkIdPair::id));
+        Page<SpecialistEntity> specialistEntityPage = specialistService.findAllByFilterAndIdIn(
+                filter, idsMap.keySet().stream().toList()
+        );
+        List<BookmarkResponseDto> dtoList = specialistEntityPage.getContent().stream()
+                .map(specialistEntity -> new BookmarkResponseDto(
+                        idsMap.get(specialistEntity.getId()), specialistService.toResponseDto(specialistEntity))
+                )
+                .toList();
+        return new PageResponse<>(
+                dtoList,
+                specialistEntityPage.getTotalPages()
+        );
     }
 
     @Caching(evict = {

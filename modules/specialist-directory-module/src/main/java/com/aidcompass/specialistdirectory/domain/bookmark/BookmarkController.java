@@ -1,6 +1,7 @@
 package com.aidcompass.specialistdirectory.domain.bookmark;
 
 import com.aidcompass.contracts.PrincipalDetails;
+import com.aidcompass.specialistdirectory.domain.bookmark.models.BookmarkCreateDto;
 import com.aidcompass.specialistdirectory.domain.bookmark.services.interfases.BookmarkCountService;
 import com.aidcompass.specialistdirectory.domain.bookmark.services.interfases.BookmarkPersistOrchestrator;
 import com.aidcompass.specialistdirectory.domain.bookmark.services.interfases.BookmarkService;
@@ -18,26 +19,26 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/specialists")
+@RequestMapping("/api/v1/bookmarks/me")
 @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
 @RequiredArgsConstructor
 public class BookmarkController {
 
     private final BookmarkService service;
-    private final BookmarkPersistOrchestrator persistOrchestrator;
+    private final BookmarkPersistOrchestrator orchestrator;
     private final BookmarkCountService countService;
 
 
-    @PostMapping("/bookmarks/{specialists_id}")
+    @PostMapping
     public ResponseEntity<?> add(@AuthenticationPrincipal PrincipalDetails principal,
-                                 @PathVariable("specialists_id")
-                                 @ValidUuid(paramName = "specialist_id") String specialistsId) {
+                                 @RequestBody @Valid BookmarkCreateDto dto) {
+        dto.setOwnerId(principal.getUserId());
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(persistOrchestrator.save(principal.getUserId(), UUID.fromString(specialistsId)));
+                .body(orchestrator.save(dto));
     }
 
-    @DeleteMapping("/bookmarks/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@AuthenticationPrincipal PrincipalDetails principal,
                                     @PathVariable("id") @ValidUuid(paramName = "id") String id) {
         service.deleteById(principal.getUserId(), UUID.fromString(id));
@@ -46,7 +47,7 @@ public class BookmarkController {
                 .build();
     }
 
-    @GetMapping("/bookmarks")
+    @GetMapping
     public ResponseEntity<?> getAll(@AuthenticationPrincipal PrincipalDetails principal,
                                     @ModelAttribute @Valid PageRequest page) {
         return ResponseEntity
@@ -54,7 +55,7 @@ public class BookmarkController {
                 .body(service.findAllByOwnerId(principal.getUserId(), page));
     }
 
-    @GetMapping("/bookmarks/filter")
+    @GetMapping("/filter")
     public ResponseEntity<?> getAllByFilter(@AuthenticationPrincipal PrincipalDetails principal,
                                             @ModelAttribute @Valid ExtendedSpecialistFilter filter) {
         return ResponseEntity
@@ -62,7 +63,7 @@ public class BookmarkController {
                 .body(service.findAllByOwnerIdAndFilter(principal.getUserId(), filter));
     }
 
-    @GetMapping("/bookmarks/count")
+    @GetMapping("/count")
     public ResponseEntity<?> count(@AuthenticationPrincipal PrincipalDetails principal) {
         return ResponseEntity
                 .status(HttpStatus.OK)

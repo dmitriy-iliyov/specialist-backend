@@ -1,6 +1,7 @@
 package com.aidcompass.specialistdirectory.domain.bookmark;
 
-import com.aidcompass.specialistdirectory.domain.specialist.models.SpecialistEntity;
+import com.aidcompass.specialistdirectory.domain.bookmark.models.BookmarkEntity;
+import com.aidcompass.specialistdirectory.domain.bookmark.models.BookmarkIdPair;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -23,13 +24,12 @@ public interface BookmarkRepository extends JpaRepository<BookmarkEntity, UUID> 
     Slice<BookmarkEntity> findAllByOwnerId(UUID ownerId, Pageable pageable);
 
     @Query("""
-        SELECT s.id FROM BookmarkEntity b
+        SELECT new com.aidcompass.specialistdirectory.domain.bookmark.models.BookmarkIdPair(b.id, s.id) 
+        FROM BookmarkEntity b
         JOIN b.specialist s
         WHERE b.ownerId = :owner_id
     """)
-    List<UUID> findAllSpecialistIdByOwnerId(@Param("owner_id") UUID ownerId);
-
-    void deleteBySpecialist(SpecialistEntity entity);
+    List<BookmarkIdPair> findAllIdPairByOwnerId(@Param("owner_id") UUID ownerId);
 
     void deleteAllByOwnerId(UUID ownerId);
 }

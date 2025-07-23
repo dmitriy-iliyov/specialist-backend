@@ -1,4 +1,4 @@
-package com.aidcompass.specialistdirectory.domain.bookmark;
+package com.aidcompass.specialistdirectory.domain.bookmark.models;
 
 import com.aidcompass.core.general.utils.uuid.UuidFactory;
 import com.aidcompass.specialistdirectory.domain.specialist.models.SpecialistEntity;

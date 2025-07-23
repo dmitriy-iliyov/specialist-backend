@@ -1,6 +1,7 @@
 package com.aidcompass.specialistdirectory.domain.bookmark.services;
 
 import com.aidcompass.specialistdirectory.domain.bookmark.BookmarkRepository;
+import com.aidcompass.specialistdirectory.domain.bookmark.models.BookmarkIdPair;
 import com.aidcompass.specialistdirectory.domain.bookmark.services.interfases.BookmarkCountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
@@ -24,10 +25,10 @@ public class BookmarkCountServiceImpl implements BookmarkCountService {
         return repository.countByOwnerId(ownerId);
     }
 
-    @Cacheable(value = "specialists:bookmarks:specialist_ids", key = "#ownerId")
+    @Cacheable(value = "specialists:bookmarks:id_pair", key = "#ownerId")
     @Transactional(readOnly = true)
     @Override
-    public List<UUID> findAllSpecialistIdByOwnerId(UUID ownerId) {
-        return repository.findAllSpecialistIdByOwnerId(ownerId);
+    public List<BookmarkIdPair> findAllIdPairByOwnerId(UUID ownerId) {
+        return repository.findAllIdPairByOwnerId(ownerId);
     }
 }
