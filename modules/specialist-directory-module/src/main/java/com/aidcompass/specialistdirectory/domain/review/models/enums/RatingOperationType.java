@@ -1,5 +1,5 @@
 package com.aidcompass.specialistdirectory.domain.review.models.enums;
 
-public enum UpdateRatingCase {
+public enum RatingOperationType {
     PERSIST, UPDATE, DELETE
 }

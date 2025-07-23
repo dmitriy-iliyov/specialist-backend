@@ -3,8 +3,9 @@ package com.aidcompass.specialistdirectory.domain.review.services;
 import com.aidcompass.specialistdirectory.domain.review.models.dtos.ReviewCreateDto;
 import com.aidcompass.specialistdirectory.domain.review.models.dtos.ReviewResponseDto;
 import com.aidcompass.specialistdirectory.domain.review.models.dtos.ReviewUpdateDto;
-import com.aidcompass.specialistdirectory.domain.review.models.enums.NextOperation;
-import com.aidcompass.specialistdirectory.domain.review.models.enums.ReviewAge;
+import com.aidcompass.specialistdirectory.domain.review.models.enums.RatingOperationType;
+import com.aidcompass.specialistdirectory.domain.review.models.enums.NextOperationType;
+import com.aidcompass.specialistdirectory.domain.review.models.enums.ReviewAgeType;
 import com.aidcompass.specialistdirectory.domain.review.services.interfases.ReviewOrchestrator;
 import com.aidcompass.specialistdirectory.domain.review.services.interfases.ReviewService;
 import com.aidcompass.specialistdirectory.domain.specialist.services.interfaces.SpecialistOrchestrator;
@@ -28,19 +29,19 @@ public class ReviewOrchestratorImpl implements ReviewOrchestrator {
     @Override
     public ReviewResponseDto save(ReviewCreateDto dto) {
         ReviewResponseDto resultDto = reviewService.save(dto);
-        specialistOrchestrator.updateRatingById(dto.getSpecialistId(), dto.getRating());
+        specialistOrchestrator.updateRatingById(dto.getSpecialistId(), dto.getRating(), RatingOperationType.PERSIST);
         return resultDto;
     }
 
     @Transactional
     @Override
     public ReviewResponseDto update(ReviewUpdateDto dto) {
-        Pair<NextOperation, Map<ReviewAge, ReviewResponseDto>> resultPair = reviewService.update(dto);
-        ReviewResponseDto newDto = resultPair.getRight().get(ReviewAge.NEW);
-        if (resultPair.getLeft().equals(NextOperation.UPDATE_RATING)) {
-            ReviewResponseDto oldDto = resultPair.getRight().get(ReviewAge.OLD);
+        Pair<NextOperationType, Map<ReviewAgeType, ReviewResponseDto>> resultPair = reviewService.update(dto);
+        ReviewResponseDto newDto = resultPair.getRight().get(ReviewAgeType.NEW);
+        if (resultPair.getLeft().equals(NextOperationType.UPDATE)) {
+            ReviewResponseDto oldDto = resultPair.getRight().get(ReviewAgeType.OLD);
             long resultRating = newDto.rating() - oldDto.rating();
-            specialistOrchestrator.updateRatingById(dto.getSpecialistId(), resultRating);
+            specialistOrchestrator.updateRatingById(dto.getSpecialistId(), resultRating, RatingOperationType.UPDATE);
         }
         return newDto;
     }
@@ -49,13 +50,13 @@ public class ReviewOrchestratorImpl implements ReviewOrchestrator {
     @Override
     public void delete(UUID creatorId, UUID specialistId, UUID id) {
         ReviewResponseDto dto = reviewService.deleteById(creatorId, specialistId, id);
-        specialistOrchestrator.updateRatingById(dto.id(), -dto.rating());
+        specialistOrchestrator.updateRatingById(specialistId, -dto.rating(), RatingOperationType.DELETE);
     }
 
     @Transactional
     @Override
     public void adminDelete(UUID specialistId, UUID id) {
         ReviewResponseDto dto = reviewService.deleteById(specialistId, id);
-        specialistOrchestrator.updateRatingById(dto.id(), -dto.rating());
+        specialistOrchestrator.updateRatingById(dto.id(), -dto.rating(), RatingOperationType.DELETE);
     }
 }

@@ -6,8 +6,8 @@ import com.aidcompass.specialistdirectory.domain.review.models.dtos.ReviewRespon
 import com.aidcompass.specialistdirectory.domain.review.ReviewMapper;
 import com.aidcompass.specialistdirectory.domain.review.ReviewRepository;
 import com.aidcompass.specialistdirectory.domain.review.models.dtos.ReviewUpdateDto;
-import com.aidcompass.specialistdirectory.domain.review.models.enums.NextOperation;
-import com.aidcompass.specialistdirectory.domain.review.models.enums.ReviewAge;
+import com.aidcompass.specialistdirectory.domain.review.models.enums.NextOperationType;
+import com.aidcompass.specialistdirectory.domain.review.models.enums.ReviewAgeType;
 import com.aidcompass.specialistdirectory.domain.review.models.filters.ReviewSort;
 import com.aidcompass.specialistdirectory.domain.review.services.interfases.ReviewService;
 import com.aidcompass.specialistdirectory.domain.specialist.services.interfaces.SystemSpecialistService;
@@ -47,25 +47,25 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Transactional
     @Override
-    public Pair<NextOperation, Map<ReviewAge, ReviewResponseDto>> update(ReviewUpdateDto newReview) {
-        Pair<NextOperation, Map<ReviewAge, ReviewResponseDto>> resultPair;
-        Map<ReviewAge, ReviewResponseDto> resultMap = new HashMap<>();
+    public Pair<NextOperationType, Map<ReviewAgeType, ReviewResponseDto>> update(ReviewUpdateDto newReview) {
+        Pair<NextOperationType, Map<ReviewAgeType, ReviewResponseDto>> resultPair;
+        Map<ReviewAgeType, ReviewResponseDto> resultMap = new HashMap<>();
 
         ReviewEntity existedReview = repository.findById(newReview.getId()).orElseThrow(ReviewNotFoundByIdException::new);
 
         this.assertOwnership(existedReview.getCreatorId(), newReview.getCreatorId());
         this.assertSpecialistAffiliation(existedReview.getSpecialist().getId(), newReview.getSpecialistId());
 
-        resultMap.put(ReviewAge.OLD, mapper.toDto(existedReview));
+        resultMap.put(ReviewAgeType.OLD, mapper.toDto(existedReview));
         if (existedReview.getRating() != newReview.getRating()) {
             existedReview.setRating(newReview.getRating());
-            resultPair = Pair.of(NextOperation.UPDATE_RATING, resultMap);
+            resultPair = Pair.of(NextOperationType.UPDATE, resultMap);
         } else {
-            resultPair = Pair.of(NextOperation.SKIP_UPDATE_RATING, resultMap);
+            resultPair = Pair.of(NextOperationType.SKIP_UPDATE, resultMap);
         }
         mapper.updateEntityFromDto(newReview, existedReview);
         existedReview = repository.save(existedReview);
-        resultMap.put(ReviewAge.NEW, mapper.toDto(existedReview));
+        resultMap.put(ReviewAgeType.NEW, mapper.toDto(existedReview));
         return resultPair;
     }
 

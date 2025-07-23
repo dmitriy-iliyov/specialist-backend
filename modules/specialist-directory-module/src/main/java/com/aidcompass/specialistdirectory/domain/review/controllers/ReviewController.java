@@ -42,9 +42,12 @@ public class ReviewController {
     @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@AuthenticationPrincipal PrincipalDetails principal,
+                                    @PathVariable("id") @ValidUuid(paramName = "id")
+                                    String id,
                                     @PathVariable("specialist_id") @ValidUuid(paramName = "specialist_id")
                                     String specialistId,
                                     @RequestBody @Valid ReviewUpdateDto dto) {
+        dto.setId(UUID.fromString(id));
         dto.setCreatorId(principal.getUserId());
         dto.setSpecialistId(UUID.fromString(specialistId));
         return ResponseEntity
