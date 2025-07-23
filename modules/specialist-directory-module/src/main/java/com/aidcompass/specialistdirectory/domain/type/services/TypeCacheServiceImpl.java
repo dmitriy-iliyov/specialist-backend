@@ -1,6 +1,5 @@
 package com.aidcompass.specialistdirectory.domain.type.services;
 
-import com.aidcompass.specialistdirectory.domain.type.services.interfaces.TypeCacheService;
 import com.aidcompass.specialistdirectory.domain.type.models.dtos.TypeResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.Cache;

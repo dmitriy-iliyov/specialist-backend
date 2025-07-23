@@ -5,8 +5,6 @@ import com.aidcompass.specialistdirectory.domain.type.models.TypeEntity;
 import com.aidcompass.specialistdirectory.domain.type.models.dtos.ShortTypeResponseDto;
 import com.aidcompass.specialistdirectory.domain.type.models.dtos.TypeCreateDto;
 import com.aidcompass.specialistdirectory.domain.type.models.dtos.TypeResponseDto;
-import com.aidcompass.specialistdirectory.domain.type.services.interfaces.TypeCacheService;
-import com.aidcompass.specialistdirectory.domain.type.services.interfaces.TypeService;
 import com.aidcompass.specialistdirectory.domain.type.TypeRepository;
 import com.aidcompass.specialistdirectory.domain.type.models.dtos.TypeUpdateDto;
 import com.aidcompass.specialistdirectory.exceptions.NullOrBlankAnotherTypeException;
@@ -23,7 +21,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Optional;
 

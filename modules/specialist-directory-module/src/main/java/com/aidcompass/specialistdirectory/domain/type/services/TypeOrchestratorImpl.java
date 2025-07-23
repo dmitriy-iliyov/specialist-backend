@@ -2,9 +2,7 @@ package com.aidcompass.specialistdirectory.domain.type.services;
 
 import com.aidcompass.specialistdirectory.domain.type.models.dtos.*;
 import com.aidcompass.specialistdirectory.domain.translate.models.dtos.TranslateResponseDto;
-import com.aidcompass.specialistdirectory.domain.type.services.interfaces.TypeService;
-import com.aidcompass.specialistdirectory.domain.translate.services.interfaces.TranslateService;
-import com.aidcompass.specialistdirectory.domain.type.services.interfaces.TypeOrchestrator;
+import com.aidcompass.specialistdirectory.domain.translate.services.TranslateService;
 import com.aidcompass.specialistdirectory.utils.pagination.PageRequest;
 import com.aidcompass.specialistdirectory.utils.pagination.PageResponse;
 import jakarta.validation.ConstraintViolation;

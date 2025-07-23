@@ -2,9 +2,9 @@ package com.aidcompass.specialistdirectory.domain.bookmark;
 
 import com.aidcompass.contracts.PrincipalDetails;
 import com.aidcompass.specialistdirectory.domain.bookmark.models.BookmarkCreateDto;
-import com.aidcompass.specialistdirectory.domain.bookmark.services.interfases.BookmarkCountService;
-import com.aidcompass.specialistdirectory.domain.bookmark.services.interfases.BookmarkPersistOrchestrator;
-import com.aidcompass.specialistdirectory.domain.bookmark.services.interfases.BookmarkService;
+import com.aidcompass.specialistdirectory.domain.bookmark.services.BookmarkCountService;
+import com.aidcompass.specialistdirectory.domain.bookmark.services.BookmarkOrchestrator;
+import com.aidcompass.specialistdirectory.domain.bookmark.services.BookmarkService;
 import com.aidcompass.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
 import com.aidcompass.specialistdirectory.utils.pagination.PageRequest;
 import com.aidcompass.specialistdirectory.utils.validation.ValidUuid;
@@ -25,7 +25,7 @@ import java.util.UUID;
 public class BookmarkController {
 
     private final BookmarkService service;
-    private final BookmarkPersistOrchestrator orchestrator;
+    private final BookmarkOrchestrator orchestrator;
     private final BookmarkCountService countService;
 
 

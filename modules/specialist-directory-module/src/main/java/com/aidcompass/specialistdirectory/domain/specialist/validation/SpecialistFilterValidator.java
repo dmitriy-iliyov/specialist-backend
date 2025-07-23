@@ -1,7 +1,6 @@
 package com.aidcompass.specialistdirectory.domain.specialist.validation;
 
 import com.aidcompass.specialistdirectory.domain.specialist.models.markers.BaseSpecialistFilter;
-import com.aidcompass.specialistdirectory.domain.specialist.validation.annotation.SpecialistFilter;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 

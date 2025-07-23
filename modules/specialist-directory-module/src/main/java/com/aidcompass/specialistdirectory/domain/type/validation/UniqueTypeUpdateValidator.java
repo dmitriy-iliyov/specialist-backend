@@ -2,9 +2,8 @@ package com.aidcompass.specialistdirectory.domain.type.validation;
 
 import com.aidcompass.core.general.exceptions.models.BaseNotFoundException;
 import com.aidcompass.specialistdirectory.domain.type.models.dtos.ShortTypeResponseDto;
-import com.aidcompass.specialistdirectory.domain.type.services.interfaces.TypeService;
+import com.aidcompass.specialistdirectory.domain.type.services.TypeService;
 import com.aidcompass.specialistdirectory.domain.type.models.dtos.TypeUpdateDto;
-import com.aidcompass.specialistdirectory.domain.type.validation.annotation.UniqueType;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;

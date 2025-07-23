@@ -1,8 +1,6 @@
 package com.aidcompass.specialistdirectory.domain.type.services;
 
-import com.aidcompass.specialistdirectory.domain.specialist.services.interfaces.SpecialistService;
-import com.aidcompass.specialistdirectory.domain.type.services.interfaces.ApproveTypeOrchestrator;
-import com.aidcompass.specialistdirectory.domain.type.services.interfaces.TypeService;
+import com.aidcompass.specialistdirectory.domain.specialist.services.SpecialistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

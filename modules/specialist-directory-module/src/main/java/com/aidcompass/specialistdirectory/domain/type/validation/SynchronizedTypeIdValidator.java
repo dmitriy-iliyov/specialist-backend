@@ -1,6 +1,5 @@
 package com.aidcompass.specialistdirectory.domain.type.validation;
 
-import com.aidcompass.specialistdirectory.domain.type.validation.annotation.SynchronizedTypeId;
 import com.aidcompass.specialistdirectory.domain.type.models.dtos.FullTypeUpdateDto;
 import com.aidcompass.specialistdirectory.domain.translate.models.dtos.CompositeTranslateUpdateDto;
 import jakarta.validation.ConstraintValidator;

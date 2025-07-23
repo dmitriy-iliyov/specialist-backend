@@ -1,6 +1,6 @@
 package com.aidcompass.specialistdirectory.domain.type.models.dtos;
 
-import com.aidcompass.specialistdirectory.domain.type.validation.annotation.UniqueType;
+import com.aidcompass.specialistdirectory.domain.type.validation.UniqueType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

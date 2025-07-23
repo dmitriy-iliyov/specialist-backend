@@ -1,6 +1,5 @@
 package com.aidcompass.specialistdirectory.domain.specialist.services;
 
-import com.aidcompass.specialistdirectory.domain.specialist.services.interfaces.SpecialistCacheService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;

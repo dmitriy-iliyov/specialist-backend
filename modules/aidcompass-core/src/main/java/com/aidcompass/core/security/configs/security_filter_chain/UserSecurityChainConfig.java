@@ -71,7 +71,8 @@ public class UserSecurityChainConfig {
                 .csrf(csrf -> csrf.csrfTokenRepository(csrfTokenRepository)
                         .ignoringRequestMatchers("/api/auth/login", "/api/users", "/api/v1/contact",
                                                            "/api/v1/contacts", "/api/confirmations/linked-email/request",
-                                                           "/api/confirmations/linked-email", "/api/csrf")
+                                                           "/api/confirmations/linked-email", "/api/csrf",
+                                                           "/api/v1/languages/**")
                         .csrfTokenRequestHandler(new XorCsrfTokenRequestAttributeHandler())
                         .sessionAuthenticationStrategy(((authentication, request, response) -> {}))
                 )

@@ -1,8 +1,8 @@
 package com.aidcompass.specialistdirectory.domain.type.controllers;
 
 import com.aidcompass.contracts.PrincipalDetails;
-import com.aidcompass.specialistdirectory.domain.type.services.interfaces.ApproveTypeOrchestrator;
-import com.aidcompass.specialistdirectory.domain.type.services.interfaces.TypeOrchestrator;
+import com.aidcompass.specialistdirectory.domain.type.services.ApproveTypeOrchestrator;
+import com.aidcompass.specialistdirectory.domain.type.services.TypeOrchestrator;
 import com.aidcompass.specialistdirectory.domain.type.models.dtos.FullTypeCreateDto;
 import com.aidcompass.specialistdirectory.domain.type.models.dtos.FullTypeUpdateDto;
 import com.aidcompass.specialistdirectory.utils.pagination.PageRequest;

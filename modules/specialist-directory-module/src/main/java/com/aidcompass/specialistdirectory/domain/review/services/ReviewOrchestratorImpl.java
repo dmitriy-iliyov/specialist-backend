@@ -6,9 +6,7 @@ import com.aidcompass.specialistdirectory.domain.review.models.dtos.ReviewUpdate
 import com.aidcompass.specialistdirectory.domain.review.models.enums.RatingOperationType;
 import com.aidcompass.specialistdirectory.domain.review.models.enums.NextOperationType;
 import com.aidcompass.specialistdirectory.domain.review.models.enums.ReviewAgeType;
-import com.aidcompass.specialistdirectory.domain.review.services.interfases.ReviewOrchestrator;
-import com.aidcompass.specialistdirectory.domain.review.services.interfases.ReviewService;
-import com.aidcompass.specialistdirectory.domain.specialist.services.interfaces.SpecialistOrchestrator;
+import com.aidcompass.specialistdirectory.domain.specialist.services.SpecialistOrchestrator;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Service;

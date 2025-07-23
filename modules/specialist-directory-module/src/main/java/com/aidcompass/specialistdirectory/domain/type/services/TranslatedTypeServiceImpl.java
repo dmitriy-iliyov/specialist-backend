@@ -1,8 +1,7 @@
-package com.aidcompass.specialistdirectory.domain.translate.services;
+package com.aidcompass.specialistdirectory.domain.type.services;
 
 import com.aidcompass.specialistdirectory.domain.language.Language;
-import com.aidcompass.specialistdirectory.domain.translate.services.interfaces.TranslateService;
-import com.aidcompass.specialistdirectory.domain.translate.services.interfaces.TypeTranslateOrchestrator;
+import com.aidcompass.specialistdirectory.domain.translate.services.TranslateService;
 import com.aidcompass.specialistdirectory.domain.type.models.dtos.ShortTypeResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +13,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class TypeTranslateOrchestratorImpl implements TypeTranslateOrchestrator {
+public class TranslatedTypeServiceImpl implements TranslatedTypeService {
 
     private final TranslateService service;
 

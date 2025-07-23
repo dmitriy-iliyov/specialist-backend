@@ -4,7 +4,7 @@ import com.aidcompass.specialistdirectory.domain.specialist.models.markers.BaseS
 import com.aidcompass.specialistdirectory.utils.pagination.PageDataHolder;
 import jakarta.validation.constraints.*;
 
-@com.aidcompass.specialistdirectory.domain.specialist.validation.annotation.SpecialistFilter
+@com.aidcompass.specialistdirectory.domain.specialist.validation.SpecialistFilter
 public record SpecialistFilter(
 
         @Size(max = 30, message = "City title lengths should be less 30 characters.")

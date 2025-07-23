@@ -1,6 +1,6 @@
 package com.aidcompass.specialistdirectory.domain.type.controllers;
 
-import com.aidcompass.specialistdirectory.domain.translate.services.interfaces.TypeTranslateOrchestrator;
+import com.aidcompass.specialistdirectory.domain.type.services.TranslatedTypeService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class TypeController {
 
-    private final TypeTranslateOrchestrator orchestrator;
+    private final TranslatedTypeService orchestrator;
 
 
     @GetMapping("/json")

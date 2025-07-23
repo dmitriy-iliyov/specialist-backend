@@ -1,8 +1,7 @@
 package com.aidcompass.specialistdirectory.domain.type.validation;
 
 import com.aidcompass.specialistdirectory.domain.type.models.dtos.TypeCreateDto;
-import com.aidcompass.specialistdirectory.domain.type.services.interfaces.TypeService;
-import com.aidcompass.specialistdirectory.domain.type.validation.annotation.UniqueType;
+import com.aidcompass.specialistdirectory.domain.type.services.TypeService;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;

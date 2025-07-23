@@ -1,7 +1,6 @@
 package com.aidcompass.specialistdirectory.domain.review.services;
 
 import com.aidcompass.avatar.AvatarService;
-import com.aidcompass.specialistdirectory.domain.review.services.interfases.ReviewUserAggregator;
 import com.aidcompass.users.customer.models.PublicCustomerResponseDto;
 import com.aidcompass.users.customer.services.CustomerService;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,6 @@
 package com.aidcompass.specialistdirectory.domain.review.controllers;
 
-import com.aidcompass.specialistdirectory.domain.review.services.interfases.ReviewOrchestrator;
+import com.aidcompass.specialistdirectory.domain.review.services.ReviewOrchestrator;
 import com.aidcompass.specialistdirectory.utils.validation.ValidUuid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

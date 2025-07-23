@@ -1,8 +1,8 @@
 package com.aidcompass.specialistdirectory.domain.specialist.controllers;
 
 import com.aidcompass.specialistdirectory.domain.specialist.models.filters.SpecialistFilter;
-import com.aidcompass.specialistdirectory.domain.specialist.services.interfaces.SpecialistCountService;
-import com.aidcompass.specialistdirectory.domain.specialist.services.interfaces.SpecialistService;
+import com.aidcompass.specialistdirectory.domain.specialist.services.SpecialistCountService;
+import com.aidcompass.specialistdirectory.domain.specialist.services.SpecialistService;
 import com.aidcompass.specialistdirectory.utils.pagination.PageRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

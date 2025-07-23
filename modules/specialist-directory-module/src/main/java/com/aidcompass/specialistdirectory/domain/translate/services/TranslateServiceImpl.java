@@ -3,7 +3,6 @@ package com.aidcompass.specialistdirectory.domain.translate.services;
 import com.aidcompass.specialistdirectory.domain.translate.TranslateMapper;
 import com.aidcompass.specialistdirectory.domain.translate.TranslateRepository;
 import com.aidcompass.specialistdirectory.domain.translate.models.dtos.*;
-import com.aidcompass.specialistdirectory.domain.translate.services.interfaces.TranslateService;
 import com.aidcompass.specialistdirectory.domain.type.models.TypeEntity;
 import com.aidcompass.specialistdirectory.domain.language.Language;
 import com.aidcompass.specialistdirectory.domain.translate.models.TranslateEntity;
@@ -93,7 +92,7 @@ public class TranslateServiceImpl implements TranslateService {
     @CacheEvict(value = "specialists:types:approved:all", allEntries = true)
     @Transactional
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(Long id, Long typeId) {
         repository.deleteById(id);
     }
 }

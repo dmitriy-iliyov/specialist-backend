@@ -6,11 +6,7 @@ import com.aidcompass.specialistdirectory.domain.specialist.models.SpecialistEnt
 import com.aidcompass.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
 import com.aidcompass.specialistdirectory.domain.specialist.repositories.SpecialistRepository;
 import com.aidcompass.specialistdirectory.domain.specialist.repositories.SpecialistSpecification;
-import com.aidcompass.specialistdirectory.domain.specialist.services.interfaces.SpecialistCacheService;
-import com.aidcompass.specialistdirectory.domain.specialist.services.interfaces.SpecialistService;
-import com.aidcompass.specialistdirectory.domain.specialist.services.interfaces.SystemSpecialistService;
 import com.aidcompass.specialistdirectory.domain.specialist.models.filters.SpecialistFilter;
-import com.aidcompass.specialistdirectory.domain.specialist.services.interfaces.SpecialistCountService;
 import com.aidcompass.specialistdirectory.exceptions.SpecialistCreatorIdNotFoundByIdException;
 import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
 import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
@@ -18,7 +14,7 @@ import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.Speciali
 import com.aidcompass.specialistdirectory.utils.pagination.PaginationUtils;
 import com.aidcompass.specialistdirectory.domain.type.models.dtos.TypeCreateDto;
 import com.aidcompass.specialistdirectory.domain.type.models.dtos.TypeResponseDto;
-import com.aidcompass.specialistdirectory.domain.type.services.interfaces.TypeService;
+import com.aidcompass.specialistdirectory.domain.type.services.TypeService;
 import com.aidcompass.specialistdirectory.domain.type.services.TypeConstants;
 import com.aidcompass.specialistdirectory.exceptions.SpecialistNotFoundByIdException;
 import com.aidcompass.specialistdirectory.utils.pagination.PageRequest;
@@ -281,10 +277,5 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
     @Override
     public SpecialistResponseDto toResponseDto(SpecialistEntity entity) {
         return mapper.toResponseDto(entity);
-    }
-
-    @Override
-    public List<SpecialistResponseDto> toResponseDtoList(List<SpecialistEntity> entityList) {
-        return mapper.toResponseDtoList(entityList);
     }
 }

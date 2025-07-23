@@ -1,7 +1,7 @@
 package com.aidcompass.specialistdirectory.domain.type.models.dtos;
 
 import com.aidcompass.specialistdirectory.domain.translate.models.dtos.CompositeTranslateCreateDto;
-import com.aidcompass.specialistdirectory.domain.type.validation.annotation.TranslateList;
+import com.aidcompass.specialistdirectory.domain.type.validation.TranslateList;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 

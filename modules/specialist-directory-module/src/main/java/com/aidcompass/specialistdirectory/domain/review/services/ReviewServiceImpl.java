@@ -9,8 +9,7 @@ import com.aidcompass.specialistdirectory.domain.review.models.dtos.ReviewUpdate
 import com.aidcompass.specialistdirectory.domain.review.models.enums.NextOperationType;
 import com.aidcompass.specialistdirectory.domain.review.models.enums.ReviewAgeType;
 import com.aidcompass.specialistdirectory.domain.review.models.filters.ReviewSort;
-import com.aidcompass.specialistdirectory.domain.review.services.interfases.ReviewService;
-import com.aidcompass.specialistdirectory.domain.specialist.services.interfaces.SystemSpecialistService;
+import com.aidcompass.specialistdirectory.domain.specialist.services.SystemSpecialistService;
 import com.aidcompass.specialistdirectory.exceptions.NotAffiliatedToSpecialistException;
 import com.aidcompass.specialistdirectory.exceptions.OwnershipException;
 import com.aidcompass.specialistdirectory.exceptions.ReviewNotFoundByIdException;

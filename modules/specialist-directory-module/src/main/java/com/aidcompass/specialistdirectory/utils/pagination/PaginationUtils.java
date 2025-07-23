@@ -30,7 +30,7 @@ public class PaginationUtils {
     }
 
     public static Pageable generatePageable(PageDataHolder holder) {
-        if (holder.asc() != null) {
+        if (holder.asc() != null && holder.asc()) {
             return org.springframework.data.domain.PageRequest
                     .of(holder.pageNumber(), holder.pageSize(), Sort.by("totalRating").ascending());
         }

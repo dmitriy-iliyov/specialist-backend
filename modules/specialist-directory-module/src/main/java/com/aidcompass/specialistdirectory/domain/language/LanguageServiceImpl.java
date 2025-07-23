@@ -12,6 +12,7 @@ public class LanguageServiceImpl implements LanguageService {
     @Override
     public void setLanguage(int code, HttpServletResponse response) {
         Cookie cookie = new Cookie("lang", Language.fromCode(code).toString());
+        cookie.setPath("/");
         response.addCookie(cookie);
     }
 }

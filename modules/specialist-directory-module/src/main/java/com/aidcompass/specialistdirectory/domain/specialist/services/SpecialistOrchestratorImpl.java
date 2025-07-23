@@ -1,13 +1,11 @@
 package com.aidcompass.specialistdirectory.domain.specialist.services;
 
 import com.aidcompass.specialistdirectory.domain.bookmark.models.BookmarkCreateDto;
-import com.aidcompass.specialistdirectory.domain.bookmark.services.interfases.BookmarkPersistOrchestrator;
+import com.aidcompass.specialistdirectory.domain.bookmark.services.BookmarkOrchestrator;
 import com.aidcompass.specialistdirectory.domain.review.models.enums.RatingOperationType;
 import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
-import com.aidcompass.specialistdirectory.domain.specialist.services.interfaces.SpecialistService;
 import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
 import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
-import com.aidcompass.specialistdirectory.domain.specialist.services.interfaces.SpecialistOrchestrator;
 import com.aidcompass.specialistdirectory.exceptions.OwnershipException;
 import jakarta.persistence.OptimisticLockException;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +25,7 @@ import java.util.UUID;
 public class SpecialistOrchestratorImpl implements SpecialistOrchestrator {
 
     private final SpecialistService specialistService;
-    private final BookmarkPersistOrchestrator bookmarkOrchestrator;
+    private final BookmarkOrchestrator bookmarkOrchestrator;
 
 
     @Transactional

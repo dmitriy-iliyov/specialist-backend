@@ -2,7 +2,6 @@ package com.aidcompass.specialistdirectory.domain.bookmark.services;
 
 import com.aidcompass.specialistdirectory.domain.bookmark.BookmarkRepository;
 import com.aidcompass.specialistdirectory.domain.bookmark.models.BookmarkIdPair;
-import com.aidcompass.specialistdirectory.domain.bookmark.services.interfases.BookmarkCountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
