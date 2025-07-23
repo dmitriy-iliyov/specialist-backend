@@ -1,6 +1,8 @@
 package com.aidcompass.specialistdirectory.domain.specialist.services;
 
+import com.aidcompass.specialistdirectory.domain.bookmark.models.BookmarkCreateDto;
 import com.aidcompass.specialistdirectory.domain.bookmark.services.interfases.BookmarkPersistOrchestrator;
+import com.aidcompass.specialistdirectory.domain.review.models.enums.RatingOperationType;
 import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
 import com.aidcompass.specialistdirectory.domain.specialist.services.interfaces.SpecialistService;
 import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
@@ -32,7 +34,7 @@ public class SpecialistOrchestratorImpl implements SpecialistOrchestrator {
     @Override
     public SpecialistResponseDto save(SpecialistCreateDto dto) {
         SpecialistResponseDto responseDto = specialistService.save(dto);
-        bookmarkOrchestrator.saveAfterSpecialistCreate(responseDto.getCreatorId(), responseDto.getId());
+        bookmarkOrchestrator.saveAfterSpecialistCreate(new BookmarkCreateDto(responseDto.getCreatorId(), responseDto.getId()));
         return responseDto;
     }
 
@@ -43,14 +45,14 @@ public class SpecialistOrchestratorImpl implements SpecialistOrchestrator {
     }
 
     @Override
-    public void updateRatingById(UUID id, long rating) {
+    public void updateRatingById(UUID id, long rating, RatingOperationType operationType) {
         for (int i = 0; i < 2; i++) {
             try {
-                specialistService.updateRatingById(id, rating);
+                specialistService.updateRatingById(id, rating, operationType);
                 return;
             } catch (OptimisticLockException e) {
                 log.warn("Optimizing look when reviewing specialist: id={}, date={}, time={}", id, LocalDate.now(), LocalTime.now());
-                specialistService.updateRatingById(id, rating);
+                specialistService.updateRatingById(id, rating, operationType);
             }
             log.error("Error when reviewing specialist: id={}, date={}, time={}", id, LocalDate.now(), LocalTime.now());
         }

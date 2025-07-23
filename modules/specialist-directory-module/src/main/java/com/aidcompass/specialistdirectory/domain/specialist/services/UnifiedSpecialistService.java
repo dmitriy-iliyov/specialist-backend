@@ -1,5 +1,6 @@
 package com.aidcompass.specialistdirectory.domain.specialist.services;
 
+import com.aidcompass.specialistdirectory.domain.review.models.enums.RatingOperationType;
 import com.aidcompass.specialistdirectory.domain.specialist.SpecialistMapper;
 import com.aidcompass.specialistdirectory.domain.specialist.models.SpecialistEntity;
 import com.aidcompass.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
@@ -163,17 +164,37 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
 
     @Transactional
     @Override
-    public void updateRatingById(UUID id, long rating) {
+    public void updateRatingById(UUID id, long rating, RatingOperationType operationType) {
         SpecialistEntity entity = repository.findById(id).orElseThrow(SpecialistNotFoundByIdException::new);
-        long summaryRating = entity.getSummaryRating() + rating;
-        long reviewRating = entity.getReviewsCount() + 1;
-        double totalRating = (double) summaryRating / reviewRating;
-        entity.setSummaryRating(summaryRating);
-        entity.setReviewsCount(reviewRating);
-        entity.setTotalRating(totalRating);
-        repository.save(entity);
-
-        cacheService.evictCreatedCountByFilter(entity.getCreatorId());
+        switch (operationType) {
+            case PERSIST -> {
+                long summaryRating = entity.getSummaryRating() + rating;
+                long reviewRating = entity.getReviewsCount() + 1;
+                double totalRating = (double) summaryRating / reviewRating;
+                entity.setSummaryRating(summaryRating);
+                entity.setReviewsCount(reviewRating);
+                entity.setTotalRating(totalRating);
+                repository.save(entity);
+            }
+            case UPDATE -> {
+                long summaryRating = entity.getSummaryRating()  + rating;
+                long reviewRating = entity.getReviewsCount();
+                double totalRating = (double) summaryRating / reviewRating;
+                entity.setSummaryRating(summaryRating);
+                entity.setReviewsCount(reviewRating);
+                entity.setTotalRating(totalRating);
+                repository.save(entity);
+            }
+            case DELETE -> {
+                long summaryRating = entity.getSummaryRating() + rating;
+                long reviewRating = entity.getReviewsCount() - 1;
+                double totalRating = (double) summaryRating / reviewRating;
+                entity.setSummaryRating(summaryRating);
+                entity.setReviewsCount(reviewRating);
+                entity.setTotalRating(totalRating);
+                repository.save(entity);
+            }
+        }
     }
 
     @CacheEvict(value = "specialists:creator_id", key = "#id")
@@ -251,15 +272,10 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
 
     @Transactional(readOnly = true)
     @Override
-    public PageResponse<SpecialistResponseDto> findAllByFilterAndIdIn(ExtendedSpecialistFilter filter, List<UUID> ids) {
+    public Page<SpecialistEntity> findAllByFilterAndIdIn(ExtendedSpecialistFilter filter, List<UUID> ids) {
         Specification<SpecialistEntity> specification = PaginationUtils.generateSpecification(filter)
                 .and(SpecialistSpecification.filterByIdIn(ids));
-
-        Page<SpecialistEntity> page = repository.findAll(
-                specification, PaginationUtils.generatePageable(filter)
-        );
-
-        return new PageResponse<>(mapper.toResponseDtoList(page.getContent()), page.getTotalPages());
+        return repository.findAll(specification, PaginationUtils.generatePageable(filter));
     }
 
     @Override

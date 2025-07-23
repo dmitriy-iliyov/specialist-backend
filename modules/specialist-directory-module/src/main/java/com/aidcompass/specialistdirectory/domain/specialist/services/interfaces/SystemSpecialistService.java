@@ -4,6 +4,7 @@ import com.aidcompass.specialistdirectory.domain.specialist.models.SpecialistEnt
 import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
 import com.aidcompass.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
 import com.aidcompass.specialistdirectory.utils.pagination.PageResponse;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,7 +17,7 @@ public interface SystemSpecialistService {
 
     SpecialistEntity getReferenceById(UUID id);
 
-    PageResponse<SpecialistResponseDto> findAllByFilterAndIdIn(ExtendedSpecialistFilter filter, List<UUID> ids);
+    Page<SpecialistEntity> findAllByFilterAndIdIn(ExtendedSpecialistFilter filter, List<UUID> ids);
 
     List<SpecialistResponseDto> toResponseDtoList(List<SpecialistEntity> entityList);
 }

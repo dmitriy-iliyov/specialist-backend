@@ -20,13 +20,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/specialists")
+@RequestMapping("/api/v1/specialists/me")
 @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
 @RequiredArgsConstructor
 public class SpecialistCreatorController {
 
     private final SpecialistService service;
-    private final SpecialistOrchestrator facade;
+    private final SpecialistOrchestrator orchestrator;
     private final SpecialistCountService countService;
 
 
@@ -36,11 +36,11 @@ public class SpecialistCreatorController {
         dto.setCreatorId(principal.getUserId());
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(facade.save(dto));
+                .body(orchestrator.save(dto));
     }
 
     //?
-    @GetMapping("/{id}")
+    @GetMapping("/created/{id}")
     public ResponseEntity<?> get(@AuthenticationPrincipal PrincipalDetails principal,
                                  @PathVariable("id") @ValidUuid(paramName = "id") String id) {
         return ResponseEntity
@@ -48,7 +48,7 @@ public class SpecialistCreatorController {
                 .body(service.findByCreatorIdAndId(principal.getUserId(), UUID.fromString(id)));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/created/{id}")
     public ResponseEntity<?> update(@AuthenticationPrincipal PrincipalDetails principal,
                                     @PathVariable("id") @ValidUuid(paramName = "id") String id,
                                     @RequestBody @Valid SpecialistUpdateDto dto) {
@@ -56,13 +56,13 @@ public class SpecialistCreatorController {
         dto.setId(UUID.fromString(id));
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(facade.update(dto));
+                .body(orchestrator.update(dto));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/created/{id}")
     public ResponseEntity<?> delete(@AuthenticationPrincipal PrincipalDetails principal,
                                     @PathVariable("id") @ValidUuid(paramName = "id") String id) {
-        facade.delete(principal.getUserId(), UUID.fromString(id));
+        orchestrator.delete(principal.getUserId(), UUID.fromString(id));
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();

@@ -1,7 +1,7 @@
 package com.aidcompass.specialistdirectory.domain.specialist.models;
 
 import com.aidcompass.core.general.utils.uuid.UuidFactory;
-import com.aidcompass.specialistdirectory.domain.bookmark.BookmarkEntity;
+import com.aidcompass.specialistdirectory.domain.bookmark.models.BookmarkEntity;
 import com.aidcompass.specialistdirectory.domain.contact.ContactType;
 import com.aidcompass.specialistdirectory.domain.contact.ContactTypeConverter;
 import com.aidcompass.specialistdirectory.domain.review.models.ReviewEntity;

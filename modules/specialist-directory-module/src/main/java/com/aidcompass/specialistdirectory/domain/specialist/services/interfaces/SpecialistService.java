@@ -1,5 +1,6 @@
 package com.aidcompass.specialistdirectory.domain.specialist.services.interfaces;
 
+import com.aidcompass.specialistdirectory.domain.review.models.enums.RatingOperationType;
 import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
 import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
 import com.aidcompass.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
@@ -19,7 +20,7 @@ public interface SpecialistService {
 
     SpecialistResponseDto update(SpecialistUpdateDto dto);
 
-    void updateRatingById(UUID id, long rating);
+    void updateRatingById(UUID id, long rating, RatingOperationType operationType);
 
     SpecialistResponseDto findById(UUID id);
 
