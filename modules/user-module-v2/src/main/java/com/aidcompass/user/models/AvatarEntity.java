@@ -1,4 +1,4 @@
-package com.aidcompass.user.avatar;
+package com.aidcompass.user.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

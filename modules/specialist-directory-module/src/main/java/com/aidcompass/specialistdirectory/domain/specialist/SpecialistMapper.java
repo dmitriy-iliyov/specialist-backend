@@ -1,5 +1,6 @@
 package com.aidcompass.specialistdirectory.domain.specialist;
 
+import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.BookmarkSpecialistResponseDto;
 import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
 import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
 import com.aidcompass.specialistdirectory.domain.specialist.models.SpecialistEntity;
@@ -18,7 +19,12 @@ public interface SpecialistMapper {
     SpecialistEntity toEntity(SpecialistCreateDto dto);
 
     @Mapping(target = "typeTitle", source = "type.title")
+    @Mapping(target = "fullName", expression = "java(entity.getFullName())")
     SpecialistResponseDto toResponseDto(SpecialistEntity entity);
+
+    @Mapping(target = "typeTitle", source = "type.title")
+    @Mapping(target = "fullName", expression = "java(entity.getFullName())")
+    BookmarkSpecialistResponseDto toBookmarkResponseDto(SpecialistEntity entity);
 
     List<SpecialistResponseDto> toResponseDtoList(List<SpecialistEntity> content);
 

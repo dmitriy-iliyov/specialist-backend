@@ -34,7 +34,7 @@ public class BookmarkServiceImpl implements BookmarkService {
 
     @Caching(evict = {
             @CacheEvict(value = "specialists:bookmarks:count:total", key = "#dto.getOwnerId()"),
-            @CacheEvict(value = "specialists:bookmarks:specialist_ids", key = "#dto.getOwnerId()")}
+            @CacheEvict(value = "specialists:bookmarks:id_pairs", key = "#dto.getOwnerId()")}
     )
     @Transactional
     @Override
@@ -52,7 +52,7 @@ public class BookmarkServiceImpl implements BookmarkService {
 
     @Caching(evict = {
             @CacheEvict(value = "specialists:bookmarks:count:total", key = "#ownerId"),
-            @CacheEvict(value = "specialists:bookmarks:specialist_ids", key = "#ownerId")}
+            @CacheEvict(value = "specialists:bookmarks:id_pairs", key = "#ownerId")}
     )
     @Transactional
     @Override
@@ -97,7 +97,7 @@ public class BookmarkServiceImpl implements BookmarkService {
 
     @Caching(evict = {
             @CacheEvict(value = "specialists:bookmarks:count:total", key = "#ownerId"),
-            @CacheEvict(value = "specialists:bookmarks:specialist_ids", key = "#ownerId")}
+            @CacheEvict(value = "specialists:bookmarks:id_pairs", key = "#ownerId")}
     )
     @Transactional
     @Override

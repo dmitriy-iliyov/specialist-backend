@@ -142,7 +142,7 @@ public class GlobalRedisConfig {
                 .withCacheConfiguration("specialists:created:count:total", defaultConfig.entryTtl(Duration.ofSeconds(1200)))
                 .withCacheConfiguration("specialists:bookmarks:count:total", defaultConfig.entryTtl(Duration.ofSeconds(600)))
                 .withCacheConfiguration("specialists:created:count:filter", defaultConfig.entryTtl(Duration.ofSeconds(1200)))
-                .withCacheConfiguration("specialists:bookmarks:specialist_ids", defaultConfig.entryTtl(Duration.ofSeconds(600)))
+                .withCacheConfiguration("specialists:bookmarks:id_pairs", defaultConfig.entryTtl(Duration.ofSeconds(600)))
                 .build();
     }
 }

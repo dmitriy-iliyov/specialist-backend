@@ -106,4 +106,10 @@ public class SpecialistEntity {
     public void preUpdate() {
         updatedAt = Instant.now();
     }
+
+    public String getFullName() {
+        if(secondName == null)
+            return lastName + " " + firstName;
+        return lastName + " " + firstName + " " + secondName;
+    }
 }

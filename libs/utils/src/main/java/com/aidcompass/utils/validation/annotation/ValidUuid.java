@@ -4,14 +4,12 @@ import com.aidcompass.utils.validation.UuidValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 @Target({ElementType.PARAMETER, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = UuidValidator.class)
+@Documented
 public @interface ValidUuid {
     String message() default "Invalid UUID format";
     String paramName() default "uuid";

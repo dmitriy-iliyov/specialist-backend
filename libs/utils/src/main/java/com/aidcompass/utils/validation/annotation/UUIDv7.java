@@ -1,15 +1,16 @@
-package com.aidcompass.specialistdirectory.utils.validation;
+package com.aidcompass.utils.validation.annotation;
 
+import com.aidcompass.utils.validation.UUIDv7Validator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
 import java.lang.annotation.*;
 
-@Target({ElementType.PARAMETER, ElementType.FIELD})
+@Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = UuidValidator.class)
+@Constraint(validatedBy = UUIDv7Validator.class)
 @Documented
-public @interface ValidUuid {
+public @interface UUIDv7 {
     String message() default "Invalid UUID format";
     String paramName() default "uuid";
     Class<?>[] groups() default {};

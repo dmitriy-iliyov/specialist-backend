@@ -1,6 +1,5 @@
 package com.aidcompass.user.models;
 
-import com.aidcompass.user.avatar.AvatarEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,6 +29,10 @@ public class UserEntity {
 
     @Column(nullable = false)
     private String email;
+
+    @OneToOne(fetch = FetchType.EAGER, orphanRemoval = true)
+    @JoinColumn(name = "avatar_id", nullable = false)
+    private AvatarEntity avatar;
 
     @Column(name = "creator_rating", nullable = false)
     private double creatorRating;

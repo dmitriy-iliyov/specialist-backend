@@ -15,14 +15,8 @@ public class SpecialistResponseDto {
         @JsonProperty("creator_id")
         private final UUID creatorId;
 
-        @JsonProperty("first_name")
-        private final String firstName;
-
-        @JsonProperty("second_name")
-        private final String secondName;
-
-        @JsonProperty("last_name")
-        private final String lastName;
+        @JsonProperty("full_name")
+        private final String fullName;
 
         @JsonProperty("type_title")
         private final String typeTitle;
@@ -56,9 +50,7 @@ public class SpecialistResponseDto {
         @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
         public SpecialistResponseDto(@JsonProperty("id") UUID id,
                                      @JsonProperty("creator_id") UUID creatorId,
-                                     @JsonProperty("first_name") String firstName,
-                                     @JsonProperty("second_name") String secondName,
-                                     @JsonProperty("last_name") String lastName,
+                                     @JsonProperty("full_name") String fullName,
                                      @JsonProperty("type_title") String typeTitle,
                                      @JsonProperty("another_type") String anotherType,
                                      @JsonProperty("house_number_and_street") String houseNumberAndStreet,
@@ -71,9 +63,7 @@ public class SpecialistResponseDto {
                                      @JsonProperty("reviews_count") long reviewsCount) {
                 this.id = id;
                 this.creatorId = creatorId;
-                this.firstName = firstName;
-                this.secondName = secondName;
-                this.lastName = lastName;
+                this.fullName = fullName;
                 this.typeTitle = typeTitle;
                 this.anotherType = anotherType;
                 this.houseNumberAndStreet = houseNumberAndStreet;

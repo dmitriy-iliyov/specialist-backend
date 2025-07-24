@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/specialists/me")
+@RequestMapping("/api/v1/me/specialists")
 @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
 @RequiredArgsConstructor
 public class SpecialistCreatorController {
@@ -39,8 +39,7 @@ public class SpecialistCreatorController {
                 .body(orchestrator.save(dto));
     }
 
-    //?
-    @GetMapping("/created/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<?> get(@AuthenticationPrincipal PrincipalDetails principal,
                                  @PathVariable("id") @ValidUuid(paramName = "id") String id) {
         return ResponseEntity
@@ -48,7 +47,7 @@ public class SpecialistCreatorController {
                 .body(service.findByCreatorIdAndId(principal.getUserId(), UUID.fromString(id)));
     }
 
-    @PutMapping("/created/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<?> update(@AuthenticationPrincipal PrincipalDetails principal,
                                     @PathVariable("id") @ValidUuid(paramName = "id") String id,
                                     @RequestBody @Valid SpecialistUpdateDto dto) {
@@ -59,7 +58,7 @@ public class SpecialistCreatorController {
                 .body(orchestrator.update(dto));
     }
 
-    @DeleteMapping("/created/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@AuthenticationPrincipal PrincipalDetails principal,
                                     @PathVariable("id") @ValidUuid(paramName = "id") String id) {
         orchestrator.delete(principal.getUserId(), UUID.fromString(id));
@@ -68,7 +67,7 @@ public class SpecialistCreatorController {
                 .build();
     }
 
-    @GetMapping("/created")
+    @GetMapping
     public ResponseEntity<?> getAllCreated(@AuthenticationPrincipal PrincipalDetails principal,
                                            @ModelAttribute @Valid PageRequest page) {
         return ResponseEntity
@@ -76,7 +75,7 @@ public class SpecialistCreatorController {
                 .body(service.findAllByCreatorId(principal.getUserId(), page));
     }
 
-    @GetMapping("/created/filter")
+    @GetMapping("/filter")
     public ResponseEntity<?> getAllCreatedByFilter(@AuthenticationPrincipal PrincipalDetails principal,
                                                    @ModelAttribute @Valid ExtendedSpecialistFilter filter) {
         return ResponseEntity
@@ -84,7 +83,7 @@ public class SpecialistCreatorController {
                 .body(service.findAllByCreatorIdAndFilter(principal.getUserId(), filter));
     }
 
-    @GetMapping("/created/count")
+    @GetMapping("/count")
     public ResponseEntity<?> countByCreatorId(@AuthenticationPrincipal PrincipalDetails principal){
         return ResponseEntity
                 .status(HttpStatus.OK)

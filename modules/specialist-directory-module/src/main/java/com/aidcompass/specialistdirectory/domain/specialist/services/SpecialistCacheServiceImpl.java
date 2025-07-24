@@ -26,8 +26,8 @@ public class SpecialistCacheServiceImpl implements SpecialistCacheService {
     public UUID getCreatorId(UUID id) {
         Cache cache = cacheManager.getCache("specialists:creator_id");
         if (cache != null) {
-            return cache.get(id.toString(), UUID.class);
-        }
+            String uuidString = cache.get(id.toString(), String.class);
+            return uuidString != null ? UUID.fromString(uuidString) : null;        }
         return null;
     }
 

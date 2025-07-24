@@ -3,6 +3,7 @@ package com.aidcompass.specialistdirectory.domain.specialist.services;
 import com.aidcompass.specialistdirectory.domain.review.models.enums.RatingOperationType;
 import com.aidcompass.specialistdirectory.domain.specialist.SpecialistMapper;
 import com.aidcompass.specialistdirectory.domain.specialist.models.SpecialistEntity;
+import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.BookmarkSpecialistResponseDto;
 import com.aidcompass.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
 import com.aidcompass.specialistdirectory.domain.specialist.repositories.SpecialistRepository;
 import com.aidcompass.specialistdirectory.domain.specialist.repositories.SpecialistSpecification;
@@ -102,11 +103,15 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
         entity.setSuggestedTypeId(id);
     }
 
-    @Cacheable(value = "specialists:creator_id", key = "#id")
     @Transactional(readOnly = true)
     @Override
     public UUID getCreatorIdById(UUID id) {
-        return repository.findCreatorIdById(id).orElseThrow(SpecialistCreatorIdNotFoundByIdException::new);
+        UUID creatorId = cacheService.getCreatorId(id);
+        if (creatorId == null) {
+            creatorId = repository.findCreatorIdById(id).orElseThrow(SpecialistCreatorIdNotFoundByIdException::new);
+            cacheService.putCreatorId(id, creatorId);
+        }
+        return creatorId;
     }
 
     @Cacheable(value = "specialists", key = "#id + ':' + #creatorId")
@@ -275,7 +280,7 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
     }
 
     @Override
-    public SpecialistResponseDto toResponseDto(SpecialistEntity entity) {
-        return mapper.toResponseDto(entity);
+    public BookmarkSpecialistResponseDto toResponseDto(SpecialistEntity entity) {
+        return mapper.toBookmarkResponseDto(entity);
     }
 }

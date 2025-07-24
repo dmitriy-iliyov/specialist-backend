@@ -1,6 +1,7 @@
 package com.aidcompass.specialistdirectory.domain.specialist.services;
 
 import com.aidcompass.specialistdirectory.domain.specialist.models.SpecialistEntity;
+import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.BookmarkSpecialistResponseDto;
 import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
 import com.aidcompass.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
 import org.springframework.data.domain.Page;
@@ -12,7 +13,7 @@ public interface SystemSpecialistService {
 
     SpecialistEntity findEntityById(UUID id);
 
-    SpecialistResponseDto toResponseDto(SpecialistEntity entity);
+    BookmarkSpecialistResponseDto toResponseDto(SpecialistEntity entity);
 
     SpecialistEntity getReferenceById(UUID id);
 

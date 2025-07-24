@@ -58,7 +58,7 @@ public class SpecialistOrchestratorImpl implements SpecialistOrchestrator {
 
     @Caching(evict = {
             @CacheEvict(value = "specialists:bookmarks:count:total", key = "#creatorId"),
-            @CacheEvict(value = "specialists:bookmarks:specialist_ids", key = "#creatorId")}
+            @CacheEvict(value = "specialists:bookmarks:id_pairs", key = "#creatorId")}
     )
     @Transactional
     @Override

@@ -24,7 +24,7 @@ public class BookmarkCountServiceImpl implements BookmarkCountService {
         return repository.countByOwnerId(ownerId);
     }
 
-    @Cacheable(value = "specialists:bookmarks:id_pair", key = "#ownerId")
+    @Cacheable(value = "specialists:bookmarks:id_pairs", key = "#ownerId")
     @Transactional(readOnly = true)
     @Override
     public List<BookmarkIdPair> findAllIdPairByOwnerId(UUID ownerId) {
