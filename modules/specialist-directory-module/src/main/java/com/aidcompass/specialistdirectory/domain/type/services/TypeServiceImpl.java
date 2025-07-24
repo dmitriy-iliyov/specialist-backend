@@ -18,6 +18,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -104,7 +105,7 @@ public class TypeServiceImpl implements TypeService {
     @Transactional(readOnly = true)
     @Override
     public PageResponse<TypeResponseDto> findAll(PageRequest page) {
-        Page<TypeEntity> entityPage = repository.findAll(Pageable.ofSize(page.pageSize()).withPage(page.pageNumber()));
+        Page<TypeEntity> entityPage = repository.findAll(this.generatePageable(page));
         return new PageResponse<>(
                 mapper.toDtoList(entityPage.getContent()),
                 entityPage.getTotalPages()
@@ -122,7 +123,7 @@ public class TypeServiceImpl implements TypeService {
     @Override
     public PageResponse<TypeResponseDto> findAllUnapproved(PageRequest page) {
         Page<TypeEntity> entityPage = repository.findAllByIsApproved(
-                false, Pageable.ofSize(page.pageSize()).withPage(page.pageNumber())
+                false, this.generatePageable(page)
         );
         return new PageResponse<>(
                 mapper.toDtoList(entityPage.getContent()),
@@ -168,5 +169,10 @@ public class TypeServiceImpl implements TypeService {
     public void deleteById(Long id) {
         repository.deleteById(id);
         cacheService.totalEvictSuggestedType(id);
+    }
+
+    private Pageable generatePageable(PageRequest page) {
+        return org.springframework.data.domain.PageRequest.of(
+                page.pageNumber(), page.pageSize(), Sort.by("id").ascending());
     }
 }

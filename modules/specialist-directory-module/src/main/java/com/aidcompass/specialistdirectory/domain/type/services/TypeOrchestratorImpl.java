@@ -43,13 +43,12 @@ public class TypeOrchestratorImpl implements TypeOrchestrator {
     public FullTypeResponseDto update(Long typeId, FullTypeUpdateDto dto) {
         dto.type().setId(typeId);
         dto.translates().forEach(translate -> translate.setTypeId(typeId));
-        TypeUpdateDto typeDto = dto.type();
-        Set<ConstraintViolation<TypeUpdateDto>> bindingErrors = validator.validate(typeDto);
+        Set<ConstraintViolation<FullTypeUpdateDto>> bindingErrors = validator.validate(dto);
         if (!bindingErrors.isEmpty()) {
             throw new ConstraintViolationException(bindingErrors);
         }
         return new FullTypeResponseDto(
-                service.update(typeDto),
+                service.update(dto.type()),
                 translateService.updateAll(service.getReferenceById(typeId), dto.translates())
         );
     }

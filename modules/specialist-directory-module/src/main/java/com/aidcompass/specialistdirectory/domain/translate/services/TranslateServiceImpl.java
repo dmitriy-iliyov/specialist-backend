@@ -38,9 +38,9 @@ public class TranslateServiceImpl implements TranslateService {
     @Transactional
     @Override
     public List<TranslateResponseDto> saveAll(TypeEntity type, List<CompositeTranslateCreateDto> dtoList) {
-        List<TranslateEntity> translates = repository.saveAll(mapper.toEntityList(dtoList));
+        List<TranslateEntity> translates = mapper.toEntityList(dtoList);
         translates.forEach(entity -> entity.setType(type));
-        return mapper.toDtoList(translates);
+        return mapper.toDtoList(repository.saveAll(translates));
     }
 
     @Transactional

@@ -4,6 +4,7 @@ import com.aidcompass.specialistdirectory.domain.translate.models.dtos.Composite
 import com.aidcompass.specialistdirectory.domain.type.validation.SynchronizedTypeId;
 import com.aidcompass.specialistdirectory.domain.type.validation.TranslateList;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
@@ -14,6 +15,6 @@ public record FullTypeUpdateDto(
         @Valid TypeUpdateDto type,
 
         @TranslateList
-        @NotNull(message = "At least one translate is required.")
+        @NotEmpty(message = "At least one translate is required.")
         @Valid List<CompositeTranslateUpdateDto> translates
 ) { }

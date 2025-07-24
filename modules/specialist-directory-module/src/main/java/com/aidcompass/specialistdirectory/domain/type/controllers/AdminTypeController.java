@@ -37,7 +37,7 @@ public class AdminTypeController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable("id") @NotNull(message = "Id is required.")
                                     @Positive(message = "Id should be positive.") Long id,
-                                    @RequestBody @Valid FullTypeUpdateDto dto) {
+                                    @RequestBody FullTypeUpdateDto dto) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(orchestrator.update(id, dto));

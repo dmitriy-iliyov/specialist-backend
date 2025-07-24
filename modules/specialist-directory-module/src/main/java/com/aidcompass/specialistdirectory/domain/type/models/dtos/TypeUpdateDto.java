@@ -1,6 +1,7 @@
 package com.aidcompass.specialistdirectory.domain.type.models.dtos;
 
 import com.aidcompass.specialistdirectory.domain.type.validation.UniqueType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 @UniqueType
 public class TypeUpdateDto {
 
+    @JsonIgnore
     private Long id;
 
     @NotBlank(message = "Title is required.")
