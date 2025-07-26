@@ -1,6 +1,6 @@
 package com.aidcompass.specialistdirectory.domain.review.controllers;
 
-import com.aidcompass.contracts.PrincipalDetails;
+import com.aidcompass.contracts.auth.PrincipalDetails;
 import com.aidcompass.specialistdirectory.domain.review.models.dtos.ReviewCreateDto;
 import com.aidcompass.specialistdirectory.domain.review.models.dtos.ReviewUpdateDto;
 import com.aidcompass.specialistdirectory.domain.review.models.filters.ReviewSort;

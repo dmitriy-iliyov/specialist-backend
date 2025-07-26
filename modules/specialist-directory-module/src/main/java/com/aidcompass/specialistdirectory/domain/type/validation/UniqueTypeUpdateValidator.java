@@ -1,6 +1,6 @@
 package com.aidcompass.specialistdirectory.domain.type.validation;
 
-import com.aidcompass.core.general.exceptions.models.BaseNotFoundException;
+import com.aidcompass.core.exceptions.models.BaseNotFoundException;
 import com.aidcompass.specialistdirectory.domain.type.models.dtos.ShortTypeResponseDto;
 import com.aidcompass.specialistdirectory.domain.type.services.TypeService;
 import com.aidcompass.specialistdirectory.domain.type.models.dtos.TypeUpdateDto;

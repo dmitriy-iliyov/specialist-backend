@@ -1,11 +1,11 @@
 package com.aidcompass.specialistdirectory.exceptions;
 
-import com.aidcompass.core.general.exceptions.BaseControllerAdvice;
-import com.aidcompass.core.general.exceptions.mapper.ExceptionMapper;
-import com.aidcompass.core.general.exceptions.models.*;
-import com.aidcompass.core.general.exceptions.models.Exception;
-import com.aidcompass.core.general.exceptions.models.dto.ErrorDto;
-import com.aidcompass.core.general.utils.ErrorUtils;
+import com.aidcompass.core.exceptions.BaseControllerAdvice;
+import com.aidcompass.core.exceptions.mapper.ExceptionMapper;
+import com.aidcompass.core.exceptions.models.*;
+import com.aidcompass.core.exceptions.models.Exception;
+import com.aidcompass.core.exceptions.models.dto.ErrorDto;
+import com.aidcompass.core.exceptions.ErrorUtils;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.github.f4b6a3.uuid.exception.InvalidUuidException;

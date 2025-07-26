@@ -1,9 +1,9 @@
 package com.aidcompass.user.validation;
 
-import com.aidcompass.user.AccountService;
-import com.aidcompass.user.models.dto.MemberUpdateDto;
-import com.aidcompass.user.models.dto.PrivateMemberResponseDto;
-import com.aidcompass.user.services.MemberService;
+import com.aidcompass.contracts.auth.SystemAccountService;
+import com.aidcompass.user.models.dto.PrivateUserResponseDto;
+import com.aidcompass.user.models.dto.UserUpdateDto;
+import com.aidcompass.user.services.UserService;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;
@@ -11,14 +11,14 @@ import lombok.RequiredArgsConstructor;
 import java.util.UUID;
 
 @RequiredArgsConstructor
-public class EmailUniquenessValidator implements ConstraintValidator<UniqueEmail, MemberUpdateDto> {
+public class EmailUniquenessValidator implements ConstraintValidator<UniqueEmail, UserUpdateDto> {
 
-    private final AccountService accountService;
-    private final MemberService userService;
+    private final SystemAccountService accountService;
+    private final UserService userService;
 
 
     @Override
-    public boolean isValid(MemberUpdateDto dto, ConstraintValidatorContext context) {
+    public boolean isValid(UserUpdateDto dto, ConstraintValidatorContext context) {
         context.disableDefaultConstraintViolation();
         if (dto == null) {
             context.buildConstraintViolationWithTemplate("User is required.")
@@ -27,7 +27,7 @@ public class EmailUniquenessValidator implements ConstraintValidator<UniqueEmail
             return false;
         }
 
-        PrivateMemberResponseDto existsUser = userService.findPrivateById(dto.getId());
+        PrivateUserResponseDto existsUser = userService.findPrivateById(dto.getId());
         if (existsUser.getEmail().equals(dto.getEmail())) {
             return true;
         } else {

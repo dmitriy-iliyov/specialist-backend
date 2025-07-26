@@ -1,6 +1,6 @@
 package com.aidcompass.specialistdirectory.domain.specialist.controllers;
 
-import com.aidcompass.contracts.PrincipalDetails;
+import com.aidcompass.contracts.auth.PrincipalDetails;
 import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
 import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
 import com.aidcompass.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;

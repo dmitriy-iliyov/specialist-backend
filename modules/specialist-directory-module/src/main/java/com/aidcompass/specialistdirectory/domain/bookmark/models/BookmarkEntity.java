@@ -1,7 +1,7 @@
 package com.aidcompass.specialistdirectory.domain.bookmark.models;
 
-import com.aidcompass.core.general.utils.uuid.UuidFactory;
 import com.aidcompass.specialistdirectory.domain.specialist.models.SpecialistEntity;
+import com.aidcompass.utils.UuidUtils;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,7 +31,7 @@ public class BookmarkEntity {
 
 
     public BookmarkEntity(UUID ownerId, SpecialistEntity specialist) {
-        this.id = UuidFactory.generate();
+        this.id = UuidUtils.generateV7();
         this.ownerId = ownerId;
         this.specialist = specialist;
     }

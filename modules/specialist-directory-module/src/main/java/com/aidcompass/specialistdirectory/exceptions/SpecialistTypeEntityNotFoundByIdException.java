@@ -1,8 +1,8 @@
 package com.aidcompass.specialistdirectory.exceptions;
 
 
-import com.aidcompass.core.general.exceptions.models.BaseNotFoundException;
-import com.aidcompass.core.general.exceptions.models.dto.ErrorDto;
+import com.aidcompass.core.exceptions.models.BaseNotFoundException;
+import com.aidcompass.core.exceptions.models.dto.ErrorDto;
 
 public class SpecialistTypeEntityNotFoundByIdException extends BaseNotFoundException {
     @Override

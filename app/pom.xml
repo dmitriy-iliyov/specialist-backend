@@ -19,17 +19,29 @@
     </properties>
 
     <dependencies>
+
         <dependency>
             <groupId>com.aidcompass</groupId>
-            <artifactId>schedule-module</artifactId>
+            <artifactId>utils</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>com.aidcompass</groupId>
-            <artifactId>avatar-module</artifactId>
+            <artifactId>auth-contracts</artifactId>
             <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.aidcompass</groupId>
+            <artifactId>user-contracts</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.aidcompass</groupId>
+            <artifactId>core-module</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -46,31 +58,7 @@
 
         <dependency>
             <groupId>com.aidcompass</groupId>
-            <artifactId>aidcompass-contract</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.aidcompass</groupId>
-            <artifactId>aidcompass-core</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.aidcompass</groupId>
-            <artifactId>aggregator-module</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.aidcompass</groupId>
             <artifactId>specialist-directory-module</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.aidcompass</groupId>
-            <artifactId>utils</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 

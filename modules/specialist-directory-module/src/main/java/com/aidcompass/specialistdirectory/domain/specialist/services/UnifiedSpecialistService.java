@@ -12,13 +12,13 @@ import com.aidcompass.specialistdirectory.exceptions.SpecialistCreatorIdNotFound
 import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
 import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
 import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
-import com.aidcompass.specialistdirectory.utils.pagination.PaginationUtils;
+import com.aidcompass.specialistdirectory.utils.PaginationUtils;
 import com.aidcompass.specialistdirectory.domain.type.models.dtos.TypeCreateDto;
 import com.aidcompass.specialistdirectory.domain.type.models.dtos.TypeResponseDto;
 import com.aidcompass.specialistdirectory.domain.type.services.TypeService;
 import com.aidcompass.specialistdirectory.domain.type.services.TypeConstants;
 import com.aidcompass.specialistdirectory.exceptions.SpecialistNotFoundByIdException;
-import com.aidcompass.specialistdirectory.utils.pagination.SpecificationRepository;
+import com.aidcompass.specialistdirectory.utils.SpecificationRepository;
 import com.aidcompass.utils.pagination.PageRequest;
 import com.aidcompass.utils.pagination.PageResponse;
 import lombok.RequiredArgsConstructor;

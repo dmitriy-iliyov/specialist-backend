@@ -1,6 +1,6 @@
 package com.aidcompass.specialistdirectory.domain.bookmark;
 
-import com.aidcompass.contracts.PrincipalDetails;
+import com.aidcompass.contracts.auth.PrincipalDetails;
 import com.aidcompass.specialistdirectory.domain.bookmark.models.BookmarkCreateDto;
 import com.aidcompass.specialistdirectory.domain.bookmark.services.BookmarkCountService;
 import com.aidcompass.specialistdirectory.domain.bookmark.services.BookmarkOrchestrator;

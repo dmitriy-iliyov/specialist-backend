@@ -5,7 +5,7 @@ import com.aidcompass.specialistdirectory.domain.specialist.models.SpecialistEnt
 import com.aidcompass.specialistdirectory.domain.specialist.models.filters.SpecialistFilter;
 import com.aidcompass.specialistdirectory.domain.specialist.repositories.SpecialistRepository;
 import com.aidcompass.specialistdirectory.domain.specialist.repositories.SpecialistSpecification;
-import com.aidcompass.specialistdirectory.utils.pagination.PaginationUtils;
+import com.aidcompass.specialistdirectory.utils.PaginationUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.domain.Specification;

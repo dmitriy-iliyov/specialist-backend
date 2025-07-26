@@ -1,7 +1,8 @@
 package com.aidcompass.specialistdirectory.exceptions;
 
-import com.aidcompass.core.general.exceptions.models.BaseInternalServerException;
-import com.aidcompass.core.general.exceptions.models.dto.ErrorDto;
+import com.aidcompass.core.exceptions.models.BaseInternalServerException;
+import com.aidcompass.core.exceptions.models.dto.ErrorDto;
+
 
 public class SpecialistCreatorIdNotFoundByIdException extends BaseInternalServerException {
     @Override

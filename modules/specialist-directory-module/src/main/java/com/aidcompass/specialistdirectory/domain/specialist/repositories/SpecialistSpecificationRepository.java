@@ -1,7 +1,7 @@
 package com.aidcompass.specialistdirectory.domain.specialist.repositories;
 
 import com.aidcompass.specialistdirectory.domain.specialist.models.SpecialistEntity;
-import com.aidcompass.specialistdirectory.utils.pagination.SpecificationRepository;
+import com.aidcompass.specialistdirectory.utils.SpecificationRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;

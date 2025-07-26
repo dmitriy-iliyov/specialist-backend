@@ -1,10 +1,10 @@
 package com.aidcompass.message.exceptions;
 
-import com.aidcompass.core.general.exceptions.BaseControllerAdvice;
-import com.aidcompass.core.general.exceptions.mapper.ExceptionMapper;
-import com.aidcompass.core.general.exceptions.models.*;
-import com.aidcompass.core.general.exceptions.models.Exception;
-import com.aidcompass.core.general.exceptions.models.dto.ErrorDto;
+import com.aidcompass.core.exceptions.BaseControllerAdvice;
+import com.aidcompass.core.exceptions.mapper.ExceptionMapper;
+import com.aidcompass.core.exceptions.models.*;
+import com.aidcompass.core.exceptions.models.Exception;
+import com.aidcompass.core.exceptions.models.dto.ErrorDto;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import io.lettuce.core.RedisConnectionException;
 import jakarta.mail.MessagingException;

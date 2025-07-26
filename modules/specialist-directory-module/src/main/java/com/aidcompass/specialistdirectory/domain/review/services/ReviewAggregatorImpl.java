@@ -1,6 +1,8 @@
 package com.aidcompass.specialistdirectory.domain.review.services;
 
 
+import com.aidcompass.contracts.user.PublicUserResponseDto;
+import com.aidcompass.contracts.user.SystemUserService;
 import com.aidcompass.specialistdirectory.domain.review.models.dtos.ReviewResponseDto;
 import com.aidcompass.specialistdirectory.domain.review.models.dtos.FullReviewResponseDto;
 import com.aidcompass.specialistdirectory.domain.review.models.filters.ReviewSort;
@@ -19,25 +21,17 @@ import java.util.stream.Collectors;
 public class ReviewAggregatorImpl implements ReviewAggregator {
 
     private final ReviewService reviewService;
-    private final ReviewUserAggregator reviewUserAggregator;
+    private final SystemUserService systemUserService;
 
     @Transactional(readOnly = true)
     @Override
     public PageResponse<FullReviewResponseDto> findAllWithSortBySpecialistId(UUID specialistId, ReviewSort sort) {
         PageResponse<ReviewResponseDto> reviewsPage = reviewService.findAllWithSortBySpecialistId(specialistId, sort);
         Set<UUID> userIds = reviewsPage.data().stream().map(ReviewResponseDto::creatorId).collect(Collectors.toSet());
-        Map<UUID, String> avatarUrls = reviewUserAggregator.findAvatarsByIdIn(userIds);
-        Map<UUID, String> usernames = reviewUserAggregator.findUsernamesByIdIn(userIds);
+        Map<UUID, PublicUserResponseDto> userMap = systemUserService.findAllByIdIn(userIds);
         return new PageResponse<>(
                 reviewsPage.data().stream()
-                        .map(review -> {
-                            UUID creatorId = review.creatorId();
-                            return new FullReviewResponseDto(
-                                    review.creatorId(),
-                                    usernames.get(creatorId),
-                                    avatarUrls.get(creatorId),
-                                    review);
-                        })
+                        .map(review -> new FullReviewResponseDto(userMap.get(review.creatorId()), review))
                         .toList(),
                 reviewsPage.totalPage()
         );

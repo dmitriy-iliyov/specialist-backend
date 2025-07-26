@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import static com.aidcompass.core.general.GlobalRedisConfig.CONF_TOKEN_KEY_TEMPLATE;
+import static com.aidcompass.core.config.RedisConfig.CONF_TOKEN_KEY_TEMPLATE;
 
 
 @Service

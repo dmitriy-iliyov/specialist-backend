@@ -1,11 +1,11 @@
 package com.aidcompass.specialistdirectory.domain.specialist.models;
 
-import com.aidcompass.core.general.utils.uuid.UuidFactory;
 import com.aidcompass.specialistdirectory.domain.bookmark.models.BookmarkEntity;
 import com.aidcompass.specialistdirectory.domain.contact.ContactType;
 import com.aidcompass.specialistdirectory.domain.contact.ContactTypeConverter;
 import com.aidcompass.specialistdirectory.domain.review.models.ReviewEntity;
 import com.aidcompass.specialistdirectory.domain.type.models.TypeEntity;
+import com.aidcompass.utils.UuidUtils;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -92,7 +92,7 @@ public class SpecialistEntity {
 
 
     public SpecialistEntity() {
-        this.id = UuidFactory.generate();
+        this.id = UuidUtils.generateV7();
     }
 
     @PrePersist
