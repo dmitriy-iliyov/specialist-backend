@@ -3,8 +3,8 @@ package com.aidcompass.specialistdirectory.domain.type.services;
 import com.aidcompass.specialistdirectory.domain.type.models.dtos.FullTypeCreateDto;
 import com.aidcompass.specialistdirectory.domain.type.models.dtos.FullTypeResponseDto;
 import com.aidcompass.specialistdirectory.domain.type.models.dtos.FullTypeUpdateDto;
-import com.aidcompass.specialistdirectory.utils.pagination.PageRequest;
-import com.aidcompass.specialistdirectory.utils.pagination.PageResponse;
+import com.aidcompass.utils.pagination.PageRequest;
+import com.aidcompass.utils.pagination.PageResponse;
 
 import java.util.UUID;
 

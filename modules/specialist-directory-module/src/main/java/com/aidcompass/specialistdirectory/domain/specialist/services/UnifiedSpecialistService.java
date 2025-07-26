@@ -18,9 +18,9 @@ import com.aidcompass.specialistdirectory.domain.type.models.dtos.TypeResponseDt
 import com.aidcompass.specialistdirectory.domain.type.services.TypeService;
 import com.aidcompass.specialistdirectory.domain.type.services.TypeConstants;
 import com.aidcompass.specialistdirectory.exceptions.SpecialistNotFoundByIdException;
-import com.aidcompass.specialistdirectory.utils.pagination.PageRequest;
-import com.aidcompass.specialistdirectory.utils.pagination.PageResponse;
 import com.aidcompass.specialistdirectory.utils.pagination.SpecificationRepository;
+import com.aidcompass.utils.pagination.PageRequest;
+import com.aidcompass.utils.pagination.PageResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;

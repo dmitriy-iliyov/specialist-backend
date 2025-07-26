@@ -6,7 +6,7 @@ import com.aidcompass.specialistdirectory.domain.review.models.dtos.ReviewUpdate
 import com.aidcompass.specialistdirectory.domain.review.models.filters.ReviewSort;
 import com.aidcompass.specialistdirectory.domain.review.services.ReviewAggregator;
 import com.aidcompass.specialistdirectory.domain.review.services.ReviewOrchestrator;
-import com.aidcompass.specialistdirectory.utils.validation.ValidUuid;
+import com.aidcompass.utils.validation.annotation.ValidUuid;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

@@ -69,6 +69,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.aidcompass</groupId>
+            <artifactId>utils</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
             <groupId>io.github.cdimascio</groupId>
             <artifactId>dotenv-java</artifactId>
             <version>3.0.0</version>
@@ -104,7 +110,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.aidcompass.AidCompassBackend</mainClass>
+                    <mainClass>com.aidcompass.SpecialistBackend</mainClass>
                 </configuration>
             </plugin>
         </plugins>

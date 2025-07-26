@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 @UtilityClass
 public class UuidUtils {
 
-    public UUID generate() {
+    public UUID generateV7() {
         return UuidCreator.getTimeOrderedEpoch();
     }
 

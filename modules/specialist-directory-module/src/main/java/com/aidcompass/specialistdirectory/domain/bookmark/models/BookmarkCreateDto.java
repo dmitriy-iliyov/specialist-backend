@@ -1,6 +1,6 @@
 package com.aidcompass.specialistdirectory.domain.bookmark.models;
 
-import com.aidcompass.specialistdirectory.utils.validation.UUIDv7;
+import com.aidcompass.utils.validation.annotation.UUIDv7;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;

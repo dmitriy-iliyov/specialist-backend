@@ -6,8 +6,8 @@ import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.Speciali
 import com.aidcompass.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
 import com.aidcompass.specialistdirectory.domain.specialist.models.filters.SpecialistFilter;
 import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
-import com.aidcompass.specialistdirectory.utils.pagination.PageRequest;
-import com.aidcompass.specialistdirectory.utils.pagination.PageResponse;
+import com.aidcompass.utils.pagination.PageRequest;
+import com.aidcompass.utils.pagination.PageResponse;
 
 import java.util.UUID;
 

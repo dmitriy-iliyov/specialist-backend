@@ -20,10 +20,16 @@ public class UuidValidator implements ConstraintValidator<ValidUuid, String> {
     }
 
     @Override
-    public boolean isValid(String uuid, ConstraintValidatorContext constraintValidatorContext) {
-        constraintValidatorContext.disableDefaultConstraintViolation();
+    public boolean isValid(String uuid, ConstraintValidatorContext context) {
+        context.disableDefaultConstraintViolation();
+        if (uuid == null) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate(paramName + " is required.")
+                    .addConstraintViolation();
+            return false;
+        }
         if (!pattern.matcher(uuid).matches()) {
-            constraintValidatorContext.buildConstraintViolationWithTemplate("Invalid UUID format.")
+            context.buildConstraintViolationWithTemplate("Invalid UUID format.")
                     .addPropertyNode(paramName)
                     .addConstraintViolation();
             return false;

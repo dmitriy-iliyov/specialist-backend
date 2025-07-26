@@ -6,7 +6,7 @@ import com.aidcompass.specialistdirectory.domain.review.models.dtos.ReviewUpdate
 import com.aidcompass.specialistdirectory.domain.review.models.enums.NextOperationType;
 import com.aidcompass.specialistdirectory.domain.review.models.enums.ReviewAgeType;
 import com.aidcompass.specialistdirectory.domain.review.models.filters.ReviewSort;
-import com.aidcompass.specialistdirectory.utils.pagination.PageResponse;
+import com.aidcompass.utils.pagination.PageResponse;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Map;

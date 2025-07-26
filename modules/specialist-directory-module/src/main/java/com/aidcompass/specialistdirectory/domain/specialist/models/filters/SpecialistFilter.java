@@ -1,7 +1,7 @@
 package com.aidcompass.specialistdirectory.domain.specialist.models.filters;
 
 import com.aidcompass.specialistdirectory.domain.specialist.models.markers.BaseSpecialistFilter;
-import com.aidcompass.specialistdirectory.utils.pagination.PageDataHolder;
+import com.aidcompass.utils.pagination.PageDataHolder;
 import jakarta.validation.constraints.*;
 
 @com.aidcompass.specialistdirectory.domain.specialist.validation.SpecialistFilter

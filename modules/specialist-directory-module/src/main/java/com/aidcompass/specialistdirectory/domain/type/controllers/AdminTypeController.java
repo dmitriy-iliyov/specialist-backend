@@ -5,7 +5,7 @@ import com.aidcompass.specialistdirectory.domain.type.services.ApproveTypeOrches
 import com.aidcompass.specialistdirectory.domain.type.services.TypeOrchestrator;
 import com.aidcompass.specialistdirectory.domain.type.models.dtos.FullTypeCreateDto;
 import com.aidcompass.specialistdirectory.domain.type.models.dtos.FullTypeUpdateDto;
-import com.aidcompass.specialistdirectory.utils.pagination.PageRequest;
+import com.aidcompass.utils.pagination.PageRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;

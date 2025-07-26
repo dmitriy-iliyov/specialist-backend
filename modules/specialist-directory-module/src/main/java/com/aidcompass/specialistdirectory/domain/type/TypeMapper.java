@@ -5,7 +5,7 @@ import com.aidcompass.specialistdirectory.domain.type.models.dtos.ShortTypeRespo
 import com.aidcompass.specialistdirectory.domain.type.models.dtos.TypeCreateDto;
 import com.aidcompass.specialistdirectory.domain.type.models.dtos.TypeResponseDto;
 import com.aidcompass.specialistdirectory.domain.type.models.dtos.TypeUpdateDto;
-import com.aidcompass.specialistdirectory.utils.converters.InstantToLocalDataTimeConverter;
+import com.aidcompass.utils.InstantToLocalDataTimeConverter;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;

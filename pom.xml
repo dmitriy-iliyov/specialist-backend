@@ -20,17 +20,17 @@
         <developer/>
     </developers>
     <modules>
-        <module>app</module>
-        <module>modules/aidcompass-core</module>
+        <module>libs/utils</module>
         <module>modules/aidcompass-contract</module>
+        <module>modules/aidcompass-core</module>
         <module>modules/message-module</module>
         <module>modules/avatar-module</module>
         <module>modules/schedule-module</module>
         <module>modules/user-module</module>
         <module>modules/aggregator-module</module>
         <module>modules/specialist-directory-module</module>
+        <module>app</module>
         <module>modules/tests</module>
-        <module>libs/utils</module>
     </modules>
 
     <packaging>pom</packaging>

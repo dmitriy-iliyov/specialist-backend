@@ -13,7 +13,7 @@ import com.aidcompass.specialistdirectory.domain.specialist.services.SystemSpeci
 import com.aidcompass.specialistdirectory.exceptions.NotAffiliatedToSpecialistException;
 import com.aidcompass.specialistdirectory.exceptions.OwnershipException;
 import com.aidcompass.specialistdirectory.exceptions.ReviewNotFoundByIdException;
-import com.aidcompass.specialistdirectory.utils.pagination.PageResponse;
+import com.aidcompass.utils.pagination.PageResponse;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.data.domain.Page;

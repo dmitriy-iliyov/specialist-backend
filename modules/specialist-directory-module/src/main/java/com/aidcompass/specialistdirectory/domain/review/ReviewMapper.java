@@ -4,7 +4,7 @@ import com.aidcompass.specialistdirectory.domain.review.models.ReviewEntity;
 import com.aidcompass.specialistdirectory.domain.review.models.dtos.ReviewCreateDto;
 import com.aidcompass.specialistdirectory.domain.review.models.dtos.ReviewResponseDto;
 import com.aidcompass.specialistdirectory.domain.review.models.dtos.ReviewUpdateDto;
-import com.aidcompass.specialistdirectory.utils.converters.InstantToLocalDataTimeConverter;
+import com.aidcompass.utils.InstantToLocalDataTimeConverter;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;

@@ -5,8 +5,8 @@ import com.aidcompass.specialistdirectory.domain.type.models.dtos.ShortTypeRespo
 import com.aidcompass.specialistdirectory.domain.type.models.dtos.TypeCreateDto;
 import com.aidcompass.specialistdirectory.domain.type.models.dtos.TypeResponseDto;
 import com.aidcompass.specialistdirectory.domain.type.models.dtos.TypeUpdateDto;
-import com.aidcompass.specialistdirectory.utils.pagination.PageRequest;
-import com.aidcompass.specialistdirectory.utils.pagination.PageResponse;
+import com.aidcompass.utils.pagination.PageRequest;
+import com.aidcompass.utils.pagination.PageResponse;
 
 import java.util.List;
 

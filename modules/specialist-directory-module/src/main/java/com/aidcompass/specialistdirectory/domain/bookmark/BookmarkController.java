@@ -6,8 +6,8 @@ import com.aidcompass.specialistdirectory.domain.bookmark.services.BookmarkCount
 import com.aidcompass.specialistdirectory.domain.bookmark.services.BookmarkOrchestrator;
 import com.aidcompass.specialistdirectory.domain.bookmark.services.BookmarkService;
 import com.aidcompass.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
-import com.aidcompass.specialistdirectory.utils.pagination.PageRequest;
-import com.aidcompass.specialistdirectory.utils.validation.ValidUuid;
+import com.aidcompass.utils.pagination.PageRequest;
+import com.aidcompass.utils.validation.annotation.ValidUuid;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
