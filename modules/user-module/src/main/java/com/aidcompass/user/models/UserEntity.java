@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -14,7 +13,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@ToString(exclude = "avatar")
 public class UserEntity {
 
     @Id
@@ -38,6 +36,12 @@ public class UserEntity {
     @Column(name = "creator_rating", nullable = false)
     private double creatorRating;
 
+    @Column(name = "summary_specialist_rating", nullable = false)
+    private long summarySpecialistRating;
+
+    @Column(name = "specialist_review_count", nullable = false)
+    private long specialistReviewCount;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
@@ -48,8 +52,18 @@ public class UserEntity {
     private Long version;
 
 
-    public UserEntity(UUID id) {
-        this.id = id;
+    @PrePersist
+    public void prePersist() {
+        createdAt = Instant.now();
+        updatedAt = createdAt;
+        creatorRating = 0;
+        summarySpecialistRating = 0;
+        specialistReviewCount = 0;
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        updatedAt = Instant.now();
     }
 
     public String getFullName() {

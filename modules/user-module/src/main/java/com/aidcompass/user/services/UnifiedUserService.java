@@ -1,5 +1,6 @@
 package com.aidcompass.user.services;
 
+import com.aidcompass.contracts.user.CreatorRatingUpdateEvent;
 import com.aidcompass.contracts.user.PublicUserResponseDto;
 import com.aidcompass.contracts.user.SystemUserService;
 import com.aidcompass.user.UserMapper;
@@ -57,8 +58,18 @@ public class UnifiedUserService implements UserService, SystemUserService, Creat
 
     @Transactional
     @Override
-    public void updateCreatorRatingById(int reviewCount, long summaryRating) {
-       // optimistic loc
+    public void updateById(CreatorRatingUpdateEvent dto) {
+        UserEntity entity = repository.findById(dto.creatorId()).orElseThrow(UserNotFoundByIdException::new);
+
+        long summarySpecialistRating = entity.getSummarySpecialistRating() + dto.earnedRating();
+        long specialistReviewCount = entity.getSpecialistReviewCount() + dto.reviewCount();
+        double creatorRating = (double) summarySpecialistRating / specialistReviewCount;
+
+        entity.setSummarySpecialistRating(summarySpecialistRating);
+        entity.setSpecialistReviewCount(specialistReviewCount);
+        entity.setCreatorRating(creatorRating);
+
+        repository.save(entity);
     }
 
     @Transactional(readOnly = true)

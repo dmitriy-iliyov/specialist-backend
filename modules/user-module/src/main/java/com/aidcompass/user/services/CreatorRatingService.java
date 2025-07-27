@@ -1,5 +1,7 @@
 package com.aidcompass.user.services;
 
+import com.aidcompass.contracts.user.CreatorRatingUpdateEvent;
+
 public interface CreatorRatingService {
-    void updateCreatorRatingById(int reviewCount, long summaryRating);
+    void updateById(CreatorRatingUpdateEvent dto);
 }

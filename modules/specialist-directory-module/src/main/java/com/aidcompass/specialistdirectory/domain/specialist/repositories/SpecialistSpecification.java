@@ -21,11 +21,11 @@ public class SpecialistSpecification {
     }
 
     public static Specification<SpecialistEntity> filerByMinRating(Integer minRating) {
-        return (r, q, cb) -> minRating == null ? null : cb.greaterThanOrEqualTo(r.get("totalRating"), minRating);
+        return (r, q, cb) -> minRating == null ? null : cb.greaterThanOrEqualTo(r.get("rating"), minRating);
     }
 
     public static Specification<SpecialistEntity> filterByMaxRating(Integer maxRating) {
-        return (r, q, cb) -> maxRating == null ? null : cb.lessThanOrEqualTo(r.get("totalRating"), maxRating);
+        return (r, q, cb) -> maxRating == null ? null : cb.lessThanOrEqualTo(r.get("rating"), maxRating);
     }
 
     public static Specification<SpecialistEntity> filterByCreatorId(UUID creatorId) {

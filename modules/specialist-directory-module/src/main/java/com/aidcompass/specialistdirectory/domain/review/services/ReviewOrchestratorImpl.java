@@ -21,6 +21,7 @@ public class ReviewOrchestratorImpl implements ReviewOrchestrator {
 
     private final ReviewService reviewService;
     private final SpecialistOrchestrator specialistOrchestrator;
+    private final ReviewBufferService reviewBufferService;
 
 
     @Transactional
@@ -28,6 +29,7 @@ public class ReviewOrchestratorImpl implements ReviewOrchestrator {
     public ReviewResponseDto save(ReviewCreateDto dto) {
         ReviewResponseDto resultDto = reviewService.save(dto);
         specialistOrchestrator.updateRatingById(dto.getSpecialistId(), dto.getRating(), RatingOperationType.PERSIST);
+        reviewBufferService.put(dto.getCreatorId(), dto.getRating());
         return resultDto;
     }
 
@@ -40,6 +42,7 @@ public class ReviewOrchestratorImpl implements ReviewOrchestrator {
             ReviewResponseDto oldDto = resultPair.getRight().get(ReviewAgeType.OLD);
             long resultRating = newDto.rating() - oldDto.rating();
             specialistOrchestrator.updateRatingById(dto.getSpecialistId(), resultRating, RatingOperationType.UPDATE);
+            reviewBufferService.put(dto.getCreatorId(), resultRating);
         }
         return newDto;
     }
@@ -49,6 +52,7 @@ public class ReviewOrchestratorImpl implements ReviewOrchestrator {
     public void delete(UUID creatorId, UUID specialistId, UUID id) {
         ReviewResponseDto dto = reviewService.deleteById(creatorId, specialistId, id);
         specialistOrchestrator.updateRatingById(specialistId, -dto.rating(), RatingOperationType.DELETE);
+        reviewBufferService.put(creatorId, -dto.rating());
     }
 
     @Transactional
@@ -56,5 +60,6 @@ public class ReviewOrchestratorImpl implements ReviewOrchestrator {
     public void adminDelete(UUID specialistId, UUID id) {
         ReviewResponseDto dto = reviewService.deleteById(specialistId, id);
         specialistOrchestrator.updateRatingById(dto.id(), -dto.rating(), RatingOperationType.DELETE);
+        reviewBufferService.put(dto.creatorId(), -dto.rating());
     }
 }

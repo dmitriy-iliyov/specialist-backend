@@ -1,4 +1,4 @@
-package com.aidcompass.specialistdirectory.domain.review;
+package com.aidcompass.specialistdirectory.domain.review.repositories;
 
 import com.aidcompass.specialistdirectory.domain.review.models.ReviewEntity;
 import org.springframework.data.domain.Page;

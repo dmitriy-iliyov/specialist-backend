@@ -1,4 +1,4 @@
-package com.aidcompass.specialistdirectory.domain.review;
+package com.aidcompass.specialistdirectory.domain.review.mappers;
 
 import com.aidcompass.specialistdirectory.domain.review.models.ReviewEntity;
 import com.aidcompass.specialistdirectory.domain.review.models.dtos.ReviewCreateDto;

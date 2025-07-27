@@ -63,7 +63,7 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
         }
         entity.setType(typeService.getReferenceById(typeId));
         entity.setSummaryRating(0);
-        entity.setTotalRating(0.0);
+        entity.setRating(0.0);
         entity.setReviewsCount(0);
         entity = repository.save(entity);
         cacheService.putCreatorId(entity.getId(), entity.getCreatorId());
@@ -165,34 +165,34 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
 
     @Transactional
     @Override
-    public void updateRatingById(UUID id, long rating, RatingOperationType operationType) {
+    public void updateRatingById(UUID id, long earnedRating, RatingOperationType operationType) {
         SpecialistEntity entity = repository.findById(id).orElseThrow(SpecialistNotFoundByIdException::new);
         switch (operationType) {
             case PERSIST -> {
-                long summaryRating = entity.getSummaryRating() + rating;
-                long reviewRating = entity.getReviewsCount() + 1;
-                double totalRating = (double) summaryRating / reviewRating;
+                long summaryRating = entity.getSummaryRating() + earnedRating;
+                long reviewsCount = entity.getReviewsCount() + 1;
+                double rating = (double) summaryRating / reviewsCount;
                 entity.setSummaryRating(summaryRating);
-                entity.setReviewsCount(reviewRating);
-                entity.setTotalRating(totalRating);
+                entity.setReviewsCount(reviewsCount);
+                entity.setRating(rating);
                 repository.save(entity);
             }
             case UPDATE -> {
-                long summaryRating = entity.getSummaryRating()  + rating;
-                long reviewRating = entity.getReviewsCount();
-                double totalRating = (double) summaryRating / reviewRating;
+                long summaryRating = entity.getSummaryRating()  + earnedRating;
+                long reviewsCount = entity.getReviewsCount();
+                double rating = (double) summaryRating / reviewsCount;
                 entity.setSummaryRating(summaryRating);
-                entity.setReviewsCount(reviewRating);
-                entity.setTotalRating(totalRating);
+                entity.setReviewsCount(reviewsCount);
+                entity.setRating(rating);
                 repository.save(entity);
             }
             case DELETE -> {
-                long summaryRating = entity.getSummaryRating() + rating;
-                long reviewRating = entity.getReviewsCount() - 1;
-                double totalRating = (double) summaryRating / reviewRating;
+                long summaryRating = entity.getSummaryRating() + earnedRating;
+                long reviewsCount = entity.getReviewsCount() - 1;
+                double rating = (double) summaryRating / reviewsCount;
                 entity.setSummaryRating(summaryRating);
-                entity.setReviewsCount(reviewRating);
-                entity.setTotalRating(totalRating);
+                entity.setReviewsCount(reviewsCount);
+                entity.setRating(rating);
                 repository.save(entity);
             }
         }

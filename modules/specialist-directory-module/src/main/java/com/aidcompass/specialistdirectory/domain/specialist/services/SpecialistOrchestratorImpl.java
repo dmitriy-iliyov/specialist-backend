@@ -12,7 +12,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Caching;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Recover;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -42,18 +46,20 @@ public class SpecialistOrchestratorImpl implements SpecialistOrchestrator {
         return specialistService.update(dto);
     }
 
+    @Retryable(
+            retryFor = {OptimisticLockException.class},
+            maxAttempts = 4,
+            backoff = @Backoff(delay = 50)
+    )
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
     public void updateRatingById(UUID id, long rating, RatingOperationType operationType) {
-        for (int i = 0; i < 2; i++) {
-            try {
-                specialistService.updateRatingById(id, rating, operationType);
-                return;
-            } catch (OptimisticLockException e) {
-                log.warn("Optimizing look when reviewing specialist: id={}, date={}, time={}", id, LocalDate.now(), LocalTime.now());
-                specialistService.updateRatingById(id, rating, operationType);
-            }
-            log.error("Error when reviewing specialist: id={}, date={}, time={}", id, LocalDate.now(), LocalTime.now());
-        }
+        specialistService.updateRatingById(id, rating, operationType);
+    }
+
+    @Recover
+    public void recover(OptimisticLockException e, UUID id, long rating, RatingOperationType operationType) {
+        log.error("Error when reviewing specialist: id={}, date={}, time={}", id, LocalDate.now(), LocalTime.now());
     }
 
     @Caching(evict = {

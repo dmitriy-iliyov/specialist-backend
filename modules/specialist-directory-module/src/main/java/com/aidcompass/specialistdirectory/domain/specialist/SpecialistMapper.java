@@ -31,7 +31,7 @@ public interface SpecialistMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "type", ignore = true)
     @Mapping(target = "summaryRating", ignore = true)
-    @Mapping(target = "totalRating", ignore = true)
+    @Mapping(target = "rating", ignore = true)
     @Mapping(target = "reviewsCount", ignore = true)
     void updateEntityFromDto(SpecialistUpdateDto dto, @MappingTarget SpecialistEntity entity);
 }

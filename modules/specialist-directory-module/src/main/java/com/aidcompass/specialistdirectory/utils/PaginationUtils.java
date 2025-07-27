@@ -34,9 +34,9 @@ public class PaginationUtils {
     public static Pageable generatePageable(PageDataHolder holder) {
         if (holder.asc() != null && holder.asc()) {
             return org.springframework.data.domain.PageRequest
-                    .of(holder.pageNumber(), holder.pageSize(), Sort.by("totalRating").ascending());
+                    .of(holder.pageNumber(), holder.pageSize(), Sort.by("rating").ascending());
         }
         return org.springframework.data.domain.PageRequest
-                .of(holder.pageNumber(), holder.pageSize(), Sort.by("totalRating").descending());
+                .of(holder.pageNumber(), holder.pageSize(), Sort.by("rating").descending());
     }
 }

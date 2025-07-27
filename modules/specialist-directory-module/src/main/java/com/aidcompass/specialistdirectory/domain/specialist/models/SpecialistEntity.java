@@ -54,7 +54,7 @@ public class SpecialistEntity {
     @Column(name = "city_code")
     private String cityCode;
 
-    @Column(nullable = false)
+    @Column(name = "city_title", nullable = false)
     private String cityTitle;
 
     @Column(name = "contact_type", nullable = false)
@@ -66,11 +66,11 @@ public class SpecialistEntity {
 
     private String site;
 
+    @Column(nullable = false)
+    private double rating;
+
     @Column(name = "summary_rating", nullable = false)
     private long summaryRating;
-
-    @Column(name = "total_rating", nullable = false)
-    private double totalRating;
 
     @Column(name = "reviews_count", nullable = false)
     private long reviewsCount;
