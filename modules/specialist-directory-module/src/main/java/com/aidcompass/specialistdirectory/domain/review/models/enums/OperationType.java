@@ -1,5 +1,5 @@
 package com.aidcompass.specialistdirectory.domain.review.models.enums;
 
-public enum RatingOperationType {
+public enum OperationType {
     PERSIST, UPDATE, DELETE
 }

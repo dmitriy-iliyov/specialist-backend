@@ -18,6 +18,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -61,14 +63,21 @@ public class ReviewBufferServiceImpl implements ReviewBufferService {
 
     @Transactional
     @Override
-    public void pop(UUID creatorId) {
-        repository.deleteByCreatorId(creatorId);
+    public void pop(UUID id) {
+        repository.deleteById(id);
+    }
+
+    @Transactional
+    @Override
+    public void markAsSent(UUID id) {
+        repository.updateDeliveryStateById(id, DeliveryState.SENT);
     }
 
     @Scheduled(
             initialDelayString = "${api.review-buffer.clean.initialDelay}",
             fixedDelayString = "${api.review-buffer.clean.fixedDelay}"
     )
+    @Override
     public void clean() {
         List<CreatorRatingUpdateEvent> events = mapper.toEventList(
                 repository.findAllByDeliveryState(DeliveryState.READY, Pageable.ofSize(cleanBatchSize)).getContent()
@@ -80,13 +89,15 @@ public class ReviewBufferServiceImpl implements ReviewBufferService {
 
     private void sendEvent(CreatorRatingUpdateEvent event, int attemptNumber) {
         kafkaTemplate.send(topic, event)
-                .thenAccept(success -> self.pop(event.creatorId()))
+                .thenAccept(success -> self.markAsSent(event.id()))
                 .exceptionally(fail -> {
                     log.error("Error publishing CreatorRatingUpdateEvent with creatorId={}, date={}, time={}",
                             event.creatorId(), LocalDate.now(), LocalTime.now());
                     if (attemptNumber <= MAX_ATTEMPT_COUNT) {
-                        int incrementedAttemptCount = attemptNumber + 1;
-                        sendEvent(event, incrementedAttemptCount);
+                        int nextAttempt = attemptNumber + 1;
+                        CompletableFuture.delayedExecutor(100, TimeUnit.MILLISECONDS).execute(() ->
+                                sendEvent(event, nextAttempt)
+                        );
                         return null;
                     }
                     log.error("Failed all attempt to publish CreatorRatingUpdateEvent with creatorId={}, date={}, time={}",

@@ -1,6 +1,6 @@
 package com.aidcompass.specialistdirectory.domain.specialist.services;
 
-import com.aidcompass.specialistdirectory.domain.review.models.enums.RatingOperationType;
+import com.aidcompass.specialistdirectory.domain.review.models.enums.OperationType;
 import com.aidcompass.specialistdirectory.domain.specialist.SpecialistMapper;
 import com.aidcompass.specialistdirectory.domain.specialist.models.SpecialistEntity;
 import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.BookmarkSpecialistResponseDto;
@@ -165,7 +165,7 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
 
     @Transactional
     @Override
-    public void updateRatingById(UUID id, long earnedRating, RatingOperationType operationType) {
+    public void updateRatingById(UUID id, long earnedRating, OperationType operationType) {
         SpecialistEntity entity = repository.findById(id).orElseThrow(SpecialistNotFoundByIdException::new);
         switch (operationType) {
             case PERSIST -> {

@@ -3,7 +3,7 @@ package com.aidcompass.specialistdirectory.domain.review.services;
 import com.aidcompass.specialistdirectory.domain.review.models.dtos.ReviewCreateDto;
 import com.aidcompass.specialistdirectory.domain.review.models.dtos.ReviewResponseDto;
 import com.aidcompass.specialistdirectory.domain.review.models.dtos.ReviewUpdateDto;
-import com.aidcompass.specialistdirectory.domain.review.models.enums.RatingOperationType;
+import com.aidcompass.specialistdirectory.domain.review.models.enums.OperationType;
 import com.aidcompass.specialistdirectory.domain.review.models.enums.NextOperationType;
 import com.aidcompass.specialistdirectory.domain.review.models.enums.ReviewAgeType;
 import com.aidcompass.specialistdirectory.domain.specialist.services.SpecialistOrchestrator;
@@ -28,7 +28,7 @@ public class ReviewOrchestratorImpl implements ReviewOrchestrator {
     @Override
     public ReviewResponseDto save(ReviewCreateDto dto) {
         ReviewResponseDto resultDto = reviewService.save(dto);
-        specialistOrchestrator.updateRatingById(dto.getSpecialistId(), dto.getRating(), RatingOperationType.PERSIST);
+        specialistOrchestrator.updateRatingById(dto.getSpecialistId(), dto.getRating(), OperationType.PERSIST);
         reviewBufferService.put(dto.getCreatorId(), dto.getRating());
         return resultDto;
     }
@@ -41,7 +41,7 @@ public class ReviewOrchestratorImpl implements ReviewOrchestrator {
         if (resultPair.getLeft().equals(NextOperationType.UPDATE)) {
             ReviewResponseDto oldDto = resultPair.getRight().get(ReviewAgeType.OLD);
             long resultRating = newDto.rating() - oldDto.rating();
-            specialistOrchestrator.updateRatingById(dto.getSpecialistId(), resultRating, RatingOperationType.UPDATE);
+            specialistOrchestrator.updateRatingById(dto.getSpecialistId(), resultRating, OperationType.UPDATE);
             reviewBufferService.put(dto.getCreatorId(), resultRating);
         }
         return newDto;
@@ -51,7 +51,7 @@ public class ReviewOrchestratorImpl implements ReviewOrchestrator {
     @Override
     public void delete(UUID creatorId, UUID specialistId, UUID id) {
         ReviewResponseDto dto = reviewService.deleteById(creatorId, specialistId, id);
-        specialistOrchestrator.updateRatingById(specialistId, -dto.rating(), RatingOperationType.DELETE);
+        specialistOrchestrator.updateRatingById(specialistId, -dto.rating(), OperationType.DELETE);
         reviewBufferService.put(creatorId, -dto.rating());
     }
 
@@ -59,7 +59,7 @@ public class ReviewOrchestratorImpl implements ReviewOrchestrator {
     @Override
     public void adminDelete(UUID specialistId, UUID id) {
         ReviewResponseDto dto = reviewService.deleteById(specialistId, id);
-        specialistOrchestrator.updateRatingById(dto.id(), -dto.rating(), RatingOperationType.DELETE);
+        specialistOrchestrator.updateRatingById(dto.id(), -dto.rating(), OperationType.DELETE);
         reviewBufferService.put(dto.creatorId(), -dto.rating());
     }
 }

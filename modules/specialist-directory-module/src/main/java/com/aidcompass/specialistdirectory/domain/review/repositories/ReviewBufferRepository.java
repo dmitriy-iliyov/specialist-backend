@@ -5,6 +5,9 @@ import com.aidcompass.specialistdirectory.domain.review.models.enums.DeliverySta
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -14,7 +17,13 @@ import java.util.UUID;
 public interface ReviewBufferRepository extends JpaRepository<ReviewBufferEntity, UUID> {
     Optional<ReviewBufferEntity> findByCreatorIdAndDeliveryState(UUID creatorId, DeliveryState state);
 
-    void deleteByCreatorId(UUID creatorId);
-
     Slice<ReviewBufferEntity> findAllByDeliveryState(DeliveryState state, Pageable pageable);
+
+    @Modifying
+    @Query("""
+        UPDATE ReviewBufferEntity rb
+        SET rb.deliveryState = :delivery_state
+        WHERE rb.id = :id
+    """)
+    void updateDeliveryStateById(@Param("id") UUID id, @Param("delivery_state") DeliveryState deliveryState);
 }

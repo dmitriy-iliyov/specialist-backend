@@ -2,7 +2,7 @@ package com.aidcompass.specialistdirectory.domain.specialist.services;
 
 import com.aidcompass.specialistdirectory.domain.bookmark.models.BookmarkCreateDto;
 import com.aidcompass.specialistdirectory.domain.bookmark.services.BookmarkOrchestrator;
-import com.aidcompass.specialistdirectory.domain.review.models.enums.RatingOperationType;
+import com.aidcompass.specialistdirectory.domain.review.models.enums.OperationType;
 import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
 import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
 import com.aidcompass.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
@@ -53,12 +53,12 @@ public class SpecialistOrchestratorImpl implements SpecialistOrchestrator {
     )
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
-    public void updateRatingById(UUID id, long rating, RatingOperationType operationType) {
+    public void updateRatingById(UUID id, long rating, OperationType operationType) {
         specialistService.updateRatingById(id, rating, operationType);
     }
 
     @Recover
-    public void recover(OptimisticLockException e, UUID id, long rating, RatingOperationType operationType) {
+    public void recover(OptimisticLockException e, UUID id, long rating, OperationType operationType) {
         log.error("Error when reviewing specialist: id={}, date={}, time={}", id, LocalDate.now(), LocalTime.now());
     }
 
