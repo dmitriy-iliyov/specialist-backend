@@ -33,7 +33,7 @@ public class ReviewBufferServiceImpl implements ReviewBufferService {
     @Value("${api.review-buffer.clean.batch-size}")
     public int CLEAN_BATCH_SIZE;
 
-    @Value("${api.kafka.topic.review-buffer}")
+    @Value("${api.kafka.topic.creator-rating}")
     public String TOPIC;
 
     private final ReviewBufferService self;
@@ -56,7 +56,7 @@ public class ReviewBufferServiceImpl implements ReviewBufferService {
             entity.setSummaryRating(earnedSpecialistRating);
             entity.setReviewCount(specialistReviewCount);
             if (specialistReviewCount >= REVIEW_BUFFER_SIZE) {
-                entity.setDeliveryState(DeliveryState.READY);
+                entity.setDeliveryState(DeliveryState.READY_TO_SEND);
             }
         }
         repository.save(entity);
@@ -65,7 +65,7 @@ public class ReviewBufferServiceImpl implements ReviewBufferService {
     @Transactional
     @Override
     public void markAsSent(UUID id) {
-        repository.updateDeliveryStateById(id, DeliveryState.SENT);
+        repository.updateDeliveryStateById(DeliveryState.SENT, id);
     }
 
     @Scheduled(
@@ -76,8 +76,11 @@ public class ReviewBufferServiceImpl implements ReviewBufferService {
     @Override
     public void sendEventsBatch() {
         List<CreatorRatingUpdateEvent> events = mapper.toEventList(
-                repository.findAllByDeliveryState(DeliveryState.READY, Pageable.ofSize(CLEAN_BATCH_SIZE)).getContent()
+                repository.findAllByDeliveryState(DeliveryState.READY_TO_SEND, Pageable.ofSize(CLEAN_BATCH_SIZE)).getContent()
         );
+        if (events.isEmpty()) {
+            return;
+        }
         for (CreatorRatingUpdateEvent event: events) {
             this.sendEvent(event, 1);
         }
@@ -109,5 +112,14 @@ public class ReviewBufferServiceImpl implements ReviewBufferService {
             return;
         }
         repository.deleteAllByIdIn(ids);
+    }
+
+    @Transactional
+    @Override
+    public void markBatchAsReadyToSend(Set<UUID> ids) {
+        if (ids.isEmpty()) {
+            return;
+        }
+        repository.updateAllDeliveryStatesByIdIn(DeliveryState.READY_TO_SEND, ids);
     }
 }

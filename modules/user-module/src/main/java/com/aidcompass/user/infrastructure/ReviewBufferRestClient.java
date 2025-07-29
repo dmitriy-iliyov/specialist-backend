@@ -13,7 +13,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Slf4j
 public class ReviewBufferRestClient implements ReviewBufferService {
-
+    
     private final RestClient restClient;
 
     @Override
@@ -22,6 +22,21 @@ public class ReviewBufferRestClient implements ReviewBufferService {
         try {
             restClient
                     .method(HttpMethod.DELETE)
+                    .uri("/specialists/reviews/buffer/batch")
+                    .body(body)
+                    .retrieve()
+                    .toBodilessEntity();
+        } catch (RestClientResponseException e) {
+            log.error("Api responded with {} {}, message: {}", e.getStatusText(), e.getStatusCode(), e.getResponseBodyAsString());
+        }
+    }
+
+    @Override
+    public void notifyToResend(Set<UUID> idsToResend) {
+        Map<String, Set<UUID>> body = Map.of("ids", idsToResend);
+        try {
+            restClient
+                    .post()
                     .uri("/specialists/reviews/buffer/batch")
                     .body(body)
                     .retrieve()

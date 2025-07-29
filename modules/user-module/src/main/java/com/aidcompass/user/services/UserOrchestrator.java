@@ -1,8 +1,8 @@
 package com.aidcompass.user.services;
 
-import com.aidcompass.user.models.dto.PrivateUserResponseDto;
-import com.aidcompass.user.models.dto.UserUpdateDto;
-import com.aidcompass.user.models.dto.UserCreateDto;
+import com.aidcompass.user.models.dtos.PrivateUserResponseDto;
+import com.aidcompass.user.models.dtos.UserUpdateDto;
+import com.aidcompass.user.models.dtos.UserCreateDto;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;

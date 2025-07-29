@@ -1,9 +1,9 @@
 package com.aidcompass.user.services;
 
 import com.aidcompass.contracts.auth.SystemAccountService;
-import com.aidcompass.user.models.dto.UserCreateDto;
-import com.aidcompass.user.models.dto.UserUpdateDto;
-import com.aidcompass.user.models.dto.PrivateUserResponseDto;
+import com.aidcompass.user.models.dtos.UserCreateDto;
+import com.aidcompass.user.models.dtos.UserUpdateDto;
+import com.aidcompass.user.models.dtos.PrivateUserResponseDto;
 import com.aidcompass.user.repositories.AvatarStorage;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;

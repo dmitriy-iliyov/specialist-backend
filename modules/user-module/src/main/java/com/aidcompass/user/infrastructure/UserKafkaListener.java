@@ -17,7 +17,7 @@ public class UserKafkaListener {
         this.creatorRatingService = creatorRatingService;
     }
 
-    @KafkaListener(topics = {"${api.kafka.topic.review-buffer}"})
+    @KafkaListener(topics = {"${api.kafka.topic.creator-rating}"})
     public void listen(CreatorRatingUpdateEvent event) {
         creatorRatingService.updateById(event);
     }

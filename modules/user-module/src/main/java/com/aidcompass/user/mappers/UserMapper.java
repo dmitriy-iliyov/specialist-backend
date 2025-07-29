@@ -3,9 +3,9 @@ package com.aidcompass.user.mappers;
 
 import com.aidcompass.contracts.user.PublicUserResponseDto;
 import com.aidcompass.user.models.UserEntity;
-import com.aidcompass.user.models.dto.PrivateUserResponseDto;
-import com.aidcompass.user.models.dto.UserUpdateDto;
-import com.aidcompass.user.models.dto.UserCreateDto;
+import com.aidcompass.user.models.dtos.PrivateUserResponseDto;
+import com.aidcompass.user.models.dtos.UserUpdateDto;
+import com.aidcompass.user.models.dtos.UserCreateDto;
 import com.aidcompass.user.repositories.AvatarStorage;
 import com.aidcompass.utils.InstantToLocalDataTimeConverter;
 import org.mapstruct.Mapper;

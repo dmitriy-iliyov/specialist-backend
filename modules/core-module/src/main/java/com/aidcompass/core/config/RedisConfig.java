@@ -80,7 +80,6 @@ public class RedisConfig {
     public CacheManager cacheManager(RedisConnectionFactory  redisConnectionFactory, RedisCacheConfiguration defaultConfig) {
         return RedisCacheManager.builder(redisConnectionFactory)
                 .disableCreateOnMissingCache()
-
                 .withCacheConfiguration("specialists:types:exists", defaultConfig)
                 .withCacheConfiguration("specialists:types:suggested:id", defaultConfig)
                 .withCacheConfiguration("specialists:types:suggested", defaultConfig)
@@ -95,6 +94,8 @@ public class RedisConfig {
                 .withCacheConfiguration("specialists:bookmarks:count:total", defaultConfig.entryTtl(Duration.ofSeconds(600)))
                 .withCacheConfiguration("specialists:created:count:filter", defaultConfig.entryTtl(Duration.ofSeconds(1200)))
                 .withCacheConfiguration("specialists:bookmarks:id_pairs", defaultConfig.entryTtl(Duration.ofSeconds(600)))
+
+                .withCacheConfiguration("users:events:creator-rating-update:processed", defaultConfig.entryTtl(Duration.ofSeconds(3600)))
                 .build();
     }
 }

@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 public enum DeliveryState {
     PREPARE(1),
-    READY(2),
+    READY_TO_SEND(2),
     SENT(3);
 
     @Getter

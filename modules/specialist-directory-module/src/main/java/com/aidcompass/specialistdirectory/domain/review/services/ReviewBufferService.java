@@ -11,4 +11,6 @@ public interface ReviewBufferService {
     void sendEventsBatch();
 
     void popAllByIdIn(Set<UUID> ids);
+
+    void markBatchAsReadyToSend(Set<UUID> ids);
 }

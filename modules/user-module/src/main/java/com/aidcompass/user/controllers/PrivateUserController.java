@@ -1,8 +1,8 @@
 package com.aidcompass.user.controllers;
 
 import com.aidcompass.contracts.auth.PrincipalDetails;
-import com.aidcompass.user.models.dto.UserCreateDto;
-import com.aidcompass.user.models.dto.UserUpdateDto;
+import com.aidcompass.user.models.dtos.UserCreateDto;
+import com.aidcompass.user.models.dtos.UserUpdateDto;
 import com.aidcompass.user.services.UserOrchestrator;
 import com.aidcompass.user.services.UserService;
 import jakarta.validation.Valid;

@@ -1,8 +1,8 @@
 package com.aidcompass.user.validation;
 
 import com.aidcompass.contracts.auth.SystemAccountService;
-import com.aidcompass.user.models.dto.PrivateUserResponseDto;
-import com.aidcompass.user.models.dto.UserUpdateDto;
+import com.aidcompass.user.models.dtos.PrivateUserResponseDto;
+import com.aidcompass.user.models.dtos.UserUpdateDto;
 import com.aidcompass.user.services.UserService;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

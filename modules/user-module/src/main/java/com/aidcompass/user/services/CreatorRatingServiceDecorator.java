@@ -1,6 +1,7 @@
 package com.aidcompass.user.services;
 
 import com.aidcompass.contracts.user.CreatorRatingUpdateEvent;
+import com.aidcompass.user.infrastructure.events.EventService;
 import com.aidcompass.user.models.enums.ProcessingStatus;
 import jakarta.persistence.OptimisticLockException;
 import lombok.extern.slf4j.Slf4j;

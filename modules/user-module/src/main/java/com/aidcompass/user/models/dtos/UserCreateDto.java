@@ -1,4 +1,4 @@
-package com.aidcompass.user.models.dto;
+package com.aidcompass.user.models.dtos;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

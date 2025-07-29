@@ -1,14 +1,14 @@
 package com.aidcompass.specialistdirectory.domain.review.controllers;
 
-import com.aidcompass.specialistdirectory.domain.review.models.dtos.DeleteRequestDto;
 import com.aidcompass.specialistdirectory.domain.review.services.ReviewBufferService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/system/v1/specialists/reviews/buffer/batch")
@@ -17,9 +17,17 @@ public class ReviewBufferController {
 
     private final ReviewBufferService service;
 
+    @PostMapping
+    public ResponseEntity<?> markBatchAsReadyToSend(@RequestBody Map<String, Set<UUID>> dto) {
+        service.markBatchAsReadyToSend(dto.get("ids"));
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .build();
+    }
+
     @DeleteMapping
-    public ResponseEntity<?> deleteAllByIdIn(@RequestBody DeleteRequestDto dto) {
-        service.popAllByIdIn(dto.ids());
+    public ResponseEntity<?> deleteBatchByIdIn(@RequestBody Map<String, Set<UUID>> dto) {
+        service.popAllByIdIn(dto.get("ids"));
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();

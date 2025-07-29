@@ -2,9 +2,9 @@ package com.aidcompass.user.services;
 
 import com.aidcompass.contracts.user.PublicUserResponseDto;
 import com.aidcompass.user.models.enums.ScopeType;
-import com.aidcompass.user.models.dto.PrivateUserResponseDto;
-import com.aidcompass.user.models.dto.UserCreateDto;
-import com.aidcompass.user.models.dto.UserUpdateDto;
+import com.aidcompass.user.models.dtos.PrivateUserResponseDto;
+import com.aidcompass.user.models.dtos.UserCreateDto;
+import com.aidcompass.user.models.dtos.UserUpdateDto;
 import com.aidcompass.utils.pagination.PageRequest;
 import com.aidcompass.utils.pagination.PageResponse;
 

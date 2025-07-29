@@ -1,4 +1,4 @@
-package com.aidcompass.user.models.dto;
+package com.aidcompass.user.models.dtos;
 
 import com.aidcompass.user.validation.UniqueEmail;
 import com.fasterxml.jackson.annotation.JsonCreator;

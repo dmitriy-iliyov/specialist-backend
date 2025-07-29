@@ -26,7 +26,15 @@ public interface ReviewBufferRepository extends JpaRepository<ReviewBufferEntity
         SET rb.deliveryState = :delivery_state
         WHERE rb.id = :id
     """)
-    void updateDeliveryStateById(@Param("id") UUID id, @Param("delivery_state") DeliveryState deliveryState);
+    void updateDeliveryStateById(@Param("delivery_state") DeliveryState deliveryState, @Param("id") UUID id);
 
     void deleteAllByIdIn(Set<UUID> ids);
+
+    @Modifying
+    @Query("""
+        UPDATE ReviewBufferEntity rb
+        SET rb.deliveryState = :delivery_state
+        WHERE rb.id IN :ids
+    """)
+    void updateAllDeliveryStatesByIdIn(@Param("delivery_state") DeliveryState deliveryState, @Param("ids") Set<UUID> ids);
 }
