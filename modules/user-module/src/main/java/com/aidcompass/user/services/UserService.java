@@ -1,7 +1,7 @@
 package com.aidcompass.user.services;
 
 import com.aidcompass.contracts.user.PublicUserResponseDto;
-import com.aidcompass.user.models.ScopeType;
+import com.aidcompass.user.models.enums.ScopeType;
 import com.aidcompass.user.models.dto.PrivateUserResponseDto;
 import com.aidcompass.user.models.dto.UserCreateDto;
 import com.aidcompass.user.models.dto.UserUpdateDto;

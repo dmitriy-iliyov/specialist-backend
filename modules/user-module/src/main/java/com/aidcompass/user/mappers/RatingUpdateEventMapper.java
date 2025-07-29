@@ -1,4 +1,4 @@
-package com.aidcompass.user;
+package com.aidcompass.user.mappers;
 
 import com.aidcompass.contracts.user.CreatorRatingUpdateEvent;
 import com.aidcompass.user.models.RatingUpdateEventEntity;

@@ -1,7 +1,6 @@
 package com.aidcompass.user.controllers;
 
-import com.aidcompass.contracts.auth.PrincipalDetails;
-import com.aidcompass.user.models.ScopeType;
+import com.aidcompass.user.models.enums.ScopeType;
 import com.aidcompass.user.services.UserService;
 import com.aidcompass.utils.pagination.PageRequest;
 import jakarta.validation.Valid;
@@ -10,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;

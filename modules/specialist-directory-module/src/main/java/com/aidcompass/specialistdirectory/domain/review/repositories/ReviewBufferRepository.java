@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 @Repository
@@ -26,4 +27,6 @@ public interface ReviewBufferRepository extends JpaRepository<ReviewBufferEntity
         WHERE rb.id = :id
     """)
     void updateDeliveryStateById(@Param("id") UUID id, @Param("delivery_state") DeliveryState deliveryState);
+
+    void deleteAllByIdIn(Set<UUID> ids);
 }

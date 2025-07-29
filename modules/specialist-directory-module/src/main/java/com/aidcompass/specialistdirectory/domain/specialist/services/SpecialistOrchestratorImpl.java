@@ -53,12 +53,12 @@ public class SpecialistOrchestratorImpl implements SpecialistOrchestrator {
     )
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
-    public void updateRatingById(UUID id, long rating, OperationType operationType) {
-        specialistService.updateRatingById(id, rating, operationType);
+    public void updateRatingById(UUID id, long rating, OperationType operation) {
+        specialistService.updateRatingById(id, rating, operation);
     }
 
     @Recover
-    public void recover(OptimisticLockException e, UUID id, long rating, OperationType operationType) {
+    public void recover(OptimisticLockException e, UUID id, long rating, OperationType operation) {
         log.error("Error when reviewing specialist: id={}, date={}, time={}", id, LocalDate.now(), LocalTime.now());
     }
 

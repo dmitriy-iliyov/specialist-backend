@@ -1,5 +1,7 @@
 package com.aidcompass.user.models;
 
+import com.aidcompass.user.mappers.ProcessingStatusConverter;
+import com.aidcompass.user.models.enums.ProcessingStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +11,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Entity
-@Table(name = "rating_events")
+@Table(name = "rating_update_events")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,20 +29,15 @@ public class RatingUpdateEventEntity {
     @Column(name = "earned_rating", nullable = false)
     private long earnedRating;
 
+    @Convert(converter = ProcessingStatusConverter.class)
+    @Column(nullable = false)
+    private ProcessingStatus status;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
-
-    @Column(name = "updated_at", nullable = false)
-    private Instant updatedAt;
 
     @PrePersist
     public void prePersist() {
         createdAt = Instant.now();
-        updatedAt = createdAt;
-    }
-
-    @PreUpdate
-    public void preUpdate() {
-        updatedAt = Instant.now();
     }
 }

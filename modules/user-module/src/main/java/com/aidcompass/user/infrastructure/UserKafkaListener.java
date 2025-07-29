@@ -1,6 +1,7 @@
-package com.aidcompass.user.services;
+package com.aidcompass.user.infrastructure;
 
 import com.aidcompass.contracts.user.CreatorRatingUpdateEvent;
+import com.aidcompass.user.services.CreatorRatingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.kafka.annotation.KafkaListener;

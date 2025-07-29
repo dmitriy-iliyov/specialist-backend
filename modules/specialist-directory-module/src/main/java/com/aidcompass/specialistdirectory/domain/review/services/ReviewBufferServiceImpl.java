@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -26,14 +27,14 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class ReviewBufferServiceImpl implements ReviewBufferService {
 
-    @Value("${api.review-buffer.batch-size}")
-    public int reviewBatchSize;
+    @Value("${api.review-buffer.size}")
+    public int REVIEW_BUFFER_SIZE;
 
     @Value("${api.review-buffer.clean.batch-size}")
-    public int cleanBatchSize;
+    public int CLEAN_BATCH_SIZE;
 
     @Value("${api.kafka.topic.review-buffer}")
-    public String topic;
+    public String TOPIC;
 
     private final ReviewBufferService self;
     private final ReviewBufferRepository repository;
@@ -54,17 +55,11 @@ public class ReviewBufferServiceImpl implements ReviewBufferService {
             long specialistReviewCount = entity.getReviewCount() + 1;
             entity.setSummaryRating(earnedSpecialistRating);
             entity.setReviewCount(specialistReviewCount);
-            if (specialistReviewCount >= reviewBatchSize) {
+            if (specialistReviewCount >= REVIEW_BUFFER_SIZE) {
                 entity.setDeliveryState(DeliveryState.READY);
             }
         }
         repository.save(entity);
-    }
-
-    @Transactional
-    @Override
-    public void pop(UUID id) {
-        repository.deleteById(id);
     }
 
     @Transactional
@@ -74,13 +69,14 @@ public class ReviewBufferServiceImpl implements ReviewBufferService {
     }
 
     @Scheduled(
-            initialDelayString = "${api.review-buffer.clean.initialDelay}",
-            fixedDelayString = "${api.review-buffer.clean.fixedDelay}"
+            initialDelayString = "${api.review-buffer.clean.initial_delay}",
+            fixedDelayString = "${api.review-buffer.clean.fixed_delay}"
     )
+    @Transactional
     @Override
-    public void clean() {
+    public void sendEventsBatch() {
         List<CreatorRatingUpdateEvent> events = mapper.toEventList(
-                repository.findAllByDeliveryState(DeliveryState.READY, Pageable.ofSize(cleanBatchSize)).getContent()
+                repository.findAllByDeliveryState(DeliveryState.READY, Pageable.ofSize(CLEAN_BATCH_SIZE)).getContent()
         );
         for (CreatorRatingUpdateEvent event: events) {
             this.sendEvent(event, 1);
@@ -88,7 +84,7 @@ public class ReviewBufferServiceImpl implements ReviewBufferService {
     }
 
     private void sendEvent(CreatorRatingUpdateEvent event, int attemptNumber) {
-        kafkaTemplate.send(topic, event)
+        kafkaTemplate.send(TOPIC, event)
                 .thenAccept(success -> self.markAsSent(event.id()))
                 .exceptionally(fail -> {
                     log.error("Error publishing CreatorRatingUpdateEvent with creatorId={}, date={}, time={}",
@@ -104,5 +100,14 @@ public class ReviewBufferServiceImpl implements ReviewBufferService {
                             event.creatorId(), LocalDate.now(), LocalTime.now());
                     return null;
                 });
+    }
+
+    @Transactional
+    @Override
+    public void popAllByIdIn(Set<UUID> ids) {
+        if (ids.isEmpty()) {
+            return;
+        }
+        repository.deleteAllByIdIn(ids);
     }
 }

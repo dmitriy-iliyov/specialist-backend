@@ -1,6 +1,6 @@
 package com.aidcompass.user.controllers;
 
-import com.aidcompass.user.models.ScopeType;
+import com.aidcompass.user.models.enums.ScopeType;
 import com.aidcompass.user.services.UserService;
 import com.aidcompass.utils.pagination.PageRequest;
 import jakarta.validation.Valid;
