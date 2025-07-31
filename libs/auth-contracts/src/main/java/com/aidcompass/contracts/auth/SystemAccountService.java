@@ -6,7 +6,9 @@ public interface SystemAccountService {
     //should return null when not found
     UUID findIdByEmail(String email);
 
-    void updateEmailById(UUID id);
+    void updateEmailById(UUID id, String email);
 
     void deleteById(UUID id);
+
+    boolean existsByEmail(String email);
 }
