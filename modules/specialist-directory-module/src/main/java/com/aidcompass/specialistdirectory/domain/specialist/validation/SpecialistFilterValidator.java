@@ -14,7 +14,7 @@ public class SpecialistFilterValidator implements ConstraintValidator<Specialist
         context.disableDefaultConstraintViolation();
 
         if (filter.minRating() != null && filter.maxRating() != null) {
-            if (filter.minRating() > filter.maxRating()) { // ИСПРАВЛЕНО: > вместо
+            if (filter.minRating() > filter.maxRating()) {
                 hasErrors = true;
                 context.buildConstraintViolationWithTemplate("Min rating cannot be greater than max rating.")
                         .addPropertyNode("minRating")

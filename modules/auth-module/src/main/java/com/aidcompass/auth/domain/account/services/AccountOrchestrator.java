@@ -1,8 +1,8 @@
 package com.aidcompass.auth.domain.account.services;
 
-import com.aidcompass.auth.domain.account.models.AccountCreateDto;
-import com.aidcompass.auth.domain.account.models.AccountResponseDto;
+import com.aidcompass.auth.domain.account.models.dtos.AccountCreateDto;
+import com.aidcompass.auth.domain.account.models.dtos.ShortAccountResponseDto;
 
 public interface AccountOrchestrator {
-    AccountResponseDto save(AccountCreateDto dto);
+    ShortAccountResponseDto save(AccountCreateDto dto);
 }

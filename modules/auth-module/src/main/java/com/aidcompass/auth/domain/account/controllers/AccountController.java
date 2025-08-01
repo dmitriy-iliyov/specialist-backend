@@ -1,6 +1,6 @@
 package com.aidcompass.auth.domain.account.controllers;
 
-import com.aidcompass.auth.domain.account.models.AccountCreateDto;
+import com.aidcompass.auth.domain.account.models.dtos.AccountCreateDto;
 import com.aidcompass.auth.domain.account.services.AccountOrchestrator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

@@ -1,11 +1,11 @@
-package com.aidcompass.auth.domain.account.models;
+package com.aidcompass.auth.domain.account.models.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public record AccountResponseDto(
+public record ShortAccountResponseDto(
         UUID id,
         String email,
         @JsonProperty("created_at")

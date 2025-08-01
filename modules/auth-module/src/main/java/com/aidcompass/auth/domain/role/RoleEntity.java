@@ -14,11 +14,16 @@ import org.springframework.security.core.GrantedAuthority;
 public class RoleEntity implements GrantedAuthority {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
+
+    public RoleEntity(Role role) {
+        this.role = role;
+    }
 
     @Override
     public String getAuthority() {

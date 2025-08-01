@@ -1,13 +1,16 @@
 package com.aidcompass.auth.domain.account.models;
 
+import com.aidcompass.auth.domain.account.mappers.LockReasonTypeConverter;
+import com.aidcompass.auth.domain.account.mappers.UnableReasonTypeConverter;
+import com.aidcompass.auth.domain.account.models.enums.LockReasonType;
+import com.aidcompass.auth.domain.account.models.enums.UnableReasonType;
 import com.aidcompass.auth.domain.authority.AuthorityEntity;
 import com.aidcompass.auth.domain.role.RoleEntity;
 import com.aidcompass.utils.UuidUtils;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.Instant;
 import java.util.List;
@@ -17,13 +20,13 @@ import java.util.UUID;
 @Table(name = "accounts")
 @Data
 @AllArgsConstructor
-@Builder
+@ToString(exclude = {"role", "authorities"})
 public class AccountEntity {
 
     @Id
     private UUID id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
@@ -35,7 +38,7 @@ public class AccountEntity {
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "authorities",
+            name = "authority_account_relation",
             joinColumns = @JoinColumn(name = "account_id", nullable = false),
             inverseJoinColumns = @JoinColumn(name = "authority_id", nullable = false)
     )
@@ -44,8 +47,19 @@ public class AccountEntity {
     @Column(name = "is_locked", nullable = false)
     private boolean isLocked;
 
+    @Column(name = "lock_reason")
+    @Convert(converter = LockReasonTypeConverter.class)
+    private LockReasonType lockReason;
+
+    @Column(name = "lock_term")
+    private Instant lockTerm;
+
     @Column(name = "is_enabled", nullable = false)
     private boolean isEnabled;
+
+    @Convert(converter = UnableReasonTypeConverter.class)
+    @Column(name = "unable_reason")
+    private UnableReasonType unableReason;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;

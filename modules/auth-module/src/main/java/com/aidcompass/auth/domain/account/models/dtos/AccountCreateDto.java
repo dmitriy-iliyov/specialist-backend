@@ -1,4 +1,4 @@
-package com.aidcompass.auth.domain.account.models;
+package com.aidcompass.auth.domain.account.models.dtos;
 
 import com.aidcompass.auth.domain.account.validation.UniqueEmail;
 import com.aidcompass.auth.domain.authority.Authority;

@@ -1,6 +1,6 @@
 package com.aidcompass.auth.domain.account.validation;
 
-import com.aidcompass.auth.domain.account.models.AccountCreateDto;
+import com.aidcompass.auth.domain.account.models.dtos.AccountCreateDto;
 import com.aidcompass.contracts.auth.SystemAccountService;
 import com.aidcompass.core.exceptions.models.BaseNotFoundException;
 import jakarta.validation.ConstraintValidator;
