@@ -1,7 +1,7 @@
 package com.aidcompass.auth.domain.account.controllers;
 
-import com.aidcompass.auth.domain.account.models.enums.LockReasonType;
-import com.aidcompass.auth.domain.account.models.enums.UnableReasonType;
+import com.aidcompass.auth.domain.account.models.enums.LockReason;
+import com.aidcompass.auth.domain.account.models.enums.UnableReason;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,13 +16,15 @@ public class AccountInfoController {
     public ResponseEntity<?> getUnableReasonTypes() {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(UnableReasonType.values());
+                .body(UnableReason.values());
     }
 
     @GetMapping("/lock")
     public ResponseEntity<?> getLockReasonTypes() {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(LockReasonType.values());
+                .body(LockReason.values());
     }
+
+
 }

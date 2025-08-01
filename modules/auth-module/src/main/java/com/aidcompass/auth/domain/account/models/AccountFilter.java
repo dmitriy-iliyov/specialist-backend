@@ -1,7 +1,7 @@
 package com.aidcompass.auth.domain.account.models;
 
-import com.aidcompass.auth.domain.account.models.enums.LockReasonType;
-import com.aidcompass.auth.domain.account.models.enums.UnableReasonType;
+import com.aidcompass.auth.domain.account.models.enums.LockReason;
+import com.aidcompass.auth.domain.account.models.enums.UnableReason;
 import com.aidcompass.utils.pagination.PageDataHolder;
 import com.aidcompass.utils.validation.annotation.ValidEnum;
 import jakarta.validation.constraints.Min;
@@ -11,12 +11,12 @@ import jakarta.validation.constraints.PositiveOrZero;
 public record AccountFilter(
         Boolean locked,
 
-        @ValidEnum(enumClass = LockReasonType.class, nullable = true, message = "Unknown lock reason.")
+        @ValidEnum(enumClass = LockReason.class, nullable = true, message = "Unknown lock reason.")
         String lockReason,
 
         Boolean enable,
 
-        @ValidEnum(enumClass = UnableReasonType.class, nullable = true, message = "Unknown lock reason.")
+        @ValidEnum(enumClass = UnableReason.class, nullable = true, message = "Unknown lock reason.")
         String unableReason,
 
         @NotNull(message = "Page number is required.")

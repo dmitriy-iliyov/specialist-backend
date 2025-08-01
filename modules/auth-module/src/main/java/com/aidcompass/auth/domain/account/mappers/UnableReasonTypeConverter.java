@@ -1,19 +1,19 @@
 package com.aidcompass.auth.domain.account.mappers;
 
-import com.aidcompass.auth.domain.account.models.enums.UnableReasonType;
+import com.aidcompass.auth.domain.account.models.enums.UnableReason;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
 @Converter
-public class UnableReasonTypeConverter implements AttributeConverter<UnableReasonType, Integer> {
+public class UnableReasonTypeConverter implements AttributeConverter<UnableReason, Integer> {
 
     @Override
-    public Integer convertToDatabaseColumn(UnableReasonType unableReasonType) {
+    public Integer convertToDatabaseColumn(UnableReason unableReasonType) {
         return unableReasonType.getCode();
     }
 
     @Override
-    public UnableReasonType convertToEntityAttribute(Integer integer) {
-        return UnableReasonType.fromCode(integer);
+    public UnableReason convertToEntityAttribute(Integer integer) {
+        return UnableReason.fromCode(integer);
     }
 }

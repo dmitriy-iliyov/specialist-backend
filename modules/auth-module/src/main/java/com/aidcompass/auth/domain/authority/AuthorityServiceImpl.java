@@ -1,6 +1,5 @@
 package com.aidcompass.auth.domain.authority;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,7 +11,6 @@ import java.util.*;
 public class AuthorityServiceImpl implements AuthorityService {
 
     private final AuthorityRepository repository;
-    private final ObjectMapper objectMapper;
 
     @Transactional(readOnly = true)
     @Override

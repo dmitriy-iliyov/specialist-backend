@@ -1,7 +1,7 @@
 package com.aidcompass.auth.domain.account.repositories;
 
 import com.aidcompass.auth.domain.account.models.AccountEntity;
-import com.aidcompass.auth.domain.account.models.enums.LockReasonType;
+import com.aidcompass.auth.domain.account.models.enums.LockReason;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -29,7 +29,7 @@ public interface AccountRepository extends JpaRepository<AccountEntity, UUID>, J
         SET a.isLocked = true, a.lockReason = :reason, a.lockTerm = :lock_term
         WHERE a.id = :id
     """)
-    void lockById(@Param("id") UUID id, @Param("reason") LockReasonType reason, @Param("lock_term") Instant lockTerm);
+    void lockById(@Param("id") UUID id, @Param("reason") LockReason reason, @Param("lock_term") Instant lockTerm);
 
     @Modifying
     @Query("""

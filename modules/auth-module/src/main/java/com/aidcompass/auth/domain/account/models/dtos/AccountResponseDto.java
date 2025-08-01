@@ -1,7 +1,7 @@
 package com.aidcompass.auth.domain.account.models.dtos;
 
-import com.aidcompass.auth.domain.account.models.enums.LockReasonType;
-import com.aidcompass.auth.domain.account.models.enums.UnableReasonType;
+import com.aidcompass.auth.domain.account.models.enums.LockReason;
+import com.aidcompass.auth.domain.account.models.enums.UnableReason;
 import com.aidcompass.auth.domain.authority.Authority;
 import com.aidcompass.auth.domain.role.Role;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -17,10 +17,10 @@ public record AccountResponseDto(
         Role role,
         List<Authority> authorities,
         @JsonProperty("is_locked") boolean isLocked,
-        @JsonProperty("lock_reason") LockReasonType lockReason,
+        @JsonProperty("lock_reason") LockReason lockReason,
         @JsonProperty("lock_term") Instant lockTerm,
         @JsonProperty("is_enable") boolean isEnable,
-        @JsonProperty("unable_reason") UnableReasonType unableReason,
+        @JsonProperty("unable_reason") UnableReason unableReason,
         @JsonProperty("created_at") Instant createdAt,
         @JsonProperty("updated_at") Instant updatedAt
 ) { }

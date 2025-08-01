@@ -5,18 +5,18 @@ import lombok.Getter;
 
 import java.util.Arrays;
 
-public enum UnableReasonType {
+public enum UnableReason {
     EMAIL_CONFIRMATION_REQUIRED(1);
 
     @Getter
     private final int code;
 
-    UnableReasonType(int code) {
+    UnableReason(int code) {
         this.code = code;
     }
 
-    public static UnableReasonType fromCode(int code) {
-        return Arrays.stream(UnableReasonType.values())
+    public static UnableReason fromCode(int code) {
+        return Arrays.stream(UnableReason.values())
                 .filter(type -> type.getCode() == code)
                 .findFirst()
                 .orElseThrow(UnknownUnableReasonTypeException::new);

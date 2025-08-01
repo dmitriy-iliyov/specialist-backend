@@ -2,8 +2,8 @@ package com.aidcompass.auth.domain.account.models;
 
 import com.aidcompass.auth.domain.account.mappers.LockReasonTypeConverter;
 import com.aidcompass.auth.domain.account.mappers.UnableReasonTypeConverter;
-import com.aidcompass.auth.domain.account.models.enums.LockReasonType;
-import com.aidcompass.auth.domain.account.models.enums.UnableReasonType;
+import com.aidcompass.auth.domain.account.models.enums.LockReason;
+import com.aidcompass.auth.domain.account.models.enums.UnableReason;
 import com.aidcompass.auth.domain.authority.AuthorityEntity;
 import com.aidcompass.auth.domain.role.RoleEntity;
 import com.aidcompass.utils.UuidUtils;
@@ -49,7 +49,7 @@ public class AccountEntity {
 
     @Column(name = "lock_reason")
     @Convert(converter = LockReasonTypeConverter.class)
-    private LockReasonType lockReason;
+    private LockReason lockReason;
 
     @Column(name = "lock_term")
     private Instant lockTerm;
@@ -59,7 +59,7 @@ public class AccountEntity {
 
     @Convert(converter = UnableReasonTypeConverter.class)
     @Column(name = "unable_reason")
-    private UnableReasonType unableReason;
+    private UnableReason unableReason;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;

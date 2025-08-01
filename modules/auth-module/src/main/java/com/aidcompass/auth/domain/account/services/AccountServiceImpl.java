@@ -4,8 +4,8 @@ import com.aidcompass.auth.domain.account.models.dtos.AccountCreateDto;
 import com.aidcompass.auth.domain.account.models.dtos.AccountResponseDto;
 import com.aidcompass.auth.domain.account.models.dtos.LockDto;
 import com.aidcompass.auth.domain.account.models.dtos.ShortAccountResponseDto;
-import com.aidcompass.auth.domain.account.models.enums.LockReasonType;
-import com.aidcompass.auth.domain.account.models.enums.UnableReasonType;
+import com.aidcompass.auth.domain.account.models.enums.LockReason;
+import com.aidcompass.auth.domain.account.models.enums.UnableReason;
 import com.aidcompass.auth.domain.account.repositories.AccountRepository;
 import com.aidcompass.auth.domain.account.mappers.AccountMapper;
 import com.aidcompass.auth.domain.account.models.*;
@@ -72,7 +72,7 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         entity.setRole(role);
         entity.setAuthorities(authorities);
         entity.setEnabled(false);
-        entity.setUnableReason(UnableReasonType.EMAIL_CONFIRMATION_REQUIRED);
+        entity.setUnableReason(UnableReason.EMAIL_CONFIRMATION_REQUIRED);
         return mapper.toShortResponseDto(repository.save(entity));
     }
 
@@ -100,7 +100,7 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         AccountEntity entity = repository.findById(id).orElseThrow(AccountNotFoundByIdException::new);
         entity.setEmail(email);
         entity.setEnabled(false);
-        entity.setUnableReason(UnableReasonType.EMAIL_CONFIRMATION_REQUIRED);
+        entity.setUnableReason(UnableReason.EMAIL_CONFIRMATION_REQUIRED);
         repository.save(entity);
     }
 
@@ -128,9 +128,9 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
     @Override
     public PageResponse<AccountResponseDto> findAllByFilter(AccountFilter filter) {
         Specification<AccountEntity> specification = Specification.where(AccountSpecification.filterByIsLocked(filter.locked()))
-                .and(AccountSpecification.filterByLockeReason(LockReasonType.valueOf(filter.lockReason())))
+                .and(AccountSpecification.filterByLockeReason(LockReason.valueOf(filter.lockReason())))
                 .and(AccountSpecification.filterByIsEnable(filter.enable()))
-                .and(AccountSpecification.filterByUnableReason(UnableReasonType.valueOf(filter.unableReason())));
+                .and(AccountSpecification.filterByUnableReason(UnableReason.valueOf(filter.unableReason())));
         Page<AccountEntity> entityPage = repository.findAll(specification, generatePageable(filter));
         Map<UUID, List<Authority>> authoritiesMap = loadAuthorities(entityPage.getContent());
         return toPageResponse(entityPage, authoritiesMap);
