@@ -1,7 +1,7 @@
 package com.aidcompass.auth.domain.account.services;
 
 import com.aidcompass.contracts.auth.SystemAccountService;
-import com.aidcompass.message.ConfirmationService;
+import com.aidcompass.message.services.ConfirmationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

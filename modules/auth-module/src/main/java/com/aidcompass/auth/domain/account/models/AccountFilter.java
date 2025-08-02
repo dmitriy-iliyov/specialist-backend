@@ -16,7 +16,7 @@ public record AccountFilter(
 
         Boolean enable,
 
-        @ValidEnum(enumClass = UnableReason.class, nullable = true, message = "Unknown lock reason.")
+        @ValidEnum(enumClass = UnableReason.class, nullable = true, message = "Unknown unable reason.")
         String unableReason,
 
         @NotNull(message = "Page number is required.")

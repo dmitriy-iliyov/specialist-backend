@@ -1,7 +1,7 @@
 package com.aidcompass.auth.domain.account.services;
 
 import com.aidcompass.auth.domain.account.models.AccountFilter;
-import com.aidcompass.auth.domain.account.models.dtos.AccountCreateDto;
+import com.aidcompass.auth.domain.account.models.dtos.DefaultAccountCreateDto;
 import com.aidcompass.auth.domain.account.models.dtos.AccountResponseDto;
 import com.aidcompass.auth.domain.account.models.dtos.ShortAccountResponseDto;
 import com.aidcompass.auth.domain.account.models.dtos.LockDto;
@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.UUID;
 
 public interface AccountService {
-    ShortAccountResponseDto save(AccountCreateDto dto);
+    ShortAccountResponseDto save(DefaultAccountCreateDto dto);
 
     boolean existsByEmail(String email);
 
@@ -25,7 +25,6 @@ public interface AccountService {
 
     void updateEmailById(UUID id, String email);
 
-    @Transactional(readOnly = true)
     PageResponse<AccountResponseDto> findAll(com.aidcompass.utils.pagination.PageRequest page);
 
     PageResponse<AccountResponseDto> findAllByFilter(AccountFilter filter);

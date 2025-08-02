@@ -1,6 +1,6 @@
 package com.aidcompass.auth.domain.account.services;
 
-import com.aidcompass.auth.domain.account.models.dtos.AccountCreateDto;
+import com.aidcompass.auth.domain.account.models.dtos.DefaultAccountCreateDto;
 import com.aidcompass.auth.domain.account.models.dtos.AccountResponseDto;
 import com.aidcompass.auth.domain.account.models.dtos.LockDto;
 import com.aidcompass.auth.domain.account.models.dtos.ShortAccountResponseDto;
@@ -63,7 +63,7 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
 
     @Transactional
     @Override
-    public ShortAccountResponseDto save(AccountCreateDto dto) {
+    public ShortAccountResponseDto save(DefaultAccountCreateDto dto) {
         RoleEntity role = roleService.getReferenceByRole(dto.getRole());
         List<AuthorityEntity> authorities = authorityService.getReferenceAllByAuthorityIn(dto.getAuthorities());
         AccountEntity entity = new AccountEntity();

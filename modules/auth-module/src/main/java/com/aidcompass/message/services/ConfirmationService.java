@@ -1,4 +1,4 @@
-package com.aidcompass.message;
+package com.aidcompass.message.services;
 
 import java.util.UUID;
 

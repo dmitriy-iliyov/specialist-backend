@@ -1,6 +1,6 @@
 package com.aidcompass.auth.domain.account.controllers;
 
-import com.aidcompass.auth.domain.account.models.dtos.AccountCreateDto;
+import com.aidcompass.auth.domain.account.models.dtos.DefaultAccountCreateDto;
 import com.aidcompass.auth.domain.account.services.AccountOrchestrator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ public class AccountController {
     private final AccountOrchestrator orchestrator;
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody @Valid AccountCreateDto dto) {
+    public ResponseEntity<?> create(@RequestBody @Valid DefaultAccountCreateDto dto) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(orchestrator.save(dto));
