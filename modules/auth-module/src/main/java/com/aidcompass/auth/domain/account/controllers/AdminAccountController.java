@@ -3,7 +3,7 @@ package com.aidcompass.auth.domain.account.controllers;
 import com.aidcompass.auth.domain.account.models.AccountFilter;
 import com.aidcompass.auth.domain.account.models.dtos.LockDto;
 import com.aidcompass.auth.domain.account.models.dtos.ManagedAccountCreateDto;
-import com.aidcompass.auth.domain.account.services.AccountOrchestrator;
+import com.aidcompass.auth.domain.account.services.PersistAccountOrchestrator;
 import com.aidcompass.auth.domain.account.services.AccountService;
 import com.aidcompass.utils.pagination.PageRequest;
 import com.aidcompass.utils.validation.annotation.ValidUuid;
@@ -20,7 +20,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AdminAccountController {
 
-    private final AccountOrchestrator orchestrator;
+    private final PersistAccountOrchestrator orchestrator;
     private final AccountService service;
 
     @PostMapping

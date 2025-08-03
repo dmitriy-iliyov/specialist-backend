@@ -1,7 +1,7 @@
 package com.aidcompass.auth.domain.account.validation;
 
 import com.aidcompass.auth.domain.account.models.dtos.DefaultAccountCreateDto;
-import com.aidcompass.contracts.auth.SystemAccountService;
+import com.aidcompass.auth.domain.account.services.AccountService;
 import com.aidcompass.core.exceptions.models.BaseNotFoundException;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class EmailUniquenessValidator implements ConstraintValidator<UniqueEmail, DefaultAccountCreateDto> {
 
-    private final SystemAccountService accountService;
+    private final AccountService accountService;
 
     @Override
     public boolean isValid(DefaultAccountCreateDto dto, ConstraintValidatorContext context) {

@@ -1,3 +1,0 @@
-### get token
-POST https://localhost:8444/api/confirm/request?resource=test@gmail.com
-Content-Type: application/json

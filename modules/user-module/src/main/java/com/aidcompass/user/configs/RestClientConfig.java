@@ -11,12 +11,10 @@ import org.springframework.web.client.RestClient;
 public class RestClientConfig {
 
     @Value("${api.specialists-directory.base-url}")
-    public String REVIEW_BUFFER_URL;
+    public String BASE_SYSTEM_API_URL;
 
     @Bean
     public ReviewBufferService reviewBufferRestService() {
-        return new ReviewBufferRestClient(
-                RestClient.builder().baseUrl(REVIEW_BUFFER_URL).build()
-        );
+        return new ReviewBufferRestClient(RestClient.builder().baseUrl(BASE_SYSTEM_API_URL).build());
     }
 }

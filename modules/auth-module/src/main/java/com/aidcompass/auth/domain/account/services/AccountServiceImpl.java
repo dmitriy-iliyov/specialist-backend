@@ -1,9 +1,6 @@
 package com.aidcompass.auth.domain.account.services;
 
-import com.aidcompass.auth.domain.account.models.dtos.DefaultAccountCreateDto;
-import com.aidcompass.auth.domain.account.models.dtos.AccountResponseDto;
-import com.aidcompass.auth.domain.account.models.dtos.LockDto;
-import com.aidcompass.auth.domain.account.models.dtos.ShortAccountResponseDto;
+import com.aidcompass.auth.domain.account.models.dtos.*;
 import com.aidcompass.auth.domain.account.models.enums.LockReason;
 import com.aidcompass.auth.domain.account.models.enums.UnableReason;
 import com.aidcompass.auth.domain.account.repositories.AccountRepository;
@@ -17,6 +14,7 @@ import com.aidcompass.auth.domain.role.RoleEntity;
 import com.aidcompass.auth.domain.role.RoleService;
 import com.aidcompass.auth.exceptions.AccountNotFoundByEmailException;
 import com.aidcompass.auth.exceptions.AccountNotFoundByIdException;
+import com.aidcompass.auth.exceptions.NonUniqueEmailException;
 import com.aidcompass.utils.pagination.PageDataHolder;
 import com.aidcompass.utils.pagination.PageResponse;
 import lombok.RequiredArgsConstructor;
@@ -31,12 +29,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -96,12 +92,33 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
 
     @Transactional
     @Override
+    public ShortAccountResponseDto update(AccountUpdateDto dto) {
+        AccountEntity entity = repository.findById(dto.getId()).orElseThrow(AccountNotFoundByIdException::new);
+        entity.setPassword(passwordEncoder.encode(dto.getPassword()));
+        repository.save(entity);
+        return mapper.toShortResponseDto(entity);
+    }
+
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Override
     public void updateEmailById(UUID id, String email) {
         AccountEntity entity = repository.findById(id).orElseThrow(AccountNotFoundByIdException::new);
+        Optional<AccountEntity> existsByEmail = repository.findByEmail(email);
+        if (existsByEmail.isPresent() && !existsByEmail.get().getId().equals(id)) {
+            throw new NonUniqueEmailException();
+        }
         entity.setEmail(email);
         entity.setEnabled(false);
         entity.setUnableReason(UnableReason.EMAIL_CONFIRMATION_REQUIRED);
         repository.save(entity);
+    }
+
+    @Transactional
+    @Override
+    public void updatePasswordByEmail(String email, String password) {
+        AccountEntity entity = repository.findByEmail(email).orElseThrow(AccountNotFoundByEmailException::new);
+        entity.setPassword(passwordEncoder.encode(password));
+
     }
 
     @Transactional

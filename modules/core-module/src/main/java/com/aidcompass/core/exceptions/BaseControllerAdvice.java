@@ -129,7 +129,7 @@ public abstract class BaseControllerAdvice {
                 .body(exceptionDto);
     }
 
-    public ResponseEntity<?> handleInvalidInputException(BaseInvalidInputException e, Locale locale){
+    public ResponseEntity<?> handleInvalidInputException(BaseBadRequestException e, Locale locale){
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST,
                 messageSource.getMessage("400", null, "error.400", locale));
         problemDetail.setProperty("properties", Map.of("errors", List.of(e.getErrorDto())));

@@ -27,7 +27,7 @@ public class UserEntity {
     @Column(name = "last_name", nullable = false, length = 20)
     private String lastName;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column(name = "avatar_url")

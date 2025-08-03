@@ -15,7 +15,7 @@ public interface UserService {
 
     PrivateUserResponseDto findPrivateById(UUID id);
 
-    PrivateUserResponseDto update(UserUpdateDto dto);
+    PrivateUserResponseDto update(UserUpdateDto dto, EmailChangeHandler handler);
 
     PublicUserResponseDto findPublicById(UUID id);
 

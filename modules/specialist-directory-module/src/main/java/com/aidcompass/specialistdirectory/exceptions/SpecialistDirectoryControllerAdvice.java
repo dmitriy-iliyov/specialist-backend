@@ -71,8 +71,8 @@ public class SpecialistDirectoryControllerAdvice extends BaseControllerAdvice {
         return super.handleIllegalStateException(e);
     }
 
-    @ExceptionHandler(BaseInvalidInputException.class)
-    public ResponseEntity<?> handleInvalidInputException(BaseInvalidInputException e, Locale locale){
+    @ExceptionHandler(BaseBadRequestException.class)
+    public ResponseEntity<?> handleInvalidInputException(BaseBadRequestException e, Locale locale){
         return super.handleInvalidInputException(e, locale);
     }
 

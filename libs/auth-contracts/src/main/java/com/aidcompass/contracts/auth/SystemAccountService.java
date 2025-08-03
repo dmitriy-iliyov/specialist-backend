@@ -9,6 +9,4 @@ public interface SystemAccountService {
     void updateEmailById(UUID id, String email);
 
     void deleteById(UUID id);
-
-    boolean existsByEmail(String email);
 }

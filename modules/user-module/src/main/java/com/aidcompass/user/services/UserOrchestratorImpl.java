@@ -44,9 +44,7 @@ public class UserOrchestratorImpl implements UserOrchestrator {
         if (!dto.getAvatar().isEmpty()) {
             dto.setAvatarUrl(avatarStorage.save(dto.getAvatar(), dto.getId()));
         }
-        PrivateUserResponseDto responseDto = userService.update(dto);
-        accountService.updateEmailById(responseDto.getId(), responseDto.getEmail());
-        return responseDto;
+        return userService.update(dto, accountService::updateEmailById);
     }
 
     @Override

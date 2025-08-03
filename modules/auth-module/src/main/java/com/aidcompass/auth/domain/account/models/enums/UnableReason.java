@@ -6,7 +6,8 @@ import lombok.Getter;
 import java.util.Arrays;
 
 public enum UnableReason {
-    EMAIL_CONFIRMATION_REQUIRED(1);
+    EMAIL_CONFIRMATION_REQUIRED(1),
+    PERMANENTLY_BLOCKED(2);
 
     @Getter
     private final int code;

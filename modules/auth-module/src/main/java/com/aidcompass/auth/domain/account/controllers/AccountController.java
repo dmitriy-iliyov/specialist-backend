@@ -1,27 +1,40 @@
 package com.aidcompass.auth.domain.account.controllers;
 
+import com.aidcompass.auth.domain.account.models.dtos.AccountUpdateDto;
 import com.aidcompass.auth.domain.account.models.dtos.DefaultAccountCreateDto;
-import com.aidcompass.auth.domain.account.services.AccountOrchestrator;
+import com.aidcompass.auth.domain.account.services.AccountService;
+import com.aidcompass.auth.domain.account.services.PersistAccountOrchestrator;
+import com.aidcompass.contracts.auth.PrincipalDetails;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/accounts")
+@RequestMapping("/api/v1/accounts/me")
 @RequiredArgsConstructor
 public class AccountController {
 
-    private final AccountOrchestrator orchestrator;
+    private final PersistAccountOrchestrator orchestrator;
+    private final AccountService service;
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody @Valid DefaultAccountCreateDto dto) {
+    public ResponseEntity<?> create(@RequestBody @Valid DefaultAccountCreateDto dto, HttpServletResponse response) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(orchestrator.save(dto));
+                .body(orchestrator.save(dto, response));
+    }
+
+    @PatchMapping
+    public ResponseEntity<?> update(@AuthenticationPrincipal PrincipalDetails principal,
+                                    @RequestBody @Valid AccountUpdateDto dto) {
+        dto.setId(principal.getUserId());
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(service.update(dto));
     }
 }

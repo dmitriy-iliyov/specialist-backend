@@ -34,7 +34,7 @@ public interface AccountRepository extends JpaRepository<AccountEntity, UUID>, J
     @Modifying
     @Query("""
         UPDATE AccountEntity a
-        SET a.isEnabled = true
+        SET a.isEnabled = true, a.unableReason = null
         WHERE a.id = :id
     """)
     void enableById(@Param("id") UUID id);
