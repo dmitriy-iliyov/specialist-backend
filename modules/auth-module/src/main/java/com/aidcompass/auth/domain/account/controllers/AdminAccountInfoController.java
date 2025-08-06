@@ -1,32 +1,30 @@
 package com.aidcompass.auth.domain.account.controllers;
 
-import com.aidcompass.auth.domain.account.models.enums.LockReason;
-import com.aidcompass.auth.domain.account.models.enums.UnableReason;
 import com.aidcompass.auth.domain.authority.Authority;
 import com.aidcompass.auth.domain.role.Role;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.lang.annotation.Target;
-
 @RestController
-@RequestMapping("/api/v1/info/auth/enums")
-public class AccountInfoController {
+@RequestMapping("/api/admin/v1/info/auth/enums")
+@PreAuthorize("hasRole('ADMIN') && hasAuthority('ACCOUNT_CREATE')")
+public class AdminAccountInfoController {
 
-    @GetMapping("/unable-reasons")
-    public ResponseEntity<?> getUnableReasonTypes() {
+    @GetMapping("/roles")
+    public ResponseEntity<?> getRoles() {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(UnableReason.values());
+                .body(Role.values());
     }
 
-    @GetMapping("/lock-reasons")
-    public ResponseEntity<?> getLockReasonTypes() {
+    @GetMapping("/authorities")
+    public ResponseEntity<?> getAuthorities() {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(LockReason.values());
+                .body(Authority.values());
     }
 }

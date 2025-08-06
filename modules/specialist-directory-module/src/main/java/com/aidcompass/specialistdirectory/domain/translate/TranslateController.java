@@ -15,13 +15,12 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/admin/v1/types/{type_id}/translates")
-@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+@PreAuthorize("hasRole('ADMIN') && hasAuthority('TYPE_TRANSLATE_MANAGEMENT')")
 @RequiredArgsConstructor
 public class TranslateController {
 
     private final TranslateService service;
     private final TranslateOrchestrator orchestrator;
-
 
     @PostMapping
     public ResponseEntity<?> create(@PathVariable("type_id") @NotNull(message = "Type id is required.")

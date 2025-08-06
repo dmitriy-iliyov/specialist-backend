@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
-public class AuthController {
+public class AccountAuthController {
 
     private final AuthService service;
 
@@ -30,7 +30,7 @@ public class AuthController {
                 .build();
     }
 
-    @PreAuthorize("hasAnyRole({'ROLE_USER', 'ROLE_ADMIN'})")
+    @PreAuthorize("hasAnyRole({'USER', 'ADMIN'})")
     @PostMapping("/refresh")
     public ResponseEntity<?> refresh(@AuthenticationPrincipal AccessTokenUserDetails principal,
                                      HttpServletResponse response) {

@@ -2,6 +2,7 @@ package com.aidcompass.auth.domain.account.repositories;
 
 import com.aidcompass.auth.domain.account.models.AccountEntity;
 import com.aidcompass.auth.domain.account.models.enums.LockReason;
+import com.aidcompass.auth.domain.account.models.enums.UnableReason;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -46,4 +47,8 @@ public interface AccountRepository extends JpaRepository<AccountEntity, UUID>, J
     @NonNull
     @EntityGraph(attributePaths = {"role"})
     Page<AccountEntity> findAll(Specification<AccountEntity> specification, @NonNull Pageable pageable);
+
+    @Modifying
+    @Query("UPDATE AccountEntity a SET a.isEnabled = false, a.unableReason = :reason WHERE a.id = :id")
+    void setUnableById(@Param("id") UUID id, @Param("reason") UnableReason reason);
 }

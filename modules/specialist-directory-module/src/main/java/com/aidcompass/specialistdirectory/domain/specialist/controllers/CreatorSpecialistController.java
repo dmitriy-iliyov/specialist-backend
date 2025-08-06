@@ -21,7 +21,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/me/specialists")
-@PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
+@PreAuthorize("hasRole('USER')")
 @RequiredArgsConstructor
 public class CreatorSpecialistController {
 
@@ -29,7 +29,7 @@ public class CreatorSpecialistController {
     private final SpecialistOrchestrator orchestrator;
     private final SpecialistCountService countService;
 
-
+    @PreAuthorize("hasAuthority('SPECIALIST_CREATE_UPDATE')")
     @PostMapping
     public ResponseEntity<?> create(@AuthenticationPrincipal PrincipalDetails principal,
                                     @RequestBody @Valid SpecialistCreateDto dto) {
@@ -47,6 +47,7 @@ public class CreatorSpecialistController {
                 .body(service.findByCreatorIdAndId(principal.getUserId(), UUID.fromString(id)));
     }
 
+    @PreAuthorize("hasAuthority('SPECIALIST_CREATE_UPDATE')")
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@AuthenticationPrincipal PrincipalDetails principal,
                                     @PathVariable("id") @ValidUuid(paramName = "id") String id,

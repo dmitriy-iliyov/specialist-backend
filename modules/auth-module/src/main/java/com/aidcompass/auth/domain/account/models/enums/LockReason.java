@@ -6,7 +6,10 @@ import lombok.Getter;
 import java.util.Arrays;
 
 public enum LockReason {
-    SPAM(1);
+    TYPE_SPAM(1),
+    SPECIALIST_SPAM(2),
+    REVIEW_SPAM(3),
+    ABUSE(4);
 
     @Getter
     private final int code;

@@ -4,6 +4,7 @@ import com.aidcompass.specialistdirectory.domain.review.services.ReviewBufferSer
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -12,6 +13,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/system/v1/specialists/reviews/buffer/batch")
+@PreAuthorize("hasRole('SERVICE') && hasAuthority('REVIEWS_BUFFER_MANAGEMENT')")
 @RequiredArgsConstructor
 public class ReviewBufferController {
 

@@ -18,13 +18,12 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/admin/v1/types")
-@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+@PreAuthorize("hasRole('ADMIN') && hasAuthority('TYPE_MANAGEMENT')")
 @RequiredArgsConstructor
 public class AdminTypeController {
 
     private final TypeOrchestrator orchestrator;
     private final ApproveTypeOrchestrator approveOrchestrator;
-
 
     @PostMapping
     public ResponseEntity<?> create(@AuthenticationPrincipal PrincipalDetails principal,

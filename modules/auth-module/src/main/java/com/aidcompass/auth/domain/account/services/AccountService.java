@@ -11,7 +11,7 @@ public interface AccountService {
 
     boolean existsByEmail(String email);
 
-    void lockById(UUID id, LockDto dto);
+    void lockById(UUID id, LockRequest request);
 
     void deleteById(UUID id);
 
@@ -28,4 +28,6 @@ public interface AccountService {
     PageResponse<AccountResponseDto> findAll(com.aidcompass.utils.pagination.PageRequest page);
 
     PageResponse<AccountResponseDto> findAllByFilter(AccountFilter filter);
+
+    void setUnableById(UUID id, UnableRequest request);
 }

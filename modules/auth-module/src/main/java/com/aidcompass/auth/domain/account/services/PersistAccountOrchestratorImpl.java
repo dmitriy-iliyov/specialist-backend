@@ -20,7 +20,7 @@ public class PersistAccountOrchestratorImpl implements PersistAccountOrchestrato
     private final AccountService accountService;
     private final ConfirmationService confirmationService;
     private static final List<Authority> DEFAULT_USER_AUTHORITIES = new ArrayList<>(List.of(
-            Authority.COMMENT_PERMISSION
+            Authority.SPECIALIST_CREATE_UPDATE, Authority.REVIEW_CREATE_UPDATE, Authority.TYPE_SUGGEST
     ));
 
     @Override

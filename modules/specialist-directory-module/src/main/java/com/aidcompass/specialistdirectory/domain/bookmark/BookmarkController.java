@@ -20,7 +20,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/me/bookmarks")
-@PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
+@PreAuthorize("hasRole('USER')")
 @RequiredArgsConstructor
 public class BookmarkController {
 

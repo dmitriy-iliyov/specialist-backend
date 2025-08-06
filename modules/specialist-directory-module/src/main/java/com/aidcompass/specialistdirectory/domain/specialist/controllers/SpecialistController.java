@@ -21,7 +21,6 @@ public class SpecialistController {
     private final SpecialistService service;
     private final SpecialistCountService countService;
 
-
     @GetMapping
     public ResponseEntity<?> getAll(@ModelAttribute @Valid PageRequest page){
         return ResponseEntity

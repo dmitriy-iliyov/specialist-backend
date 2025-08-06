@@ -26,7 +26,7 @@ public class ReviewController {
     private final ReviewAggregator aggregator;
 
 
-    @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
+    @PreAuthorize("hasRole('USER') && hasAuthority('REVIEW_CREATE_UPDATE')")
     @PostMapping
     public ResponseEntity<?> create(@AuthenticationPrincipal PrincipalDetails principal,
                                     @PathVariable("specialist_id")
@@ -39,7 +39,7 @@ public class ReviewController {
                 .body(orchestrator.save(dto));
     }
 
-    @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
+    @PreAuthorize("hasRole('USER') && hasAuthority('REVIEW_CREATE_UPDATE')")
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@AuthenticationPrincipal PrincipalDetails principal,
                                     @PathVariable("id") @ValidUuid(paramName = "id")
@@ -55,7 +55,7 @@ public class ReviewController {
                 .body(orchestrator.update(dto));
     }
 
-    @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
+    @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@AuthenticationPrincipal PrincipalDetails principal,
                                     @PathVariable("specialist_id") @ValidUuid(paramName = "specialist_id")

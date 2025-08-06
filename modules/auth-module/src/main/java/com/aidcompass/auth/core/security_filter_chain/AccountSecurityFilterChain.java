@@ -1,4 +1,4 @@
-package com.aidcompass.auth.core.configs;
+package com.aidcompass.auth.core.security_filter_chain;
 
 import com.aidcompass.auth.core.rate_limit.RateLimitFilter;
 import com.aidcompass.auth.core.xss.XssFilter;
@@ -10,7 +10,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
@@ -23,7 +22,6 @@ import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.XorCsrfTokenRequestAttributeHandler;
 import org.springframework.web.cors.CorsConfigurationSource;
 
-@EnableWebSecurity
 @Configuration
 public class AccountSecurityFilterChain {
 
@@ -52,7 +50,7 @@ public class AccountSecurityFilterChain {
         this.logoutSuccessHandler = logoutSuccessHandler;
     }
 
-    @Order(1)
+    @Order(2)
     @Bean
     public SecurityFilterChain accountSecurityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -71,7 +69,24 @@ public class AccountSecurityFilterChain {
                 .addFilterAfter(authenticationFilter, RateLimitFilter.class)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers()
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/info/**").permitAll()
+                        .requestMatchers("/api/auth/login").permitAll()
+                        .requestMatchers("/api/auth/refresh", "/api/auth/logout").authenticated()
+                        .requestMatchers("/api/v1/accounts").permitAll()
+                        .requestMatchers("/api/v1/accounts/me").hasRole("USER")
+                        .requestMatchers("/api/v1/accounts/confirmation/**",
+                                         "/api/v1/accounts/password-recovery/**").permitAll()
+                        .requestMatchers("/api/v1/users/me", "/api/v1/users/me/avatar").authenticated()
+                        .requestMatchers("/api/v1/users", "/api/v1/users/**").permitAll()
+                        .requestMatchers("/api/v1/me/bookmarks", "/api/v1/me/bookmarks/**").authenticated()
+                        .requestMatchers("/api/v1/languages").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/specialists/**/reviews").permitAll()
+                        .requestMatchers("/api/v1/specialists/**/reviews",
+                                         "/api/v1/specialists/**/reviews/**").authenticated()
+                        .requestMatchers("/api/v1/me/specialists", "/api/v1/me/specialists/**").hasRole("USER")
+                        .requestMatchers("/api/v1/specialists", "/api/v1/specialists/**").permitAll()
+                        .requestMatchers("/api/v1/types/**").permitAll()
                 )
                 .logout(logout -> logout
                         .logoutUrl("/api/auth/logout")

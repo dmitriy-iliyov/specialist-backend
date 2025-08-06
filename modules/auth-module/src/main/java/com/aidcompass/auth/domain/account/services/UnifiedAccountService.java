@@ -130,8 +130,14 @@ public class UnifiedAccountService implements AccountService, UserDetailsService
 
     @Transactional
     @Override
-    public void lockById(UUID id, LockDto dto) {
-        repository.lockById(id, dto.reason(), dto.term());
+    public void lockById(UUID id, LockRequest request) {
+        repository.lockById(id, request.reason(), request.term());
+    }
+
+    @Transactional
+    @Override
+    public void setUnableById(UUID id, UnableRequest request) {
+        repository.setUnableById(id, request.reason());
     }
 
     @Transactional

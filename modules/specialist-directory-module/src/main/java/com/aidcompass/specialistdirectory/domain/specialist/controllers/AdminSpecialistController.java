@@ -17,12 +17,11 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/admin/v1/specialists")
-@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+@PreAuthorize("hasRole('ADMIN') && hasAuthority('SPECIALIST_MANAGEMENT')")
 @RequiredArgsConstructor
 public class AdminSpecialistController {
 
     private final SpecialistService service;
-
 
     @PostMapping
     public ResponseEntity<?> create(@AuthenticationPrincipal PrincipalDetails principal,

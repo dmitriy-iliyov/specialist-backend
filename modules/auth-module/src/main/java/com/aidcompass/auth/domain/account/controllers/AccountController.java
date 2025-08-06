@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +30,7 @@ public class AccountController {
                 .body(orchestrator.save(dto, response));
     }
 
+    @PreAuthorize("hasRole('USER')")
     @PatchMapping("/me")
     public ResponseEntity<?> update(@AuthenticationPrincipal PrincipalDetails principal,
                                     @RequestBody @Valid AccountUpdateDto dto) {

@@ -15,12 +15,11 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/admin/v1/specialists/{specialist_id}/reviews")
-@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+@PreAuthorize("hasRole('ADMIN') && hasAuthority('REVIEW_MANAGEMENT')")
 @RequiredArgsConstructor
 public class AdminReviewController {
 
     private final ReviewOrchestrator orchestrator;
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("specialist_id") @ValidUuid(paramName = "specialist_id")

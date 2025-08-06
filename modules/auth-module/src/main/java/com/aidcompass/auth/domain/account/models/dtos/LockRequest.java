@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.time.Instant;
 
-public record LockDto(
+public record LockRequest(
     @ValidEnum(enumClass = LockReason.class, message = "Unsupported lock reason.")
     LockReason reason,
     @NotNull(message = "Lock term is required.")

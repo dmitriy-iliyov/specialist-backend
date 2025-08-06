@@ -16,7 +16,6 @@ public class TypeController {
 
     private final TranslatedTypeService orchestrator;
 
-
     @GetMapping("/json")
     public ResponseEntity<?> getAllAsJson(HttpServletRequest request) {
         return ResponseEntity

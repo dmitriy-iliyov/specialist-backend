@@ -7,7 +7,9 @@ import java.util.Arrays;
 
 public enum UnableReason {
     EMAIL_CONFIRMATION_REQUIRED(1),
-    PERMANENTLY_BLOCKED(2);
+    PERMANENTLY_SPAM(2),
+    PERMANENTLY_ABUSE(3),
+    ATTACK_ATTEMPT_DETECTED(4);
 
     @Getter
     private final int code;
