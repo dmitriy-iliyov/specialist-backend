@@ -3,19 +3,20 @@ package com.aidcompass.auth.domain.account.models.dtos;
 import com.aidcompass.auth.domain.account.validation.UniqueEmail;
 import com.aidcompass.auth.domain.authority.Authority;
 import com.aidcompass.auth.domain.role.Role;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Data
-@Builder
 public class DefaultAccountCreateDto {
         @UniqueEmail(message = "Email isn't unique.")
         @Email(message = "Email should be valid.")
@@ -31,4 +32,10 @@ public class DefaultAccountCreateDto {
 
         @JsonIgnore
         private List<Authority> authorities;
+
+        @JsonCreator
+        public DefaultAccountCreateDto(String email, String password) {
+                this.email = email;
+                this.password = password;
+        }
 }

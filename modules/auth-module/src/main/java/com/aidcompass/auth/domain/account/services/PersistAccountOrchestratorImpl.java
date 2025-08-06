@@ -28,20 +28,22 @@ public class PersistAccountOrchestratorImpl implements PersistAccountOrchestrato
         dto.setRole(Role.ROLE_USER);
         dto.setAuthorities(DEFAULT_USER_AUTHORITIES);
         ShortAccountResponseDto responseDto = accountService.save(dto);
-        confirmationService.sendConfirmationMessage(responseDto.id(), dto.getEmail());
+        confirmationService.sendConfirmationCode(dto.getEmail());
         return responseDto;
     }
 
     @Override
     public ShortAccountResponseDto save(ManagedAccountCreateDto dto) {
-        DefaultAccountCreateDto createDto = DefaultAccountCreateDto.builder()
-                .email(dto.email())
-                .password(dto.password())
-                .role(Role.valueOf(dto.role()))
-                .authorities(dto.authorities().stream().map(Authority::valueOf).toList())
-                .build();
+        DefaultAccountCreateDto createDto = new DefaultAccountCreateDto(
+                dto.email(),
+                dto.password(),
+                Role.valueOf(dto.role()),
+                dto.authorities().stream()
+                        .map(Authority::valueOf)
+                        .toList()
+        );
         ShortAccountResponseDto responseDto = accountService.save(createDto);
-        confirmationService.sendConfirmationMessage(responseDto.id(), dto.email());
+        confirmationService.sendConfirmationCode(dto.email());
         return responseDto;
     }
 }

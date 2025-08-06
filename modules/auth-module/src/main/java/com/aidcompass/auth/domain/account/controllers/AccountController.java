@@ -15,7 +15,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/accounts/me")
+@RequestMapping("/api/v1/accounts")
 @RequiredArgsConstructor
 public class AccountController {
 
@@ -29,7 +29,7 @@ public class AccountController {
                 .body(orchestrator.save(dto, response));
     }
 
-    @PatchMapping
+    @PatchMapping("/me")
     public ResponseEntity<?> update(@AuthenticationPrincipal PrincipalDetails principal,
                                     @RequestBody @Valid AccountUpdateDto dto) {
         dto.setId(principal.getUserId());

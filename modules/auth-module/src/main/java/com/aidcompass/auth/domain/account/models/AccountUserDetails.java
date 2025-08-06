@@ -1,15 +1,20 @@
 package com.aidcompass.auth.domain.account.models;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 @AllArgsConstructor
-public class AccountUserDetails implements UserDetails {
+public class AccountUserDetails implements UserDetails, CredentialsContainer {
 
+    @Getter
+    private UUID id;
     private String email;
     private String password;
     private List<? extends GrantedAuthority> authorities;
@@ -49,5 +54,10 @@ public class AccountUserDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         return isEnabled;
+    }
+
+    @Override
+    public void eraseCredentials() {
+        this.password = null;
     }
 }

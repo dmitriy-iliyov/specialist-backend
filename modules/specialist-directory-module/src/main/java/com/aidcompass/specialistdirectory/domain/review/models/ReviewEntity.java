@@ -5,6 +5,7 @@ import com.aidcompass.utils.UuidUtils;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.ToString;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -13,6 +14,7 @@ import java.util.UUID;
 @Table(name = "speecialist_reviews")
 @Data
 @AllArgsConstructor
+@ToString(exclude = "specialist")
 public class ReviewEntity {
 
     @Id

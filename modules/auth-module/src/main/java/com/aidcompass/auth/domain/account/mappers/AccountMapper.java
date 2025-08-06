@@ -17,11 +17,9 @@ public interface AccountMapper {
     @Mapping(target = "createdAt", source = "createdAt")
     ShortAccountResponseDto toShortResponseDto(AccountEntity save);
 
-    @Mapping(target = "role", source = "role.role")
+    @Mapping(target = "role", source = "entity.role.role")
     @Mapping(target = "authorities", source = "paramAuthorities")
-    @Mapping(target = "createdAt", source = "createdAt")
-    @Mapping(target = "updatedAt", source = "updatedAt")
+    @Mapping(target = "createdAt", source = "entity.createdAt")
+    @Mapping(target = "updatedAt", source = "entity.updatedAt")
     AccountResponseDto toResponseDto(List<Authority> paramAuthorities, AccountEntity entity);
-
-    List<AccountResponseDto> toResponseDtoList(List<AccountEntity> entityList);
 }

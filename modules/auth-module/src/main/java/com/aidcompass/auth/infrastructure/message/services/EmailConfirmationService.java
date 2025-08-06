@@ -2,20 +2,19 @@ package com.aidcompass.auth.infrastructure.message.services;
 
 import com.aidcompass.auth.domain.account.services.AccountService;
 import com.aidcompass.auth.exceptions.AccountNotFoundByEmailException;
-import com.aidcompass.auth.infrastructure.message.CodeGenerator;
-import com.aidcompass.auth.infrastructure.message.configs.MessageConfig;
 import com.aidcompass.auth.exceptions.CodeExpiredException;
 import com.aidcompass.auth.exceptions.SendMessageException;
+import com.aidcompass.auth.infrastructure.message.CodeGenerator;
+import com.aidcompass.auth.infrastructure.message.configs.MessageConfig;
 import com.aidcompass.auth.infrastructure.message.models.ConfirmationEntity;
-import com.aidcompass.auth.infrastructure.message.repositories.ConfirmationRepository;
 import com.aidcompass.auth.infrastructure.message.models.MessageDto;
+import com.aidcompass.auth.infrastructure.message.repositories.ConfirmationRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
-import java.util.UUID;
 
 @Service
 @Slf4j
@@ -35,13 +34,13 @@ public class EmailConfirmationService implements ConfirmationService {
     }
 
     @Override
-    public void sendConfirmationMessage(UUID accountId, String email) {
+    public void sendConfirmationCode(String email) {
         if (!accountService.existsByEmail(email)) {
             throw new AccountNotFoundByEmailException();
         }
         try {
             String code = CodeGenerator.generate();
-            repository.save(new ConfirmationEntity(code, accountId, Duration.ofSeconds(CODE_TTL)));
+            repository.save(new ConfirmationEntity(code, email, Duration.ofSeconds(CODE_TTL)));
             messageService.sendMessage(
                     new MessageDto(email, "Account confirmation", MessageConfig.ACCOUNT_CONFIRMATION.formatted(code))
             );
@@ -52,12 +51,14 @@ public class EmailConfirmationService implements ConfirmationService {
     }
 
     @Override
-    public void confirmEmail(String code) {
+    public String confirmEmailByCode(String code) {
         ConfirmationEntity entity = repository.findById(code).orElse(null);
         if (entity == null) {
             throw new CodeExpiredException();
         }
-        accountService.confirmEmailById(entity.accountId());
+        String email = entity.email();
+        accountService.confirmEmail(email);
         repository.deleteById(code);
+        return email;
     }
 }

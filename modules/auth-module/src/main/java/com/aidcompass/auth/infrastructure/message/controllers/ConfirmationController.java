@@ -1,13 +1,13 @@
 package com.aidcompass.auth.infrastructure.message.controllers;
 
+import com.aidcompass.auth.core.AuthService;
 import com.aidcompass.auth.infrastructure.message.services.ConfirmationService;
-import com.aidcompass.contracts.auth.PrincipalDetails;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ConfirmationController {
 
-    private final ConfirmationService service;
+    private final ConfirmationService confirmationService;
+    private final AuthService authService;
 
     @PostMapping("/request")
-    public ResponseEntity<?> request(@AuthenticationPrincipal PrincipalDetails principal,
-                                     @RequestParam("email") @NotBlank(message = "Email is required.") String email) {
-        service.sendConfirmationMessage(principal.getUserId(), email);
+    public ResponseEntity<?> request(@RequestParam("email") @NotBlank(message = "Email is required.") String email) {
+        confirmationService.sendConfirmationCode(email);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
@@ -28,8 +28,9 @@ public class ConfirmationController {
 
     @PatchMapping("/confirm")
     public ResponseEntity<?> confirm(@RequestParam("code") @NotBlank(message = "Code is required.")
-                                     @Pattern(regexp = "^//d{6}$", message = "Invalid code.") String code) {
-        service.confirmEmail(code);
+                                     @Pattern(regexp = "^//d{6}$", message = "Invalid code.") String code,
+                                     HttpServletResponse response) {
+        authService.postConfirmationLogin(confirmationService.confirmEmailByCode(code), response);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();

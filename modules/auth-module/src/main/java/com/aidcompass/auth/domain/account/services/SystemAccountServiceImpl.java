@@ -25,7 +25,7 @@ public class SystemAccountServiceImpl implements SystemAccountService {
     @Override
     public void updateEmailById(UUID id, String email) {
         accountService.updateEmailById(id, email);
-        confirmationService.sendConfirmationMessage(id, email);
+        confirmationService.sendConfirmationCode(email);
     }
 
     @Override

@@ -18,7 +18,7 @@ public class PasswordRecoveryController {
 
     @PostMapping("/request")
     public ResponseEntity<?> request(@RequestParam("email") @NotBlank(message = "Email is required.") String email) {
-        service.sendRecoveryMessage(email);
+        service.sendRecoveryCode(email);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
@@ -26,7 +26,7 @@ public class PasswordRecoveryController {
 
     @PatchMapping("/recover")
     public ResponseEntity<?> recover(@RequestBody @Valid PasswordRecoveryRequest request) {
-        service.recoverPassword(request);
+        service.recoverPasswordByCode(request);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();

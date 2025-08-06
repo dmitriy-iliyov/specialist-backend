@@ -36,7 +36,7 @@ public class EmailPasswordRecoveryService implements PasswordRecoveryService {
     }
 
     @Override
-    public void sendRecoveryMessage(String recipientEmail) {
+    public void sendRecoveryCode(String recipientEmail) {
         if (!accountService.existsByEmail(recipientEmail)) {
             throw new AccountNotFoundByEmailException();
         }
@@ -51,7 +51,7 @@ public class EmailPasswordRecoveryService implements PasswordRecoveryService {
     }
 
     @Override
-    public void recoverPassword(PasswordRecoveryRequest request) {
+    public void recoverPasswordByCode(PasswordRecoveryRequest request) {
         PasswordRecoveryEntity entity = repository.findById(request.code()).orElse(null);
         if (entity == null) {
             throw new CodeExpiredException();

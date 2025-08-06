@@ -26,18 +26,18 @@ public interface AccountRepository extends JpaRepository<AccountEntity, UUID>, J
     @Modifying
     @Query("""
         UPDATE AccountEntity a
-        SET a.isLocked = true, a.lockReason = :reason, a.lockTerm = :lock_term
-        WHERE a.id = :id
+        SET a.isEnabled = true, a.unableReason = null
+        WHERE a.email = :email
     """)
-    void lockById(@Param("id") UUID id, @Param("reason") LockReason reason, @Param("lock_term") Instant lockTerm);
+    void enableByEmail(@Param("email") String email);
 
     @Modifying
     @Query("""
         UPDATE AccountEntity a
-        SET a.isEnabled = true, a.unableReason = null
+        SET a.isLocked = true, a.lockReason = :reason, a.lockTerm = :lock_term
         WHERE a.id = :id
     """)
-    void enableById(@Param("id") UUID id);
+    void lockById(@Param("id") UUID id, @Param("reason") LockReason reason, @Param("lock_term") Instant lockTerm);
 
     @NonNull
     @EntityGraph(attributePaths = {"role"})

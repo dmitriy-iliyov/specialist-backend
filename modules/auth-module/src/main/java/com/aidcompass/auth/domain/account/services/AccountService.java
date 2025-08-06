@@ -17,7 +17,7 @@ public interface AccountService {
 
     UUID findIdByEmail(String email);
 
-    void confirmEmailById(UUID id);
+    void confirmEmail(String email);
 
     ShortAccountResponseDto update(AccountUpdateDto dto);
 

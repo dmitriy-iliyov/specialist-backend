@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/api/v2/users/me")
+@RequestMapping("/api/v1/users/me")
 @RequiredArgsConstructor
 public class PrivateUserController {
 

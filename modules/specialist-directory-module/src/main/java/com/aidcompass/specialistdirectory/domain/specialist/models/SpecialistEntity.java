@@ -23,7 +23,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Getter
 @Setter
-@ToString(exclude = {"type", "reviews"})
+@ToString(exclude = {"type", "reviews", "bookmarks"})
 public class SpecialistEntity {
 
     @Id
