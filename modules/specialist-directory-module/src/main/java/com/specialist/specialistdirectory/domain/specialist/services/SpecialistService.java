@@ -1,0 +1,38 @@
+package com.specialist.specialistdirectory.domain.specialist.services;
+
+import com.specialist.specialistdirectory.domain.review.models.enums.OperationType;
+import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
+import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
+import com.specialist.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
+import com.specialist.specialistdirectory.domain.specialist.models.filters.SpecialistFilter;
+import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
+import com.specialist.utils.pagination.PageRequest;
+import com.specialist.utils.pagination.PageResponse;
+
+import java.util.UUID;
+
+public interface SpecialistService {
+    SpecialistResponseDto save(SpecialistCreateDto dto);
+
+    UUID getCreatorIdById(UUID id);
+
+    SpecialistResponseDto findByCreatorIdAndId(UUID creatorId, UUID id);
+
+    SpecialistResponseDto update(SpecialistUpdateDto dto);
+
+    void updateRatingById(UUID id, long rating, OperationType operationType);
+
+    SpecialistResponseDto findById(UUID id);
+
+    void updateAllByTypeIdPair(Long oldTypeId, Long newTypeId);
+
+    void deleteById(UUID id);
+
+    PageResponse<SpecialistResponseDto> findAll(PageRequest page);
+
+    PageResponse<SpecialistResponseDto> findAllByFilter(SpecialistFilter filter);
+
+    PageResponse<SpecialistResponseDto> findAllByCreatorId(UUID creatorId, PageRequest page);
+
+    PageResponse<SpecialistResponseDto> findAllByCreatorIdAndFilter(UUID creatorId, ExtendedSpecialistFilter filter);
+}

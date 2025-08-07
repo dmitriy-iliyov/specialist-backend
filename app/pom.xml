@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.aidcompass</groupId>
+        <groupId>com.specialist</groupId>
         <artifactId>specialist-backend</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
@@ -21,43 +21,43 @@
     <dependencies>
 
         <dependency>
-            <groupId>com.aidcompass</groupId>
+            <groupId>com.specialist</groupId>
             <artifactId>utils</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>
-            <groupId>com.aidcompass</groupId>
+            <groupId>com.specialist</groupId>
             <artifactId>auth-contracts</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>
-            <groupId>com.aidcompass</groupId>
+            <groupId>com.specialist</groupId>
             <artifactId>user-contracts</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>
-            <groupId>com.aidcompass</groupId>
+            <groupId>com.specialist</groupId>
             <artifactId>core-module</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>
-            <groupId>com.aidcompass</groupId>
+            <groupId>com.specialist</groupId>
             <artifactId>message-module</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>
-            <groupId>com.aidcompass</groupId>
+            <groupId>com.specialist</groupId>
             <artifactId>user-module</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>
-            <groupId>com.aidcompass</groupId>
+            <groupId>com.specialist</groupId>
             <artifactId>specialist-directory-module</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
@@ -98,7 +98,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.aidcompass.SpecialistBackend</mainClass>
+                    <mainClass>com.specialist.SpecialistBackend</mainClass>
                 </configuration>
             </plugin>
         </plugins>

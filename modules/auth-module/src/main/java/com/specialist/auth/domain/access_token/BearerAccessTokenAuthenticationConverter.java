@@ -1,0 +1,39 @@
+package com.specialist.auth.domain.access_token;
+
+import com.specialist.auth.domain.access_token.models.AccessToken;
+import com.specialist.auth.exceptions.AccessTokenExpiredException;
+import com.specialist.auth.exceptions.AuthorizationHeaderFormatException;
+import com.specialist.auth.exceptions.BlankTokenException;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.web.authentication.AuthenticationConverter;
+import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
+import org.springframework.stereotype.Component;
+
+@Component
+@RequiredArgsConstructor
+public class BearerAccessTokenAuthenticationConverter implements AuthenticationConverter {
+
+    private final AccessTokenDeserializer deserializer;
+
+    @Override
+    public Authentication convert(HttpServletRequest request) {
+        String header = request.getHeader("Authorization");
+        if (header != null) {
+            if (header.startsWith("Bearer ")) {
+                String rawToken = header.substring("Bearer ".length()).trim();
+                if (!rawToken.isBlank()) {
+                    AccessToken accessToken = deserializer.deserialize(rawToken);
+                    if (accessToken == null) {
+                        throw new AccessTokenExpiredException();
+                    }
+                    return new PreAuthenticatedAuthenticationToken(accessToken, null);
+                }
+                throw new BlankTokenException();
+            }
+            throw new AuthorizationHeaderFormatException();
+        }
+        return null;
+    }
+}

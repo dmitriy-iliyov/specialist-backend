@@ -1,0 +1,15 @@
+package com.specialist.auth.core;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.specialist.utils.validation.annotation.ValidUuid;
+import jakarta.validation.constraints.NotBlank;
+
+public record ServiceLoginRequest(
+    @JsonProperty("client_id")
+    @NotBlank(message = "Client id is required.")
+    @ValidUuid(paramName = "client_id", message = "Client id should be valid.")
+    String clientId,
+    @JsonProperty("client_secret")
+    @NotBlank(message = "Client secret is required.")
+    String clientSecret
+) { }
