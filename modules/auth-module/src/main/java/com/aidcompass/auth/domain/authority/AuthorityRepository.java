@@ -11,6 +11,7 @@ import java.util.UUID;
 
 @Repository
 public interface AuthorityRepository extends JpaRepository<AuthorityEntity, Long> {
+
     List<AuthorityEntity> getReferenceAllByAuthorityIn(List<Authority> authorities);
 
     @Query("""
@@ -19,4 +20,12 @@ public interface AuthorityRepository extends JpaRepository<AuthorityEntity, Long
         WHERE accs.id IN :ids
     """)
     List<Object[]> findAllByAccountIdIn(@Param("ids") Set<UUID> accountIds);
+
+
+    @Query("""
+        SELECT accs.id, a FROM AuthorityEntity a
+        JOIN a.serviceAccounts accs
+        WHERE accs.id IN :ids
+    """)
+    List<Object[]> findAllByServiceAccountIdIn(@Param("ids") Set<UUID> serviceAccountIds);
 }

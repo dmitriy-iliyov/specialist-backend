@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/admin/v1/info/auth/enums")
-@PreAuthorize("hasRole('ADMIN') && hasAuthority('ACCOUNT_CREATE')")
+@PreAuthorize("hasRole('ADMIN') && hasAnyAuthority({'ACCOUNT_CREATE', 'SERVICE_ACCOUNT_MANAGER'})")
 public class AdminAccountInfoController {
 
     @GetMapping("/roles")

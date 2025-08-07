@@ -1,15 +1,44 @@
 package com.aidcompass.auth.core.cookie;
 
-import com.aidcompass.auth.domain.access_token.models.AccessToken;
-import com.aidcompass.auth.domain.account.models.dtos.ShortAccountResponseDto;
-import com.aidcompass.auth.domain.refresh_token.models.RefreshToken;
 import jakarta.servlet.http.Cookie;
 
-public interface AuthCookieFactory {
+import java.time.Duration;
+import java.time.Instant;
 
-    Cookie generate(RefreshToken refreshToken);
+public final class AuthCookieFactory {
 
-    Cookie generate(AccessToken accessToken);
+    public static Cookie generate(String rawToken, Instant expiresAt, TokenType type) {
+        if (type.equals(TokenType.REFRESH)) {
+            Cookie cookie = new Cookie("__Host-refresh-token", rawToken);
+            cookie.setPath("/");
+            cookie.setDomain(null);
+            cookie.setSecure(true);
+            cookie.setHttpOnly(true);
+            cookie.setMaxAge((int) Duration.between(Instant.now(), expiresAt).getSeconds());
+            return cookie;
+        } else {
+            Cookie cookie = new Cookie("__Host-access-token", rawToken);
+            cookie.setPath("/");
+            cookie.setDomain(null);
+            cookie.setSecure(true);
+            cookie.setHttpOnly(true);
+            cookie.setMaxAge((int) Duration.between(Instant.now(), expiresAt).getSeconds());
+            return cookie;
+        }
+    }
 
-    Cookie generateEmpty(TokenType type);
+    public static Cookie generateEmpty(TokenType type) {
+        Cookie cookie;
+        if (type.equals(TokenType.REFRESH)) {
+            cookie = new Cookie("__Host-refresh-token", "");
+        } else {
+            cookie = new Cookie("__Host-access-token", "");
+        }
+        cookie.setPath("/");
+        cookie.setDomain(null);
+        cookie.setSecure(true);
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(0);
+        return cookie;
+    }
 }

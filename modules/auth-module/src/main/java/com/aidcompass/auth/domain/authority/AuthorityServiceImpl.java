@@ -18,9 +18,21 @@ public class AuthorityServiceImpl implements AuthorityService {
         return repository.getReferenceAllByAuthorityIn(authorities);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Map<UUID, List<Authority>> findAllByAccountIdIn(Set<UUID> accountIds) {
         List<Object[]> pairs = repository.findAllByAccountIdIn(accountIds);
+        return toMap(pairs);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Map<UUID, List<Authority>> findAllByServiceAccountIdIn(Set<UUID> serviceAccountIds) {
+        List<Object[]> pairs = repository.findAllByServiceAccountIdIn(serviceAccountIds);
+        return toMap(pairs);
+    }
+
+    private Map<UUID, List<Authority>> toMap(List<Object[]> pairs) {
         Map<UUID, List<Authority>> authoritiesMap = new HashMap<>();
         for (Object [] pair : pairs) {
             UUID id = (UUID) pair[0];

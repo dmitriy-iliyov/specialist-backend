@@ -1,6 +1,6 @@
 package com.aidcompass.auth.infrastructure.message.controllers;
 
-import com.aidcompass.auth.core.AuthService;
+import com.aidcompass.auth.core.AccountAuthService;
 import com.aidcompass.auth.infrastructure.message.services.ConfirmationService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotBlank;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class ConfirmationController {
 
     private final ConfirmationService confirmationService;
-    private final AuthService authService;
+    private final AccountAuthService accountAuthService;
 
     @PostMapping("/request")
     public ResponseEntity<?> request(@RequestParam("email") @NotBlank(message = "Email is required.") String email) {
@@ -30,7 +30,7 @@ public class ConfirmationController {
     public ResponseEntity<?> confirm(@RequestParam("code") @NotBlank(message = "Code is required.")
                                      @Pattern(regexp = "^//d{6}$", message = "Invalid code.") String code,
                                      HttpServletResponse response) {
-        authService.postConfirmationLogin(confirmationService.confirmEmailByCode(code), response);
+        accountAuthService.postConfirmationLogin(confirmationService.confirmEmailByCode(code), response);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();

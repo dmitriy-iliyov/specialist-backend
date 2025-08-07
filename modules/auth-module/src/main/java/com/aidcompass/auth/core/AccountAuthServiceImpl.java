@@ -16,16 +16,16 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 @Service
-public class AuthServiceImpl implements AuthService {
+public class AccountAuthServiceImpl implements AccountAuthService {
 
     private final UserDetailsService userDetailsService;
     private final AuthenticationManager authenticationManager;
     private final TokenManager tokenManager;
     private final CsrfTokenService csrfTokenService;
 
-    public AuthServiceImpl(@Qualifier("unifiedAccountService") UserDetailsService userDetailsService,
-                           AuthenticationManager authenticationManager, TokenManager tokenManager,
-                           CsrfTokenService csrfTokenService) {
+    public AccountAuthServiceImpl(@Qualifier("unifiedAccountService") UserDetailsService userDetailsService,
+                                  AuthenticationManager authenticationManager, TokenManager tokenManager,
+                                  CsrfTokenService csrfTokenService) {
         this.userDetailsService = userDetailsService;
         this.authenticationManager = authenticationManager;
         this.tokenManager = tokenManager;

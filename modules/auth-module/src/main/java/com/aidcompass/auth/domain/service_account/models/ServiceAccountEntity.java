@@ -1,9 +1,5 @@
-package com.aidcompass.auth.domain.account.models;
+package com.aidcompass.auth.domain.service_account.models;
 
-import com.aidcompass.auth.domain.account.mappers.LockReasonTypeConverter;
-import com.aidcompass.auth.domain.account.mappers.UnableReasonTypeConverter;
-import com.aidcompass.auth.domain.account.models.enums.LockReason;
-import com.aidcompass.auth.domain.account.models.enums.UnableReason;
 import com.aidcompass.auth.domain.authority.AuthorityEntity;
 import com.aidcompass.auth.domain.role.RoleEntity;
 import com.aidcompass.utils.UuidUtils;
@@ -17,20 +13,17 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "accounts")
-@Data
+@Table(name = "service_accounts")
 @AllArgsConstructor
+@Data
 @ToString(exclude = {"role", "authorities"})
-public class AccountEntity {
+public class ServiceAccountEntity {
 
     @Id
     private UUID id;
 
-    @Column(nullable = false, unique = true)
-    private String email;
-
     @Column(nullable = false)
-    private String password;
+    private String secret;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id", nullable = false)
@@ -38,28 +31,17 @@ public class AccountEntity {
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "authority_account_relation",
-            joinColumns = @JoinColumn(name = "account_id", nullable = false),
+            name = "authority_service_account_relation",
+            joinColumns = @JoinColumn(name = "service_account_id", nullable = false),
             inverseJoinColumns = @JoinColumn(name = "authority_id", nullable = false)
     )
     private List<AuthorityEntity> authorities;
 
-    @Column(name = "is_locked", nullable = false)
-    private boolean isLocked;
+    @Column(name = "creator_id", nullable = false, updatable = false)
+    private UUID creatorId;
 
-    @Column(name = "lock_reason")
-    @Convert(converter = LockReasonTypeConverter.class)
-    private LockReason lockReason;
-
-    @Column(name = "lock_term")
-    private Instant lockTerm;
-
-    @Column(name = "is_enabled", nullable = false)
-    private boolean isEnabled;
-
-    @Convert(converter = UnableReasonTypeConverter.class)
-    @Column(name = "unable_reason")
-    private UnableReason unableReason;
+    @Column(name = "updater_id", nullable = false)
+    private UUID updaterId;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
@@ -67,10 +49,8 @@ public class AccountEntity {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
-    public AccountEntity() {
+    public ServiceAccountEntity() {
         this.id = UuidUtils.generateV7();
-        this.isEnabled = false;
-        this.isLocked = false;
     }
 
     @PrePersist

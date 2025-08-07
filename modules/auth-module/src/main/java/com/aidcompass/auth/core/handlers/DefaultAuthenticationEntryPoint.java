@@ -1,6 +1,5 @@
 package com.aidcompass.auth.core.handlers;
 
-import com.aidcompass.auth.core.cookie.AuthCookieFactory;
 import com.aidcompass.auth.core.cookie.TokenType;
 import com.aidcompass.auth.exceptions.AccessTokenExpiredException;
 import com.aidcompass.auth.exceptions.InvalidJwtSignatureException;

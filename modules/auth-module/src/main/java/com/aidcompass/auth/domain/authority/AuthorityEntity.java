@@ -1,6 +1,7 @@
 package com.aidcompass.auth.domain.authority;
 
 import com.aidcompass.auth.domain.account.models.AccountEntity;
+import com.aidcompass.auth.domain.service_account.models.ServiceAccountEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,6 +27,9 @@ public class AuthorityEntity implements GrantedAuthority {
 
     @ManyToMany(mappedBy = "authorities")
     private Set<AccountEntity> accounts;
+
+    @ManyToMany(mappedBy = "authorities")
+    private Set<ServiceAccountEntity> serviceAccounts;
 
     public AuthorityEntity(Authority authority) {
         this.authority = authority;
