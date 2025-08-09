@@ -1,4 +1,4 @@
-package com.specialist.auth.core.cookie;
+package com.specialist.auth.core.models;
 
 public enum TokenType {
     REFRESH, ACCESS

@@ -20,7 +20,7 @@ import java.time.Duration;
 @Slf4j
 public class EmailConfirmationService implements ConfirmationService {
 
-    @Value("${api.conf.account.token.ttl.secs}")
+    @Value("${api.conf.account.code.ttl.secs}")
     private Long CODE_TTL;
     private final MessageService messageService;
     private final ConfirmationRepository repository;

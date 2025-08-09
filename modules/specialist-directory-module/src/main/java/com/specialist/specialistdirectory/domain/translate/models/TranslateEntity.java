@@ -1,8 +1,8 @@
 package com.specialist.specialistdirectory.domain.translate.models;
 
 import com.specialist.specialistdirectory.domain.language.Language;
-import com.specialist.specialistdirectory.domain.type.models.TypeEntity;
 import com.specialist.specialistdirectory.domain.language.LanguageConverter;
+import com.specialist.specialistdirectory.domain.type.models.TypeEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

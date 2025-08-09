@@ -1,14 +1,14 @@
 package com.specialist.specialistdirectory.exceptions;
 
-import com.specialist.core.exceptions.BaseControllerAdvice;
-import com.specialist.core.exceptions.mapper.ExceptionMapper;
-import com.specialist.core.exceptions.models.*;
-import com.specialist.core.exceptions.models.Exception;
-import com.specialist.core.exceptions.models.dto.ErrorDto;
-import com.specialist.core.exceptions.ErrorUtils;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.github.f4b6a3.uuid.exception.InvalidUuidException;
+import com.specialist.core.exceptions.BaseControllerAdvice;
+import com.specialist.core.exceptions.ErrorUtils;
+import com.specialist.core.exceptions.mapper.ExceptionMapper;
+import com.specialist.core.exceptions.models.Exception;
+import com.specialist.core.exceptions.models.*;
+import com.specialist.core.exceptions.models.dto.ErrorDto;
 import io.lettuce.core.RedisConnectionException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.context.MessageSource;

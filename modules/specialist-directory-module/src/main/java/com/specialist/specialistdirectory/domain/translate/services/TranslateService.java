@@ -1,9 +1,8 @@
 package com.specialist.specialistdirectory.domain.translate.services;
 
-import com.aidcompass.specialistdirectory.domain.translate.models.dtos.*;
+import com.specialist.specialistdirectory.domain.language.Language;
 import com.specialist.specialistdirectory.domain.translate.models.dtos.*;
 import com.specialist.specialistdirectory.domain.type.models.TypeEntity;
-import com.specialist.specialistdirectory.domain.language.Language;
 import com.specialist.specialistdirectory.domain.type.models.dtos.ShortTypeResponseDto;
 
 import java.util.List;

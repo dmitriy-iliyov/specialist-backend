@@ -1,7 +1,6 @@
 package com.specialist.auth.core;
 
-import com.specialist.auth.core.cookie.AuthCookieFactory;
-import com.specialist.auth.core.cookie.TokenType;
+import com.specialist.auth.core.models.TokenType;
 import com.specialist.auth.domain.access_token.AccessTokenFactory;
 import com.specialist.auth.domain.access_token.AccessTokenSerializer;
 import com.specialist.auth.domain.access_token.models.AccessToken;

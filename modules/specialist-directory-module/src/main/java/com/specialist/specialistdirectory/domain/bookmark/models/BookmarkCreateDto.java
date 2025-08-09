@@ -1,9 +1,9 @@
 package com.specialist.specialistdirectory.domain.bookmark.models;
 
-import com.specialist.utils.validation.annotation.UUIDv7;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.specialist.utils.validation.annotation.UUIDv7;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;

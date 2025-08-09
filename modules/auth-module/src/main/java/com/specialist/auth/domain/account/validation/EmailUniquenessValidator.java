@@ -2,7 +2,6 @@ package com.specialist.auth.domain.account.validation;
 
 import com.specialist.auth.domain.account.models.dtos.DefaultAccountCreateDto;
 import com.specialist.auth.domain.account.services.AccountService;
-import com.specialist.core.exceptions.models.BaseNotFoundException;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;
@@ -22,14 +21,12 @@ public class EmailUniquenessValidator implements ConstraintValidator<UniqueEmail
             return false;
         }
 
-        try {
-            accountService.existsByEmail(dto.getEmail());
+        if (accountService.existsByEmail(dto.getEmail())) {
             context.buildConstraintViolationWithTemplate("Email isn't unique.")
                     .addPropertyNode("email")
                     .addConstraintViolation();
             return false;
-        } catch (BaseNotFoundException e) {
-            return true;
         }
+        return true;
     }
 }

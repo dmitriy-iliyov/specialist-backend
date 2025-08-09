@@ -1,7 +1,7 @@
 package com.specialist.specialistdirectory.domain.translate.models.dtos;
 
-import com.specialist.specialistdirectory.domain.language.Language;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.specialist.specialistdirectory.domain.language.Language;
 
 public record TranslateResponseDto(
         Long id,

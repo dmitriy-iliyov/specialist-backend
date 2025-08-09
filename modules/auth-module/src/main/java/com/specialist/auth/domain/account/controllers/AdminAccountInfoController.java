@@ -1,5 +1,7 @@
 package com.specialist.auth.domain.account.controllers;
 
+import com.specialist.auth.domain.account.models.enums.LockReason;
+import com.specialist.auth.domain.account.models.enums.UnableReason;
 import com.specialist.auth.domain.authority.Authority;
 import com.specialist.auth.domain.role.Role;
 import org.springframework.http.HttpStatus;
@@ -26,5 +28,21 @@ public class AdminAccountInfoController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(Authority.values());
+    }
+
+    @PreAuthorize("hasAuthority('ACCOUNT_UNABLE')")
+    @GetMapping("/unable-reasons")
+    public ResponseEntity<?> getUnableReasonTypes() {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(UnableReason.values());
+    }
+
+    @PreAuthorize("hasAuthority('ACCOUNT_LOCK')")
+    @GetMapping("/lock-reasons")
+    public ResponseEntity<?> getLockReasonTypes() {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(LockReason.values());
     }
 }

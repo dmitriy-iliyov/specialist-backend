@@ -5,6 +5,7 @@ import com.specialist.auth.exceptions.AccessTokenExpiredException;
 import com.specialist.auth.exceptions.InvalidJwtSignatureException;
 import com.specialist.auth.exceptions.JwtParseException;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -36,6 +37,9 @@ public class AccessTokenDeserializerImpl implements AccessTokenDeserializer {
                     .build()
                     .parseSignedClaims(rawToken);
         } catch (Exception e) {
+            if (e instanceof ExpiredJwtException) {
+                throw new AccessTokenExpiredException();
+            }
             log.error("Exception when check jwt signature: {}", e.getMessage());
             throw new InvalidJwtSignatureException(e);
         }

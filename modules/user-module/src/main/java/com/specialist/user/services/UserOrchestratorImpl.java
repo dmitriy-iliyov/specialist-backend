@@ -1,9 +1,9 @@
 package com.specialist.user.services;
 
 import com.specialist.contracts.auth.SystemAccountService;
+import com.specialist.user.models.dtos.PrivateUserResponseDto;
 import com.specialist.user.models.dtos.UserCreateDto;
 import com.specialist.user.models.dtos.UserUpdateDto;
-import com.specialist.user.models.dtos.PrivateUserResponseDto;
 import com.specialist.user.repositories.AvatarStorage;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;

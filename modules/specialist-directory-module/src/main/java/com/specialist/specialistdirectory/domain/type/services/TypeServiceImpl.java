@@ -1,11 +1,11 @@
 package com.specialist.specialistdirectory.domain.type.services;
 
 import com.specialist.specialistdirectory.domain.type.TypeMapper;
+import com.specialist.specialistdirectory.domain.type.TypeRepository;
 import com.specialist.specialistdirectory.domain.type.models.TypeEntity;
 import com.specialist.specialistdirectory.domain.type.models.dtos.ShortTypeResponseDto;
 import com.specialist.specialistdirectory.domain.type.models.dtos.TypeCreateDto;
 import com.specialist.specialistdirectory.domain.type.models.dtos.TypeResponseDto;
-import com.specialist.specialistdirectory.domain.type.TypeRepository;
 import com.specialist.specialistdirectory.domain.type.models.dtos.TypeUpdateDto;
 import com.specialist.specialistdirectory.exceptions.NullOrBlankAnotherTypeException;
 import com.specialist.specialistdirectory.exceptions.SpecialistTypeEntityNotFoundByIdException;

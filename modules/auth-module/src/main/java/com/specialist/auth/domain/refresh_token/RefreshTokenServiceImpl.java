@@ -1,10 +1,9 @@
 package com.specialist.auth.domain.refresh_token;
 
-import com.specialist.auth.domain.account.models.AccountUserDetails;
+import com.specialist.auth.core.models.BaseUserDetails;
 import com.specialist.auth.domain.refresh_token.models.RefreshToken;
 import com.specialist.auth.domain.refresh_token.models.RefreshTokenEntity;
 import com.specialist.auth.domain.refresh_token.models.RefreshTokenStatus;
-import com.specialist.auth.domain.service_account.models.ServiceAccountUserDetails;
 import com.specialist.auth.exceptions.RefreshTokenNotFoundByIdException;
 import com.specialist.utils.UuidUtils;
 import lombok.RequiredArgsConstructor;
@@ -35,33 +34,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     @CachePut(value = "refresh-tokens", key = "#result.id()")
     @Transactional
     @Override
-    public RefreshToken generateAndSave(AccountUserDetails userDetails) {
-        UUID id = UuidUtils.generateV7();
-        UUID accountId = userDetails.getId();
-        List<String> authorities = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
-        Instant createdAt = Instant.now();
-        Instant expiresAt = createdAt.plusSeconds(TOKEN_TTL);
-        RefreshTokenEntity refreshTokenEntity = new RefreshTokenEntity(
-                id, accountId, String.join(",", authorities), RefreshTokenStatus.ACTIVE, createdAt, expiresAt
-        );
-        repository.save(refreshTokenEntity);
-        Cache cache = cacheManager.getCache("refresh-tokens:active");
-        if (cache != null) {
-            cache.put(id, Boolean.TRUE);
-        }
-        return new RefreshToken(
-                refreshTokenEntity.getId(),
-                accountId,
-                authorities,
-                refreshTokenEntity.getStatus(),
-                refreshTokenEntity.getExpiresAt()
-        );
-    }
-
-    @CachePut(value = "refresh-tokens", key = "#result.id()")
-    @Transactional
-    @Override
-    public RefreshToken generateAndSave(ServiceAccountUserDetails userDetails) {
+    public RefreshToken generateAndSave(BaseUserDetails userDetails) {
         UUID id = UuidUtils.generateV7();
         UUID accountId = userDetails.getId();
         List<String> authorities = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();

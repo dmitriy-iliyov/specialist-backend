@@ -1,8 +1,8 @@
 package com.specialist.specialistdirectory.domain.type.models.dtos;
 
-import com.specialist.specialistdirectory.domain.type.validation.UniqueType;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.specialist.specialistdirectory.domain.type.validation.UniqueType;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;

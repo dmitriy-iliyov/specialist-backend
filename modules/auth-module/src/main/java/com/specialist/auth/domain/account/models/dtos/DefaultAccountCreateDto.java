@@ -1,10 +1,10 @@
 package com.specialist.auth.domain.account.models.dtos;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.specialist.auth.domain.account.validation.UniqueEmail;
 import com.specialist.auth.domain.authority.Authority;
 import com.specialist.auth.domain.role.Role;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

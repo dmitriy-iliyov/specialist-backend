@@ -1,9 +1,8 @@
 package com.specialist.auth.core;
 
-import com.specialist.auth.domain.service_account.ServiceAccountService;
+import com.specialist.auth.core.models.ServiceLoginRequest;
 import com.specialist.auth.domain.service_account.models.ServiceAccountUserDetails;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

@@ -1,12 +1,11 @@
 package com.specialist.specialistdirectory.domain.translate.services;
 
+import com.specialist.specialistdirectory.domain.language.Language;
 import com.specialist.specialistdirectory.domain.translate.TranslateMapper;
 import com.specialist.specialistdirectory.domain.translate.TranslateRepository;
-import com.aidcompass.specialistdirectory.domain.translate.models.dtos.*;
+import com.specialist.specialistdirectory.domain.translate.models.TranslateEntity;
 import com.specialist.specialistdirectory.domain.translate.models.dtos.*;
 import com.specialist.specialistdirectory.domain.type.models.TypeEntity;
-import com.specialist.specialistdirectory.domain.language.Language;
-import com.specialist.specialistdirectory.domain.translate.models.TranslateEntity;
 import com.specialist.specialistdirectory.domain.type.models.dtos.ShortTypeResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;

@@ -1,8 +1,8 @@
 package com.specialist.user.models.dtos;
 
-import com.specialist.user.validation.UniqueEmail;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.specialist.user.validation.UniqueEmail;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;

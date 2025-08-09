@@ -1,8 +1,8 @@
 package com.specialist.user.services;
 
 import com.specialist.user.models.dtos.PrivateUserResponseDto;
-import com.specialist.user.models.dtos.UserUpdateDto;
 import com.specialist.user.models.dtos.UserCreateDto;
+import com.specialist.user.models.dtos.UserUpdateDto;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;

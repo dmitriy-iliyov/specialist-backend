@@ -1,7 +1,6 @@
 package com.specialist.specialistdirectory.domain.translate;
 
 import com.specialist.specialistdirectory.domain.translate.models.TranslateEntity;
-import com.aidcompass.specialistdirectory.domain.translate.models.dtos.*;
 import com.specialist.specialistdirectory.domain.translate.models.dtos.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

@@ -1,10 +1,10 @@
 package com.specialist.specialistdirectory.domain.bookmark.services;
 
+import com.specialist.specialistdirectory.domain.bookmark.BookmarkRepository;
 import com.specialist.specialistdirectory.domain.bookmark.models.BookmarkCreateDto;
 import com.specialist.specialistdirectory.domain.bookmark.models.BookmarkEntity;
-import com.specialist.specialistdirectory.domain.bookmark.BookmarkRepository;
-import com.specialist.specialistdirectory.domain.bookmark.models.BookmarkResponseDto;
 import com.specialist.specialistdirectory.domain.bookmark.models.BookmarkIdPair;
+import com.specialist.specialistdirectory.domain.bookmark.models.BookmarkResponseDto;
 import com.specialist.specialistdirectory.domain.specialist.models.SpecialistEntity;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
 import com.specialist.specialistdirectory.domain.specialist.services.SystemSpecialistService;

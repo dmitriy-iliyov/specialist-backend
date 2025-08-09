@@ -1,10 +1,10 @@
 package com.specialist.specialistdirectory.domain.type.controllers;
 
 import com.specialist.contracts.auth.PrincipalDetails;
-import com.specialist.specialistdirectory.domain.type.services.ApproveTypeOrchestrator;
-import com.specialist.specialistdirectory.domain.type.services.TypeOrchestrator;
 import com.specialist.specialistdirectory.domain.type.models.dtos.FullTypeCreateDto;
 import com.specialist.specialistdirectory.domain.type.models.dtos.FullTypeUpdateDto;
+import com.specialist.specialistdirectory.domain.type.services.ApproveTypeOrchestrator;
+import com.specialist.specialistdirectory.domain.type.services.TypeOrchestrator;
 import com.specialist.utils.pagination.PageRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;

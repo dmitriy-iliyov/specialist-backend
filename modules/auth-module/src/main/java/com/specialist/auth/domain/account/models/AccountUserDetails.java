@@ -1,5 +1,6 @@
 package com.specialist.auth.domain.account.models;
 
+import com.specialist.auth.core.models.BaseUserDetails;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.security.core.CredentialsContainer;
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
-public class AccountUserDetails implements UserDetails, CredentialsContainer {
+public class AccountUserDetails implements UserDetails, CredentialsContainer, BaseUserDetails {
 
     @Getter
     private UUID id;

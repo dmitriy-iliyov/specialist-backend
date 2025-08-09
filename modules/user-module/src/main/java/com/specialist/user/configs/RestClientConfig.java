@@ -1,7 +1,7 @@
 package com.specialist.user.configs;
 
-import com.specialist.user.infrastructure.ReviewBufferService;
 import com.specialist.user.infrastructure.ReviewBufferRestClient;
+import com.specialist.user.infrastructure.ReviewBufferService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

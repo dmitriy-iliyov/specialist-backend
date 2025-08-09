@@ -1,12 +1,12 @@
 package com.specialist.auth.core.handlers;
 
-import com.specialist.auth.core.cookie.AuthCookieFactory;
-import com.specialist.auth.core.cookie.TokenType;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.specialist.auth.core.AuthCookieFactory;
+import com.specialist.auth.core.models.TokenType;
 import com.specialist.auth.exceptions.AccessTokenExpiredException;
 import com.specialist.auth.exceptions.InvalidJwtSignatureException;
 import com.specialist.auth.exceptions.JwtParseException;
 import com.specialist.auth.exceptions.RefreshTokenExpiredException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

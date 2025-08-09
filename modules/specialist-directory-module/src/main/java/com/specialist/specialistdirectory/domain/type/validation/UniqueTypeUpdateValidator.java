@@ -2,8 +2,8 @@ package com.specialist.specialistdirectory.domain.type.validation;
 
 import com.specialist.core.exceptions.models.BaseNotFoundException;
 import com.specialist.specialistdirectory.domain.type.models.dtos.ShortTypeResponseDto;
-import com.specialist.specialistdirectory.domain.type.services.TypeService;
 import com.specialist.specialistdirectory.domain.type.models.dtos.TypeUpdateDto;
+import com.specialist.specialistdirectory.domain.type.services.TypeService;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;

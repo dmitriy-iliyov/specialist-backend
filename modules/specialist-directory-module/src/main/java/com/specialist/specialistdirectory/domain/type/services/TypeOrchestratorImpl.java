@@ -1,6 +1,5 @@
 package com.specialist.specialistdirectory.domain.type.services;
 
-import com.aidcompass.specialistdirectory.domain.type.models.dtos.*;
 import com.specialist.specialistdirectory.domain.translate.models.dtos.TranslateResponseDto;
 import com.specialist.specialistdirectory.domain.translate.services.TranslateService;
 import com.specialist.specialistdirectory.domain.type.models.dtos.FullTypeCreateDto;
@@ -68,7 +67,7 @@ public class TypeOrchestratorImpl implements TypeOrchestrator {
         PageResponse<TypeResponseDto> typesPage = service.findAll(page);
         return new PageResponse<>(
                 toFullDto(typesPage.data()),
-                typesPage.totalPage()
+                typesPage.totalPages()
         );
     }
 
@@ -78,7 +77,7 @@ public class TypeOrchestratorImpl implements TypeOrchestrator {
         PageResponse<TypeResponseDto> typesPage = service.findAllUnapproved(page);
         return new PageResponse<>(
                 toFullDto(typesPage.data()),
-                typesPage.totalPage()
+                typesPage.totalPages()
         );
     }
 

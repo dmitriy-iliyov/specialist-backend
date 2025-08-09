@@ -1,10 +1,10 @@
 package com.specialist.auth.domain.account.models.dtos;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.specialist.auth.domain.account.models.enums.LockReason;
 import com.specialist.auth.domain.account.models.enums.UnableReason;
 import com.specialist.auth.domain.authority.Authority;
 import com.specialist.auth.domain.role.Role;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.Instant;
 import java.util.List;

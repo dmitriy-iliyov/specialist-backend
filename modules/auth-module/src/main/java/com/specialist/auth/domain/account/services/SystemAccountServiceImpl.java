@@ -1,7 +1,7 @@
 package com.specialist.auth.domain.account.services;
 
-import com.specialist.contracts.auth.SystemAccountService;
 import com.specialist.auth.infrastructure.message.services.ConfirmationService;
+import com.specialist.contracts.auth.SystemAccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

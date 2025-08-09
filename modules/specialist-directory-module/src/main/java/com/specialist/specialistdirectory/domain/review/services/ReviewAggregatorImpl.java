@@ -3,8 +3,8 @@ package com.specialist.specialistdirectory.domain.review.services;
 
 import com.specialist.contracts.user.PublicUserResponseDto;
 import com.specialist.contracts.user.SystemUserService;
-import com.specialist.specialistdirectory.domain.review.models.dtos.ReviewResponseDto;
 import com.specialist.specialistdirectory.domain.review.models.dtos.FullReviewResponseDto;
+import com.specialist.specialistdirectory.domain.review.models.dtos.ReviewResponseDto;
 import com.specialist.specialistdirectory.domain.review.models.filters.ReviewSort;
 import com.specialist.utils.pagination.PageResponse;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +33,7 @@ public class ReviewAggregatorImpl implements ReviewAggregator {
                 reviewsPage.data().stream()
                         .map(review -> new FullReviewResponseDto(userMap.get(review.creatorId()), review))
                         .toList(),
-                reviewsPage.totalPage()
+                reviewsPage.totalPages()
         );
     }
 }

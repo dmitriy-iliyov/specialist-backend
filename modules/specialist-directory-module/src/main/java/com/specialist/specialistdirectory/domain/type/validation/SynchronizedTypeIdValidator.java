@@ -1,7 +1,7 @@
 package com.specialist.specialistdirectory.domain.type.validation;
 
-import com.specialist.specialistdirectory.domain.type.models.dtos.FullTypeUpdateDto;
 import com.specialist.specialistdirectory.domain.translate.models.dtos.CompositeTranslateUpdateDto;
+import com.specialist.specialistdirectory.domain.type.models.dtos.FullTypeUpdateDto;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 

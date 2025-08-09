@@ -1,10 +1,10 @@
 package com.specialist.specialistdirectory.domain.specialist;
 
+import com.specialist.specialistdirectory.domain.specialist.models.SpecialistEntity;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.BookmarkSpecialistResponseDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
-import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
-import com.specialist.specialistdirectory.domain.specialist.models.SpecialistEntity;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
+import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;

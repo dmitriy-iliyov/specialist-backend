@@ -1,9 +1,8 @@
 package com.specialist.auth.core.handlers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.specialist.auth.core.cookie.AuthCookieFactory;
-import com.specialist.auth.core.cookie.TokenType;
-import com.specialist.auth.exceptions.*;
+import com.specialist.auth.exceptions.InvalidJwtSignatureException;
+import com.specialist.auth.exceptions.JwtParseException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

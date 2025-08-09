@@ -1,10 +1,10 @@
 package com.specialist.specialistdirectory.domain.specialist.models.dtos;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.specialist.specialistdirectory.domain.contact.ContactType;
 import com.specialist.specialistdirectory.domain.specialist.models.markers.SpecialistMarker;
 import com.specialist.specialistdirectory.domain.specialist.validation.Specialist;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

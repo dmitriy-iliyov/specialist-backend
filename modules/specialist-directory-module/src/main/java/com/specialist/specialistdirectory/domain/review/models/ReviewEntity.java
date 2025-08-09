@@ -29,7 +29,7 @@ public class ReviewEntity {
     @Column(nullable = false)
     private long rating;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "specialist_id", nullable = false, updatable = false)
     private SpecialistEntity specialist;
 

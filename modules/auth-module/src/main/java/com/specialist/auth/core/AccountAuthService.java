@@ -1,5 +1,6 @@
 package com.specialist.auth.core;
 
+import com.specialist.auth.core.models.LoginRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 

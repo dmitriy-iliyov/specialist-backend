@@ -1,4 +1,4 @@
-package com.specialist.auth.core;
+package com.specialist.auth.core.models;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

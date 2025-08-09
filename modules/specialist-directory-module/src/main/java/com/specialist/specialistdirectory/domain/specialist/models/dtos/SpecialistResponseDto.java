@@ -1,8 +1,8 @@
 package com.specialist.specialistdirectory.domain.specialist.models.dtos;
 
-import com.specialist.specialistdirectory.domain.contact.ContactType;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.specialist.specialistdirectory.domain.contact.ContactType;
 import lombok.Data;
 
 import java.util.UUID;

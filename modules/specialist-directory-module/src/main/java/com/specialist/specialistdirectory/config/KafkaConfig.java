@@ -1,7 +1,7 @@
 package com.specialist.specialistdirectory.config;
 
-import com.specialist.contracts.user.CreatorRatingUpdateEvent;
 import com.fasterxml.jackson.databind.JsonSerializer;
+import com.specialist.contracts.user.CreatorRatingUpdateEvent;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.context.annotation.Bean;

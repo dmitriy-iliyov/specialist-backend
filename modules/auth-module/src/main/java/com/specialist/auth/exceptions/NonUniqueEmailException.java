@@ -1,7 +1,9 @@
 package com.specialist.auth.exceptions;
 
 import com.specialist.core.exceptions.models.BaseBadRequestException;
-import com.specialist.core.exceptions.models.dto.ErrorDto;;
+import com.specialist.core.exceptions.models.dto.ErrorDto;
+
+;
 
 public class NonUniqueEmailException extends BaseBadRequestException {
     @Override

@@ -1,7 +1,7 @@
 package com.specialist.specialistdirectory.domain.language;
 
-import com.specialist.specialistdirectory.exceptions.UnsupportedLanguageException;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.specialist.specialistdirectory.exceptions.UnsupportedLanguageException;
 import lombok.Getter;
 
 import java.util.Arrays;

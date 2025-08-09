@@ -21,7 +21,7 @@ import java.time.Duration;
 @Slf4j
 public class EmailPasswordRecoveryService implements PasswordRecoveryService {
 
-    @Value("${api.account.pass-recovery.token.ttl.secs}")
+    @Value("${api.account.pass-recovery.code.ttl.secs}")
     public Long CODE_TTL;
 
     private final MessageService messageService;

@@ -1,5 +1,6 @@
 package com.specialist.auth.domain.account.services;
 
+import com.specialist.auth.domain.account.mappers.AccountMapper;
 import com.specialist.auth.domain.account.models.AccountEntity;
 import com.specialist.auth.domain.account.models.AccountFilter;
 import com.specialist.auth.domain.account.models.AccountUserDetails;
@@ -7,7 +8,6 @@ import com.specialist.auth.domain.account.models.dtos.*;
 import com.specialist.auth.domain.account.models.enums.LockReason;
 import com.specialist.auth.domain.account.models.enums.UnableReason;
 import com.specialist.auth.domain.account.repositories.AccountRepository;
-import com.specialist.auth.domain.account.mappers.AccountMapper;
 import com.specialist.auth.domain.account.repositories.AccountSpecification;
 import com.specialist.auth.domain.authority.Authority;
 import com.specialist.auth.domain.authority.AuthorityEntity;
@@ -34,6 +34,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -133,7 +134,7 @@ public class UnifiedAccountService implements AccountService, UserDetailsService
     @Transactional
     @Override
     public void lockById(UUID id, LockRequest request) {
-        repository.lockById(id, request.reason(), request.term());
+        repository.lockById(id, request.reason(), request.term().atZone(ZoneId.systemDefault()).toInstant());
     }
 
     @Transactional
