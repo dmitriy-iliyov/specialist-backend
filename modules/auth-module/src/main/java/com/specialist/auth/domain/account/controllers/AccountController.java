@@ -23,7 +23,7 @@ public class AccountController {
     private final AccountService service;
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody @Valid DefaultAccountCreateDto dto, HttpServletResponse response) {
+    public ResponseEntity<?> register(@RequestBody @Valid DefaultAccountCreateDto dto, HttpServletResponse response) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(orchestrator.save(dto, response));

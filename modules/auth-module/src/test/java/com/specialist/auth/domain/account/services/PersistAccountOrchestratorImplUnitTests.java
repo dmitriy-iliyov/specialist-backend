@@ -41,7 +41,7 @@ class PersistAccountOrchestratorImplUnitTests {
         var dto = new DefaultAccountCreateDto("test@example.com", "pass");
 
         var expectedResponse = new ShortAccountResponseDto(UUID.randomUUID(), "admin@example.com", LocalDateTime.now());
-        when(accountService.save(any())).thenReturn(expectedResponse);
+        when(accountService.save(any(DefaultAccountCreateDto.class))).thenReturn(expectedResponse);
 
         var responseMock = mock(HttpServletResponse.class);
 
@@ -70,7 +70,7 @@ class PersistAccountOrchestratorImplUnitTests {
         );
 
         var expectedResponse = new ShortAccountResponseDto(UUID.randomUUID(), "admin@example.com", LocalDateTime.now());
-        when(accountService.save(any())).thenReturn(expectedResponse);
+        when(accountService.save(any(DefaultAccountCreateDto.class))).thenReturn(expectedResponse);
 
         var actual = orchestrator.save(dto);
 
@@ -95,7 +95,7 @@ class PersistAccountOrchestratorImplUnitTests {
     void save_withInvalidDefaultAccountCreateDto_shouldThrow() {
         var dto = new DefaultAccountCreateDto(null, ""); // неверный email и пустой пароль, например
 
-        when(accountService.save(any())).thenThrow(new IllegalArgumentException("Invalid data"));
+        when(accountService.save(any(DefaultAccountCreateDto.class))).thenThrow(new IllegalArgumentException("Invalid data"));
 
         var responseMock = mock(HttpServletResponse.class);
 

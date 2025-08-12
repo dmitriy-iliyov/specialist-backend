@@ -2,12 +2,15 @@ package com.specialist.auth.domain.account.services;
 
 import com.specialist.auth.domain.account.models.AccountFilter;
 import com.specialist.auth.domain.account.models.dtos.*;
+import com.specialist.auth.domain.auth_provider.Provider;
 import com.specialist.utils.pagination.PageResponse;
 
 import java.util.UUID;
 
 public interface AccountService {
     ShortAccountResponseDto save(DefaultAccountCreateDto dto);
+
+    ShortAccountResponseDto save(OAuth2AccountCreateDto dto);
 
     boolean existsByEmail(String email);
 
@@ -30,4 +33,6 @@ public interface AccountService {
     PageResponse<AccountResponseDto> findAllByFilter(AccountFilter filter);
 
     void setUnableById(UUID id, UnableRequest request);
+
+    Provider findProviderByEmail(String email);
 }

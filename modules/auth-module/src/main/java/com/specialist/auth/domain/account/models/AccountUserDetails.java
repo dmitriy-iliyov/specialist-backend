@@ -1,6 +1,7 @@
 package com.specialist.auth.domain.account.models;
 
 import com.specialist.auth.core.models.BaseUserDetails;
+import com.specialist.auth.domain.auth_provider.Provider;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.security.core.CredentialsContainer;
@@ -12,12 +13,13 @@ import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
+@Getter
 public class AccountUserDetails implements UserDetails, CredentialsContainer, BaseUserDetails {
 
-    @Getter
     private UUID id;
     private String email;
     private String password;
+    private Provider provider;
     private List<? extends GrantedAuthority> authorities;
     private boolean isLocked;
     private boolean isEnabled;

@@ -31,7 +31,7 @@ public class ServiceAccountSecurityFilterChain {
     @Order(1)
     @Bean
     public SecurityFilterChain serviceSecurityFilterChain(HttpSecurity http) throws Exception {
-        http
+        return http
                 .securityMatcher("/api/system/**")
                 .csrf(csrf -> csrf.disable())
                 .authenticationManager(authenticationManager)
@@ -46,8 +46,8 @@ public class ServiceAccountSecurityFilterChain {
                 )
                 .sessionManagement(
                         sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                );
-        return http.build();
+                )
+                .build();
     }
 
 }

@@ -9,6 +9,7 @@ import com.specialist.auth.domain.account.models.enums.LockReason;
 import com.specialist.auth.domain.account.models.enums.UnableReason;
 import com.specialist.auth.domain.account.repositories.AccountRepository;
 import com.specialist.auth.domain.account.repositories.AccountSpecification;
+import com.specialist.auth.domain.auth_provider.Provider;
 import com.specialist.auth.domain.authority.Authority;
 import com.specialist.auth.domain.authority.AuthorityEntity;
 import com.specialist.auth.domain.authority.AuthorityService;
@@ -61,6 +62,7 @@ public class UnifiedAccountService implements AccountService, UserDetailsService
                 entity.getId(),
                 entity.getEmail(),
                 entity.getPassword(),
+                entity.getProvider(),
                 authorities,
                 entity.isLocked(),
                 entity.isEnabled()
@@ -75,10 +77,26 @@ public class UnifiedAccountService implements AccountService, UserDetailsService
         AccountEntity entity = new AccountEntity();
         entity.setEmail(dto.getEmail());
         entity.setPassword(passwordEncoder.encode(dto.getPassword()));
+        entity.setProvider(Provider.LOCAL);
         entity.setRole(role);
         entity.setAuthorities(authorities);
         entity.setEnabled(false);
         entity.setUnableReason(UnableReason.EMAIL_CONFIRMATION_REQUIRED);
+        return mapper.toShortResponseDto(repository.save(entity));
+    }
+
+    @Transactional
+    @Override
+    public ShortAccountResponseDto save(OAuth2AccountCreateDto dto) {
+        RoleEntity role = roleService.getReferenceByRole(dto.role());
+        List<AuthorityEntity> authorities = authorityService.getReferenceAllByAuthorityIn(dto.authorities());
+        AccountEntity entity = new AccountEntity();
+        entity.setEmail(dto.email());
+        entity.setPassword(passwordEncoder.encode("password"));
+        entity.setProvider(dto.provider());
+        entity.setRole(role);
+        entity.setAuthorities(authorities);
+        entity.setEnabled(true);
         return mapper.toShortResponseDto(repository.save(entity));
     }
 
@@ -141,6 +159,12 @@ public class UnifiedAccountService implements AccountService, UserDetailsService
     @Override
     public void setUnableById(UUID id, UnableRequest request) {
         repository.setUnableById(id, request.reason());
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Provider findProviderByEmail(String email) {
+        return repository.findProviderByEmail(email).orElseThrow(AccountNotFoundByEmailException::new);
     }
 
     @Transactional

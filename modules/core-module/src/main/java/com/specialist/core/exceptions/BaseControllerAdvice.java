@@ -259,4 +259,13 @@ public abstract class BaseControllerAdvice {
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(problemDetail);
     }
+
+    public ResponseEntity<?> handleBaseForbiddenException(BaseForbiddenException e, Locale locale) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN,
+                messageSource.getMessage("403", null, "error.403", locale));
+        problemDetail.setProperty("properties", Map.of("errors", List.of(e.getErrorDto())));
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(problemDetail);
+    }
 }

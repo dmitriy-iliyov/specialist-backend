@@ -1,5 +1,6 @@
 package com.specialist.auth.core;
 
+import com.specialist.auth.core.models.Token;
 import com.specialist.auth.core.models.TokenType;
 import com.specialist.auth.domain.access_token.AccessTokenFactory;
 import com.specialist.auth.domain.access_token.AccessTokenSerializer;
@@ -10,7 +11,6 @@ import com.specialist.auth.domain.refresh_token.models.RefreshToken;
 import com.specialist.auth.domain.refresh_token.models.RefreshTokenStatus;
 import com.specialist.auth.domain.service_account.models.ServiceAccountUserDetails;
 import com.specialist.auth.exceptions.RefreshTokenExpiredException;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -30,14 +30,16 @@ public class TokenManagerImpl implements TokenManager {
     private final AccessTokenSerializer accessTokenSerializer;
 
     @Override
-    public void generate(AccountUserDetails userDetails, HttpServletResponse response) {
+    public Map<TokenType, Token> generate(AccountUserDetails userDetails) {
         RefreshToken refreshToken = refreshTokenService.generateAndSave(userDetails);
         AccessToken accessToken = accessTokenFactory.generate(refreshToken);
         String rawRefreshToken = Base64.getUrlEncoder().withoutPadding()
                 .encodeToString(refreshToken.id().toString().getBytes(StandardCharsets.UTF_8));
         String rawAccessToken = accessTokenSerializer.serialize(accessToken);
-        response.addCookie(AuthCookieFactory.generate(rawRefreshToken, refreshToken.expiresAt(), TokenType.REFRESH));
-        response.addCookie(AuthCookieFactory.generate(rawAccessToken, accessToken.expiresAt(), TokenType.ACCESS));
+        return Map.of(
+                TokenType.REFRESH, new Token(TokenType.REFRESH, rawRefreshToken, refreshToken.expiresAt()),
+                TokenType.ACCESS, new Token(TokenType.ACCESS, rawAccessToken, accessToken.expiresAt())
+        );
     }
 
     @Override
@@ -54,20 +56,16 @@ public class TokenManagerImpl implements TokenManager {
     }
 
     @Override
-    public void refresh(UUID refreshTokenId, HttpServletResponse response) {
+    public Token refresh(UUID refreshTokenId) {
         RefreshToken refreshToken = refreshTokenService.findById(refreshTokenId);
         if (refreshToken.status().equals(RefreshTokenStatus.ACTIVE)) {
             long timeToExpiration = Duration.between(refreshToken.expiresAt(), Instant.now()).getSeconds();
             if (timeToExpiration <= 120) {
                 refreshTokenService.deactivateById(refreshTokenId);
-                response.addCookie(AuthCookieFactory.generateEmpty(TokenType.REFRESH));
-                response.addCookie(AuthCookieFactory.generateEmpty(TokenType.ACCESS));
                 throw new RefreshTokenExpiredException();
             } else {
                 AccessToken accessToken = accessTokenFactory.generate(refreshToken);
-                response.addCookie(AuthCookieFactory.generate(
-                        accessTokenSerializer.serialize(accessToken), accessToken.expiresAt(), TokenType.ACCESS)
-                );
+                return new Token(TokenType.ACCESS, accessTokenSerializer.serialize(accessToken), accessToken.expiresAt());
             }
         } else {
             throw new RefreshTokenExpiredException();

@@ -1,4 +1,4 @@
-package com.specialist.user.exceptions;
+package com.specialist.auth.exceptions;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -30,10 +30,10 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 import java.lang.reflect.Field;
 import java.util.*;
 
-@RestControllerAdvice(basePackages = "com.specialist.user")
-public class UserControllerAdvice extends BaseControllerAdvice {
+@RestControllerAdvice(basePackages = "com.specialist.auth")
+public class AuthModuleControllerAdvice extends BaseControllerAdvice {
 
-    public UserControllerAdvice(ExceptionMapper exceptionMapper, MessageSource messageSource) {
+    public AuthModuleControllerAdvice(ExceptionMapper exceptionMapper, MessageSource messageSource) {
         super(exceptionMapper, messageSource);
     }
 

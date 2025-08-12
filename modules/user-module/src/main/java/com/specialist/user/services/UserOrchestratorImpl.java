@@ -1,8 +1,8 @@
 package com.specialist.user.services;
 
 import com.specialist.contracts.auth.SystemAccountService;
+import com.specialist.user.models.dtos.BaseUserDto;
 import com.specialist.user.models.dtos.PrivateUserResponseDto;
-import com.specialist.user.models.dtos.UserCreateDto;
 import com.specialist.user.models.dtos.UserUpdateDto;
 import com.specialist.user.repositories.AvatarStorage;
 import jakarta.validation.ConstraintViolation;
@@ -27,7 +27,7 @@ public class UserOrchestratorImpl implements UserOrchestrator {
 
 
     @Override
-    public PrivateUserResponseDto save(UserCreateDto dto) {
+    public PrivateUserResponseDto save(BaseUserDto dto) {
         if (!dto.getAvatar().isEmpty()) {
             dto.setAvatarUrl(avatarStorage.save(dto.getAvatar(), dto.getId()));
         }

@@ -27,7 +27,7 @@ public class EventServiceImpl implements EventService {
 
 
     @CachePut(value = "users:events:creator-rating-update:processed", key = "#event.id()",
-              condition = "#status == com.aidcompass.user.models.enums.ProcessingStatus.PROCESSED")
+              condition = "#status.name() == 'PROCESSED'")
     @Transactional
     @Override
     public void saveOrUpdate(ProcessingStatus status, CreatorRatingUpdateEvent event) {

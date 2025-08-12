@@ -6,8 +6,8 @@ import com.specialist.contracts.user.SystemUserService;
 import com.specialist.user.exceptions.UserNotFoundByIdException;
 import com.specialist.user.mappers.UserMapper;
 import com.specialist.user.models.UserEntity;
+import com.specialist.user.models.dtos.BaseUserDto;
 import com.specialist.user.models.dtos.PrivateUserResponseDto;
-import com.specialist.user.models.dtos.UserCreateDto;
 import com.specialist.user.models.dtos.UserUpdateDto;
 import com.specialist.user.models.enums.ScopeType;
 import com.specialist.user.repositories.UserRepository;
@@ -37,7 +37,7 @@ public class UnifiedUserService implements UserService, SystemUserService, Creat
 
     @Transactional
     @Override
-    public PrivateUserResponseDto save(UserCreateDto dto) {
+    public PrivateUserResponseDto save(BaseUserDto dto) {
         UserEntity userEntity = mapper.toEntity(dto);
         return mapper.toPrivateDto(userEntity);
     }

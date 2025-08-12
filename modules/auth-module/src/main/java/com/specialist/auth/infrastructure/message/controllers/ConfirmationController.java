@@ -2,6 +2,7 @@ package com.specialist.auth.infrastructure.message.controllers;
 
 import com.specialist.auth.core.AccountAuthService;
 import com.specialist.auth.infrastructure.message.services.ConfirmationService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -29,8 +30,9 @@ public class ConfirmationController {
     @PatchMapping("/confirm")
     public ResponseEntity<?> confirm(@RequestParam("code") @NotBlank(message = "Code is required.")
                                      @Pattern(regexp = "^//d{6}$", message = "Invalid code.") String code,
+                                     HttpServletRequest request,
                                      HttpServletResponse response) {
-        accountAuthService.postConfirmationLogin(confirmationService.confirmEmailByCode(code), response);
+        accountAuthService.postConfirmationLogin(confirmationService.confirmEmailByCode(code), request, response);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();

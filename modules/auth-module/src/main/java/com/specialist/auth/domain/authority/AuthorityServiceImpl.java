@@ -11,6 +11,9 @@ import java.util.*;
 public class AuthorityServiceImpl implements AuthorityService {
 
     private final AuthorityRepository repository;
+    public static final List<Authority> DEFAULT_USER_AUTHORITIES = new ArrayList<>(List.of(
+            Authority.SPECIALIST_CREATE_UPDATE, Authority.REVIEW_CREATE_UPDATE, Authority.TYPE_SUGGEST
+    ));
 
     @Transactional(readOnly = true)
     @Override

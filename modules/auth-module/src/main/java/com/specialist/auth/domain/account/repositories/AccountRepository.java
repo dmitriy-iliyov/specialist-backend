@@ -3,6 +3,7 @@ package com.specialist.auth.domain.account.repositories;
 import com.specialist.auth.domain.account.models.AccountEntity;
 import com.specialist.auth.domain.account.models.enums.LockReason;
 import com.specialist.auth.domain.account.models.enums.UnableReason;
+import com.specialist.auth.domain.auth_provider.Provider;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -19,7 +20,11 @@ import java.util.UUID;
 public interface AccountRepository extends JpaRepository<AccountEntity, UUID>, JpaSpecificationExecutor<AccountEntity> {
     boolean existsByEmail(String email);
 
-    Optional<UUID> findIdByEmail(String email);
+    @Query("""
+        SELECT a.id FROM AccountEntity a
+        WHERE a.email = :email
+    """)
+    Optional<UUID> findIdByEmail(@Param("email") String email);
 
     @EntityGraph(attributePaths = {"role", "authorities"})
     Optional<AccountEntity> findByEmail(String email);
@@ -51,4 +56,10 @@ public interface AccountRepository extends JpaRepository<AccountEntity, UUID>, J
     @Modifying
     @Query("UPDATE AccountEntity a SET a.isEnabled = false, a.unableReason = :reason WHERE a.id = :id")
     void setUnableById(@Param("id") UUID id, @Param("reason") UnableReason reason);
+
+    @Query("""
+        SELECT a.provider FROM AccountEntity a
+        WHERE a.email = :email
+    """)
+    Optional<Provider> findProviderByEmail(@Param("email") String email);
 }

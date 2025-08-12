@@ -30,7 +30,7 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 import java.lang.reflect.Field;
 import java.util.*;
 
-@RestControllerAdvice(basePackages = "com.aidcompass.specialistdirectory")
+@RestControllerAdvice(basePackages = "com.specialist.specialistdirectory")
 public class SpecialistDirectoryControllerAdvice extends BaseControllerAdvice {
 
     public SpecialistDirectoryControllerAdvice(ExceptionMapper exceptionMapper, MessageSource messageSource) {
@@ -168,11 +168,14 @@ public class SpecialistDirectoryControllerAdvice extends BaseControllerAdvice {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST,
                 getMessageSource().getMessage("400", null, "error.400", locale));
         String [] em = e.getMessage().split(":");
-        System.out.println(e);
-        System.out.println("em" + Arrays.toString(em));
         problemDetail.setProperty("properties", List.of(new ErrorDto(em[0], em[1])));
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(problemDetail);
+    }
+
+    @ExceptionHandler(BaseForbiddenException.class)
+    public ResponseEntity<?> handleBaseForbiddenException(BaseForbiddenException e, Locale locale) {
+        return super.handleBaseForbiddenException(e, locale);
     }
 }

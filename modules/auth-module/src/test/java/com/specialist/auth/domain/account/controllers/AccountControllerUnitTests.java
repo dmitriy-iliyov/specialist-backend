@@ -53,7 +53,7 @@ public class AccountControllerUnitTests {
 
         when(orchestrator.save(eq(createDto), any())).thenReturn(expectedResponse);
 
-        ResponseEntity<?> responseEntity = accountController.create(createDto, response);
+        ResponseEntity<?> responseEntity = accountController.register(createDto, response);
 
         verify(orchestrator, times(1)).save(eq(createDto), any());
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
@@ -66,7 +66,7 @@ public class AccountControllerUnitTests {
 
         when(orchestrator.save(eq(createDto), any())).thenThrow(RuntimeException.class);
 
-        assertThrows(RuntimeException.class, () -> accountController.create(createDto, response));
+        assertThrows(RuntimeException.class, () -> accountController.register(createDto, response));
 
         verify(orchestrator, times(1)).save(eq(createDto), any());
     }
