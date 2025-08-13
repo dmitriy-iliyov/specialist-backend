@@ -48,7 +48,7 @@ public class TokenManagerImpl implements TokenManager {
     }
 
     @Override
-    public Map<String, String> generate(ServiceAccountUserDetails userDetails) {
+    public Token generate(ServiceAccountUserDetails userDetails) {
         if (userDetails == null) {
             throw new UserDetailsNullException();
         }
@@ -60,7 +60,7 @@ public class TokenManagerImpl implements TokenManager {
                 Instant.now(),
                 refreshToken.expiresAt()
         );
-        return Map.of("access_token", accessTokenSerializer.serialize(accessToken));
+        return new Token(TokenType.ACCESS, accessTokenSerializer.serialize(accessToken), accessToken.expiresAt());
     }
 
     @Override

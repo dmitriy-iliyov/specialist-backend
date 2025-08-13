@@ -11,7 +11,7 @@ import java.util.UUID;
 public interface TokenManager {
     Map<TokenType, Token> generate(AccountUserDetails userDetails);
 
-    Map<String, String> generate(ServiceAccountUserDetails userDetails);
+    Token generate(ServiceAccountUserDetails userDetails);
 
     Token refresh(UUID refreshTokenId);
 }

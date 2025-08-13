@@ -33,7 +33,7 @@ public class ServiceAccountAuthServiceImpl implements ServiceAccountAuthService 
             );
             SecurityContextHolder.getContext().setAuthentication(authentication);
             ServiceAccountUserDetails userDetails = (ServiceAccountUserDetails) authentication.getPrincipal();
-            return tokenManager.generate(userDetails);
+            return Map.of("access_token", tokenManager.generate(userDetails).rawToken());
         } catch (AuthenticationException e) {
             SecurityContextHolder.clearContext();
             throw e;
