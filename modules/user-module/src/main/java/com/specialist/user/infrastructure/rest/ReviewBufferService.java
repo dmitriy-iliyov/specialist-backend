@@ -1,4 +1,4 @@
-package com.specialist.user.infrastructure;
+package com.specialist.user.infrastructure.rest;
 
 import java.util.Set;
 import java.util.UUID;

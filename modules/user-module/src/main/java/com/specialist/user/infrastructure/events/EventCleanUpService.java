@@ -1,6 +1,6 @@
 package com.specialist.user.infrastructure.events;
 
-import com.specialist.user.infrastructure.ReviewBufferService;
+import com.specialist.user.infrastructure.rest.ReviewBufferService;
 import com.specialist.user.models.enums.ProcessingStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
