@@ -9,7 +9,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@SpringBootApplication(scanBasePackages = "com.aidcompass")
+@SpringBootApplication(scanBasePackages = "com.specialist")
 @EnableJpaRepositories
 @EnableTransactionManagement
 @EnableAsync

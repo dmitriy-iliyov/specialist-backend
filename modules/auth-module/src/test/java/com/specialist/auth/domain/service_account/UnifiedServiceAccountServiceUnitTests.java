@@ -7,7 +7,6 @@ import com.specialist.auth.domain.authority.AuthorityService;
 import com.specialist.auth.domain.role.Role;
 import com.specialist.auth.domain.role.RoleEntity;
 import com.specialist.auth.domain.role.RoleService;
-import com.specialist.auth.domain.service_account.*;
 import com.specialist.auth.domain.service_account.models.ServiceAccountDto;
 import com.specialist.auth.domain.service_account.models.ServiceAccountEntity;
 import com.specialist.auth.domain.service_account.models.ServiceAccountResponseDto;
@@ -18,16 +17,18 @@ import com.specialist.utils.pagination.PageResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.time.Instant;
 import java.util.*;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 

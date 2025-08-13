@@ -39,7 +39,7 @@ public class AccountSecurityFilterChain {
     private final AuthenticationEntryPoint authenticationEntryPoint;
     private final LogoutHandler refreshTokenLogoutHandler;
     private final LogoutSuccessHandler logoutSuccessHandler;
-    public static final String OAUTH2_URL_TEMPLATE = "/api/auth/oauth2/authorization/%s";
+    public static final String OAUTH2_URL_TEMPLATE = "/api/auth/oauth2/authorize/%s";
 
     public AccountSecurityFilterChain(CorsConfigurationSource configurationSource, CsrfTokenRepository csrfTokenRepository,
                                       RateLimitFilter rateLimitFilter,
@@ -99,7 +99,7 @@ public class AccountSecurityFilterChain {
                         .requestMatchers("/api/v1/users/me", "/api/v1/users/me/avatar").authenticated()
                         .requestMatchers("/api/v1/users", "/api/v1/users/**").permitAll()
                         .requestMatchers("/api/v1/me/bookmarks", "/api/v1/me/bookmarks/**").authenticated()
-                        .requestMatchers("/api/v1/languages").permitAll()
+                        .requestMatchers("/api/v1/languages", "/api/v1/languages/**", "/api/v1/contacts/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/specialists/**/reviews").permitAll()
                         .requestMatchers("/api/v1/specialists/**/reviews",
                                          "/api/v1/specialists/**/reviews/**").authenticated()

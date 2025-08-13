@@ -36,7 +36,7 @@ public class ServiceAccountAuthServiceImpl implements ServiceAccountAuthService 
             return tokenManager.generate(userDetails);
         } catch (AuthenticationException e) {
             SecurityContextHolder.clearContext();
-            return null;
+            throw e;
         }
     }
 }

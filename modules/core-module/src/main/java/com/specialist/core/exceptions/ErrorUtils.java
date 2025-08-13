@@ -1,8 +1,8 @@
 package com.specialist.core.exceptions;
 
-import com.specialist.core.exceptions.models.dto.ErrorDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.specialist.core.exceptions.models.dto.ErrorDto;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.constraints.NotNull;
 import lombok.experimental.UtilityClass;

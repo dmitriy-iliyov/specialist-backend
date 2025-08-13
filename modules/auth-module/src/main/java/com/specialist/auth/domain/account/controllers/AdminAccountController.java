@@ -26,7 +26,7 @@ public class AdminAccountController {
     private final PersistAccountOrchestrator orchestrator;
     private final AccountService service;
 
-    @PreAuthorize("hasAuthority('ACCOUNT_CREATE')")
+    @PreAuthorize("hasAnyAuthority('ACCOUNT_CREATE', 'ACCOUNT_MANAGER')")
     @PostMapping
     public ResponseEntity<?> create(@RequestBody @Valid ManagedAccountCreateDto dto) {
         return ResponseEntity
@@ -48,7 +48,7 @@ public class AdminAccountController {
                 .body(service.findAllByFilter(filter));
     }
 
-    @PreAuthorize("hasAuthority('ACCOUNT_LOCK')")
+    @PreAuthorize("hasAnyAuthority('ACCOUNT_LOCK', 'ACCOUNT_MANAGER')")
     @PostMapping("/{id}/lock")
     public ResponseEntity<?> lock(@PathVariable("id")
                                   @ValidUuid(paramName = "id", message = "Id should have valid format.") UUID id,
@@ -59,7 +59,7 @@ public class AdminAccountController {
                 .build();
     }
 
-    @PreAuthorize("hasAuthority('ACCOUNT_UNABLE')")
+    @PreAuthorize("hasAnyAuthority('ACCOUNT_UNABLE', 'ACCOUNT_MANAGER')")
     @PostMapping("/{id}/unable")
     public ResponseEntity<?> unable(@PathVariable("id")
                                     @ValidUuid(paramName = "id", message = "Id should have valid format.") UUID id,
@@ -70,7 +70,7 @@ public class AdminAccountController {
                 .build();
     }
 
-    @PreAuthorize("hasAuthority('ACCOUNT_DELETE')")
+    @PreAuthorize("hasAnyAuthority('ACCOUNT_DELETE', 'ACCOUNT_MANAGER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") UUID id) {
         service.deleteById(id);

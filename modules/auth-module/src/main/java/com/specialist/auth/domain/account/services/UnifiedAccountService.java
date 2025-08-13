@@ -92,7 +92,6 @@ public class UnifiedAccountService implements AccountService, UserDetailsService
         List<AuthorityEntity> authorities = authorityService.getReferenceAllByAuthorityIn(dto.authorities());
         AccountEntity entity = new AccountEntity();
         entity.setEmail(dto.email());
-        entity.setPassword(passwordEncoder.encode("password"));
         entity.setProvider(dto.provider());
         entity.setRole(role);
         entity.setAuthorities(authorities);

@@ -11,6 +11,8 @@ import com.specialist.auth.domain.refresh_token.models.RefreshToken;
 import com.specialist.auth.domain.refresh_token.models.RefreshTokenStatus;
 import com.specialist.auth.domain.service_account.models.ServiceAccountUserDetails;
 import com.specialist.auth.exceptions.RefreshTokenExpiredException;
+import com.specialist.auth.exceptions.RefreshTokenIdNullException;
+import com.specialist.auth.exceptions.UserDetailsNullException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -31,6 +33,9 @@ public class TokenManagerImpl implements TokenManager {
 
     @Override
     public Map<TokenType, Token> generate(AccountUserDetails userDetails) {
+        if (userDetails == null) {
+            throw new UserDetailsNullException();
+        }
         RefreshToken refreshToken = refreshTokenService.generateAndSave(userDetails);
         AccessToken accessToken = accessTokenFactory.generate(refreshToken);
         String rawRefreshToken = Base64.getUrlEncoder().withoutPadding()
@@ -44,6 +49,9 @@ public class TokenManagerImpl implements TokenManager {
 
     @Override
     public Map<String, String> generate(ServiceAccountUserDetails userDetails) {
+        if (userDetails == null) {
+            throw new UserDetailsNullException();
+        }
         RefreshToken refreshToken = refreshTokenService.generateAndSave(userDetails);
         AccessToken accessToken = new AccessToken(
                 refreshToken.id(),
@@ -57,9 +65,12 @@ public class TokenManagerImpl implements TokenManager {
 
     @Override
     public Token refresh(UUID refreshTokenId) {
+        if (refreshTokenId == null) {
+            throw new RefreshTokenIdNullException();
+        }
         RefreshToken refreshToken = refreshTokenService.findById(refreshTokenId);
         if (refreshToken.status().equals(RefreshTokenStatus.ACTIVE)) {
-            long timeToExpiration = Duration.between(refreshToken.expiresAt(), Instant.now()).getSeconds();
+            long timeToExpiration = Duration.between(Instant.now(), refreshToken.expiresAt()).toSeconds();
             if (timeToExpiration <= 120) {
                 refreshTokenService.deactivateById(refreshTokenId);
                 throw new RefreshTokenExpiredException();

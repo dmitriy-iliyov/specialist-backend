@@ -46,12 +46,6 @@
 
         <dependency>
             <groupId>com.specialist</groupId>
-            <artifactId>message-module</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.specialist</groupId>
             <artifactId>user-module</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>

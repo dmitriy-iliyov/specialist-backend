@@ -41,7 +41,7 @@ public class DefaultOAuth2UserServiceDecorator extends DefaultOAuth2UserService 
     @Transactional
     public void saveIfNonExists(Provider provider, OAuth2User oAuth2User) {
         String email = oAuth2User.getAttribute("email");
-        if (!service.existsByEmail(email)) {
+        if (!service.existsByEmail(email) && email != null) {
             OAuth2AccountCreateDto createDto = new OAuth2AccountCreateDto(
                     email,
                     provider,

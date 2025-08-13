@@ -1,7 +1,7 @@
 package com.specialist.auth.core.csrf;
 
 import com.specialist.auth.exceptions.CsrfTokenMaskingException;
-import com.specialist.auth.exceptions.NullCsrfTokenException;
+import com.specialist.auth.exceptions.CsrfTokenNullException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +35,7 @@ public class CsrfTokenServiceImpl implements CsrfTokenService {
             );
         } catch(Exception e) {
             if (e instanceof NullPointerException) {
-                throw new NullCsrfTokenException();
+                throw new CsrfTokenNullException();
             }
             throw new CsrfTokenMaskingException();
         }

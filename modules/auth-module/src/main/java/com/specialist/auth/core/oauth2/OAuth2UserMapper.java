@@ -1,8 +1,8 @@
 package com.specialist.auth.core.oauth2;
 
 import com.specialist.auth.domain.auth_provider.Provider;
-import com.specialist.auth.exceptions.NullOAuth2UserAttributesException;
-import com.specialist.auth.exceptions.NullOAuth2UserException;
+import com.specialist.auth.exceptions.OAuth2UserAttributesNullException;
+import com.specialist.auth.exceptions.OAuth2UserNullException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.Map;
@@ -12,9 +12,9 @@ public final class OAuth2UserMapper {
 
     public OAuthUserEntity toEntity(Provider provider, UUID accountId, OAuth2User oAuth2User) {
         if (oAuth2User == null) {
-            throw new NullOAuth2UserException();
+            throw new OAuth2UserNullException();
         } else if (oAuth2User.getAttributes() == null) {
-            throw new NullOAuth2UserAttributesException();
+            throw new OAuth2UserAttributesNullException();
         }
         Map<String, Object> attributes = oAuth2User.getAttributes();
         OAuthUserEntity entity = new OAuthUserEntity(accountId, (String) attributes.get("email"));
