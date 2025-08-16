@@ -2,13 +2,15 @@ package com.specialist.specialistdirectory.domain.specialist.models.dtos;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.specialist.specialistdirectory.domain.contact.ContactType;
+import com.specialist.specialistdirectory.domain.contact.ContactDto;
+import com.specialist.specialistdirectory.domain.language.SpecialistLanguage;
 import com.specialist.specialistdirectory.domain.specialist.models.markers.SpecialistMarker;
 import com.specialist.specialistdirectory.domain.specialist.validation.Specialist;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
 import java.util.UUID;
 
 @Specialist
@@ -42,10 +44,8 @@ public class SpecialistCreateDto implements SpecialistMarker {
     @Size(min = 5, max = 20, message = "Another type must be between 5 and 20 characters.")
     private final String anotherType;
 
-    @JsonProperty("house_number_and_street")
-    @NotBlank(message = "House pageNumber and street are required.")
-    @Size(min = 2, max = 50, message = "House pageNumber and street must be between 2 and 20 characters.")
-    private final String houseNumberAndStreet;
+    @NotEmpty(message = "At least one language required.")
+    private final List<SpecialistLanguage> languages;
 
     @JsonProperty("city_title")
     @NotBlank(message = "City title is required.")
@@ -56,11 +56,12 @@ public class SpecialistCreateDto implements SpecialistMarker {
     @Pattern(regexp = "\\d{5}", message = "City code should be exactly 5 digits.")
     private final String cityCode;
 
-    @JsonProperty("contact_type")
-    private final ContactType contactType;
+    @JsonProperty("house_number_and_street")
+    @NotBlank(message = "House pageNumber and street are required.")
+    @Size(min = 2, max = 50, message = "House pageNumber and street must be between 2 and 20 characters.")
+    private final String houseNumberAndStreet;
 
-    @NotBlank(message = "Contact is required.")
-    private final String contact;
+    private final List<ContactDto> contacts;
 
     @Pattern(regexp = "^(https?:\\/\\/)?([\\w\\-]+\\.)+[\\w\\-]+(\\/\\S*)?$", message = "Site must be a valid URL.")
     private final String site;

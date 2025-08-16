@@ -7,20 +7,13 @@ import java.util.Arrays;
 
 @Getter
 public enum ContactType {
-    EMAIL(0),
-    PHONE_NUMBER(1);
+    EMAIL("email"),
+    PHONE_NUMBER("phone");
 
-    private final int code;
+    private final String jsonValue;
 
-    ContactType(int code) {
-        this.code = code;
-    }
-
-    public static ContactType fromCode(int code) {
-        return Arrays.stream(ContactType.values())
-                .filter(type -> type.getCode() == code)
-                .findFirst()
-                .orElse(null);
+    ContactType(String jsonValue) {
+        this.jsonValue = jsonValue;
     }
 
     @JsonCreator

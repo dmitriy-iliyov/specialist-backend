@@ -2,9 +2,11 @@ package com.specialist.specialistdirectory.domain.specialist.models.dtos;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.specialist.specialistdirectory.domain.contact.ContactType;
+import com.specialist.specialistdirectory.domain.contact.ContactDto;
+import com.specialist.specialistdirectory.domain.language.SpecialistLanguage;
 import lombok.Data;
 
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -24,8 +26,7 @@ public class SpecialistResponseDto {
         @JsonProperty("another_type")
         private String anotherType;
 
-        @JsonProperty("house_number_and_street")
-        private final String houseNumberAndStreet;
+        private final List<SpecialistLanguage> languages;
 
         @JsonProperty("city_title")
         private final String cityTitle;
@@ -33,10 +34,10 @@ public class SpecialistResponseDto {
         @JsonProperty("city_code")
         private final String cityCode;
 
-        @JsonProperty("contact_type")
-        private final ContactType contactType;
+        @JsonProperty("house_number_and_street")
+        private final String houseNumberAndStreet;
 
-        private final String contact;
+        private final List<ContactDto> contacts;
 
         private final String site;
 
@@ -53,11 +54,11 @@ public class SpecialistResponseDto {
                                      @JsonProperty("full_name") String fullName,
                                      @JsonProperty("type_title") String typeTitle,
                                      @JsonProperty("another_type") String anotherType,
-                                     @JsonProperty("house_number_and_street") String houseNumberAndStreet,
+                                     List<SpecialistLanguage> languages,
                                      @JsonProperty("city_title") String cityTitle,
                                      @JsonProperty("city_code") String cityCode,
-                                     @JsonProperty("contact_type") ContactType contactType,
-                                     @JsonProperty("contact") String contact,
+                                     @JsonProperty("house_number_and_street") String houseNumberAndStreet,
+                                     List<ContactDto> contacts,
                                      @JsonProperty("site") String site,
                                      @JsonProperty("total_rating") double totalRating,
                                      @JsonProperty("reviews_count") long reviewsCount) {
@@ -66,11 +67,11 @@ public class SpecialistResponseDto {
                 this.fullName = fullName;
                 this.typeTitle = typeTitle;
                 this.anotherType = anotherType;
-                this.houseNumberAndStreet = houseNumberAndStreet;
+                this.languages = languages;
                 this.cityTitle = cityTitle;
                 this.cityCode = cityCode;
-                this.contactType = contactType;
-                this.contact = contact;
+                this.houseNumberAndStreet = houseNumberAndStreet;
+                this.contacts = contacts;
                 this.site = site;
                 this.totalRating = totalRating;
                 this.reviewsCount = reviewsCount;

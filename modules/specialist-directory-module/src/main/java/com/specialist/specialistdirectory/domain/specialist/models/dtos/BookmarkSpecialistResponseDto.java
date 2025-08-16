@@ -1,8 +1,12 @@
 package com.specialist.specialistdirectory.domain.specialist.models.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.specialist.specialistdirectory.domain.contact.ContactDto;
 import com.specialist.specialistdirectory.domain.contact.ContactType;
+import com.specialist.specialistdirectory.domain.language.SpecialistLanguage;
+import jakarta.validation.constraints.NotEmpty;
 
+import java.util.List;
 import java.util.UUID;
 
 public record BookmarkSpecialistResponseDto(
@@ -16,15 +20,15 @@ public record BookmarkSpecialistResponseDto(
 
         @JsonProperty("another_type") String anotherType,
 
-        @JsonProperty("house_number_and_street") String houseNumberAndStreet,
+        List<SpecialistLanguage> languages,
 
         @JsonProperty("city_title") String cityTitle,
 
         @JsonProperty("city_code") String cityCode,
 
-        @JsonProperty("contact_type") ContactType contactType,
+        @JsonProperty("house_number_and_street") String houseNumberAndStreet,
 
-        String contact,
+        List<ContactDto> contacts,
 
         String site,
 

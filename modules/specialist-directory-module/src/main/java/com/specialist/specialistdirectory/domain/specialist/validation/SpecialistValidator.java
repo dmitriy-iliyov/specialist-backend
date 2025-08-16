@@ -1,50 +1,23 @@
 package com.specialist.specialistdirectory.domain.specialist.validation;
 
-import com.specialist.specialistdirectory.domain.contact.ContactType;
-import com.specialist.specialistdirectory.domain.contact.ContactValidator;
 import com.specialist.specialistdirectory.domain.specialist.models.markers.SpecialistMarker;
 import com.specialist.specialistdirectory.domain.type.services.TypeConstants;
 import com.specialist.specialistdirectory.domain.type.services.TypeService;
 import com.specialist.specialistdirectory.domain.type.validation.TypeValidator;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import lombok.RequiredArgsConstructor;
 
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
+@RequiredArgsConstructor
 public class SpecialistValidator implements ConstraintValidator<Specialist, SpecialistMarker> {
 
-    private final Map<ContactType, ContactValidator> contactValidators;
     private final TypeService typeService;
-
-
-    public SpecialistValidator(List<ContactValidator> contactValidators, TypeService typeService) {
-        this.contactValidators = contactValidators.stream().collect(Collectors.toMap(ContactValidator::getType, Function.identity()));
-        this.typeService = typeService;
-    }
 
     @Override
     public boolean isValid(SpecialistMarker dto, ConstraintValidatorContext context) {
         boolean hasErrors = false;
 
         context.disableDefaultConstraintViolation();
-
-        ContactValidator contactValidator = contactValidators.get(dto.getContactType());
-        if (contactValidator == null) {
-            hasErrors = true;
-            context.buildConstraintViolationWithTemplate("Unsupported contact type.")
-                    .addPropertyNode("contact_type")
-                    .addConstraintViolation();
-        } else {
-            if (!contactValidator.validate(dto.getContact())) {
-                hasErrors = true;
-                context.buildConstraintViolationWithTemplate("Contact should be valid.")
-                        .addPropertyNode("contact")
-                        .addConstraintViolation();
-            }
-        }
 
         if(!typeService.existsById(dto.getTypeId())) {
             context.buildConstraintViolationWithTemplate("Non-existent type id.")

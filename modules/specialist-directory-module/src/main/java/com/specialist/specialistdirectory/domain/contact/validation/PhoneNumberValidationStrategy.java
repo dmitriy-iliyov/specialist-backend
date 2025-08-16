@@ -1,11 +1,12 @@
-package com.specialist.specialistdirectory.domain.contact;
+package com.specialist.specialistdirectory.domain.contact.validation;
 
+import com.specialist.specialistdirectory.domain.contact.ContactType;
 import org.springframework.stereotype.Component;
 
 import java.util.regex.Pattern;
 
 @Component
-public class PhoneNumberValidator implements ContactValidator {
+public class PhoneNumberValidationStrategy implements ContactValidationStrategy {
 
     private final Pattern pattern = Pattern.compile("^[+]\\d{12}$");
 
