@@ -1,6 +1,6 @@
 package com.specialist.user.validation;
 
-import com.specialist.contracts.auth.SystemAccountService;
+import com.specialist.contracts.auth.SystemAccountFacade;
 import com.specialist.user.models.dtos.PrivateUserResponseDto;
 import com.specialist.user.models.dtos.UserUpdateDto;
 import com.specialist.user.services.UserService;
@@ -13,7 +13,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class EmailUniquenessValidator implements ConstraintValidator<UniqueEmail, UserUpdateDto> {
 
-    private final SystemAccountService accountService;
+    private final SystemAccountFacade accountFacade;
     private final UserService userService;
 
 
@@ -31,7 +31,7 @@ public class EmailUniquenessValidator implements ConstraintValidator<UniqueEmail
         if (existsUser.getEmail().equals(dto.getEmail())) {
             return true;
         } else {
-            UUID emailOwnerId = accountService.findIdByEmail(dto.getEmail());
+            UUID emailOwnerId = accountFacade.findIdByEmail(dto.getEmail());
             if (emailOwnerId != null && !existsUser.getId().equals(emailOwnerId)) {
                 context.buildConstraintViolationWithTemplate("Email isn't unique.")
                         .addPropertyNode("email")

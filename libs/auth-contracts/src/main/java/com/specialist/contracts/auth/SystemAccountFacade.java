@@ -2,7 +2,7 @@ package com.specialist.contracts.auth;
 
 import java.util.UUID;
 
-public interface SystemAccountService {
+public interface SystemAccountFacade {
     //should return null when not found
     UUID findIdByEmail(String email);
 

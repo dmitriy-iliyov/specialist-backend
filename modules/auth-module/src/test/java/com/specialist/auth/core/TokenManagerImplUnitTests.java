@@ -141,9 +141,9 @@ public class TokenManagerImplUnitTests {
         when(refreshTokenService.generateAndSave(userDetails)).thenReturn(refreshToken);
         when(accessTokenSerializer.serialize(any(AccessToken.class))).thenReturn(rawAccessToken);
 
-        Map<String, String> result = tokenManager.generate(userDetails);
+        Token token = tokenManager.generate(userDetails);
 
-        assertEquals(rawAccessToken, result.get("access_token"));
+        assertEquals(rawAccessToken, token.rawToken());
         verify(refreshTokenService, times(1)).generateAndSave(userDetails);
         verify(accessTokenSerializer, times(1)).serialize(any(AccessToken.class));
         verifyNoMoreInteractions(refreshTokenService, accessTokenFactory, accessTokenSerializer);

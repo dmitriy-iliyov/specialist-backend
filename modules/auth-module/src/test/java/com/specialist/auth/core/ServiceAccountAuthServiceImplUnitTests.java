@@ -1,6 +1,8 @@
 package com.specialist.auth.core;
 
 import com.specialist.auth.core.models.ServiceLoginRequest;
+import com.specialist.auth.core.models.Token;
+import com.specialist.auth.core.models.TokenType;
 import com.specialist.auth.domain.service_account.models.ServiceAccountUserDetails;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.DisplayName;
@@ -16,6 +18,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -52,22 +55,22 @@ public class ServiceAccountAuthServiceImplUnitTests {
                 List.of(new SimpleGrantedAuthority("ROLE_SERVICE"))
         );
 
-        Map<String, String> expectedTokens = Map.of("access_token", "access-token-value");
+        Token token = new Token(TokenType.ACCESS, "access-token-value", Instant.now());
 
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
                 .thenReturn(authentication);
         when(authentication.getPrincipal()).thenReturn(userDetails);
-        when(tokenManager.generate(userDetails)).thenReturn(expectedTokens);
+        when(tokenManager.generate(userDetails)).thenReturn(token);
 
         Map<String, String> result = service.login(requestDto, httpServletRequest);
 
-        assertEquals(expectedTokens, result);
+        assertEquals(token.rawToken(), result.get("access_token"));
         assertEquals(authentication, SecurityContextHolder.getContext().getAuthentication());
 
         verify(authenticationManager, times(1))
-                .authenticate(argThat(token ->
-                        token.getPrincipal().equals("client-id") &&
-                                token.getCredentials().equals("client-secret")
+                .authenticate(argThat(authenticationToken ->
+                        authenticationToken.getPrincipal().equals("client-id") &&
+                                authenticationToken.getCredentials().equals("client-secret")
                 ));
         verify(tokenManager, times(1)).generate(userDetails);
         verifyNoMoreInteractions(authenticationManager, tokenManager);

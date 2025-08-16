@@ -16,7 +16,7 @@ import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
-public class SystemAccountServiceImplUnitTests {
+public class SystemAccountFacadeImplUnitTests {
 
     @Mock
     private AccountService accountService;
@@ -25,7 +25,7 @@ public class SystemAccountServiceImplUnitTests {
     private ConfirmationService confirmationService;
 
     @InjectMocks
-    private SystemAccountServiceImpl service;
+    private SystemAccountFacadeImpl service;
 
     @Test
     @DisplayName("UT: findIdByEmail() should return UUID on success")

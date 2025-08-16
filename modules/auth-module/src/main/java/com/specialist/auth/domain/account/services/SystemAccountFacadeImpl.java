@@ -1,7 +1,7 @@
 package com.specialist.auth.domain.account.services;
 
 import com.specialist.auth.infrastructure.message.services.ConfirmationService;
-import com.specialist.contracts.auth.SystemAccountService;
+import com.specialist.contracts.auth.SystemAccountFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class SystemAccountServiceImpl implements SystemAccountService {
+public class SystemAccountFacadeImpl implements SystemAccountFacade {
 
     private final AccountService accountService;
     private final ConfirmationService confirmationService;

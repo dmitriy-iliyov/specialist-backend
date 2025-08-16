@@ -1,6 +1,6 @@
 package com.specialist.user.services;
 
-import com.specialist.contracts.auth.SystemAccountService;
+import com.specialist.contracts.auth.SystemAccountFacade;
 import com.specialist.user.models.dtos.BaseUserDto;
 import com.specialist.user.models.dtos.PrivateUserResponseDto;
 import com.specialist.user.models.dtos.UserUpdateDto;
@@ -23,7 +23,7 @@ public class UserOrchestratorImpl implements UserOrchestrator {
     private final UserService userService;
     private final AvatarStorage avatarStorage;
     private final Validator validator;
-    private final SystemAccountService accountService;
+    private final SystemAccountFacade accountFacade;
 
 
     @Override
@@ -44,7 +44,7 @@ public class UserOrchestratorImpl implements UserOrchestrator {
         if (!dto.getAvatar().isEmpty()) {
             dto.setAvatarUrl(avatarStorage.save(dto.getAvatar(), dto.getId()));
         }
-        return userService.update(dto, accountService::updateEmailById);
+        return userService.update(dto, accountFacade::updateEmailById);
     }
 
     @Override
@@ -58,7 +58,7 @@ public class UserOrchestratorImpl implements UserOrchestrator {
     @Override
     public void delete(UUID id) {
         userService.deleteById(id);
-        accountService.deleteById(id);
+        accountFacade.deleteById(id);
         avatarStorage.deleteByUserId(id);
     }
 }

@@ -5,10 +5,7 @@ import com.specialist.auth.domain.authority.AuthorityEntity;
 import com.specialist.auth.domain.authority.AuthorityService;
 import com.specialist.auth.domain.role.RoleEntity;
 import com.specialist.auth.domain.role.RoleService;
-import com.specialist.auth.domain.service_account.models.ServiceAccountDto;
-import com.specialist.auth.domain.service_account.models.ServiceAccountEntity;
-import com.specialist.auth.domain.service_account.models.ServiceAccountResponseDto;
-import com.specialist.auth.domain.service_account.models.ServiceAccountUserDetails;
+import com.specialist.auth.domain.service_account.models.*;
 import com.specialist.auth.exceptions.ServiceAccountNotFoundByIdException;
 import com.specialist.utils.pagination.PageRequest;
 import com.specialist.utils.pagination.PageResponse;
@@ -23,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.SecureRandom;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -54,27 +52,36 @@ public class UnifiedServiceAccountService implements ServiceAccountService, User
 
     @Transactional
     @Override
-    public ServiceAccountResponseDto save(UUID adminId, ServiceAccountDto dto) {
-        ServiceAccountEntity entity = new ServiceAccountEntity();
-        if (dto.getId() != null) {
-            entity = repository.findById(dto.getId()).orElse(null);
-        }
-        if (entity == null) {
-            entity = new ServiceAccountEntity();
-            entity.setCreatorId(adminId);
-        }
+    public SecretServiceAccountResponseDto save(UUID adminId, ServiceAccountDto dto) {
+        ServiceAccountEntity entity = Optional.ofNullable(dto.getId()).
+                flatMap(repository::findById)
+                .orElseGet(() -> {
+                    ServiceAccountEntity newEntity = new ServiceAccountEntity();
+                    newEntity.setCreatorId(adminId);
+                    return newEntity;
+                });
+
         RoleEntity roleEntity = roleService.getReferenceByRole(dto.getRole());
         List<AuthorityEntity> authorities = authorityService.getReferenceAllByAuthorityIn(dto.getAuthorities().stream().toList());
-        entity.setSecret(passwordEncoder.encode(dto.getSecret()));
+
+        String secret = generateSecret();
+        entity.setSecret(passwordEncoder.encode(secret));
         entity.setRole(roleEntity);
         entity.setAuthorities(authorities);
         entity.setUpdaterId(adminId);
         entity = repository.save(entity);
-        return mapper.toResponseDto(
+        ServiceAccountResponseDto responseDto = mapper.toResponseDto(
                 authorityService.findAllByServiceAccountIdIn(new HashSet<>(Set.of(entity.getId())))
                         .get(entity.getId()),
                 entity
         );
+        return new SecretServiceAccountResponseDto(secret, responseDto);
+    }
+
+    private String generateSecret() {
+        byte [] secretBytes = new byte[48];
+        new SecureRandom().nextBytes(secretBytes);
+        return Base64.getUrlEncoder().encodeToString(secretBytes);
     }
 
     @Transactional(readOnly = true)

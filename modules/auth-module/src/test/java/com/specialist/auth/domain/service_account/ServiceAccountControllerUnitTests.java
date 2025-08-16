@@ -3,6 +3,7 @@ package com.specialist.auth.domain.service_account;
 import com.specialist.auth.domain.access_token.models.AccessTokenUserDetails;
 import com.specialist.auth.domain.authority.Authority;
 import com.specialist.auth.domain.role.Role;
+import com.specialist.auth.domain.service_account.models.SecretServiceAccountResponseDto;
 import com.specialist.auth.domain.service_account.models.ServiceAccountDto;
 import com.specialist.auth.domain.service_account.models.ServiceAccountResponseDto;
 import com.specialist.utils.pagination.PageRequest;
@@ -44,12 +45,12 @@ class ServiceAccountControllerUnitTests {
         AccessTokenUserDetails principal = mock(AccessTokenUserDetails.class);
         UUID userId = UUID.randomUUID();
         ServiceAccountDto dto = new ServiceAccountDto();
-        dto.setSecret("super-secret");
         dto.setRole(Role.ROLE_SERVICE);
         dto.setAuthorities(Set.of(Authority.ACCOUNT_CREATE, Authority.SERVICE_ACCOUNT_MANAGER));
 
         ServiceAccountResponseDto expectedResponse = new ServiceAccountResponseDto(
                 UUID.randomUUID(),
+                "name",
                 Role.ROLE_SERVICE,
                 List.of(Authority.ACCOUNT_CREATE, Authority.SERVICE_ACCOUNT_MANAGER),
                 UUID.randomUUID(),
@@ -58,14 +59,16 @@ class ServiceAccountControllerUnitTests {
                 LocalDateTime.now()
         );
 
+        SecretServiceAccountResponseDto secretServiceAccountResponseDto = new SecretServiceAccountResponseDto("kojgejg", expectedResponse);
+
         when(principal.getUserId()).thenReturn(userId);
-        when(mockService.save(eq(userId), eq(dto))).thenReturn(expectedResponse);
+        when(mockService.save(eq(userId), eq(dto))).thenReturn(secretServiceAccountResponseDto);
 
         ResponseEntity<?> response = controller.create(principal, dto);
 
         verify(mockService).save(userId, dto);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertEquals(expectedResponse, response.getBody());
+        assertEquals(secretServiceAccountResponseDto, response.getBody());
     }
 
     @Test
@@ -76,12 +79,12 @@ class ServiceAccountControllerUnitTests {
         String idStr = UUID.randomUUID().toString();
         UUID id = UUID.fromString(idStr);
         ServiceAccountDto dto = new ServiceAccountDto();
-        dto.setSecret("updated-secret");
         dto.setRole(Role.ROLE_SERVICE);
         dto.setAuthorities(Set.of(Authority.ACCOUNT_DELETE));
 
         ServiceAccountResponseDto expectedResponse = new ServiceAccountResponseDto(
                 id,
+                "name",
                 Role.ROLE_SERVICE,
                 List.of(Authority.ACCOUNT_DELETE),
                 UUID.randomUUID(),
@@ -90,15 +93,17 @@ class ServiceAccountControllerUnitTests {
                 LocalDateTime.now()
         );
 
+        SecretServiceAccountResponseDto secretServiceAccountResponseDto = new SecretServiceAccountResponseDto("kojgejg", expectedResponse);
+
         when(principal.getUserId()).thenReturn(userId);
-        when(mockService.save(eq(userId), any(ServiceAccountDto.class))).thenReturn(expectedResponse);
+        when(mockService.save(eq(userId), any(ServiceAccountDto.class))).thenReturn(secretServiceAccountResponseDto);
 
         ResponseEntity<?> response = controller.update(principal, idStr, dto);
 
         assertThat(dto.getId(), is(id));
         verify(mockService).save(userId, dto);
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedResponse, response.getBody());
+        assertEquals(secretServiceAccountResponseDto, response.getBody());
     }
 
     @Test
@@ -108,6 +113,7 @@ class ServiceAccountControllerUnitTests {
 
         ServiceAccountResponseDto expectedResponse = new ServiceAccountResponseDto(
                 UUID.randomUUID(),
+                "name",
                 Role.ROLE_SERVICE,
                 List.of(Authority.ACCOUNT_DELETE),
                 UUID.randomUUID(),

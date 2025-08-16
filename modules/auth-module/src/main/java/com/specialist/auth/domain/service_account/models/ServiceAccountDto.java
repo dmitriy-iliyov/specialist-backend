@@ -12,8 +12,8 @@ import java.util.UUID;
 @Data
 public class ServiceAccountDto {
     private UUID id;
-    @NotBlank(message = "Secret is required.")
-    private String secret;
+    @NotBlank(message = "Name is required.")
+    private String name;
     private Role role;
     @NotEmpty(message = "At list one authority is required.")
     private Set<Authority> authorities;

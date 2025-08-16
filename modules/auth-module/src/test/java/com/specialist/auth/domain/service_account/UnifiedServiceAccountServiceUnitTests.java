@@ -7,10 +7,7 @@ import com.specialist.auth.domain.authority.AuthorityService;
 import com.specialist.auth.domain.role.Role;
 import com.specialist.auth.domain.role.RoleEntity;
 import com.specialist.auth.domain.role.RoleService;
-import com.specialist.auth.domain.service_account.models.ServiceAccountDto;
-import com.specialist.auth.domain.service_account.models.ServiceAccountEntity;
-import com.specialist.auth.domain.service_account.models.ServiceAccountResponseDto;
-import com.specialist.auth.domain.service_account.models.ServiceAccountUserDetails;
+import com.specialist.auth.domain.service_account.models.*;
 import com.specialist.auth.exceptions.ServiceAccountNotFoundByIdException;
 import com.specialist.utils.pagination.PageRequest;
 import com.specialist.utils.pagination.PageResponse;
@@ -129,7 +126,6 @@ class UnifiedServiceAccountServiceUnitTests {
         UUID dtoId = UUID.randomUUID();
         ServiceAccountDto dto = new ServiceAccountDto();
         dto.setId(dtoId);
-        dto.setSecret("secret123");
         dto.setRole(Role.ROLE_USER);
         dto.setAuthorities(Set.of(Authority.REVIEW_CREATE_UPDATE));
 
@@ -142,27 +138,24 @@ class UnifiedServiceAccountServiceUnitTests {
         AuthorityEntity authEntity = mock(AuthorityEntity.class);
         when(authorityService.getReferenceAllByAuthorityIn(anyList())).thenReturn(List.of(authEntity));
 
-        when(repository.findById(dtoId)).thenReturn(Optional.of(existingEntity));
-        when(passwordEncoder.encode(dto.getSecret())).thenReturn("encodedSecret");
-        when(repository.save(existingEntity)).thenReturn(existingEntity);
+        when(repository.findById(dtoId)).thenReturn(Optional.of(existingEntity));when(repository.save(existingEntity)).thenReturn(existingEntity);
 
         Map<UUID, List<Authority>> map = new HashMap<>();
         map.put(dtoId, List.of(Authority.REVIEW_CREATE_UPDATE));
         when(authorityService.findAllByServiceAccountIdIn(anySet())).thenReturn(map);
 
         when(mapper.toResponseDto(anyList(), eq(existingEntity))).thenReturn(
-                new ServiceAccountResponseDto(dtoId, dto.getRole(), List.of(Authority.REVIEW_CREATE_UPDATE),
+                new ServiceAccountResponseDto(dtoId, "account-name", dto.getRole(), List.of(Authority.REVIEW_CREATE_UPDATE),
                         adminId, adminId, null, null));
 
-        ServiceAccountResponseDto response = service.save(adminId, dto);
+        SecretServiceAccountResponseDto response = service.save(adminId, dto);
 
         assertNotNull(response);
-        assertEquals(dtoId, response.id());
-        assertEquals(dto.getRole(), response.role());
-        assertEquals(1, response.authorities().size());
+        assertEquals(dtoId, response.dto().id());
+        assertEquals(dto.getRole(), response.dto().role());
+        assertEquals(1, response.dto().authorities().size());
 
         verify(repository).findById(dtoId);
-        verify(passwordEncoder).encode(dto.getSecret());
         verify(repository).save(existingEntity);
         verify(roleService).getReferenceByRole(dto.getRole());
         verify(authorityService).getReferenceAllByAuthorityIn(anyList());
@@ -175,7 +168,6 @@ class UnifiedServiceAccountServiceUnitTests {
     void save_whenDtoHasNoId_shouldCreateAndSave() {
         UUID adminId = UUID.randomUUID();
         ServiceAccountDto dto = new ServiceAccountDto();
-        dto.setSecret("secret123");
         dto.setRole(Role.ROLE_USER);
         dto.setAuthorities(Set.of(Authority.REVIEW_CREATE_UPDATE));
 
@@ -184,8 +176,6 @@ class UnifiedServiceAccountServiceUnitTests {
 
         AuthorityEntity authEntity = mock(AuthorityEntity.class);
         when(authorityService.getReferenceAllByAuthorityIn(anyList())).thenReturn(List.of(authEntity));
-
-        when(passwordEncoder.encode(dto.getSecret())).thenReturn("encodedSecret");
 
         ServiceAccountEntity savedEntity = new ServiceAccountEntity();
         savedEntity.setId(UUID.randomUUID());
@@ -196,18 +186,17 @@ class UnifiedServiceAccountServiceUnitTests {
         when(authorityService.findAllByServiceAccountIdIn(anySet())).thenReturn(map);
 
         when(mapper.toResponseDto(anyList(), any(ServiceAccountEntity.class))).thenReturn(
-                new ServiceAccountResponseDto(savedEntity.getId(), dto.getRole(), List.of(Authority.REVIEW_CREATE_UPDATE),
+                new ServiceAccountResponseDto(savedEntity.getId(), "account-name", dto.getRole(), List.of(Authority.REVIEW_CREATE_UPDATE),
                         adminId, adminId, null, null));
 
-        ServiceAccountResponseDto response = service.save(adminId, dto);
+        SecretServiceAccountResponseDto response = service.save(adminId, dto);
 
         assertNotNull(response);
-        assertEquals(dto.getRole(), response.role());
-        assertEquals(1, response.authorities().size());
+        assertEquals(dto.getRole(), response.dto().role());
+        assertEquals(1, response.dto().authorities().size());
 
         verify(roleService).getReferenceByRole(dto.getRole());
         verify(authorityService).getReferenceAllByAuthorityIn(anyList());
-        verify(passwordEncoder).encode(dto.getSecret());
         verify(repository).save(any(ServiceAccountEntity.class));
         verify(authorityService).findAllByServiceAccountIdIn(anySet());
         verify(mapper).toResponseDto(anyList(), any(ServiceAccountEntity.class));
@@ -236,7 +225,7 @@ class UnifiedServiceAccountServiceUnitTests {
         when(mapper.toResponseDto(anyList(), any(ServiceAccountEntity.class))).thenAnswer(invocation -> {
             List<Authority> auths = invocation.getArgument(0);
             ServiceAccountEntity ent = invocation.getArgument(1);
-            return new ServiceAccountResponseDto(ent.getId(), Role.ROLE_ADMIN, auths, UUID.randomUUID(), UUID.randomUUID(), null, null);
+            return new ServiceAccountResponseDto(ent.getId(), "account-name", Role.ROLE_ADMIN, auths, UUID.randomUUID(), UUID.randomUUID(), null, null);
         });
 
         PageRequest pageRequest = new PageRequest(0, 10, true);
