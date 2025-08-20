@@ -24,7 +24,7 @@ public interface BookmarkRepository extends JpaRepository<BookmarkEntity, UUID> 
     Slice<BookmarkEntity> findAllByOwnerId(UUID ownerId, Pageable pageable);
 
     @Query("""
-        SELECT new com.aidcompass.specialistdirectory.domain.bookmark.models.BookmarkIdPair(b.id, s.id) 
+        SELECT new com.specialist.specialistdirectory.domain.bookmark.models.BookmarkIdPair(b.id, s.id) 
         FROM BookmarkEntity b
         JOIN b.specialist s
         WHERE b.ownerId = :owner_id

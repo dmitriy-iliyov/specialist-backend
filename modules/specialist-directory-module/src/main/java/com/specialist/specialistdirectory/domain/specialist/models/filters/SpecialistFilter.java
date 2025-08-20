@@ -1,5 +1,6 @@
 package com.specialist.specialistdirectory.domain.specialist.models.filters;
 
+import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistLanguage;
 import com.specialist.specialistdirectory.domain.specialist.models.markers.BaseSpecialistFilter;
 import com.specialist.utils.pagination.PageDataHolder;
 import jakarta.validation.constraints.*;
@@ -15,6 +16,8 @@ public record SpecialistFilter(
 
         @Positive(message = "Type id should be positive.")
         Long typeId,
+
+        SpecialistLanguage lang,
 
         @Min(value = 0, message = "Min value is 0.")
         @Max(value = 5, message = "Max value is 5.")

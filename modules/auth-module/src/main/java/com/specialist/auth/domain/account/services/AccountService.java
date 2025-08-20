@@ -1,8 +1,8 @@
 package com.specialist.auth.domain.account.services;
 
+import com.specialist.auth.core.oauth2.provider.Provider;
 import com.specialist.auth.domain.account.models.AccountFilter;
 import com.specialist.auth.domain.account.models.dtos.*;
-import com.specialist.auth.domain.auth_provider.Provider;
 import com.specialist.utils.pagination.PageResponse;
 
 import java.util.UUID;

@@ -1,7 +1,6 @@
 package com.specialist.specialistdirectory.domain.type.services;
 
 import com.specialist.specialistdirectory.domain.language.Language;
-import com.specialist.specialistdirectory.domain.translate.services.TranslateService;
 import com.specialist.specialistdirectory.domain.type.models.dtos.ShortTypeResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,6 @@ import java.util.Map;
 public class TranslatedTypeServiceImpl implements TranslatedTypeService {
 
     private final TranslateService service;
-
 
     @Override
     public Map<Long, String> findAllApprovedAsMap(HttpServletRequest request) {

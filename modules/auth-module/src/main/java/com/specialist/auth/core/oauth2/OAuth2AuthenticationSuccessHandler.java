@@ -7,6 +7,7 @@ import com.specialist.auth.core.csrf.CsrfTokenService;
 import com.specialist.auth.core.models.Token;
 import com.specialist.auth.core.models.TokenType;
 import com.specialist.auth.domain.account.models.AccountUserDetails;
+import com.specialist.auth.exceptions.OAuth2UserNullEmailException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -20,7 +21,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.Map;
 
-@Component
+@Component("oAuth2AuthenticationSuccessHandler")
 public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
     private final UserDetailsService userDetailsService;
@@ -44,7 +45,7 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
         DefaultOAuth2User principal = (DefaultOAuth2User) authentication.getPrincipal();
         String email = principal.getAttribute("email");
         if (email == null) {
-            throw new RuntimeException("Null email from oauth2 user attributes.");
+            throw new OAuth2UserNullEmailException();
         }
         AccountUserDetails userDetails = (AccountUserDetails) userDetailsService.loadUserByUsername(email);
         Map<TokenType, Token> tokens = tokenManager.generate(userDetails);

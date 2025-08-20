@@ -15,7 +15,6 @@ public class SystemAccountFacadeImpl implements SystemAccountFacade {
     private final AccountService accountService;
     private final ConfirmationService confirmationService;
 
-
     @Override
     public UUID findIdByEmail(String email) {
         return accountService.findIdByEmail(email);

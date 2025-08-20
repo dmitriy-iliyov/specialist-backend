@@ -12,7 +12,6 @@ public class TypeCacheServiceImpl implements TypeCacheService {
 
     private final CacheManager cacheManager;
 
-
     @Override
     public void putToSuggestedType(TypeResponseDto dto) {
         Cache cache = cacheManager.getCache("specialists:types:suggested");

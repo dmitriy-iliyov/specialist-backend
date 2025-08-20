@@ -1,6 +1,5 @@
 package com.specialist.specialistdirectory.domain.type.models.dtos;
 
-import com.specialist.specialistdirectory.domain.translate.models.dtos.CompositeTranslateCreateDto;
 import com.specialist.specialistdirectory.domain.type.validation.TranslateList;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;

@@ -1,7 +1,7 @@
 package com.specialist.specialistdirectory.domain.specialist.services;
 
 import com.specialist.specialistdirectory.domain.review.models.enums.OperationType;
-import com.specialist.specialistdirectory.domain.specialist.SpecialistMapper;
+import com.specialist.specialistdirectory.domain.specialist.mappers.SpecialistMapper;
 import com.specialist.specialistdirectory.domain.specialist.models.SpecialistEntity;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.BookmarkSpecialistResponseDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;

@@ -1,5 +1,9 @@
 package com.specialist.specialistdirectory.domain.review.services;
 
+import com.specialist.specialistdirectory.domain.review.models.ReviewBufferEntity;
+import com.specialist.specialistdirectory.domain.review.models.enums.DeliveryState;
+
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -8,7 +12,7 @@ public interface ReviewBufferService {
 
     void markAsSent(UUID id);
 
-    void sendEventsBatch();
+    List<ReviewBufferEntity> findBatchByDeliveryState(DeliveryState state, int batchSize);
 
     void popAllByIdIn(Set<UUID> ids);
 

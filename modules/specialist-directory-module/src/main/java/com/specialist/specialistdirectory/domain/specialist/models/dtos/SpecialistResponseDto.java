@@ -2,8 +2,7 @@ package com.specialist.specialistdirectory.domain.specialist.models.dtos;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.specialist.specialistdirectory.domain.contact.ContactDto;
-import com.specialist.specialistdirectory.domain.language.SpecialistLanguage;
+import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistLanguage;
 import lombok.Data;
 
 import java.util.List;
@@ -34,8 +33,7 @@ public class SpecialistResponseDto {
         @JsonProperty("city_code")
         private final String cityCode;
 
-        @JsonProperty("house_number_and_street")
-        private final String houseNumberAndStreet;
+        private final String address;
 
         private final List<ContactDto> contacts;
 
@@ -57,7 +55,7 @@ public class SpecialistResponseDto {
                                      List<SpecialistLanguage> languages,
                                      @JsonProperty("city_title") String cityTitle,
                                      @JsonProperty("city_code") String cityCode,
-                                     @JsonProperty("house_number_and_street") String houseNumberAndStreet,
+                                     String address,
                                      List<ContactDto> contacts,
                                      @JsonProperty("site") String site,
                                      @JsonProperty("total_rating") double totalRating,
@@ -70,7 +68,7 @@ public class SpecialistResponseDto {
                 this.languages = languages;
                 this.cityTitle = cityTitle;
                 this.cityCode = cityCode;
-                this.houseNumberAndStreet = houseNumberAndStreet;
+                this.address = address;
                 this.contacts = contacts;
                 this.site = site;
                 this.totalRating = totalRating;

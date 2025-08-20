@@ -1,6 +1,5 @@
 package com.specialist.specialistdirectory.domain.type.models.dtos;
 
-import com.specialist.specialistdirectory.domain.translate.models.dtos.CompositeTranslateUpdateDto;
 import com.specialist.specialistdirectory.domain.type.validation.SynchronizedTypeId;
 import com.specialist.specialistdirectory.domain.type.validation.TranslateList;
 import jakarta.validation.Valid;

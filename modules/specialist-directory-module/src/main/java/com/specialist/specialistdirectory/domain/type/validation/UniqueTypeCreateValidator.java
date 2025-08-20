@@ -11,7 +11,6 @@ public class UniqueTypeCreateValidator implements ConstraintValidator<UniqueType
 
     private final TypeService service;
 
-
     @Override
     public boolean isValid(TypeCreateDto typeCreateDto, ConstraintValidatorContext constraintValidatorContext) {
         if (service.existsByTitleIgnoreCase(typeCreateDto.getTitle())) {

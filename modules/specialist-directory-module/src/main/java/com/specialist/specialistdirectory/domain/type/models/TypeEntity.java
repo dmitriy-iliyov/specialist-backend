@@ -1,7 +1,6 @@
 package com.specialist.specialistdirectory.domain.type.models;
 
 import com.specialist.specialistdirectory.domain.specialist.models.SpecialistEntity;
-import com.specialist.specialistdirectory.domain.translate.models.TranslateEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

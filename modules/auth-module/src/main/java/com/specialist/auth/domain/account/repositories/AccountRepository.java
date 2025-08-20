@@ -1,9 +1,9 @@
 package com.specialist.auth.domain.account.repositories;
 
+import com.specialist.auth.core.oauth2.provider.Provider;
 import com.specialist.auth.domain.account.models.AccountEntity;
 import com.specialist.auth.domain.account.models.enums.LockReason;
 import com.specialist.auth.domain.account.models.enums.UnableReason;
-import com.specialist.auth.domain.auth_provider.Provider;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;

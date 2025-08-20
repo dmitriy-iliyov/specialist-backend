@@ -1,5 +1,6 @@
 package com.specialist.auth.domain.account.services;
 
+import com.specialist.auth.core.oauth2.provider.Provider;
 import com.specialist.auth.domain.account.mappers.AccountMapper;
 import com.specialist.auth.domain.account.models.AccountEntity;
 import com.specialist.auth.domain.account.models.AccountFilter;
@@ -7,7 +8,6 @@ import com.specialist.auth.domain.account.models.dtos.*;
 import com.specialist.auth.domain.account.models.enums.LockReason;
 import com.specialist.auth.domain.account.models.enums.UnableReason;
 import com.specialist.auth.domain.account.repositories.AccountRepository;
-import com.specialist.auth.domain.auth_provider.Provider;
 import com.specialist.auth.domain.authority.Authority;
 import com.specialist.auth.domain.authority.AuthorityEntity;
 import com.specialist.auth.domain.authority.AuthorityService;

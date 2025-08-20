@@ -1,13 +1,15 @@
 package com.specialist.auth.core.oauth2;
 
-import com.specialist.auth.domain.auth_provider.Provider;
+import com.specialist.auth.core.oauth2.provider.Provider;
 import com.specialist.auth.exceptions.OAuth2UserAttributesNullException;
 import com.specialist.auth.exceptions.OAuth2UserNullException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.stereotype.Service;
 
 import java.util.Map;
 import java.util.UUID;
 
+@Service
 public final class OAuth2UserMapper {
 
     public OAuthUserEntity toEntity(Provider provider, UUID accountId, OAuth2User oAuth2User) {

@@ -1,11 +1,11 @@
 package com.specialist.auth.domain.account.models;
 
+import com.specialist.auth.core.oauth2.provider.Provider;
+import com.specialist.auth.core.oauth2.provider.ProviderConverter;
 import com.specialist.auth.domain.account.mappers.LockReasonTypeConverter;
 import com.specialist.auth.domain.account.mappers.UnableReasonTypeConverter;
 import com.specialist.auth.domain.account.models.enums.LockReason;
 import com.specialist.auth.domain.account.models.enums.UnableReason;
-import com.specialist.auth.domain.auth_provider.Provider;
-import com.specialist.auth.domain.auth_provider.ProviderConverter;
 import com.specialist.auth.domain.authority.AuthorityEntity;
 import com.specialist.auth.domain.role.RoleEntity;
 import com.specialist.utils.UuidUtils;

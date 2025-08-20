@@ -13,7 +13,6 @@ public class UniqueTypeUpdateValidator implements ConstraintValidator<UniqueType
 
     private final TypeService service;
 
-
     @Override
     public boolean isValid(TypeUpdateDto typeUpdateDto, ConstraintValidatorContext constraintValidatorContext) {
         try {

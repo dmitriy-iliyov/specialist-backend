@@ -29,7 +29,7 @@ public class ReviewBufferRestClient implements ReviewBufferService {
 
     @PostConstruct
     public void postConstruct() {
-        login();
+        //login();
     }
 
     @Override

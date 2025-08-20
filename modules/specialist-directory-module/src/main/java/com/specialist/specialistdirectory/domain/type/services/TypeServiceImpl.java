@@ -33,7 +33,6 @@ public class TypeServiceImpl implements TypeService {
     private final TypeMapper mapper;
     private final TypeCacheService cacheService;
 
-
     @CacheEvict(value = "specialists:types:approved:all", allEntries = true)
     @Transactional
     @Override

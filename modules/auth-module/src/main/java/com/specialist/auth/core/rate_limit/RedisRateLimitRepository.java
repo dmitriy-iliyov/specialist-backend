@@ -1,11 +1,11 @@
 package com.specialist.auth.core.rate_limit;
 
-import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.time.Duration;
 
-@RequiredArgsConstructor
+@Slf4j
 public class RedisRateLimitRepository implements RateLimitRepository {
 
     private final RedisTemplate<String, String> redisTemplate;
@@ -14,6 +14,17 @@ public class RedisRateLimitRepository implements RateLimitRepository {
     private final Long MAX_ATTEMPT_COUNT;
     private final Long OBSERVE_TIME;
     private final Long LOCK_TIME;
+
+    public RedisRateLimitRepository(RedisTemplate<String, String> redisTemplate, String targetUrl,
+                                    String keyTemplate, Long maxAttemptCount, Long observeTime, Long lockTime) {
+        this.redisTemplate = redisTemplate;
+        this.TARGET_URL = targetUrl;
+        this.KEY_TEMPLATE = keyTemplate;
+        this.MAX_ATTEMPT_COUNT = maxAttemptCount;
+        this.OBSERVE_TIME = observeTime;
+        this.LOCK_TIME = lockTime;
+        log.info("Create instant of RedisRateLimitRepository.class with TARGET_URL: {}", TARGET_URL);
+    }
 
     @Override
     public String getTargetUrl() {

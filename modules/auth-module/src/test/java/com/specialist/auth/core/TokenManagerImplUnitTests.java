@@ -2,11 +2,11 @@ package com.specialist.auth.core;
 
 import com.specialist.auth.core.models.Token;
 import com.specialist.auth.core.models.TokenType;
+import com.specialist.auth.core.oauth2.provider.Provider;
 import com.specialist.auth.domain.access_token.AccessTokenFactory;
 import com.specialist.auth.domain.access_token.AccessTokenSerializer;
 import com.specialist.auth.domain.access_token.models.AccessToken;
 import com.specialist.auth.domain.account.models.AccountUserDetails;
-import com.specialist.auth.domain.auth_provider.Provider;
 import com.specialist.auth.domain.refresh_token.RefreshTokenService;
 import com.specialist.auth.domain.refresh_token.models.RefreshToken;
 import com.specialist.auth.domain.refresh_token.models.RefreshTokenStatus;

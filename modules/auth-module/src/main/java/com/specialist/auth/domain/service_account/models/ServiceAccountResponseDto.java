@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.specialist.auth.domain.authority.Authority;
 import com.specialist.auth.domain.role.Role;
-import jakarta.mail.search.SearchTerm;
 
 import java.time.LocalDateTime;
 import java.util.List;
