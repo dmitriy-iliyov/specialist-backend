@@ -9,11 +9,11 @@ public class UnableReasonTypeConverter implements AttributeConverter<UnableReaso
 
     @Override
     public Integer convertToDatabaseColumn(UnableReason unableReasonType) {
-        return unableReasonType.getCode();
+        return unableReasonType == null ? null : unableReasonType.getCode();
     }
 
     @Override
     public UnableReason convertToEntityAttribute(Integer integer) {
-        return UnableReason.fromCode(integer);
+        return integer == null ? null : UnableReason.fromCode(integer);
     }
 }

@@ -21,6 +21,7 @@ import com.specialist.auth.exceptions.NonUniqueEmailException;
 import com.specialist.utils.pagination.PageDataHolder;
 import com.specialist.utils.pagination.PageResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -46,6 +47,7 @@ public class UnifiedAccountService implements AccountService, UserDetailsService
     private final PasswordEncoder passwordEncoder;
     private final AccountRepository repository;
     private final AccountMapper mapper;
+    private final AccountCacheService cacheService;
     private final RoleService roleService;
     private final AuthorityService authorityService;
 
@@ -80,9 +82,12 @@ public class UnifiedAccountService implements AccountService, UserDetailsService
         entity.setProvider(Provider.LOCAL);
         entity.setRole(role);
         entity.setAuthorities(authorities);
+        entity.setLocked(false);
         entity.setEnabled(false);
         entity.setUnableReason(UnableReason.EMAIL_CONFIRMATION_REQUIRED);
-        return mapper.toShortResponseDto(repository.save(entity));
+        ShortAccountResponseDto responseDto = mapper.toShortResponseDto(repository.save(entity));
+        cacheService.putEmailAsTrue(responseDto.email());
+        return responseDto;
     }
 
     @Transactional
@@ -95,10 +100,12 @@ public class UnifiedAccountService implements AccountService, UserDetailsService
         entity.setProvider(dto.provider());
         entity.setRole(role);
         entity.setAuthorities(authorities);
+        entity.setLocked(false);
         entity.setEnabled(true);
         return mapper.toShortResponseDto(repository.save(entity));
     }
 
+    @Cacheable(value = "accounts:emails", key = "#email")
     @Transactional(readOnly = true)
     @Override
     public boolean existsByEmail(String email) {
@@ -145,13 +152,18 @@ public class UnifiedAccountService implements AccountService, UserDetailsService
     public void updatePasswordByEmail(String email, String password) {
         AccountEntity entity = repository.findByEmail(email).orElseThrow(AccountNotFoundByEmailException::new);
         entity.setPassword(passwordEncoder.encode(password));
-
     }
 
     @Transactional
     @Override
     public void lockById(UUID id, LockRequest request) {
         repository.lockById(id, request.reason(), request.term().atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    @Transactional
+    @Override
+    public void unlockById(UUID id) {
+        repository.unlockById(id);
     }
 
     @Transactional

@@ -40,7 +40,7 @@ public class EmailConfirmationService implements ConfirmationService {
         }
         try {
             String code = CodeGenerator.generate();
-            repository.save(new ConfirmationEntity(code, email, Duration.ofSeconds(CODE_TTL)));
+            repository.save(new ConfirmationEntity(code, email, CODE_TTL));
             messageService.sendMessage(
                     new MessageDto(email, "Account confirmation", MessageConfig.ACCOUNT_CONFIRMATION.formatted(code))
             );

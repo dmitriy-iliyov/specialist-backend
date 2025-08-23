@@ -23,7 +23,6 @@ public class EmailPasswordRecoveryService implements PasswordRecoveryService {
 
     @Value("${api.account.pass-recovery.code.ttl.secs}")
     public Long CODE_TTL;
-
     private final MessageService messageService;
     private final PasswordRecoveryRepository repository;
     private final AccountService accountService;
@@ -42,7 +41,7 @@ public class EmailPasswordRecoveryService implements PasswordRecoveryService {
         }
         try {
             String code = CodeGenerator.generate();
-            repository.save(new PasswordRecoveryEntity(code, recipientEmail, Duration.ofSeconds(CODE_TTL)));
+            repository.save(new PasswordRecoveryEntity(code, recipientEmail, CODE_TTL));
             messageService.sendMessage(new MessageDto(recipientEmail, "Password recovery", MessageConfig.PASS_RECOVERY.formatted(code)));
         } catch (Exception e) {
             log.error("Failed send recovery message: {}", e.getMessage());

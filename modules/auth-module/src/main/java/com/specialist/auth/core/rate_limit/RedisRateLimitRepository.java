@@ -19,7 +19,7 @@ public class RedisRateLimitRepository implements RateLimitRepository {
                                     String keyTemplate, Long maxAttemptCount, Long observeTime, Long lockTime) {
         this.redisTemplate = redisTemplate;
         this.TARGET_URL = targetUrl;
-        this.KEY_TEMPLATE = keyTemplate;
+        this.KEY_TEMPLATE = keyTemplate + ":ip:%s";
         this.MAX_ATTEMPT_COUNT = maxAttemptCount;
         this.OBSERVE_TIME = observeTime;
         this.LOCK_TIME = lockTime;

@@ -95,6 +95,9 @@ public class RedisConfig {
                 .withCacheConfiguration("specialists:created:count:filter", defaultConfig.entryTtl(Duration.ofSeconds(1200)))
                 .withCacheConfiguration("specialists:bookmarks:id_pairs", defaultConfig.entryTtl(Duration.ofSeconds(600)))
 
+                .withCacheConfiguration("accounts:emails", defaultConfig.entryTtl(Duration.ofSeconds(120)))
+                .withCacheConfiguration("accounts:roles:id", defaultConfig)
+                .withCacheConfiguration("accounts:authorities:id", defaultConfig)
                 .withCacheConfiguration("users:events:creator-rating-update:processed", defaultConfig.entryTtl(Duration.ofSeconds(3600)))
                 .build();
     }

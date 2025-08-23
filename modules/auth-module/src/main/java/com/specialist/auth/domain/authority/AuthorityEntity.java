@@ -22,13 +22,13 @@ public class AuthorityEntity implements GrantedAuthority {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private Authority authority;
 
-    @ManyToMany(mappedBy = "authorities")
+    @ManyToMany(mappedBy = "authorities", fetch = FetchType.LAZY)
     private Set<AccountEntity> accounts;
 
-    @ManyToMany(mappedBy = "authorities")
+    @ManyToMany(mappedBy = "authorities", fetch = FetchType.LAZY)
     private Set<ServiceAccountEntity> serviceAccounts;
 
     public AuthorityEntity(Authority authority) {
@@ -37,6 +37,10 @@ public class AuthorityEntity implements GrantedAuthority {
 
     @Override
     public String getAuthority() {
+        return authority.name();
+    }
+
+    public String getFieldAuthority() {
         return authority.name();
     }
 

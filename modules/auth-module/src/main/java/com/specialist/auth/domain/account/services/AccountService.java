@@ -32,6 +32,8 @@ public interface AccountService {
 
     PageResponse<AccountResponseDto> findAllByFilter(AccountFilter filter);
 
+    void unlockById(UUID id);
+
     void setUnableById(UUID id, UnableRequest request);
 
     Provider findProviderByEmail(String email);

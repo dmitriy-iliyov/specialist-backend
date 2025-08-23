@@ -91,8 +91,8 @@ public abstract class BaseControllerAdvice {
                 "500",
                 "Unexpected server error.",
                 null);
-        log.error(Arrays.toString(throwable.getStackTrace()));
         log.error(throwable.getMessage());
+        throwable.printStackTrace();
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(exceptionDto);

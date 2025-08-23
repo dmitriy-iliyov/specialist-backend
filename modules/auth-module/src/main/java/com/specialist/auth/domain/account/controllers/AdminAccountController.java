@@ -59,6 +59,16 @@ public class AdminAccountController {
                 .build();
     }
 
+    @PreAuthorize("hasAnyAuthority('ACCOUNT_LOCK', 'ACCOUNT_MANAGER')")
+    @PostMapping("/{id}/unlock")
+    public ResponseEntity<?> unlock(@PathVariable("id")
+                                    @ValidUuid(paramName = "id", message = "Id should have valid format.") UUID id) {
+        service.unlockById(id);
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .build();
+    }
+
     @PreAuthorize("hasAnyAuthority('ACCOUNT_UNABLE', 'ACCOUNT_MANAGER')")
     @PostMapping("/{id}/unable")
     public ResponseEntity<?> unable(@PathVariable("id")

@@ -18,7 +18,7 @@ public class RoleEntity implements GrantedAuthority {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private Role role;
 
     public RoleEntity(Role role) {

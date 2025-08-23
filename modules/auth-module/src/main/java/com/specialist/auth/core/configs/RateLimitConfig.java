@@ -13,7 +13,7 @@ public class RateLimitConfig {
         return new RedisRateLimitRepository(
                 redisTemplate,
                 "/api/v1/accounts/password-recovery/request",
-                "rate-limit:pass-recovery:request:",
+                "rate-limit:pass-recovery:request",
                 2L,
                 900L,
                 3600L
@@ -25,7 +25,7 @@ public class RateLimitConfig {
         return new RedisRateLimitRepository(
                 redisTemplate,
                 "/api/v1/accounts/password-recovery/recover",
-                "rate-limit:pass-recovery:recover:",
+                "rate-limit:pass-recovery:recover",
                 3L,
                 300L,
                 1800L
@@ -37,7 +37,7 @@ public class RateLimitConfig {
         return new RedisRateLimitRepository(
                 redisTemplate,
                 "/api/v1/accounts/confirmation/request",
-                "rate-limit:confirmation:request:",
+                "rate-limit:confirmation:request",
                 3L,
                 600L,
                 3600L
@@ -49,7 +49,7 @@ public class RateLimitConfig {
         return new RedisRateLimitRepository(
                 redisTemplate,
                 "/api/v1/accounts/confirmation/confirm",
-                "rate-limit:confirmation:confirm:",
+                "rate-limit:confirmation:confirm",
                 2L,
                 300L,
                 120L
@@ -61,7 +61,7 @@ public class RateLimitConfig {
         return new RedisRateLimitRepository(
                 redisTemplate,
                 "/api/auth/login",
-                "rate-limit:login:",
+                "rate-limit:login",
                 5L,
                 60L,
                 600L
@@ -73,7 +73,19 @@ public class RateLimitConfig {
         return new RedisRateLimitRepository(
                 redisTemplate,
                 "/api/auth/oauth2/login",
-                "rate-limit:oauth2-login:",
+                "rate-limit:oauth2-login",
+                5L,
+                60L,
+                600L
+        );
+    }
+
+    @Bean("accountRegistrationRedisRateLimitRepository")
+    public RedisRateLimitRepository accountRegistrationRedisRateLimitRepository(RedisTemplate<String, String> redisTemplate) {
+        return new RedisRateLimitRepository(
+                redisTemplate,
+                "/api/v1/accounts",
+                "rate-limit:accounts:registration",
                 5L,
                 60L,
                 600L

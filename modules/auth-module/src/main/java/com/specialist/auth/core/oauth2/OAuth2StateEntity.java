@@ -11,5 +11,5 @@ public record OAuth2StateEntity(
         @Id
         String state,
         @TimeToLive
-        Duration ttl
+        Long ttl
 ) { }

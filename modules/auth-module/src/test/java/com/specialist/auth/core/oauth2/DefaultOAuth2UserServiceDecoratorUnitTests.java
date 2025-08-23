@@ -1,9 +1,9 @@
 //package com.specialist.auth.core.oauth2;
 //
+//import com.specialist.auth.core.oauth2.provider.Provider;
 //import com.specialist.auth.domain.account.models.dtos.OAuth2AccountCreateDto;
 //import com.specialist.auth.domain.account.models.dtos.ShortAccountResponseDto;
 //import com.specialist.auth.domain.account.services.AccountService;
-//import com.specialist.auth.domain.auth_provider.Provider;
 //import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.DisplayName;
 //import org.junit.jupiter.api.Test;

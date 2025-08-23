@@ -53,7 +53,7 @@ public class OAuth2AccountAuthServiceImpl implements OAuth2AccountAuthService {
     @Override
     public String authorize(Provider provider, HttpServletRequest request) {
         OAuth2AuthorizationRequest authorizationRequest = oAuth2AuthorizationRequestResolver.resolve(request, provider.getRegistrationId());
-        stateRepository.save(new OAuth2StateEntity(authorizationRequest.getState(), STATE_TTL));
+        stateRepository.save(new OAuth2StateEntity(authorizationRequest.getState(), STATE_TTL.getSeconds()));
         return authorizationRequest.getAuthorizationRequestUri();
     }
 

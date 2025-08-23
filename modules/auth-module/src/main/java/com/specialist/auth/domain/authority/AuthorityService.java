@@ -11,4 +11,6 @@ public interface AuthorityService {
     Map<UUID, List<Authority>> findAllByAccountIdIn(Set<UUID> accountIds);
 
     Map<UUID, List<Authority>> findAllByServiceAccountIdIn(Set<UUID> serviceAccountIds);
+
+    List<AuthorityEntity> findAll();
 }

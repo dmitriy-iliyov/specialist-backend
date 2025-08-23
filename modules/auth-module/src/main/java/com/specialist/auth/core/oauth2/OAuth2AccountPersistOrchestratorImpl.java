@@ -29,7 +29,7 @@ public class OAuth2AccountPersistOrchestratorImpl implements OAuth2AccountPersis
     @Override
     public void saveIfNonExists(Provider provider, OAuth2User oAuth2User) {
         String email = oAuth2User.getAttribute("email");
-        if (!service.existsByEmail(email) && email != null) {
+        if (email != null && !service.existsByEmail(email)) {
             OAuth2AccountCreateDto createDto = new OAuth2AccountCreateDto(
                     email,
                     provider,

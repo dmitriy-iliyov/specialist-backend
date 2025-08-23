@@ -62,4 +62,12 @@ public interface AccountRepository extends JpaRepository<AccountEntity, UUID>, J
         WHERE a.email = :email
     """)
     Optional<Provider> findProviderByEmail(@Param("email") String email);
+
+    @Modifying
+    @Query("""
+        UPDATE AccountEntity a
+        SET a.isLocked = false, a.lockReason = null, a.lockTerm = null
+        WHERE a.id = :id
+    """)
+    void unlockById(UUID id);
 }

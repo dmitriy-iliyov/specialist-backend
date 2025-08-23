@@ -13,6 +13,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.ToString;
+import org.hibernate.annotations.BatchSize;
 
 import java.time.Instant;
 import java.util.List;
@@ -41,6 +42,7 @@ public class AccountEntity {
     @JoinColumn(name = "role_id", nullable = false)
     private RoleEntity role;
 
+    @BatchSize(size = 20)
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "authority_account_relation",

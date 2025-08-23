@@ -12,5 +12,5 @@ public record PasswordRecoveryEntity(
         String code,
         String email,
         @TimeToLive
-        Duration ttl
+        Long ttl
 ) { }

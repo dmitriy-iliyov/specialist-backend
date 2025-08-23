@@ -11,6 +11,7 @@ import java.util.*;
 public class AuthorityServiceImpl implements AuthorityService {
 
     private final AuthorityRepository repository;
+    private final AuthorityCacheService cacheService;
     public static final List<Authority> DEFAULT_USER_AUTHORITIES = new ArrayList<>(List.of(
             Authority.SPECIALIST_CREATE_UPDATE, Authority.REVIEW_CREATE_UPDATE, Authority.TYPE_SUGGEST
     ));
@@ -18,6 +19,14 @@ public class AuthorityServiceImpl implements AuthorityService {
     @Transactional(readOnly = true)
     @Override
     public List<AuthorityEntity> getReferenceAllByAuthorityIn(List<Authority> authorities) {
+//        List<Long> ids = cacheService.getAuthoritiesIds(authorities);
+//        if (ids != null && !ids.isEmpty() && !ids.contains(null)) {
+//            List<AuthorityEntity> referencedEntity = new ArrayList<>();
+//            for (Long id : ids) {
+//                referencedEntity.add(repository.getReferenceById(id));
+//            }
+//            return referencedEntity;
+//        }
         return repository.getReferenceAllByAuthorityIn(authorities);
     }
 
@@ -33,6 +42,12 @@ public class AuthorityServiceImpl implements AuthorityService {
     public Map<UUID, List<Authority>> findAllByServiceAccountIdIn(Set<UUID> serviceAccountIds) {
         List<Object[]> pairs = repository.findAllByServiceAccountIdIn(serviceAccountIds);
         return toMap(pairs);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<AuthorityEntity> findAll() {
+        return repository.findAll();
     }
 
     private Map<UUID, List<Authority>> toMap(List<Object[]> pairs) {

@@ -9,11 +9,11 @@ public class LockReasonTypeConverter implements AttributeConverter<LockReason, I
 
     @Override
     public Integer convertToDatabaseColumn(LockReason lockReason) {
-        return lockReason.getCode();
+        return lockReason == null ? null : lockReason.getCode();
     }
 
     @Override
     public LockReason convertToEntityAttribute(Integer integer) {
-        return LockReason.fromCode(integer);
+        return integer == null ? null : LockReason.fromCode(integer);
     }
 }
