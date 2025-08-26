@@ -54,6 +54,17 @@ public class SpecialistSpecification {
     }
 
     public static Specification<SpecialistEntity> filterByLanguage(SpecialistLanguage lang) {
-        return (r, q, cb) -> lang == null ? null : cb.equal(r.get("language"), lang);
-    }
+        return (root, query, cb) -> {
+            if (lang == null) {
+                return null;
+            }
+            return cb.isTrue(
+                    cb.function(
+                            "jsonb_exists",
+                            Boolean.class,
+                            root.get("languages"),
+                            cb.literal(lang.name())
+                    )
+            );
+        };    }
 }

@@ -2,7 +2,6 @@ package com.specialist.specialistdirectory.domain.type.services;
 
 import com.specialist.specialistdirectory.domain.type.TypeRepository;
 import com.specialist.specialistdirectory.exceptions.SpecialistTypeEntityNotFoundByTitleException;
-import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;

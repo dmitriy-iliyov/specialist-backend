@@ -1,8 +1,8 @@
 package com.specialist.auth.domain.account.repositories;
 
 import com.specialist.auth.domain.account.models.AccountEntity;
-import com.specialist.auth.domain.account.models.enums.LockReason;
 import com.specialist.auth.domain.account.models.enums.DisableReason;
+import com.specialist.auth.domain.account.models.enums.LockReason;
 import org.springframework.data.jpa.domain.Specification;
 
 public class AccountSpecification {

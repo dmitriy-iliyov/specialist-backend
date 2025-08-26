@@ -1,6 +1,5 @@
 package com.specialist.auth.domain.account.validation;
 
-import com.specialist.auth.domain.account.models.dtos.DefaultAccountCreateDto;
 import com.specialist.auth.domain.account.services.AccountService;
 import jakarta.validation.ConstraintValidatorContext;
 import org.junit.jupiter.api.DisplayName;

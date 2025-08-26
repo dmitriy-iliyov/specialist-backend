@@ -6,7 +6,6 @@ import com.specialist.specialistdirectory.domain.review.models.enums.OperationTy
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
-import com.specialist.specialistdirectory.domain.specialist.models.enums.CreatorType;
 import com.specialist.specialistdirectory.exceptions.OwnershipException;
 import jakarta.persistence.OptimisticLockException;
 import lombok.RequiredArgsConstructor;

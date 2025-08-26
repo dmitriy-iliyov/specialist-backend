@@ -1,7 +1,7 @@
 package com.specialist.auth.domain.account.controllers;
 
-import com.specialist.auth.domain.account.models.enums.LockReason;
 import com.specialist.auth.domain.account.models.enums.DisableReason;
+import com.specialist.auth.domain.account.models.enums.LockReason;
 import com.specialist.auth.domain.authority.Authority;
 import com.specialist.auth.domain.role.Role;
 import org.springframework.http.HttpStatus;

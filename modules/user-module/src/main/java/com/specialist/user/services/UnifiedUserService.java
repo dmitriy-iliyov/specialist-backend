@@ -41,12 +41,6 @@ public class UnifiedUserService implements UserService, SystemUserService, Creat
         return mapper.toPrivateDto(repository.save(mapper.toEntity(dto)));
     }
 
-    @Transactional(readOnly = true)
-    @Override
-    public PrivateUserResponseDto findPrivateById(UUID id) {
-        return mapper.toPrivateDto(repository.findById(id).orElseThrow(UserNotFoundByIdException::new));
-    }
-
     @Transactional
     @Override
     public PrivateUserResponseDto update(UserUpdateDto dto, EmailChangeHandler handler) {
@@ -56,6 +50,12 @@ public class UnifiedUserService implements UserService, SystemUserService, Creat
         }
         mapper.updateEntityFromDto(dto, userEntity);
         return mapper.toPrivateDto(repository.save(userEntity));
+    }
+
+    @Transactional
+    @Override
+    public void updateAvatarUrlById(UUID id, String avatarUrl) {
+        repository.updateAvatarUrlById(id, avatarUrl);
     }
 
     @Transactional
@@ -72,6 +72,18 @@ public class UnifiedUserService implements UserService, SystemUserService, Creat
         entity.setCreatorRating(creatorRating);
 
         repository.save(entity);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public boolean existsById(UUID id) {
+        return false;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public PrivateUserResponseDto findPrivateById(UUID id) {
+        return mapper.toPrivateDto(repository.findById(id).orElseThrow(UserNotFoundByIdException::new));
     }
 
     @Transactional(readOnly = true)
@@ -118,11 +130,5 @@ public class UnifiedUserService implements UserService, SystemUserService, Creat
     @Override
     public void deleteById(UUID id) {
         repository.deleteById(id);
-    }
-
-    @Transactional
-    @Override
-    public void updateAvatarUrlById(UUID id, String avatarUrl) {
-        repository.updateAvatarUrlById(id, avatarUrl);
     }
 }

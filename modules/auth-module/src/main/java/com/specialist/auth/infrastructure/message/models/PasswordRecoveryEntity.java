@@ -4,8 +4,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.TimeToLive;
 
-import java.time.Duration;
-
 @RedisHash(value = "accounts:pass-recovery")
 public record PasswordRecoveryEntity(
         @Id

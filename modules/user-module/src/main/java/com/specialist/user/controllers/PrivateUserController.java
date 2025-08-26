@@ -8,7 +8,6 @@ import com.specialist.user.models.dtos.UserUpdateDto;
 import com.specialist.user.services.UserOrchestrator;
 import com.specialist.user.services.UserService;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/v1/users/me")
-@PreAuthorize("hasRole('USER')")
 @RequiredArgsConstructor
 public class PrivateUserController {
 
@@ -28,7 +26,7 @@ public class PrivateUserController {
     private final UserService service;
     private final ObjectMapper mapper;
 
-
+    @PreAuthorize("hasRole('USER')")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE )
     public ResponseEntity<?> create(@AuthenticationPrincipal PrincipalDetails principal,
                                     @RequestPart("user") String rawDto,
@@ -41,6 +39,7 @@ public class PrivateUserController {
                 .body(orchestrator.save(dto));
     }
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping
     public ResponseEntity<?> get(@AuthenticationPrincipal PrincipalDetails principal) {
         return ResponseEntity
@@ -48,6 +47,7 @@ public class PrivateUserController {
                 .body(service.findPrivateById(principal.getAccountId()));
     }
 
+    @PreAuthorize("hasRole('USER')")
     @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> update(@AuthenticationPrincipal PrincipalDetails principal,
                                     @RequestPart("user") String rawDto,
@@ -60,6 +60,7 @@ public class PrivateUserController {
                 .body(orchestrator.update(dto));
     }
 
+    @PreAuthorize("hasRole('USER')")
     @DeleteMapping
     public ResponseEntity<?> delete(@AuthenticationPrincipal PrincipalDetails principal, HttpServletResponse response) {
         orchestrator.delete(principal.getAccountId(), principal.getId(), response);

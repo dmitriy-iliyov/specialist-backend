@@ -1,8 +1,6 @@
 package com.specialist.auth.domain.access_token;
 
 import com.specialist.auth.domain.access_token.models.AccessToken;
-import com.specialist.auth.domain.refresh_token.RefreshTokenService;
-import com.specialist.auth.domain.refresh_token.models.RefreshToken;
 import com.specialist.auth.exceptions.AccessTokenExpiredException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,8 +9,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationConverter;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.stereotype.Component;
-
-import java.util.stream.Stream;
 
 @Component
 @RequiredArgsConstructor

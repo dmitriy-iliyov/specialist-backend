@@ -1,7 +1,6 @@
 package com.specialist.auth.core;
 
 import com.specialist.auth.core.models.LoginRequest;
-import com.specialist.auth.domain.access_token.models.AccessTokenUserDetails;
 import com.specialist.auth.domain.refresh_token.models.RefreshTokenUserDetails;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

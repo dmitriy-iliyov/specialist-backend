@@ -3,7 +3,6 @@ package com.specialist.auth.domain.refresh_token;
 import com.specialist.auth.core.models.BaseUserDetails;
 import com.specialist.auth.domain.refresh_token.models.RefreshToken;
 
-import java.util.List;
 import java.util.UUID;
 
 public interface RefreshTokenService {
