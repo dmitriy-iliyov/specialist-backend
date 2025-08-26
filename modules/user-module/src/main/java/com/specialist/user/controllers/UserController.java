@@ -19,7 +19,6 @@ public class UserController {
 
     private final UserService service;
 
-
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable("id") @NotNull(message = "Id is required.") String id) {
         return ResponseEntity

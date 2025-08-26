@@ -2,32 +2,44 @@ package com.specialist.specialistdirectory.domain.specialist.controllers;
 
 import com.specialist.contracts.auth.PrincipalDetails;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
+import com.specialist.specialistdirectory.domain.specialist.models.enums.ApproverType;
+import com.specialist.specialistdirectory.domain.specialist.models.enums.CreatorType;
+import com.specialist.specialistdirectory.domain.specialist.services.SpecialistPersistOrchestrator;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistService;
+import com.specialist.utils.validation.annotation.ValidUuid;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/system/v1/specialists")
 @PreAuthorize("hasRole('SERVICE') && hasAuthority('SPECIALIST_CREATE')")
 @RequiredArgsConstructor
-public class SystemSpecialistController {
+public class ServiceSpecialistController {
 
+    private final SpecialistPersistOrchestrator persistOrchestrator;
     private final SpecialistService service;
 
     @PostMapping
     public ResponseEntity<?> create(@AuthenticationPrincipal PrincipalDetails principal,
                                     @RequestBody @Valid SpecialistCreateDto dto) {
-        dto.setCreatorId(principal.getUserId());
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(service.save(dto));
+                .body(persistOrchestrator.save(principal.getAccountId(), CreatorType.SERVICE, dto));
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> approve(@AuthenticationPrincipal PrincipalDetails principal,
+                                     @PathVariable("id") @ValidUuid(paramName = "id") String id) {
+        service.approve(UUID.fromString(id), principal.getAccountId(), ApproverType.SERVICE);
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .build();
     }
 }

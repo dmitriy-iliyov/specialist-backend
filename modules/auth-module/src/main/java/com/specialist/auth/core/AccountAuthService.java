@@ -12,4 +12,8 @@ public interface AccountAuthService {
     void login(LoginRequest requestDto, HttpServletRequest request, HttpServletResponse response);
 
     void refresh(UUID refreshTokenId, HttpServletResponse response);
+
+    void logout(UUID refreshTokenId, HttpServletResponse response);
+
+    void logoutFromAll(UUID accountId, HttpServletResponse response);
 }

@@ -4,6 +4,7 @@ import com.specialist.specialistdirectory.domain.review.models.enums.OperationTy
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
+import com.specialist.specialistdirectory.domain.specialist.models.enums.ApproverType;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.SpecialistFilter;
 import com.specialist.utils.pagination.PageRequest;
@@ -17,6 +18,8 @@ public interface SpecialistService {
     UUID getCreatorIdById(UUID id);
 
     SpecialistResponseDto findByCreatorIdAndId(UUID creatorId, UUID id);
+
+    void approve(UUID id, UUID approverId, ApproverType approverType);
 
     SpecialistResponseDto update(SpecialistUpdateDto dto);
 

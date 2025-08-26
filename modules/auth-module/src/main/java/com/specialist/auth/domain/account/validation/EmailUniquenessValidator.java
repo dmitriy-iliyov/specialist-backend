@@ -15,14 +15,14 @@ public class EmailUniquenessValidator implements ConstraintValidator<UniqueEmail
         context.disableDefaultConstraintViolation();
         if (email == null) {
             context.buildConstraintViolationWithTemplate("Email is required.")
-                    //.addPropertyNode("account")
+                    .addPropertyNode("email")
                     .addConstraintViolation();
             return false;
         }
 
         if (accountService.existsByEmail(email)) {
             context.buildConstraintViolationWithTemplate("Email isn't unique.")
-                    //.addPropertyNode("email")
+                    .addPropertyNode("email")
                     .addConstraintViolation();
             return false;
         }

@@ -30,7 +30,7 @@ public class AdminTypeController {
                                     @RequestBody @Valid FullTypeCreateDto dto) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(orchestrator.save(principal.getUserId(), dto));
+                .body(orchestrator.save(principal.getAccountId(), dto));
     }
 
     @PutMapping("/{id}")

@@ -17,7 +17,7 @@ public class AccessTokenUserDetails implements UserDetails, PrincipalDetails {
     private UUID id;
     private List<? extends GrantedAuthority> authorities;
     @Getter
-    private UUID userId;
+    private UUID accountId;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -31,6 +31,6 @@ public class AccessTokenUserDetails implements UserDetails, PrincipalDetails {
 
     @Override
     public String getUsername() {
-        return userId.toString();
+        return accountId.toString();
     }
 }

@@ -2,7 +2,7 @@ package com.specialist.auth.domain.account.repositories;
 
 import com.specialist.auth.domain.account.models.AccountEntity;
 import com.specialist.auth.domain.account.models.enums.LockReason;
-import com.specialist.auth.domain.account.models.enums.UnableReason;
+import com.specialist.auth.domain.account.models.enums.DisableReason;
 import org.springframework.data.jpa.domain.Specification;
 
 public class AccountSpecification {
@@ -19,7 +19,7 @@ public class AccountSpecification {
         return (r, q, cb) -> isEnabled == null ? null : cb.equal(r.get("isEnabled"), isEnabled);
     }
 
-    public static Specification<AccountEntity> filterByUnableReason(UnableReason unableReason) {
-        return (r, q, cb) -> unableReason == null ? null : cb.equal(r.get("unableReason"), unableReason);
+    public static Specification<AccountEntity> filterByUnableReason(DisableReason disableReason) {
+        return (r, q, cb) -> disableReason == null ? null : cb.equal(r.get("disableReason"), disableReason);
     }
 }

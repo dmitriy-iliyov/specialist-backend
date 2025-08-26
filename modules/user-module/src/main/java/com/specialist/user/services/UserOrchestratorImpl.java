@@ -5,6 +5,7 @@ import com.specialist.user.models.dtos.BaseUserDto;
 import com.specialist.user.models.dtos.PrivateUserResponseDto;
 import com.specialist.user.models.dtos.UserUpdateDto;
 import com.specialist.user.repositories.AvatarStorage;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
@@ -25,25 +26,31 @@ public class UserOrchestratorImpl implements UserOrchestrator {
     private final Validator validator;
     private final SystemAccountFacade accountFacade;
 
+    private void validate(BaseUserDto dto) {
+        Set<ConstraintViolation<BaseUserDto>> errors = validator.validate(dto);
+        if (!errors.isEmpty()) {
+            throw new ConstraintViolationException(errors);
+        }
+    }
+
+    private void saveAvatar(BaseUserDto dto) {
+        if (dto.getAvatar() != null && !dto.getAvatar().isEmpty()) {
+            dto.setAvatarUrl(avatarStorage.save(dto.getAvatar(), dto.getId()));
+        }
+    }
 
     @Override
     public PrivateUserResponseDto save(BaseUserDto dto) {
-        if (!dto.getAvatar().isEmpty()) {
-            dto.setAvatarUrl(avatarStorage.save(dto.getAvatar(), dto.getId()));
-        }
+        validate(dto);
+        saveAvatar(dto);
         return userService.save(dto);
     }
 
     @Transactional
     @Override
     public PrivateUserResponseDto update(UserUpdateDto dto) {
-        Set<ConstraintViolation<UserUpdateDto>> errors = validator.validate(dto);
-        if (!errors.isEmpty()) {
-            throw new ConstraintViolationException(errors);
-        }
-        if (!dto.getAvatar().isEmpty()) {
-            dto.setAvatarUrl(avatarStorage.save(dto.getAvatar(), dto.getId()));
-        }
+        validate(dto);
+        saveAvatar(dto);
         return userService.update(dto, accountFacade::updateEmailById);
     }
 
@@ -56,9 +63,9 @@ public class UserOrchestratorImpl implements UserOrchestrator {
 
     @Transactional
     @Override
-    public void delete(UUID id) {
+    public void delete(UUID id, UUID refreshTokenId, HttpServletResponse response) {
         userService.deleteById(id);
-        accountFacade.deleteById(id);
+        accountFacade.deleteById(id, refreshTokenId, response);
         avatarStorage.deleteByUserId(id);
     }
 }

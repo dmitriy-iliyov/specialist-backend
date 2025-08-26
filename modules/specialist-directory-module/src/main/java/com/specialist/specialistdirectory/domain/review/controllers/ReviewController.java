@@ -32,7 +32,7 @@ public class ReviewController {
                                     @PathVariable("specialist_id")
                                     @ValidUuid(paramName = "specialist_id") String specialistId,
                                     @RequestBody @Valid ReviewCreateDto dto) {
-        dto.setCreatorId(principal.getUserId());
+        dto.setCreatorId(principal.getAccountId());
         dto.setSpecialistId(UUID.fromString(specialistId));
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -48,7 +48,7 @@ public class ReviewController {
                                     String specialistId,
                                     @RequestBody @Valid ReviewUpdateDto dto) {
         dto.setId(UUID.fromString(id));
-        dto.setCreatorId(principal.getUserId());
+        dto.setCreatorId(principal.getAccountId());
         dto.setSpecialistId(UUID.fromString(specialistId));
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -61,7 +61,7 @@ public class ReviewController {
                                     @PathVariable("specialist_id") @ValidUuid(paramName = "specialist_id")
                                     String specialistId,
                                     @PathVariable("id") @ValidUuid(paramName = "id") String id) {
-        orchestrator.delete(principal.getUserId(), UUID.fromString(specialistId), UUID.fromString(id));
+        orchestrator.delete(principal.getAccountId(), UUID.fromString(specialistId), UUID.fromString(id));
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();

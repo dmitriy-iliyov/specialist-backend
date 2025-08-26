@@ -1,6 +1,7 @@
 package com.specialist.user.validation;
 
 import com.specialist.contracts.auth.SystemAccountFacade;
+import com.specialist.user.models.dtos.BaseUserDto;
 import com.specialist.user.models.dtos.PrivateUserResponseDto;
 import com.specialist.user.models.dtos.UserUpdateDto;
 import com.specialist.user.services.UserService;
@@ -15,7 +16,6 @@ public class EmailUniquenessValidator implements ConstraintValidator<UniqueEmail
 
     private final SystemAccountFacade accountFacade;
     private final UserService userService;
-
 
     @Override
     public boolean isValid(UserUpdateDto dto, ConstraintValidatorContext context) {

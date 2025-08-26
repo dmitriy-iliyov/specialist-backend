@@ -28,7 +28,7 @@ public class BearerAccessTokenAuthenticationConverter implements AuthenticationC
                     if (accessToken == null) {
                         throw new AccessTokenExpiredException();
                     }
-                    return new PreAuthenticatedAuthenticationToken(accessToken, null);
+                    return new PreAuthenticatedAuthenticationToken(accessToken, rawToken);
                 }
                 throw new BlankTokenException();
             }

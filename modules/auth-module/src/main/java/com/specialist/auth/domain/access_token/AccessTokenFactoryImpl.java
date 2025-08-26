@@ -20,7 +20,7 @@ public class AccessTokenFactoryImpl implements AccessTokenFactory {
         Instant expiresAt = createdAt.plusSeconds(TOKEN_TTL);
         return new AccessToken(
                 refreshToken.id(),
-                refreshToken.subjectId(),
+                refreshToken.accountId(),
                 refreshToken.authorities(),
                 createdAt,
                 expiresAt

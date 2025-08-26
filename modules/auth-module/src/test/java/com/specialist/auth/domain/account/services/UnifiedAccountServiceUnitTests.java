@@ -5,8 +5,8 @@ import com.specialist.auth.domain.account.mappers.AccountMapper;
 import com.specialist.auth.domain.account.models.AccountEntity;
 import com.specialist.auth.domain.account.models.AccountFilter;
 import com.specialist.auth.domain.account.models.dtos.*;
+import com.specialist.auth.domain.account.models.enums.DisableReason;
 import com.specialist.auth.domain.account.models.enums.LockReason;
-import com.specialist.auth.domain.account.models.enums.UnableReason;
 import com.specialist.auth.domain.account.repositories.AccountRepository;
 import com.specialist.auth.domain.authority.Authority;
 import com.specialist.auth.domain.authority.AuthorityEntity;
@@ -59,6 +59,9 @@ public class UnifiedAccountServiceUnitTests {
 
     @Mock
     private AuthorityService authorityService;
+
+    @Mock
+    private AccountCacheService cacheService;
 
     @InjectMocks
     private UnifiedAccountService unifiedAccountService;
@@ -135,6 +138,7 @@ public class UnifiedAccountServiceUnitTests {
         when(passwordEncoder.encode("rawPass")).thenReturn("encodedPass");
         when(repository.save(any())).thenReturn(savedEntity);
         when(mapper.toShortResponseDto(savedEntity)).thenReturn(new ShortAccountResponseDto(savedEntity.getId(), dto.getEmail(), LocalDateTime.now()));
+        doNothing().when(cacheService).putEmailAsTrue(anyString());
 
         var response = unifiedAccountService.save(dto);
 
@@ -145,7 +149,7 @@ public class UnifiedAccountServiceUnitTests {
         assertEquals(dto.getEmail(), entitySaved.getEmail());
         assertEquals("encodedPass", entitySaved.getPassword());
         assertFalse(entitySaved.isEnabled());
-        assertEquals(UnableReason.EMAIL_CONFIRMATION_REQUIRED, entitySaved.getUnableReason());
+        assertEquals(DisableReason.EMAIL_CONFIRMATION_REQUIRED, entitySaved.getDisableReason());
         assertEquals(roleEntity, entitySaved.getRole());
         assertEquals(authEntities, entitySaved.getAuthorities());
 
@@ -153,6 +157,7 @@ public class UnifiedAccountServiceUnitTests {
         verify(authorityService, times(1)).getReferenceAllByAuthorityIn(dto.getAuthorities());
         verify(passwordEncoder, times(1)).encode("rawPass");
         verify(mapper, times(1)).toShortResponseDto(savedEntity);
+        verify(cacheService, times(1)).putEmailAsTrue(anyString());
 
         assertNotNull(response);
     }
@@ -316,7 +321,7 @@ public class UnifiedAccountServiceUnitTests {
 
         assertEquals(newEmail, entity.getEmail());
         assertFalse(entity.isEnabled());
-        assertEquals(UnableReason.EMAIL_CONFIRMATION_REQUIRED, entity.getUnableReason());
+        assertEquals(DisableReason.EMAIL_CONFIRMATION_REQUIRED, entity.getDisableReason());
 
         verify(repository, times(1)).findById(id);
         verify(repository, times(1)).findByEmail(newEmail);
@@ -509,13 +514,13 @@ public class UnifiedAccountServiceUnitTests {
     @DisplayName("UT: setUnableById() calls repository with correct params")
     void setUnableById_shouldCallRepository() {
         UUID id = UUID.randomUUID();
-        var unableRequest = new UnableRequest(UnableReason.EMAIL_CONFIRMATION_REQUIRED);
+        var unableRequest = new DisableRequest(DisableReason.EMAIL_CONFIRMATION_REQUIRED);
 
-        doNothing().when(repository).setUnableById(id, UnableReason.EMAIL_CONFIRMATION_REQUIRED);
+        doNothing().when(repository).disableById(id, DisableReason.EMAIL_CONFIRMATION_REQUIRED);
 
-        unifiedAccountService.setUnableById(id, unableRequest);
+        unifiedAccountService.disableById(id, unableRequest);
 
-        verify(repository, times(1)).setUnableById(id, UnableReason.EMAIL_CONFIRMATION_REQUIRED);
+        verify(repository, times(1)).disableById(id, DisableReason.EMAIL_CONFIRMATION_REQUIRED);
     }
 }
 

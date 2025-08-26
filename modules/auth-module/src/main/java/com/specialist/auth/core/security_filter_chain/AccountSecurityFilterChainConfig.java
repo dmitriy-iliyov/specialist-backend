@@ -66,7 +66,7 @@ public class AccountSecurityFilterChainConfig {
                         .ignoringRequestMatchers("/api/v1/accounts", "/api/csrf", "/api/auth/login",
                                                  "/api/auth/oauth2/authorize", "/api/auth/oauth2/callback/**",
                                                  "/api/v1/accounts/confirmation/**",
-                                                 "/api/v1/accounts/password-recovery/**")
+                                                 "/api/v1/accounts/password-recovery/**", "/api/auth/refresh")
                         .csrfTokenRequestHandler(new XorCsrfTokenRequestAttributeHandler())
                         .sessionAuthenticationStrategy(((authentication, request, response) -> {}))
                 )
@@ -75,9 +75,10 @@ public class AccountSecurityFilterChainConfig {
                 .addFilterAfter(authenticationFilter, rateLimitFilter.getClass())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers("/api/csrf").authenticated()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/v1/info/**").permitAll()
-                        .requestMatchers("/api/auth/login", "/api/auth/oauth2/authorize",
+                        .requestMatchers("/api/auth/login", "/api/auth/refresh", "/api/auth/oauth2/authorize",
                                          "/api/auth/oauth2/callback/**").permitAll()
                         .requestMatchers("/api/auth/refresh", "/api/auth/logout").authenticated()
                         .requestMatchers("/api/v1/accounts").permitAll()

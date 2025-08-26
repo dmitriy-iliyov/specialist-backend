@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Profile("dev_v2")
+@Profile("initialize-db")
 @Component
 @RequiredArgsConstructor
 public class TypeDbInitializer {

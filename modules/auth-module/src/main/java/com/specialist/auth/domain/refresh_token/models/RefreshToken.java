@@ -6,8 +6,7 @@ import java.util.UUID;
 
 public record RefreshToken(
         UUID id,
-        UUID subjectId,
+        UUID accountId,
         List<String> authorities,
-        RefreshTokenStatus status,
         Instant expiresAt
 ) { }

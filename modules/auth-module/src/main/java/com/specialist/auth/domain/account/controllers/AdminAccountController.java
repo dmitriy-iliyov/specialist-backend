@@ -3,8 +3,9 @@ package com.specialist.auth.domain.account.controllers;
 import com.specialist.auth.domain.account.models.AccountFilter;
 import com.specialist.auth.domain.account.models.dtos.LockRequest;
 import com.specialist.auth.domain.account.models.dtos.ManagedAccountCreateDto;
-import com.specialist.auth.domain.account.models.dtos.UnableRequest;
+import com.specialist.auth.domain.account.models.dtos.DisableRequest;
 import com.specialist.auth.domain.account.services.AccountService;
+import com.specialist.auth.domain.account.services.AdminAccountOrchestrator;
 import com.specialist.auth.domain.account.services.PersistAccountOrchestrator;
 import com.specialist.utils.pagination.PageRequest;
 import com.specialist.utils.validation.annotation.ValidUuid;
@@ -25,6 +26,7 @@ public class AdminAccountController {
 
     private final PersistAccountOrchestrator orchestrator;
     private final AccountService service;
+    private final AdminAccountOrchestrator adminAccountOrchestrator;
 
     @PreAuthorize("hasAnyAuthority('ACCOUNT_CREATE', 'ACCOUNT_MANAGER')")
     @PostMapping
@@ -53,7 +55,7 @@ public class AdminAccountController {
     public ResponseEntity<?> lock(@PathVariable("id")
                                   @ValidUuid(paramName = "id", message = "Id should have valid format.") UUID id,
                                   @RequestBody @Valid LockRequest request) {
-        service.lockById(id, request);
+        adminAccountOrchestrator.lockById(id, request);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
@@ -69,12 +71,22 @@ public class AdminAccountController {
                 .build();
     }
 
-    @PreAuthorize("hasAnyAuthority('ACCOUNT_UNABLE', 'ACCOUNT_MANAGER')")
-    @PostMapping("/{id}/unable")
-    public ResponseEntity<?> unable(@PathVariable("id")
+    @PreAuthorize("hasAnyAuthority('ACCOUNT_DISABLE', 'ACCOUNT_MANAGER')")
+    @PostMapping("/{id}/disable")
+    public ResponseEntity<?> disable(@PathVariable("id")
                                     @ValidUuid(paramName = "id", message = "Id should have valid format.") UUID id,
-                                    @RequestBody @Valid UnableRequest request) {
-        service.setUnableById(id, request);
+                                     @RequestBody @Valid DisableRequest request) {
+        adminAccountOrchestrator.disableById(id, request);
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .build();
+    }
+
+    @PreAuthorize("hasAnyAuthority('ACCOUNT_DISABLE', 'ACCOUNT_MANAGER')")
+    @PostMapping("/{id}/enable")
+    public ResponseEntity<?> enable(@PathVariable("id")
+                                    @ValidUuid(paramName = "id", message = "Id should have valid format.") UUID id) {
+        service.enableById(id);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();

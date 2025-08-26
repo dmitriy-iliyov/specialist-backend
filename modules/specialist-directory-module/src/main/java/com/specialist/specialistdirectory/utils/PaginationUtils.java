@@ -13,11 +13,13 @@ import org.springframework.data.jpa.domain.Specification;
 public class PaginationUtils {
 
     public static Specification<SpecialistEntity> generateSpecification(BaseSpecialistFilter filter) {
-        return Specification.where(SpecialistSpecification.filterByCity(filter.city()))
+        return Specification.where(SpecialistSpecification.filterByApproved(true))
+                .and(SpecialistSpecification.filterByCity(filter.city()))
                 .and(SpecialistSpecification.filterByCityCode(filter.cityCode()))
                 .and(SpecialistSpecification.filterByType(filter.typeId()))
                 .and(SpecialistSpecification.filerByMinRating(filter.minRating()))
-                .and(SpecialistSpecification.filterByMaxRating(filter.maxRating()));
+                .and(SpecialistSpecification.filterByMaxRating(filter.maxRating()))
+                .and(SpecialistSpecification.filterByLanguage(filter.lang()));
     }
 
     public static Specification<SpecialistEntity> generateSpecification(ExtendedSpecialistFilter filter) {
@@ -28,7 +30,8 @@ public class PaginationUtils {
                 .and(SpecialistSpecification.filterByMaxRating(filter.maxRating()))
                 .and(SpecialistSpecification.filterByFirstName(filter.firstName()))
                 .and(SpecialistSpecification.filterBySecondName(filter.secondName()))
-                .and(SpecialistSpecification.filterByLastName(filter.lastName()));
+                .and(SpecialistSpecification.filterByLastName(filter.lastName()))
+                .and(SpecialistSpecification.filterByLanguage(filter.lang()));
     }
 
     public static Pageable generatePageable(PageDataHolder holder) {

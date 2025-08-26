@@ -2,6 +2,8 @@ package com.specialist.user.models.dtos;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.specialist.user.validation.UniqueEmail;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -13,6 +15,10 @@ import java.util.UUID;
 public abstract class BaseUserDto {
         @JsonIgnore
         protected UUID id;
+
+        @Email(message = "Email should be valid.")
+        @Size(min = 11, max = 50, message = "Email length must be greater than 11 and less than 50!")
+        protected final String email;
 
         @JsonProperty("last_name")
         @NotBlank(message = "Last name shouldn't be empty or blank!")

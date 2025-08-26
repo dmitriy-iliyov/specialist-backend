@@ -5,11 +5,13 @@ import com.specialist.auth.domain.authority.AuthorityEntity;
 import com.specialist.auth.domain.authority.AuthorityRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
 
+@Profile("initialize-db")
 @Component
 @RequiredArgsConstructor
 public class AuthorityDbInitializer {

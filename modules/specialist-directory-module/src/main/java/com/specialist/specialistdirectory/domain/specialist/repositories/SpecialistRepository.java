@@ -1,6 +1,7 @@
 package com.specialist.specialistdirectory.domain.specialist.repositories;
 
 import com.specialist.specialistdirectory.domain.specialist.models.SpecialistEntity;
+import com.specialist.specialistdirectory.domain.specialist.models.enums.ApproverType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -40,4 +41,13 @@ public interface SpecialistRepository extends JpaRepository<SpecialistEntity, UU
     Optional<UUID> findCreatorIdById(@Param("id") UUID id);
 
     long countByCreatorId(UUID creatorId);
+
+    @Modifying
+    @Query("""
+        UPDATE SpecialistEntity s 
+        SET s.approved = true, s.approverId = :approverId, s.approverType = :approverType
+        WHERE s.id = :id
+    """)
+    void approve(@Param("id") UUID id, @Param("approverId") UUID approverId,
+                 @Param("approverType") ApproverType approverType);
 }

@@ -1,5 +1,7 @@
 package com.specialist.contracts.auth;
 
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.util.UUID;
 
 public interface SystemAccountFacade {
@@ -8,5 +10,5 @@ public interface SystemAccountFacade {
 
     void updateEmailById(UUID id, String email);
 
-    void deleteById(UUID id);
+    void deleteById(UUID id, UUID refreshTokenId, HttpServletResponse response);
 }

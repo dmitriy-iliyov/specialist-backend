@@ -9,6 +9,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,9 +28,9 @@ public class ConfirmationController {
                 .build();
     }
 
-    @PatchMapping("/confirm")
+    @PostMapping("/confirm")
     public ResponseEntity<?> confirm(@RequestParam("code") @NotBlank(message = "Code is required.")
-                                     @Pattern(regexp = "^//d{6}$", message = "Invalid code.") String code,
+                                     @Pattern(regexp = "^\\d{6}$", message = "Invalid code.") String code,
                                      HttpServletRequest request,
                                      HttpServletResponse response) {
         accountAuthService.postConfirmationLogin(confirmationService.confirmEmailByCode(code), request, response);

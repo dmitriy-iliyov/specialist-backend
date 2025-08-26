@@ -9,7 +9,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Entity
-@Table(name = "members")
+@Table(name = "users")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -18,13 +18,13 @@ public class UserEntity {
     @Id
     private UUID id;
 
-    @Column(name = "first_name", nullable = false, length = 20)
+    @Column(name = "first_name", length = 20)
     private String firstName;
 
     @Column(name = "second_name", length = 20)
     private String secondName;
 
-    @Column(name = "last_name", nullable = false, length = 20)
+    @Column(name = "last_name", length = 20)
     private String lastName;
 
     @Column(nullable = false, unique = true)

@@ -8,8 +8,8 @@ import com.specialist.auth.domain.access_token.models.AccessToken;
 import com.specialist.auth.domain.account.models.AccountUserDetails;
 import com.specialist.auth.domain.refresh_token.RefreshTokenService;
 import com.specialist.auth.domain.refresh_token.models.RefreshToken;
-import com.specialist.auth.domain.refresh_token.models.RefreshTokenStatus;
 import com.specialist.auth.domain.service_account.models.ServiceAccountUserDetails;
+import com.specialist.auth.exceptions.AccountIdNullException;
 import com.specialist.auth.exceptions.RefreshTokenExpiredException;
 import com.specialist.auth.exceptions.RefreshTokenIdNullException;
 import com.specialist.auth.exceptions.UserDetailsNullException;
@@ -55,7 +55,7 @@ public class TokenManagerImpl implements TokenManager {
         RefreshToken refreshToken = refreshTokenService.generateAndSave(userDetails);
         AccessToken accessToken = new AccessToken(
                 refreshToken.id(),
-                refreshToken.subjectId(),
+                refreshToken.accountId(),
                 refreshToken.authorities(),
                 Instant.now(),
                 refreshToken.expiresAt()
@@ -69,10 +69,10 @@ public class TokenManagerImpl implements TokenManager {
             throw new RefreshTokenIdNullException();
         }
         RefreshToken refreshToken = refreshTokenService.findById(refreshTokenId);
-        if (refreshToken.status().equals(RefreshTokenStatus.ACTIVE)) {
+        if (refreshToken != null) {
             long timeToExpiration = Duration.between(Instant.now(), refreshToken.expiresAt()).toSeconds();
             if (timeToExpiration <= 120) {
-                refreshTokenService.deactivateById(refreshTokenId);
+                refreshTokenService.deleteById(refreshTokenId);
                 throw new RefreshTokenExpiredException();
             } else {
                 AccessToken accessToken = accessTokenFactory.generate(refreshToken);
@@ -81,5 +81,37 @@ public class TokenManagerImpl implements TokenManager {
         } else {
             throw new RefreshTokenExpiredException();
         }
+    }
+
+    @Override
+    public void deactivate(UUID refreshTokenId) {
+        if (refreshTokenId == null) {
+            throw new RefreshTokenIdNullException();
+        }
+        refreshTokenService.deleteById(refreshTokenId);
+    }
+
+    @Override
+    public void deactivateAll(UUID accountId) {
+        if (accountId == null) {
+            throw new AccountIdNullException();
+        }
+        refreshTokenService.deleteAllByAccountId(accountId);
+    }
+
+    @Override
+    public void revoke(UUID refreshTokenId) {
+        if (refreshTokenId == null) {
+            throw new RefreshTokenIdNullException();
+        }
+        refreshTokenService.deleteById(refreshTokenId);
+    }
+
+    @Override
+    public void revokeAll(UUID accountId) {
+        if (accountId == null) {
+            throw new AccountIdNullException();
+        }
+        refreshTokenService.deleteAllByAccountId(accountId);
     }
 }

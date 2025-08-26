@@ -19,14 +19,14 @@ public class AuthorityServiceImpl implements AuthorityService {
     @Transactional(readOnly = true)
     @Override
     public List<AuthorityEntity> getReferenceAllByAuthorityIn(List<Authority> authorities) {
-//        List<Long> ids = cacheService.getAuthoritiesIds(authorities);
-//        if (ids != null && !ids.isEmpty() && !ids.contains(null)) {
-//            List<AuthorityEntity> referencedEntity = new ArrayList<>();
-//            for (Long id : ids) {
-//                referencedEntity.add(repository.getReferenceById(id));
-//            }
-//            return referencedEntity;
-//        }
+        List<Long> ids = cacheService.getAuthoritiesIds(authorities);
+        if (ids != null && !ids.isEmpty() && !ids.contains(null)) {
+            List<AuthorityEntity> referencedEntity = new ArrayList<>();
+            for (Long id : ids) {
+                referencedEntity.add(repository.getReferenceById(id));
+            }
+            return referencedEntity;
+        }
         return repository.getReferenceAllByAuthorityIn(authorities);
     }
 

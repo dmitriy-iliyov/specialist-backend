@@ -91,7 +91,7 @@ class BearerAccessTokenAuthenticationConverterUnitTests {
         assertNotNull(result);
         assertTrue(result instanceof PreAuthenticatedAuthenticationToken);
         assertEquals(accessToken, result.getPrincipal());
-        assertNull(result.getCredentials());
+        assertEquals("validToken", result.getCredentials());
 
         verify(request, times(1)).getHeader("Authorization");
         verify(deserializer, times(1)).deserialize(token);

@@ -79,7 +79,7 @@ class CookieAccessTokenAuthenticationConverterUnitTests {
         assertNotNull(auth);
         assertTrue(auth instanceof PreAuthenticatedAuthenticationToken);
         assertEquals(accessToken, auth.getPrincipal());
-        assertNull(auth.getCredentials());
+        assertEquals("tokenValue", auth.getCredentials());
 
         verify(request, times(2)).getCookies();
         verify(deserializer, times(1)).deserialize("tokenValue");

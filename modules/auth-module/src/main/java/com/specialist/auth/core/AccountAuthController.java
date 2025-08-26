@@ -2,6 +2,7 @@ package com.specialist.auth.core;
 
 import com.specialist.auth.core.models.LoginRequest;
 import com.specialist.auth.domain.access_token.models.AccessTokenUserDetails;
+import com.specialist.auth.domain.refresh_token.models.RefreshTokenUserDetails;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -31,11 +32,19 @@ public class AccountAuthController {
                 .build();
     }
 
-    @PreAuthorize("hasAnyRole({'USER', 'ADMIN'})")
     @PostMapping("/refresh")
-    public ResponseEntity<?> refresh(@AuthenticationPrincipal AccessTokenUserDetails principal,
+    public ResponseEntity<?> refresh(@AuthenticationPrincipal RefreshTokenUserDetails principal,
                                      HttpServletResponse response) {
         service.refresh(principal.getId(), response);
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .build();
+    }
+
+    @PostMapping("/logout/all")
+    public ResponseEntity<?> logoutFromAll(@AuthenticationPrincipal AccessTokenUserDetails principal,
+                                           HttpServletResponse response) {
+        service.logoutFromAll(principal.getAccountId(), response);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();

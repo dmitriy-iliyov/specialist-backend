@@ -42,4 +42,14 @@ public final class AuthCookieFactory {
         cookie.setMaxAge(0);
         return cookie;
     }
+
+    public static Cookie generateEmptyCsrf() {
+        Cookie cookie = new Cookie("XSRF-TOKEN", "");
+        cookie.setPath("/");
+        cookie.setDomain(null);
+        cookie.setSecure(true);
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(0);
+        return cookie;
+    }
 }

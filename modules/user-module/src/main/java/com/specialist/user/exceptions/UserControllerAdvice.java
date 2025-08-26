@@ -1,6 +1,7 @@
 package com.specialist.user.exceptions;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.github.f4b6a3.uuid.exception.InvalidUuidException;
 import com.specialist.core.exceptions.BaseControllerAdvice;
@@ -35,6 +36,18 @@ public class UserControllerAdvice extends BaseControllerAdvice {
 
     public UserControllerAdvice(ExceptionMapper exceptionMapper, MessageSource messageSource) {
         super(exceptionMapper, messageSource);
+    }
+
+    @ExceptionHandler(JsonProcessingException.class)
+    public ResponseEntity<?> handleJsonProcessingException(JsonProcessingException e, Locale locale) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST,
+                getMessageSource().getMessage("400", null, "error.400", locale));
+        problemDetail.setProperty("properties", Map.of("errors", List.of(
+                new ErrorDto("data", "Data have invalid format.")))
+        );
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(problemDetail);
     }
 
     @ExceptionHandler({

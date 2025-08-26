@@ -189,6 +189,7 @@ public abstract class BaseControllerAdvice {
 
     public ResponseEntity<?> handleConstraintViolationException(ConstraintViolationException e, Locale locale) {
         Set<ConstraintViolation<?>> bindingResult = e.getConstraintViolations();
+        System.out.println("bindingResult");
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST,
                 messageSource.getMessage("400", null, "error.400", locale));
         problemDetail.setProperty("properties", Map.of("errors", ErrorUtils.toErrorDtoList(bindingResult)));

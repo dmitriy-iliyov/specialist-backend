@@ -2,8 +2,8 @@ package com.specialist.auth.domain.account.repositories;
 
 import com.specialist.auth.core.oauth2.provider.Provider;
 import com.specialist.auth.domain.account.models.AccountEntity;
+import com.specialist.auth.domain.account.models.enums.DisableReason;
 import com.specialist.auth.domain.account.models.enums.LockReason;
-import com.specialist.auth.domain.account.models.enums.UnableReason;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -32,7 +32,7 @@ public interface AccountRepository extends JpaRepository<AccountEntity, UUID>, J
     @Modifying
     @Query("""
         UPDATE AccountEntity a
-        SET a.isEnabled = true, a.unableReason = null
+        SET a.isEnabled = true, a.disableReason = null
         WHERE a.email = :email
     """)
     void enableByEmail(@Param("email") String email);
@@ -54,8 +54,12 @@ public interface AccountRepository extends JpaRepository<AccountEntity, UUID>, J
     Page<AccountEntity> findAll(Specification<AccountEntity> specification, @NonNull Pageable pageable);
 
     @Modifying
-    @Query("UPDATE AccountEntity a SET a.isEnabled = false, a.unableReason = :reason WHERE a.id = :id")
-    void setUnableById(@Param("id") UUID id, @Param("reason") UnableReason reason);
+    @Query("UPDATE AccountEntity a SET a.isEnabled = false, a.disableReason = :reason WHERE a.id = :id")
+    void disableById(@Param("id") UUID id, @Param("reason") DisableReason reason);
+
+    @Modifying
+    @Query("UPDATE AccountEntity a SET a.isEnabled = true, a.disableReason = null WHERE a.id = :id")
+    void enableById(@Param("id") UUID id);
 
     @Query("""
         SELECT a.provider FROM AccountEntity a

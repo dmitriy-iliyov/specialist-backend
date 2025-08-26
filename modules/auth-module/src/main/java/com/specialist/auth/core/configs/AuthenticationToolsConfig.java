@@ -3,6 +3,7 @@ package com.specialist.auth.core.configs;
 import com.specialist.auth.domain.access_token.AccessTokenAuthenticationFailureHandler;
 import com.specialist.auth.domain.access_token.AccessTokenAuthenticationSuccessHandler;
 import com.specialist.auth.domain.access_token.AccessTokenUserDetailsService;
+import com.specialist.auth.domain.account.services.ExtendedPreAuthenticationChecker;
 import com.specialist.auth.domain.refresh_token.RefreshTokenService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -30,6 +31,7 @@ public class AuthenticationToolsConfig {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setUserDetailsService(accountUserDetailsService);
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder);
+        daoAuthenticationProvider.setPreAuthenticationChecks(new ExtendedPreAuthenticationChecker());
 
         PreAuthenticatedAuthenticationProvider preAuthenticatedAuthenticationProvider = new PreAuthenticatedAuthenticationProvider();
         preAuthenticatedAuthenticationProvider.setPreAuthenticatedUserDetailsService(new AccessTokenUserDetailsService(service));

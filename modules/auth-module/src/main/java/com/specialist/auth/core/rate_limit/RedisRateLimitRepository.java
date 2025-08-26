@@ -23,7 +23,7 @@ public class RedisRateLimitRepository implements RateLimitRepository {
         this.MAX_ATTEMPT_COUNT = maxAttemptCount;
         this.OBSERVE_TIME = observeTime;
         this.LOCK_TIME = lockTime;
-        log.info("Create instant of RedisRateLimitRepository.class with TARGET_URL: {}", TARGET_URL);
+        log.info("Create RedisRateLimitRepository.class with TARGET_URL: {}", TARGET_URL);
     }
 
     @Override

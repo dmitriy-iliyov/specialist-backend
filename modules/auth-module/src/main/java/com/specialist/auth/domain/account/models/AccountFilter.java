@@ -1,7 +1,7 @@
 package com.specialist.auth.domain.account.models;
 
+import com.specialist.auth.domain.account.models.enums.DisableReason;
 import com.specialist.auth.domain.account.models.enums.LockReason;
-import com.specialist.auth.domain.account.models.enums.UnableReason;
 import com.specialist.utils.pagination.PageDataHolder;
 import com.specialist.utils.validation.annotation.ValidEnum;
 import jakarta.validation.constraints.Min;
@@ -16,8 +16,8 @@ public record AccountFilter(
 
         Boolean enable,
 
-        @ValidEnum(enumClass = UnableReason.class, nullable = true, message = "Unknown unable reason.")
-        String unableReason,
+        @ValidEnum(enumClass = DisableReason.class, nullable = true, message = "Unknown disable reason.")
+        String disableReason,
 
         @NotNull(message = "Page number is required.")
         @PositiveOrZero(message = "Page number should be positive or zero.")

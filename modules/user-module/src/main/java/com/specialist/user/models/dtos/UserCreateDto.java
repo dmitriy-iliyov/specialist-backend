@@ -6,9 +6,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class UserCreateDto extends BaseUserDto {
 
         @JsonCreator
-        public UserCreateDto(@JsonProperty("last_name") String lastName,
+        public UserCreateDto(String email,
+                             @JsonProperty("last_name") String lastName,
                              @JsonProperty("first_name") String firstName,
                              @JsonProperty("second_name") String secondName) {
-                super(lastName, firstName, secondName);
+                super(email, lastName, firstName, secondName);
         }
 }

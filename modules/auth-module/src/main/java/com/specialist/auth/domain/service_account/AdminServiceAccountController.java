@@ -27,7 +27,7 @@ public class AdminServiceAccountController {
                                     @RequestBody @Valid ServiceAccountDto dto) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(service.save(principal.getUserId(), dto));
+                .body(service.save(principal.getAccountId(), dto));
     }
 
     @PutMapping("/{id}")
@@ -38,7 +38,7 @@ public class AdminServiceAccountController {
         dto.setId(UUID.fromString(id));
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(service.save(principal.getUserId(), dto));
+                .body(service.save(principal.getAccountId(), dto));
     }
 
     @GetMapping

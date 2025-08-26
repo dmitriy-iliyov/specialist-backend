@@ -79,7 +79,7 @@ public class AccountControllerUnitTests {
         LocalDateTime fixedTime = LocalDateTime.of(2023, 1, 1, 12, 0);
         ShortAccountResponseDto expectedBody = new ShortAccountResponseDto(fixedId, "email@gmail.com", fixedTime);
 
-        when(principalDetails.getUserId()).thenReturn(fixedId);
+        when(principalDetails.getAccountId()).thenReturn(fixedId);
         when(service.update(eq(updateDto))).thenReturn(expectedBody);
 
         ResponseEntity<?> responseEntity = accountController.update(principalDetails, updateDto);
@@ -98,7 +98,7 @@ public class AccountControllerUnitTests {
         UUID fixedId = UUID.fromString("123e4567-e89b-12d3-a456-426614174000");
         AccountUpdateDto updateDto = new AccountUpdateDto("securepassword");
 
-        when(principalDetails.getUserId()).thenReturn(fixedId);
+        when(principalDetails.getAccountId()).thenReturn(fixedId);
         when(service.update(eq(updateDto))).thenThrow(RuntimeException.class);
 
         assertThrows(RuntimeException.class, () -> accountController.update(principalDetails, updateDto));
@@ -111,7 +111,7 @@ public class AccountControllerUnitTests {
         UUID fixedId = UUID.fromString("123e4567-e89b-12d3-a456-426614174000");
         AccountUpdateDto updateDto = new AccountUpdateDto("securepassword");
 
-        when(principalDetails.getUserId()).thenThrow(RuntimeException.class);
+        when(principalDetails.getAccountId()).thenThrow(RuntimeException.class);
 
         assertThrows(RuntimeException.class, () -> accountController.update(principalDetails, updateDto));
         verify(service, times(0)).update(eq(updateDto));

@@ -2,9 +2,10 @@ package com.specialist.auth.domain.account.controllers;
 
 import com.specialist.auth.domain.account.models.AccountFilter;
 import com.specialist.auth.domain.account.models.dtos.*;
+import com.specialist.auth.domain.account.models.enums.DisableReason;
 import com.specialist.auth.domain.account.models.enums.LockReason;
-import com.specialist.auth.domain.account.models.enums.UnableReason;
 import com.specialist.auth.domain.account.services.AccountService;
+import com.specialist.auth.domain.account.services.AdminAccountOrchestrator;
 import com.specialist.auth.domain.account.services.PersistAccountOrchestrator;
 import com.specialist.utils.pagination.PageRequest;
 import com.specialist.utils.pagination.PageResponse;
@@ -32,6 +33,9 @@ public class AdminAccountControllerUnitTests {
 
     @Mock
     AccountService service;
+
+    @Mock
+    AdminAccountOrchestrator adminAccountOrchestrator;
 
     @InjectMocks
     AdminAccountController controller;
@@ -123,7 +127,8 @@ public class AdminAccountControllerUnitTests {
 
         ResponseEntity<?> response = controller.lock(id, request);
 
-        verify(service, times(1)).lockById(id, request);
+        verify(adminAccountOrchestrator, times(1)).lockById(id, request);
+        verifyNoMoreInteractions(adminAccountOrchestrator);
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
         assertNull(response.getBody());
     }
@@ -134,33 +139,33 @@ public class AdminAccountControllerUnitTests {
         UUID id = UUID.randomUUID();
         LockRequest request = new LockRequest(LockReason.ABUSE, LocalDateTime.now());
 
-        doThrow(RuntimeException.class).when(service).lockById(id, request);
+        doThrow(RuntimeException.class).when(adminAccountOrchestrator).lockById(id, request);
 
         assertThrows(RuntimeException.class, () -> controller.lock(id, request));
     }
 
     @Test
-    @DisplayName("UT: unable() when valid should return 204")
-    void unable_whenValid_shouldReturn204() {
+    @DisplayName("UT: disable() when valid should return 204")
+    void disable_whenValid_shouldReturn204() {
         UUID id = UUID.randomUUID();
-        UnableRequest request = new UnableRequest(UnableReason.PERMANENTLY_ABUSE);
+        DisableRequest request = new DisableRequest(DisableReason.PERMANENTLY_ABUSE);
 
-        ResponseEntity<?> response = controller.unable(id, request);
+        ResponseEntity<?> response = controller.disable(id, request);
 
-        verify(service, times(1)).setUnableById(id, request);
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        verify(adminAccountOrchestrator, times(1)).disableById(id, request);
+        verifyNoMoreInteractions(adminAccountOrchestrator);        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
         assertNull(response.getBody());
     }
 
     @Test
     @DisplayName("UT: unable() when service throws should throw exception")
-    void unable_whenInvalid_shouldThrowException() {
+    void disable_whenInvalid_shouldThrowException() {
         UUID id = UUID.randomUUID();
-        UnableRequest request = new UnableRequest(UnableReason.PERMANENTLY_ABUSE);
+        DisableRequest request = new DisableRequest(DisableReason.PERMANENTLY_ABUSE);
 
-        doThrow(RuntimeException.class).when(service).setUnableById(id, request);
+        doThrow(RuntimeException.class).when(adminAccountOrchestrator).disableById(id, request);
 
-        assertThrows(RuntimeException.class, () -> controller.unable(id, request));
+        assertThrows(RuntimeException.class, () -> controller.disable(id, request));
     }
 
     @Test

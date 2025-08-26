@@ -1,5 +1,6 @@
 package com.specialist.auth.domain.refresh_token;
 
+import com.specialist.auth.core.TokenManager;
 import com.specialist.auth.domain.access_token.models.AccessTokenUserDetails;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,7 +20,7 @@ import static org.mockito.Mockito.*;
 class RefreshTokenLogoutHandlerUnitTests {
 
     @Mock
-    private RefreshTokenService service;
+    private TokenManager tokenManager;
 
     @Mock
     private HttpServletRequest request;
@@ -47,9 +48,9 @@ class RefreshTokenLogoutHandlerUnitTests {
 
         verify(authentication, times(1)).getPrincipal();
         verify(userDetails, times(1)).getId();
-        verify(service, times(1)).deactivateById(tokenId);
+        verify(tokenManager, times(1)).deactivate(tokenId);
 
-        verifyNoMoreInteractions(authentication, userDetails, service);
+        verifyNoMoreInteractions(authentication, userDetails, tokenManager);
         verifyNoInteractions(request, response);
     }
 }

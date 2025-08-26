@@ -2,6 +2,7 @@ package com.specialist.auth.core;
 
 import com.specialist.auth.core.models.LoginRequest;
 import com.specialist.auth.domain.access_token.models.AccessTokenUserDetails;
+import com.specialist.auth.domain.refresh_token.models.RefreshTokenUserDetails;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.Test;
@@ -45,7 +46,7 @@ class AccountAuthControllerUnitTests {
 
     @Test
     void refresh_shouldReturnNoContent() {
-        AccessTokenUserDetails principal = mock(AccessTokenUserDetails.class);
+        RefreshTokenUserDetails principal = mock(RefreshTokenUserDetails.class);
         UUID id = UUID.randomUUID();
         when(principal.getId()).thenReturn(id);
 

@@ -1,8 +1,8 @@
 package com.specialist.auth.domain.account.models.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.specialist.auth.domain.account.models.enums.DisableReason;
 import com.specialist.auth.domain.account.models.enums.LockReason;
-import com.specialist.auth.domain.account.models.enums.UnableReason;
 import com.specialist.auth.domain.authority.Authority;
 import com.specialist.auth.domain.role.Role;
 
@@ -20,7 +20,7 @@ public record AccountResponseDto(
         @JsonProperty("lock_reason") LockReason lockReason,
         @JsonProperty("lock_term") Instant lockTerm,
         @JsonProperty("is_enable") boolean isEnable,
-        @JsonProperty("unable_reason") UnableReason unableReason,
+        @JsonProperty("disable_reason") DisableReason disableReason,
         @JsonProperty("created_at") Instant createdAt,
         @JsonProperty("updated_at") Instant updatedAt
 ) { }

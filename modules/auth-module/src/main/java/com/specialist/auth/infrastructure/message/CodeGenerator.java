@@ -10,7 +10,7 @@ public class CodeGenerator {
     private final SecureRandom random = new SecureRandom();
 
     public String generate() {
-        int code = random.nextInt(100_000, 100_000_000);
+        int code = random.nextInt(100_000, 999_999);
         return String.valueOf(code);
     }
 }

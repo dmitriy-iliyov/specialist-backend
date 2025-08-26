@@ -3,5 +3,6 @@ package com.specialist.contracts.auth;
 import java.util.UUID;
 
 public interface PrincipalDetails {
-    UUID getUserId();
+    UUID getAccountId();
+    UUID getId();
 }

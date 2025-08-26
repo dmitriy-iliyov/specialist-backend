@@ -1,7 +1,9 @@
 package com.specialist.auth.domain.account.services;
 
+import com.specialist.auth.core.AccountAuthService;
 import com.specialist.auth.infrastructure.message.services.ConfirmationService;
 import com.specialist.contracts.auth.SystemAccountFacade;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +16,7 @@ public class SystemAccountFacadeImpl implements SystemAccountFacade {
 
     private final AccountService accountService;
     private final ConfirmationService confirmationService;
+    private final AccountAuthService accountAuthService;
 
     @Override
     public UUID findIdByEmail(String email) {
@@ -28,7 +31,8 @@ public class SystemAccountFacadeImpl implements SystemAccountFacade {
     }
 
     @Override
-    public void deleteById(UUID id) {
+    public void deleteById(UUID id, UUID refreshTokenId, HttpServletResponse response) {
         accountService.deleteById(id);
+        accountAuthService.logout(refreshTokenId, response);
     }
 }

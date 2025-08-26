@@ -2,7 +2,11 @@ package com.specialist.specialistdirectory.domain.specialist.models;
 
 import com.specialist.specialistdirectory.domain.bookmark.models.BookmarkEntity;
 import com.specialist.specialistdirectory.domain.review.models.ReviewEntity;
+import com.specialist.specialistdirectory.domain.specialist.mappers.ApproverTypeConverter;
+import com.specialist.specialistdirectory.domain.specialist.mappers.CreatorTypeConverter;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.ContactDto;
+import com.specialist.specialistdirectory.domain.specialist.models.enums.ApproverType;
+import com.specialist.specialistdirectory.domain.specialist.models.enums.CreatorType;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistLanguage;
 import com.specialist.specialistdirectory.domain.type.models.TypeEntity;
 import com.specialist.utils.UuidUtils;
@@ -33,8 +37,12 @@ public class SpecialistEntity {
     @Id
     private UUID id;
 
-    @Column(name = "creator_id", nullable = false)
+    @Column(name = "creator_id", nullable = false, updatable = false)
     private UUID creatorId;
+
+    @Column(name = "creator_type", nullable = false, updatable = false)
+    @Convert(converter = CreatorTypeConverter.class)
+    private CreatorType creatorType;
 
     @Column(name = "first_name", nullable = false, length = 20)
     private String firstName;
@@ -75,6 +83,16 @@ public class SpecialistEntity {
     private List<ContactDto> contacts = new ArrayList<>();
 
     private String site;
+
+    @Column(name = "approved", nullable = false)
+    private boolean approved;
+
+    @Column(name = "approver_id")
+    private UUID approverId;
+
+    @Column(name = "approver_type")
+    @Convert(converter = ApproverTypeConverter.class)
+    private ApproverType approverType;
 
     @Column(nullable = false)
     private double rating;

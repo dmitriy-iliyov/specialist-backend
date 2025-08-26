@@ -3,23 +3,16 @@ package com.specialist.auth.domain.refresh_token;
 import com.specialist.auth.core.models.BaseUserDetails;
 import com.specialist.auth.domain.refresh_token.models.RefreshToken;
 import com.specialist.auth.domain.refresh_token.models.RefreshTokenEntity;
-import com.specialist.auth.domain.refresh_token.models.RefreshTokenStatus;
-import com.specialist.auth.exceptions.RefreshTokenNotFoundByIdException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.cache.Cache;
-import org.springframework.cache.CacheManager;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.time.Instant;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -30,9 +23,6 @@ class RefreshTokenServiceImplUnitTests {
     @Mock
     RefreshTokenRepository repository;
 
-    @Mock
-    CacheManager cacheManager;
-
     @InjectMocks
     RefreshTokenServiceImpl service;
 
@@ -40,7 +30,7 @@ class RefreshTokenServiceImplUnitTests {
     BaseUserDetails userDetails;
 
     @Mock
-    Cache cache;
+    RefreshTokenCacheService cacheService;
 
     @Test
     @DisplayName("UT: generateAndSave() should save token and put into cache")
@@ -48,23 +38,24 @@ class RefreshTokenServiceImplUnitTests {
         UUID userId = UUID.randomUUID();
         Collection authorities =
                 List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        RefreshToken refreshToken = new RefreshToken(UUID.randomUUID(), userId, List.of("ROLE_USER"), Instant.now());
         when(userDetails.getId()).thenReturn(userId);
         when(userDetails.getAuthorities()).thenReturn(authorities);
-        when(cacheManager.getCache("refresh-tokens:active")).thenReturn(cache);
+        when(cacheService.putToActiveAsTrue(any(RefreshToken.class))).thenReturn(refreshToken);
+        when(repository.save(any(RefreshTokenEntity.class))).thenReturn(new RefreshTokenEntity(UUID.randomUUID(), userId, "ROLE_USER", Instant.now(), Instant.now()));
+
         service.TOKEN_TTL = 3600L;
 
         RefreshToken result = service.generateAndSave(userDetails);
 
         assertNotNull(result);
-        assertEquals(userId, result.subjectId());
-        assertEquals(RefreshTokenStatus.ACTIVE, result.status());
+        assertEquals(userId, result.accountId());
 
         verify(userDetails, times(1)).getId();
         verify(userDetails, times(1)).getAuthorities();
         verify(repository, times(1)).save(any(RefreshTokenEntity.class));
-        verify(cacheManager, times(1)).getCache("refresh-tokens:active");
-        verify(cache, times(1)).put(eq(result.id()), eq(Boolean.TRUE));
-        verifyNoMoreInteractions(repository, cacheManager, cache, userDetails);
+        verify(cacheService, times(1)).putToActiveAsTrue(any(RefreshToken.class));
+        verifyNoMoreInteractions(repository, cacheService, userDetails);
     }
 
     @Test
@@ -73,37 +64,36 @@ class RefreshTokenServiceImplUnitTests {
         UUID userId = UUID.randomUUID();
         Collection authorities =
                 List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        RefreshToken refreshToken = new RefreshToken(UUID.randomUUID(), userId, List.of("ROLE_USER"), Instant.now());
         when(userDetails.getId()).thenReturn(userId);
         when(userDetails.getAuthorities()).thenReturn(authorities);
-        when(cacheManager.getCache("refresh-tokens:active")).thenReturn(null);
+        when(cacheService.putToActiveAsTrue(any(RefreshToken.class))).thenReturn(refreshToken);
+        when(repository.save(any(RefreshTokenEntity.class))).thenReturn(new RefreshTokenEntity(UUID.randomUUID(), userId, "ROLE_USER", Instant.now(), Instant.now()));
         service.TOKEN_TTL = 3600L;
 
         RefreshToken result = service.generateAndSave(userDetails);
 
         assertNotNull(result);
-        assertEquals(userId, result.subjectId());
-        assertEquals(RefreshTokenStatus.ACTIVE, result.status());
+        assertEquals(userId, result.accountId());
 
         verify(userDetails, times(1)).getId();
         verify(userDetails, times(1)).getAuthorities();
         verify(repository, times(1)).save(any(RefreshTokenEntity.class));
-        verify(cacheManager, times(1)).getCache("refresh-tokens:active");
-        verify(cache, times(0)).put(eq(result.id()), eq(Boolean.TRUE));
-        verifyNoMoreInteractions(repository, cacheManager, cache, userDetails);
+        verify(cacheService, times(1)).putToActiveAsTrue(any(RefreshToken.class));
+        verifyNoMoreInteractions(repository, cacheService, userDetails);
     }
 
     @Test
     @DisplayName("UT: isActiveById() should delegate to repository")
     void isActiveById_shouldReturnRepositoryValue() {
         UUID id = UUID.randomUUID();
-        when(repository.existsByIdAndStatus(id, RefreshTokenStatus.ACTIVE)).thenReturn(true);
+        when(repository.existsById(id)).thenReturn(true);
 
         boolean active = service.isActiveById(id);
 
         assertTrue(active);
-        verify(repository, times(1)).existsByIdAndStatus(id, RefreshTokenStatus.ACTIVE);
-        verifyNoMoreInteractions(repository);
-        verifyNoInteractions(cacheManager);
+        verify(repository, times(1)).existsById(id);
+        verifyNoMoreInteractions(repository, cacheService);
     }
 
     @Test
@@ -114,12 +104,19 @@ class RefreshTokenServiceImplUnitTests {
                 id,
                 UUID.randomUUID(),
                 "ROLE_USER,ROLE_ADMIN",
-                RefreshTokenStatus.ACTIVE,
                 Instant.now(),
                 Instant.now().plusSeconds(3600)
         );
 
+        RefreshToken refreshToken = new RefreshToken(
+                entity.getId(),
+                entity.getAccountId(),
+                Arrays.asList(entity.getAuthorities().split(",")),
+                entity.getExpiresAt()
+        );
+
         when(repository.findById(id)).thenReturn(Optional.of(entity));
+        when(cacheService.put(refreshToken)).thenReturn(refreshToken);
 
         RefreshToken result = service.findById(id);
 
@@ -128,8 +125,7 @@ class RefreshTokenServiceImplUnitTests {
         assertEquals(List.of("ROLE_USER", "ROLE_ADMIN"), result.authorities());
 
         verify(repository, times(1)).findById(id);
-        verifyNoMoreInteractions(repository);
-        verifyNoInteractions(cacheManager);
+        verifyNoMoreInteractions(repository, cacheService);
     }
 
     @Test
@@ -137,67 +133,26 @@ class RefreshTokenServiceImplUnitTests {
     void findById_whenNotFound_shouldThrow() {
         UUID id = UUID.randomUUID();
         when(repository.findById(id)).thenReturn(Optional.empty());
+        doNothing().when(cacheService).putToActiveAsFalse(id);
 
-        assertThrows(RefreshTokenNotFoundByIdException.class, () -> service.findById(id));
+        RefreshToken refreshToken = service.findById(id);
+        assertEquals(refreshToken, null);
 
         verify(repository, times(1)).findById(id);
-        verifyNoMoreInteractions(repository);
-        verifyNoInteractions(cacheManager);
+        verify(cacheService, times(1)).putToActiveAsFalse(any(UUID.class));
+        verifyNoMoreInteractions(repository, cacheService);
     }
 
     @Test
-    @DisplayName("UT: deactivateById() should update status and put false into cache")
-    void deactivateById_shouldUpdateStatusAndPutFalseInCache() {
+    @DisplayName("UT: deleteById() should delete and put false into cache")
+    void deleteById_shouldDeleteStatusAndPutFalseInCache() {
         UUID id = UUID.randomUUID();
-        when(cacheManager.getCache("refresh-tokens:active")).thenReturn(cache);
+        doNothing().when(cacheService).putToActiveAsFalse(id);
 
-        service.deactivateById(id);
+        service.deleteById(id);
 
-        verify(repository, times(1)).updateStatusById(id, RefreshTokenStatus.DEACTIVATED);
-        verify(cacheManager, times(1)).getCache("refresh-tokens:active");
-        verify(cache, times(1)).put(id, Boolean.FALSE);
-        verifyNoMoreInteractions(repository, cacheManager, cache);
-    }
-
-    @Test
-    @DisplayName("UT: deactivateById() should update status and NOT put false into cache")
-    void deactivateById_whenCacheNull_shouldUpdateStatusAndPutFalseInCache() {
-        UUID id = UUID.randomUUID();
-        when(cacheManager.getCache("refresh-tokens:active")).thenReturn(null);
-
-        service.deactivateById(id);
-
-        verify(repository, times(1)).updateStatusById(id, RefreshTokenStatus.DEACTIVATED);
-        verify(cacheManager, times(1)).getCache("refresh-tokens:active");
-        verify(cache, times(0)).put(id, Boolean.FALSE);
-        verifyNoMoreInteractions(repository, cacheManager, cache);
-    }
-
-    @Test
-    @DisplayName("UT: revokeById() should update status and put false into cache")
-    void revokeById_shouldUpdateStatusAndPutFalseInCache() {
-        UUID id = UUID.randomUUID();
-        when(cacheManager.getCache("refresh-tokens:active")).thenReturn(cache);
-
-        service.revokeById(id);
-
-        verify(repository, times(1)).updateStatusById(id, RefreshTokenStatus.REVOKED);
-        verify(cacheManager, times(1)).getCache("refresh-tokens:active");
-        verify(cache, times(1)).put(id, Boolean.FALSE);
-        verifyNoMoreInteractions(repository, cacheManager, cache);
-    }
-
-    @Test
-    @DisplayName("UT: revokeById() should update status and NOT put false into cache")
-    void revokeById_whenCacheNull_shouldUpdateStatusAndPutFalseInCache() {
-        UUID id = UUID.randomUUID();
-        when(cacheManager.getCache("refresh-tokens:active")).thenReturn(null);
-
-        service.revokeById(id);
-
-        verify(repository, times(1)).updateStatusById(id, RefreshTokenStatus.REVOKED);
-        verify(cacheManager, times(1)).getCache("refresh-tokens:active");
-        verify(cache, times(0)).put(id, Boolean.FALSE);
-        verifyNoMoreInteractions(repository, cacheManager, cache);
+        verify(repository, times(1)).deleteById(id);
+        verify(cacheService, times(1)).putToActiveAsFalse(any(UUID.class));
+        verifyNoMoreInteractions(repository, cacheService);
     }
 }

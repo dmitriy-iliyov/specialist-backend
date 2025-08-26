@@ -2,7 +2,6 @@ package com.specialist.auth.domain.access_token;
 
 import com.specialist.auth.domain.access_token.models.AccessToken;
 import com.specialist.auth.domain.refresh_token.models.RefreshToken;
-import com.specialist.auth.domain.refresh_token.models.RefreshTokenStatus;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,7 +27,6 @@ public class AccessTokenFactoryImplUnitTests {
                 UUID.randomUUID(),
                 UUID.randomUUID(),
                 List.of("ROLE_USER"),
-                RefreshTokenStatus.ACTIVE,
                 Instant.now()
         );
         factory.TOKEN_TTL = 300L;
@@ -36,7 +34,7 @@ public class AccessTokenFactoryImplUnitTests {
         AccessToken accessToken = factory.generate(refreshToken);
 
         assertEquals(refreshToken.id(), accessToken.id());
-        assertEquals(refreshToken.subjectId(), accessToken.subjectId());
+        assertEquals(refreshToken.accountId(), accessToken.accountId());
         assertEquals(refreshToken.authorities(), accessToken.authorities());
     }
 }

@@ -34,7 +34,9 @@ public interface AccountService {
 
     void unlockById(UUID id);
 
-    void setUnableById(UUID id, UnableRequest request);
+    void disableById(UUID id, DisableRequest request);
+
+    void enableById(UUID id);
 
     Provider findProviderByEmail(String email);
 }

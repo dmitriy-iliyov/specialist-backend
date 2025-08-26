@@ -3,9 +3,11 @@ package com.specialist.specialistdirectory.domain.specialist.controllers;
 import com.specialist.contracts.auth.PrincipalDetails;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
+import com.specialist.specialistdirectory.domain.specialist.models.enums.CreatorType;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistCountService;
-import com.specialist.specialistdirectory.domain.specialist.services.SpecialistOrchestrator;
+import com.specialist.specialistdirectory.domain.specialist.services.SpecialistCreatorOrchestrator;
+import com.specialist.specialistdirectory.domain.specialist.services.SpecialistPersistOrchestrator;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistService;
 import com.specialist.utils.pagination.PageRequest;
 import com.specialist.utils.validation.annotation.ValidUuid;
@@ -25,18 +27,18 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CreatorSpecialistController {
 
+    private final SpecialistPersistOrchestrator persistOrchestrator;
     private final SpecialistService service;
-    private final SpecialistOrchestrator orchestrator;
+    private final SpecialistCreatorOrchestrator orchestrator;
     private final SpecialistCountService countService;
 
     @PreAuthorize("hasAuthority('SPECIALIST_CREATE_UPDATE')")
     @PostMapping
     public ResponseEntity<?> create(@AuthenticationPrincipal PrincipalDetails principal,
                                     @RequestBody @Valid SpecialistCreateDto dto) {
-        dto.setCreatorId(principal.getUserId());
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(orchestrator.save(dto));
+                .body(persistOrchestrator.save(principal.getAccountId(), CreatorType.USER, dto));
     }
 
     @GetMapping("/{id}")
@@ -44,7 +46,7 @@ public class CreatorSpecialistController {
                                  @PathVariable("id") @ValidUuid(paramName = "id") String id) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(service.findByCreatorIdAndId(principal.getUserId(), UUID.fromString(id)));
+                .body(service.findByCreatorIdAndId(principal.getAccountId(), UUID.fromString(id)));
     }
 
     @PreAuthorize("hasAuthority('SPECIALIST_CREATE_UPDATE')")
@@ -52,7 +54,7 @@ public class CreatorSpecialistController {
     public ResponseEntity<?> update(@AuthenticationPrincipal PrincipalDetails principal,
                                     @PathVariable("id") @ValidUuid(paramName = "id") String id,
                                     @RequestBody @Valid SpecialistUpdateDto dto) {
-        dto.setCreatorId(principal.getUserId());
+        dto.setCreatorId(principal.getAccountId());
         dto.setId(UUID.fromString(id));
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -62,7 +64,7 @@ public class CreatorSpecialistController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@AuthenticationPrincipal PrincipalDetails principal,
                                     @PathVariable("id") @ValidUuid(paramName = "id") String id) {
-        orchestrator.delete(principal.getUserId(), UUID.fromString(id));
+        orchestrator.delete(principal.getAccountId(), UUID.fromString(id));
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
@@ -73,7 +75,7 @@ public class CreatorSpecialistController {
                                            @ModelAttribute @Valid PageRequest page) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(service.findAllByCreatorId(principal.getUserId(), page));
+                .body(service.findAllByCreatorId(principal.getAccountId(), page));
     }
 
     @GetMapping("/filter")
@@ -81,13 +83,13 @@ public class CreatorSpecialistController {
                                                    @ModelAttribute @Valid ExtendedSpecialistFilter filter) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(service.findAllByCreatorIdAndFilter(principal.getUserId(), filter));
+                .body(service.findAllByCreatorIdAndFilter(principal.getAccountId(), filter));
     }
 
     @GetMapping("/count")
     public ResponseEntity<?> countByCreatorId(@AuthenticationPrincipal PrincipalDetails principal){
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(countService.countByCreatorId(principal.getUserId()));
+                .body(countService.countByCreatorId(principal.getAccountId()));
     }
 }

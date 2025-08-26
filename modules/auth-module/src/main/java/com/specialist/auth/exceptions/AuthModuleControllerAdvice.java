@@ -18,6 +18,7 @@ import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -93,13 +94,14 @@ public class AuthModuleControllerAdvice extends BaseControllerAdvice {
 
     @ExceptionHandler(HandlerMethodValidationException.class)
     public ResponseEntity<?> handleHandlerMethodValidationException(HandlerMethodValidationException e, Locale locale) {
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST,
-                getMessageSource().getMessage("400", null, "error.400", locale));
-        problemDetail.setProperty("properties", Map.of("errors", ErrorUtils.fromParameterErrorstoListErrorDtoList(e.getBeanResults())));
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(problemDetail);
-
+//        System.out.println("methodvalidationexeption");
+//        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST,
+//                getMessageSource().getMessage("400", null, "error.400", locale));
+//        problemDetail.setProperty("properties", Map.of("errors", ErrorUtils.fromParameterErrorstoListErrorDtoList(e.getBeanResults())));
+//        return ResponseEntity
+//                .status(HttpStatus.BAD_REQUEST)
+//                .body(problemDetail);
+        return super.handleHandlerMethodValidationException(e, locale);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -126,6 +128,7 @@ public class AuthModuleControllerAdvice extends BaseControllerAdvice {
             Collections.reverse(errors);
             problemDetail.setProperty("properties", Map.of("errors", errors));
         } else {
+            System.out.println("binding");
             problemDetail.setProperty("properties", Map.of("errors", ErrorUtils.toErrorDtoList(e.getBindingResult())));
         }
         return ResponseEntity
@@ -177,5 +180,15 @@ public class AuthModuleControllerAdvice extends BaseControllerAdvice {
     @ExceptionHandler(BaseForbiddenException.class)
     public ResponseEntity<?> handleBaseForbiddenException(BaseForbiddenException e, Locale locale) {
         return super.handleBaseForbiddenException(e, locale);
+    }
+
+    @ExceptionHandler(DisabledException.class)
+    public ResponseEntity<?> handleDisabledException(DisabledException disabledException, Locale locale) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN,
+                getMessageSource().getMessage("403", null, "error.403", locale));
+        problemDetail.setProperty("properties", List.of(new ErrorDto("account", disabledException.getMessage())));
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(problemDetail);
     }
 }

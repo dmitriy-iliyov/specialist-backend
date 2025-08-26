@@ -1,7 +1,7 @@
 package com.specialist.auth.domain.account.controllers;
 
+import com.specialist.auth.domain.account.models.enums.DisableReason;
 import com.specialist.auth.domain.account.models.enums.LockReason;
-import com.specialist.auth.domain.account.models.enums.UnableReason;
 import com.specialist.auth.domain.authority.Authority;
 import com.specialist.auth.domain.role.Role;
 import org.junit.jupiter.api.DisplayName;
@@ -50,14 +50,14 @@ public class AdminAccountInfoControllerUnitTests {
 
     @Test
     @DisplayName("UT: getUnableReasonTypes() should return 200 and all enum values")
-    public void getUnableReasonTypes_shouldReturn200AndEnumValues() {
-        ResponseEntity<?> response = controller.getUnableReasonTypes();
+    public void getDisableReasonTypes_shouldReturn200AndEnumValues() {
+        ResponseEntity<?> response = controller.getDisableReasonTypes();
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
 
-        UnableReason[] expected = UnableReason.values();
-        UnableReason[] actual = (UnableReason[]) response.getBody();
+        DisableReason[] expected = DisableReason.values();
+        DisableReason[] actual = (DisableReason[]) response.getBody();
 
         assertArrayEquals(expected, actual);
     }

@@ -45,9 +45,8 @@ public class AccountAuthServiceImpl implements AccountAuthService {
     @Override
     public void postConfirmationLogin(String email, HttpServletRequest request, HttpServletResponse response) {
         AccountUserDetails userDetails = (AccountUserDetails) userDetailsService.loadUserByUsername(email);
-        SecurityContextHolder.getContext().setAuthentication(
-                new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities())
-        );
+        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
         Map<TokenType, Token> tokens = tokenManager.generate(userDetails);
         for (Token token: tokens.values()) {
             response.addCookie(AuthCookieFactory.generate(token.rawToken(), token.expiresAt(), token.type()));
@@ -87,5 +86,24 @@ public class AccountAuthServiceImpl implements AccountAuthService {
             response.addCookie(AuthCookieFactory.generateEmpty(TokenType.ACCESS));
             throw e;
         }
+    }
+
+    @Override
+    public void logout(UUID refreshTokenId, HttpServletResponse response) {
+        tokenManager.deactivate(refreshTokenId);
+        cleanCookie(response);
+    }
+
+    @Override
+    public void logoutFromAll(UUID accountId, HttpServletResponse response) {
+        tokenManager.deactivateAll(accountId);
+        cleanCookie(response);
+    }
+
+    private void cleanCookie(HttpServletResponse response) {
+        for (TokenType type: TokenType.values()) {
+            response.addCookie(AuthCookieFactory.generateEmpty(type));
+        }
+        response.addCookie(AuthCookieFactory.generateEmptyCsrf());
     }
 }

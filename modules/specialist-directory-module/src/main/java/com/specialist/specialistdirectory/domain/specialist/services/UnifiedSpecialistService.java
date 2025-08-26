@@ -7,6 +7,7 @@ import com.specialist.specialistdirectory.domain.specialist.models.dtos.Bookmark
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
+import com.specialist.specialistdirectory.domain.specialist.models.enums.ApproverType;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.SpecialistFilter;
 import com.specialist.specialistdirectory.domain.specialist.repositories.SpecialistRepository;
@@ -26,7 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.domain.Specification;
@@ -48,11 +48,7 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
     private final SpecialistCacheService cacheService;
     private final TypeService typeService;
 
-
-    @Caching(
-            evict = {@CacheEvict(value = "specialists:created:count:total", key = "#result.creatorId")},
-            put = {@CachePut(value = "specialists", key = "#result.id + ':' + #result.creatorId")}
-    )
+    @CachePut(value = "specialists", key = "#result.id + ':' + #result.creatorId")
     @Transactional
     @Override
     public SpecialistResponseDto save(SpecialistCreateDto dto) {
@@ -69,6 +65,13 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
         cacheService.putCreatorId(entity.getId(), entity.getCreatorId());
         cacheService.evictCreatedCountByFilter(entity.getCreatorId());
         return mapper.toResponseDto(entity);
+    }
+
+    @CacheEvict(value = "specialists:created:count:total", key = "#id")
+    @Transactional
+    @Override
+    public void approve(UUID id, UUID approverId, ApproverType approverType) {
+        repository.approve(id, approverId, approverType);
     }
 
     @CachePut(value = "specialists", key = "#result.id + ':' + #result.creatorId")
@@ -216,7 +219,12 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
     @Transactional(readOnly = true)
     @Override
     public PageResponse<SpecialistResponseDto> findAll(PageRequest page) {
-        Slice<SpecialistEntity> slice = specificationRepository.findAll(PaginationUtils.generatePageable(page));
+        Specification<SpecialistEntity> specification = Specification.where(
+                SpecialistSpecification.filterByApproved(true)
+        );
+        Slice<SpecialistEntity> slice = specificationRepository.findAll(
+                specification, PaginationUtils.generatePageable(page)
+        );
         return new PageResponse<>(
                 mapper.toResponseDtoList(slice.getContent()),
                 (countService.countAll() + page.pageSize() - 1) / page.pageSize()

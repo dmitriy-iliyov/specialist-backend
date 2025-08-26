@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public record AccessToken(
         UUID id,
-        UUID subjectId,
+        UUID accountId,
         List<String> authorities,
         Instant createdAt,
         Instant expiresAt

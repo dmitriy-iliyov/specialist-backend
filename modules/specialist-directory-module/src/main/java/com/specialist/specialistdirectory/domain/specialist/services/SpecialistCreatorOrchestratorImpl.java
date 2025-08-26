@@ -6,6 +6,7 @@ import com.specialist.specialistdirectory.domain.review.models.enums.OperationTy
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
+import com.specialist.specialistdirectory.domain.specialist.models.enums.CreatorType;
 import com.specialist.specialistdirectory.exceptions.OwnershipException;
 import jakarta.persistence.OptimisticLockException;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class SpecialistOrchestratorImpl implements SpecialistOrchestrator {
+public class SpecialistCreatorOrchestratorImpl implements SpecialistCreatorOrchestrator {
 
     private final SpecialistService specialistService;
     private final BookmarkOrchestrator bookmarkOrchestrator;

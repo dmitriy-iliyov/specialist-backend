@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.specialist.core.exceptions.models.dto.ErrorDto;
 import jakarta.validation.ConstraintViolation;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.experimental.UtilityClass;
 import org.springframework.validation.BindingResult;
@@ -26,7 +27,7 @@ public class ErrorUtils {
         return errors;
     }
 
-    public List<ErrorDto> toErrorDtoList(List<ParameterValidationResult> validationResult) {
+    public List<ErrorDto> toErrorDtoList(@NotNull List<ParameterValidationResult> validationResult) {
         List<ErrorDto> errors = new ArrayList<>();
         validationResult.forEach(result -> {
             result.getResolvableErrors().forEach(error -> {
@@ -42,7 +43,7 @@ public class ErrorUtils {
         return errors;
     }
 
-    public List<ErrorDto> fromParameterErrorstoListErrorDtoList(List<ParameterErrors> validationResult) {
+    public List<ErrorDto> fromParameterErrorstoListErrorDtoList(@NotNull List<ParameterErrors> validationResult) {
         List<ErrorDto> errors = new ArrayList<>();
         validationResult.forEach(result -> {
             result.getResolvableErrors().forEach(error -> {

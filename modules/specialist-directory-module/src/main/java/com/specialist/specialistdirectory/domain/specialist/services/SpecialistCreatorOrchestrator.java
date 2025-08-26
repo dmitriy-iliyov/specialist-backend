@@ -7,12 +7,12 @@ import com.specialist.specialistdirectory.domain.specialist.models.dtos.Speciali
 
 import java.util.UUID;
 
-public interface SpecialistOrchestrator {
+public interface SpecialistCreatorOrchestrator {
+    SpecialistResponseDto save(SpecialistCreateDto dto);
+
     SpecialistResponseDto update(SpecialistUpdateDto dto);
 
     void updateRatingById(UUID id, long rating, OperationType operationType);
 
     void delete(UUID creatorId, UUID id);
-
-    SpecialistResponseDto save(SpecialistCreateDto dto);
 }

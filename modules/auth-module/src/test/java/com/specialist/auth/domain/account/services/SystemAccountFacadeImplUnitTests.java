@@ -1,6 +1,8 @@
 package com.specialist.auth.domain.account.services;
 
+import com.specialist.auth.core.AccountAuthService;
 import com.specialist.auth.infrastructure.message.services.ConfirmationService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,6 +25,12 @@ public class SystemAccountFacadeImplUnitTests {
 
     @Mock
     private ConfirmationService confirmationService;
+
+    @Mock
+    private AccountAuthService authService;
+
+    @Mock
+    private HttpServletResponse response;
 
     @InjectMocks
     private SystemAccountFacadeImpl service;
@@ -95,10 +103,12 @@ public class SystemAccountFacadeImplUnitTests {
     @DisplayName("UT: deleteById() should call accountService.deleteById")
     void deleteById_success() {
         UUID id = UUID.randomUUID();
+        UUID refreshTokenId = UUID.randomUUID();
 
         doNothing().when(accountService).deleteById(id);
+        doNothing().when(authService).logout(any(UUID.class), any(HttpServletResponse.class));
 
-        service.deleteById(id);
+        service.deleteById(id, refreshTokenId, response);
 
         verify(accountService, times(1)).deleteById(id);
         verifyNoMoreInteractions(accountService);
@@ -109,10 +119,11 @@ public class SystemAccountFacadeImplUnitTests {
     @DisplayName("UT: deleteById() should throw if accountService.deleteById throws")
     void deleteById_throwsException() {
         UUID id = UUID.randomUUID();
+        UUID refreshTokenId = UUID.randomUUID();
 
         doThrow(new RuntimeException("Delete failed")).when(accountService).deleteById(id);
 
-        RuntimeException ex = assertThrows(RuntimeException.class, () -> service.deleteById(id));
+        RuntimeException ex = assertThrows(RuntimeException.class, () -> service.deleteById(id, refreshTokenId, response));
 
         verify(accountService, times(1)).deleteById(id);
         verifyNoMoreInteractions(accountService);

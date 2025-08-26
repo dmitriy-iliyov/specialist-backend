@@ -75,7 +75,7 @@ class AccessTokenUserDetailsServiceUnitTests {
 
         AccessToken accessToken = mock(AccessToken.class);
         when(accessToken.id()).thenReturn(tokenId);
-        when(accessToken.subjectId()).thenReturn(userId);
+        when(accessToken.accountId()).thenReturn(userId);
         when(accessToken.authorities()).thenReturn(authStrings);
 
         PreAuthenticatedAuthenticationToken token = mock(PreAuthenticatedAuthenticationToken.class);
@@ -91,7 +91,7 @@ class AccessTokenUserDetailsServiceUnitTests {
         AccessTokenUserDetails details = (AccessTokenUserDetails) userDetails;
 
         assertEquals(tokenId, details.getId());
-        assertEquals(userId, details.getUserId());
+        assertEquals(userId, details.getAccountId());
         assertEquals(authStrings.size(), details.getAuthorities().size());
         assertTrue(details.getAuthorities().stream()
                 .allMatch(a -> a instanceof SimpleGrantedAuthority));

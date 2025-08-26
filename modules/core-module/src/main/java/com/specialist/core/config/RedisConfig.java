@@ -60,7 +60,7 @@ public class RedisConfig {
         );
 
         return RedisCacheConfiguration.defaultCacheConfig()
-                .disableCachingNullValues()
+                //.disableCachingNullValues()
                 .serializeKeysWith(RedisSerializationContext
                         .SerializationPair.fromSerializer(new StringRedisSerializer()))
                 .serializeValuesWith(RedisSerializationContext.
@@ -98,6 +98,8 @@ public class RedisConfig {
                 .withCacheConfiguration("accounts:emails", defaultConfig.entryTtl(Duration.ofSeconds(120)))
                 .withCacheConfiguration("accounts:roles:id", defaultConfig)
                 .withCacheConfiguration("accounts:authorities:id", defaultConfig)
+                .withCacheConfiguration("refresh-tokens", defaultConfig)
+                .withCacheConfiguration("refresh-tokens:active", defaultConfig)
                 .withCacheConfiguration("users:events:creator-rating-update:processed", defaultConfig.entryTtl(Duration.ofSeconds(3600)))
                 .build();
     }

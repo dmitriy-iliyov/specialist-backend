@@ -5,24 +5,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.specialist.user.validation.UniqueEmail;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-@UniqueEmail(message = "Email should  be unique.")
 public class UserUpdateDto extends BaseUserDto {
 
-        @NotBlank(message = "Email is required.")
-        @Email(message = "Email should be valid.")
-        private final String email;
-
         @JsonCreator
-        public UserUpdateDto(@JsonProperty("last_name") String lastName,
+        public UserUpdateDto(String email,
+                             @JsonProperty("last_name") String lastName,
                              @JsonProperty("first_name") String firstName,
-                             @JsonProperty("second_name") String secondName,
-                             String email) {
-                super(lastName, firstName, secondName);
-                this.email = email;
+                             @JsonProperty("second_name") String secondName) {
+                super(email, lastName, firstName, secondName);
         }
 }

@@ -24,7 +24,7 @@ public class PasswordRecoveryController {
                 .build();
     }
 
-    @PatchMapping("/recover")
+    @PostMapping("/recover")
     public ResponseEntity<?> recover(@RequestBody @Valid PasswordRecoveryRequest request) {
         service.recoverPasswordByCode(request);
         return ResponseEntity

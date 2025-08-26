@@ -14,4 +14,12 @@ public interface TokenManager {
     Token generate(ServiceAccountUserDetails userDetails);
 
     Token refresh(UUID refreshTokenId);
+
+    void deactivate(UUID refreshTokenId);
+
+    void deactivateAll(UUID accountId);
+
+    void revoke(UUID refreshTokenId);
+
+    void revokeAll(UUID accountId);
 }

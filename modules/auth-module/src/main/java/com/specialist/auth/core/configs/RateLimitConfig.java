@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
 
-@Configuration
+//@Configuration
 public class RateLimitConfig {
 
     @Bean("passwordRecoveryRequestRedisRateLimitRepository")
@@ -26,7 +26,7 @@ public class RateLimitConfig {
                 redisTemplate,
                 "/api/v1/accounts/password-recovery/recover",
                 "rate-limit:pass-recovery:recover",
-                3L,
+                2L,
                 300L,
                 1800L
         );
@@ -50,9 +50,9 @@ public class RateLimitConfig {
                 redisTemplate,
                 "/api/v1/accounts/confirmation/confirm",
                 "rate-limit:confirmation:confirm",
-                2L,
+                3L,
                 300L,
-                120L
+                300L
         );
     }
 

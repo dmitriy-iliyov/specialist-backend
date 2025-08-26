@@ -29,7 +29,7 @@ public class AccessTokenSerializerImpl implements AccessTokenSerializer {
 
         Claims claims = Jwts.claims()
                 .id(accessToken.id().toString())
-                .subject(accessToken.subjectId().toString())
+                .subject(accessToken.accountId().toString())
                 .issuedAt(Date.from(accessToken.createdAt()))
                 .expiration(Date.from(accessToken.expiresAt()))
                 .add("authorities", accessToken.authorities())

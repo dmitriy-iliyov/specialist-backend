@@ -17,10 +17,8 @@ import java.util.UUID;
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, UUID> {
     @NonNull
-    @EntityGraph(attributePaths = {"avatar"})
     Optional<UserEntity> findById(@NonNull UUID id);
 
-    @EntityGraph(attributePaths = {"avatar"})
     List<UserEntity> findAllByIdIn(Set<UUID> ids);
 
     @Modifying

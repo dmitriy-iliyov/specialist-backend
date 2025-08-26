@@ -2,6 +2,7 @@ package com.specialist.specialistdirectory.domain.specialist.models.dtos;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.specialist.specialistdirectory.domain.specialist.models.enums.CreatorType;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistLanguage;
 import com.specialist.specialistdirectory.domain.specialist.models.markers.SpecialistMarker;
 import com.specialist.specialistdirectory.domain.specialist.validation.Contact;
@@ -21,6 +22,9 @@ public class SpecialistCreateDto implements SpecialistMarker {
 
     @JsonIgnore
     private UUID creatorId;
+
+    @JsonIgnore
+    private CreatorType creatorType;
 
     @JsonProperty("first_name")
     @NotBlank(message = "First name is required.")
@@ -69,4 +73,7 @@ public class SpecialistCreateDto implements SpecialistMarker {
 
     @Pattern(regexp = "^(https?:\\/\\/)?([\\w\\-]+\\.)+[\\w\\-]+(\\/\\S*)?$", message = "Site must be a valid URL.")
     private final String site;
+
+    @JsonIgnore
+    private boolean approved;
 }

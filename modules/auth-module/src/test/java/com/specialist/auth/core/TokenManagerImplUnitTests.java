@@ -7,9 +7,10 @@ import com.specialist.auth.domain.access_token.AccessTokenFactory;
 import com.specialist.auth.domain.access_token.AccessTokenSerializer;
 import com.specialist.auth.domain.access_token.models.AccessToken;
 import com.specialist.auth.domain.account.models.AccountUserDetails;
+import com.specialist.auth.domain.account.models.enums.DisableReason;
+import com.specialist.auth.domain.account.models.enums.LockReason;
 import com.specialist.auth.domain.refresh_token.RefreshTokenService;
 import com.specialist.auth.domain.refresh_token.models.RefreshToken;
-import com.specialist.auth.domain.refresh_token.models.RefreshTokenStatus;
 import com.specialist.auth.domain.service_account.models.ServiceAccountUserDetails;
 import com.specialist.auth.exceptions.RefreshTokenExpiredException;
 import com.specialist.auth.exceptions.RefreshTokenIdNullException;
@@ -58,14 +59,16 @@ public class TokenManagerImplUnitTests {
                 Provider.LOCAL,
                 List.of(new SimpleGrantedAuthority("ROLE_USER")),
                 false,
-                true
+                LockReason.ABUSE,
+                Instant.now(),
+                true,
+                DisableReason.ATTACK_ATTEMPT_DETECTED
         );
 
         RefreshToken refreshToken = new RefreshToken(
                 UUID.randomUUID(),
                 userDetails.getId(),
                 List.of("ROLE_USER"),
-                RefreshTokenStatus.ACTIVE,
                 Instant.now().plusSeconds(100L)
         );
 
@@ -124,13 +127,12 @@ public class TokenManagerImplUnitTests {
                 UUID.randomUUID(),
                 userDetails.getId(),
                 List.of("ROLE_SERVICE"),
-                RefreshTokenStatus.ACTIVE,
                 Instant.now().plusSeconds(300L)
         );
 
         AccessToken accessToken = new AccessToken(
                 refreshToken.id(),
-                refreshToken.subjectId(),
+                refreshToken.accountId(),
                 refreshToken.authorities(),
                 Instant.now(),
                 refreshToken.expiresAt()
@@ -176,12 +178,11 @@ public class TokenManagerImplUnitTests {
                 tokenId,
                 UUID.randomUUID(),
                 List.of("ROLE_USER"),
-                RefreshTokenStatus.ACTIVE,
                 Instant.now().plusSeconds(500L)
         );
         AccessToken accessToken = new AccessToken(
                 tokenId,
-                refreshToken.subjectId(),
+                refreshToken.accountId(),
                 refreshToken.authorities(),
                 Instant.now(),
                 Instant.now().plusSeconds(500L)
@@ -212,14 +213,13 @@ public class TokenManagerImplUnitTests {
                 tokenId,
                 UUID.randomUUID(),
                 List.of("ROLE_USER"),
-                RefreshTokenStatus.ACTIVE,
                 Instant.now().plusSeconds(60L)
         );
 
         when(refreshTokenService.findById(tokenId)).thenReturn(refreshToken);
 
         assertThrows(RefreshTokenExpiredException.class, () -> tokenManager.refresh(tokenId));
-        verify(refreshTokenService, times(1)).deactivateById(tokenId);
+        verify(refreshTokenService, times(1)).deleteById(tokenId);
     }
 
     @Test
@@ -230,29 +230,21 @@ public class TokenManagerImplUnitTests {
                 tokenId,
                 UUID.randomUUID(),
                 List.of("ROLE_USER"),
-                RefreshTokenStatus.ACTIVE,
                 Instant.now().plusSeconds(-60L)
         );
 
         when(refreshTokenService.findById(tokenId)).thenReturn(refreshToken);
 
         assertThrows(RefreshTokenExpiredException.class, () -> tokenManager.refresh(tokenId));
-        verify(refreshTokenService, times(1)).deactivateById(tokenId);
+        verify(refreshTokenService, times(1)).deleteById(tokenId);
     }
 
     @Test
     @DisplayName("UT: refresh() when refresh token not ACTIVE should throw RefreshTokenExpiredException.class")
     public void refresh_whenTokenNotActive_shouldThrowRefreshTokenExpiredException() {
         UUID tokenId = UUID.randomUUID();
-        RefreshToken refreshToken = new RefreshToken(
-                tokenId,
-                UUID.randomUUID(),
-                List.of("ROLE_USER"),
-                RefreshTokenStatus.DEACTIVATED,
-                Instant.now().plusSeconds(300L)
-        );
 
-        when(refreshTokenService.findById(tokenId)).thenReturn(refreshToken);
+        when(refreshTokenService.findById(tokenId)).thenReturn(null);
 
         assertThrows(RefreshTokenExpiredException.class, () -> tokenManager.refresh(tokenId));
     }

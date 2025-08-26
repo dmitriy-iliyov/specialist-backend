@@ -32,7 +32,7 @@ public class BookmarkController {
     @PostMapping
     public ResponseEntity<?> add(@AuthenticationPrincipal PrincipalDetails principal,
                                  @RequestBody @Valid BookmarkCreateDto dto) {
-        dto.setOwnerId(principal.getUserId());
+        dto.setOwnerId(principal.getAccountId());
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(orchestrator.save(dto));
@@ -41,7 +41,7 @@ public class BookmarkController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@AuthenticationPrincipal PrincipalDetails principal,
                                     @PathVariable("id") @ValidUuid(paramName = "id") String id) {
-        service.deleteById(principal.getUserId(), UUID.fromString(id));
+        service.deleteById(principal.getAccountId(), UUID.fromString(id));
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
@@ -52,7 +52,7 @@ public class BookmarkController {
                                     @ModelAttribute @Valid PageRequest page) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(service.findAllByOwnerId(principal.getUserId(), page));
+                .body(service.findAllByOwnerId(principal.getAccountId(), page));
     }
 
     @GetMapping("/filter")
@@ -60,13 +60,13 @@ public class BookmarkController {
                                             @ModelAttribute @Valid ExtendedSpecialistFilter filter) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(service.findAllByOwnerIdAndFilter(principal.getUserId(), filter));
+                .body(service.findAllByOwnerIdAndFilter(principal.getAccountId(), filter));
     }
 
     @GetMapping("/count")
     public ResponseEntity<?> count(@AuthenticationPrincipal PrincipalDetails principal) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(countService.countByOwnerId(principal.getUserId()));
+                .body(countService.countByOwnerId(principal.getAccountId()));
     }
 }

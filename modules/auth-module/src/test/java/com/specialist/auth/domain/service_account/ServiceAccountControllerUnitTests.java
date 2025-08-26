@@ -61,7 +61,7 @@ class ServiceAccountControllerUnitTests {
 
         SecretServiceAccountResponseDto secretServiceAccountResponseDto = new SecretServiceAccountResponseDto("kojgejg", expectedResponse);
 
-        when(principal.getUserId()).thenReturn(userId);
+        when(principal.getAccountId()).thenReturn(userId);
         when(mockService.save(eq(userId), eq(dto))).thenReturn(secretServiceAccountResponseDto);
 
         ResponseEntity<?> response = controller.create(principal, dto);
@@ -95,7 +95,7 @@ class ServiceAccountControllerUnitTests {
 
         SecretServiceAccountResponseDto secretServiceAccountResponseDto = new SecretServiceAccountResponseDto("kojgejg", expectedResponse);
 
-        when(principal.getUserId()).thenReturn(userId);
+        when(principal.getAccountId()).thenReturn(userId);
         when(mockService.save(eq(userId), any(ServiceAccountDto.class))).thenReturn(secretServiceAccountResponseDto);
 
         ResponseEntity<?> response = controller.update(principal, idStr, dto);

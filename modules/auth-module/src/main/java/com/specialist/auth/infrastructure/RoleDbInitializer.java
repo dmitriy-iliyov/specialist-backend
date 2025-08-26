@@ -5,10 +5,12 @@ import com.specialist.auth.domain.role.RoleEntity;
 import com.specialist.auth.domain.role.RoleRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 
+@Profile("initialize-db")
 @Component
 @RequiredArgsConstructor
 public class RoleDbInitializer {

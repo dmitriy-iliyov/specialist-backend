@@ -19,6 +19,9 @@ public class AuthorityServiceImplUnitTests {
     @Mock
     private AuthorityRepository repository;
 
+    @Mock
+    private AuthorityCacheService cacheService;
+
     @InjectMocks
     private AuthorityServiceImpl service;
 
@@ -28,6 +31,7 @@ public class AuthorityServiceImplUnitTests {
         List<Authority> authorities = List.of(Authority.REVIEW_CREATE_UPDATE);
         List<AuthorityEntity> expected = List.of(new AuthorityEntity());
 
+        when(cacheService.getAuthoritiesIds(authorities)).thenReturn(null);
         when(repository.getReferenceAllByAuthorityIn(authorities)).thenReturn(expected);
 
         List<AuthorityEntity> result = service.getReferenceAllByAuthorityIn(authorities);
@@ -42,6 +46,7 @@ public class AuthorityServiceImplUnitTests {
     void getReferenceAllByAuthorityIn_whenEmpty_shouldReturnEmptyList() {
         List<Authority> authorities = Collections.emptyList();
 
+        when(cacheService.getAuthoritiesIds(authorities)).thenReturn(null);
         when(repository.getReferenceAllByAuthorityIn(authorities)).thenReturn(Collections.emptyList());
 
         List<AuthorityEntity> result = service.getReferenceAllByAuthorityIn(authorities);

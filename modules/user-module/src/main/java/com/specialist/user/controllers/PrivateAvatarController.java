@@ -27,6 +27,6 @@ public class PrivateAvatarController {
                                  @RequestPart("avatar") MultipartFile avatar) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(orchestrator.updateAvatar(avatar, principal.getUserId()));
+                .body(orchestrator.updateAvatar(avatar, principal.getAccountId()));
     }
 }

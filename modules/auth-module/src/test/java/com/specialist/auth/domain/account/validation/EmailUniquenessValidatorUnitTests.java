@@ -59,7 +59,7 @@ public class EmailUniquenessValidatorUnitTests {
         doNothing().when(context).disableDefaultConstraintViolation();
 
         when(context.buildConstraintViolationWithTemplate(anyString())).thenReturn(constraintViolationBuilder);
-        when(constraintViolationBuilder.addPropertyNode("account")).thenReturn(nodeBuilderCustomizableContext);
+        when(constraintViolationBuilder.addPropertyNode("email")).thenReturn(nodeBuilderCustomizableContext);
         when(nodeBuilderCustomizableContext.addConstraintViolation()).thenReturn(context);
 
         boolean result = validator.isValid(email, context);

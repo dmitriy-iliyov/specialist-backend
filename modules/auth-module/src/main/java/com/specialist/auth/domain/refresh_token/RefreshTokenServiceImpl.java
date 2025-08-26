@@ -3,13 +3,9 @@ package com.specialist.auth.domain.refresh_token;
 import com.specialist.auth.core.models.BaseUserDetails;
 import com.specialist.auth.domain.refresh_token.models.RefreshToken;
 import com.specialist.auth.domain.refresh_token.models.RefreshTokenEntity;
-import com.specialist.auth.domain.refresh_token.models.RefreshTokenStatus;
-import com.specialist.auth.exceptions.RefreshTokenNotFoundByIdException;
-import com.specialist.utils.UuidUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.Cache;
-import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -29,74 +25,66 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     @Value("${api.refresh-token.ttl}")
     public Long TOKEN_TTL;
     private final RefreshTokenRepository repository;
-    private final CacheManager cacheManager;
+    private final RefreshTokenCacheService cacheService;
 
     @CachePut(value = "refresh-tokens", key = "#result.id()")
     @Transactional
     @Override
     public RefreshToken generateAndSave(BaseUserDetails userDetails) {
-        UUID id = UuidUtils.generateV7();
         UUID accountId = userDetails.getId();
         List<String> authorities = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
         Instant createdAt = Instant.now();
         Instant expiresAt = createdAt.plusSeconds(TOKEN_TTL);
         RefreshTokenEntity refreshTokenEntity = new RefreshTokenEntity(
-                id, accountId, String.join(",", authorities), RefreshTokenStatus.ACTIVE, createdAt, expiresAt
+                accountId, String.join(",", authorities), createdAt, expiresAt
         );
-        repository.save(refreshTokenEntity);
-        Cache cache = cacheManager.getCache("refresh-tokens:active");
-        if (cache != null) {
-            cache.put(id, Boolean.TRUE);
-        }
-        return new RefreshToken(
-                refreshTokenEntity.getId(),
-                accountId,
-                authorities,
-                refreshTokenEntity.getStatus(),
-                refreshTokenEntity.getExpiresAt()
-        );
+        return cacheService.putToActiveAsTrue(fromEntity(repository.save(refreshTokenEntity)));
     }
 
     @Cacheable(value = "refresh-tokens:active", key = "#id")
     @Transactional(readOnly = true)
     @Override
     public boolean isActiveById(UUID id) {
-        return repository.existsByIdAndStatus(id, RefreshTokenStatus.ACTIVE);
+        return repository.existsById(id);
     }
 
     @Cacheable(value = "refresh-tokens", key = "#id")
     @Transactional(readOnly = true)
     @Override
     public RefreshToken findById(UUID id) {
-        RefreshTokenEntity entity = repository.findById(id).orElseThrow(RefreshTokenNotFoundByIdException::new);
+        RefreshTokenEntity entity = repository.findById(id).orElse(null);
+        if (entity == null) {
+            cacheService.putToActiveAsFalse(id);
+            return null;
+        }
+        return cacheService.put(fromEntity(entity));
+    }
+
+    @CacheEvict(value = "refresh-tokens", key = "#id")
+    @Transactional
+    @Override
+    public void deleteById(UUID id) {
+        repository.deleteById(id);
+        cacheService.putToActiveAsFalse(id);
+    }
+
+    @Transactional
+    @Override
+    public void deleteAllByAccountId(UUID accountId) {
+        List<UUID> refreshTokensIds = repository.findAllIdByAccountId(accountId);
+        for (UUID id: refreshTokensIds) {
+            cacheService.putToActiveAsFalse(id);
+            cacheService.evictById(id);
+        }
+        repository.deleteAllByAccountId(accountId);
+    }
+
+    private RefreshToken fromEntity(RefreshTokenEntity entity) {
         return new RefreshToken(
                 entity.getId(),
-                entity.getSubjectId(),
+                entity.getAccountId(),
                 Arrays.stream(entity.getAuthorities().split(",")).map(String::trim).toList(),
-                entity.getStatus(),
                 entity.getExpiresAt()
         );
-    }
-
-    @CacheEvict(value = "refresh-tokens", key = "#id")
-    @Transactional
-    @Override
-    public void deactivateById(UUID id) {
-        repository.updateStatusById(id, RefreshTokenStatus.DEACTIVATED);
-        Cache cache = cacheManager.getCache("refresh-tokens:active");
-        if (cache != null) {
-            cache.put(id, Boolean.FALSE);
-        }
-    }
-
-    @CacheEvict(value = "refresh-tokens", key = "#id")
-    @Transactional
-    @Override
-    public void revokeById(UUID id) {
-        repository.updateStatusById(id, RefreshTokenStatus.REVOKED);
-        Cache cache = cacheManager.getCache("refresh-tokens:active");
-        if (cache != null) {
-            cache.put(id, Boolean.FALSE);
-        }
     }
 }

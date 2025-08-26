@@ -33,7 +33,7 @@ public class AccountController {
     @PatchMapping("/me")
     public ResponseEntity<?> update(@AuthenticationPrincipal PrincipalDetails principal,
                                     @RequestBody @Valid AccountUpdateDto dto) {
-        dto.setId(principal.getUserId());
+        dto.setId(principal.getAccountId());
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(service.update(dto));

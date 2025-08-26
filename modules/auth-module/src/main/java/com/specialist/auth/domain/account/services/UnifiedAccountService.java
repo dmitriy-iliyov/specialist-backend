@@ -6,8 +6,8 @@ import com.specialist.auth.domain.account.models.AccountEntity;
 import com.specialist.auth.domain.account.models.AccountFilter;
 import com.specialist.auth.domain.account.models.AccountUserDetails;
 import com.specialist.auth.domain.account.models.dtos.*;
+import com.specialist.auth.domain.account.models.enums.DisableReason;
 import com.specialist.auth.domain.account.models.enums.LockReason;
-import com.specialist.auth.domain.account.models.enums.UnableReason;
 import com.specialist.auth.domain.account.repositories.AccountRepository;
 import com.specialist.auth.domain.account.repositories.AccountSpecification;
 import com.specialist.auth.domain.authority.Authority;
@@ -67,7 +67,10 @@ public class UnifiedAccountService implements AccountService, UserDetailsService
                 entity.getProvider(),
                 authorities,
                 entity.isLocked(),
-                entity.isEnabled()
+                entity.getLockReason(),
+                entity.getLockTerm(),
+                entity.isEnabled(),
+                entity.getDisableReason()
         );
     }
 
@@ -84,7 +87,7 @@ public class UnifiedAccountService implements AccountService, UserDetailsService
         entity.setAuthorities(authorities);
         entity.setLocked(false);
         entity.setEnabled(false);
-        entity.setUnableReason(UnableReason.EMAIL_CONFIRMATION_REQUIRED);
+        entity.setDisableReason(DisableReason.EMAIL_CONFIRMATION_REQUIRED);
         ShortAccountResponseDto responseDto = mapper.toShortResponseDto(repository.save(entity));
         cacheService.putEmailAsTrue(responseDto.email());
         return responseDto;
@@ -143,7 +146,7 @@ public class UnifiedAccountService implements AccountService, UserDetailsService
         }
         entity.setEmail(email);
         entity.setEnabled(false);
-        entity.setUnableReason(UnableReason.EMAIL_CONFIRMATION_REQUIRED);
+        entity.setDisableReason(DisableReason.EMAIL_CONFIRMATION_REQUIRED);
         repository.save(entity);
     }
 
@@ -168,8 +171,14 @@ public class UnifiedAccountService implements AccountService, UserDetailsService
 
     @Transactional
     @Override
-    public void setUnableById(UUID id, UnableRequest request) {
-        repository.setUnableById(id, request.reason());
+    public void disableById(UUID id, DisableRequest request) {
+        repository.disableById(id, request.reason());
+    }
+
+    @Transactional
+    @Override
+    public void enableById(UUID id) {
+        repository.enableById(id);
     }
 
     @Transactional(readOnly = true)
@@ -198,7 +207,7 @@ public class UnifiedAccountService implements AccountService, UserDetailsService
         Specification<AccountEntity> specification = Specification.where(AccountSpecification.filterByIsLocked(filter.locked()))
                 .and(AccountSpecification.filterByLockeReason(LockReason.valueOf(filter.lockReason())))
                 .and(AccountSpecification.filterByIsEnable(filter.enable()))
-                .and(AccountSpecification.filterByUnableReason(UnableReason.valueOf(filter.unableReason())));
+                .and(AccountSpecification.filterByUnableReason(DisableReason.valueOf(filter.disableReason())));
         Page<AccountEntity> entityPage = repository.findAll(specification, generatePageable(filter));
         Map<UUID, List<Authority>> authoritiesMap = loadAuthorities(entityPage.getContent());
         return toPageResponse(entityPage, authoritiesMap);

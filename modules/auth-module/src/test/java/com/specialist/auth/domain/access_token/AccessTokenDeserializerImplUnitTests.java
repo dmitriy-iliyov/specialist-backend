@@ -91,7 +91,7 @@ class AccessTokenDeserializerImplUnitTests {
 
         assertNotNull(result);
         assertEquals(id, result.id());
-        assertEquals(subjectId, result.subjectId());
+        assertEquals(subjectId, result.accountId());
         assertEquals(authorities, result.authorities());
         assertNotNull(result.createdAt());
         assertNotNull(result.expiresAt());

@@ -2,12 +2,15 @@ package com.specialist.auth.domain.account.models;
 
 import com.specialist.auth.core.models.BaseUserDetails;
 import com.specialist.auth.core.oauth2.provider.Provider;
+import com.specialist.auth.domain.account.models.enums.DisableReason;
+import com.specialist.auth.domain.account.models.enums.LockReason;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -22,7 +25,10 @@ public class AccountUserDetails implements UserDetails, CredentialsContainer, Ba
     private Provider provider;
     private List<? extends GrantedAuthority> authorities;
     private boolean isLocked;
+    private LockReason lockReason;
+    private Instant lockTerm;
     private boolean isEnabled;
+    private DisableReason disableReason;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

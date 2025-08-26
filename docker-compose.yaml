@@ -16,7 +16,7 @@ services:
       - default
     environment:
       POSTGRES_PASSWORD: qvakaydoma
-      POSTGRES_USER: specialist_admin
+      POSTGRES_USER: specialist_api
       POSTGRES_DB: specialist_database
     ports:
       - "5432:5432"
