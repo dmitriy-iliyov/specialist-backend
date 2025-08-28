@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Size;
 
 public record PasswordRecoveryRequest(
         @NotBlank(message = "Code is required.")
-        @Pattern(regexp = "^//d{6}$", message = "Invalid code.")
+        @Pattern(regexp = "^\\d{6}$", message = "Invalid code.")
         String code,
         @NotBlank(message = "Password is required.")
         @Size(min = 10, max = 50, message = "Password length must be greater than 10 and less than 50!")

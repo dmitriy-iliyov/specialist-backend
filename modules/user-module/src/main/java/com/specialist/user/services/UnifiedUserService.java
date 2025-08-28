@@ -43,13 +43,16 @@ public class UnifiedUserService implements UserService, SystemUserService, Creat
 
     @Transactional
     @Override
-    public PrivateUserResponseDto update(UserUpdateDto dto, EmailChangeHandler handler) {
+    public PrivateUserResponseDto update(UserUpdateDto dto) {
         UserEntity userEntity = repository.findById(dto.getId()).orElseThrow(UserNotFoundByIdException::new);
-        if (!userEntity.getEmail().equals(dto.getEmail())) {
-            handler.handle(userEntity.getId(), dto.getEmail());
-        }
         mapper.updateEntityFromDto(dto, userEntity);
         return mapper.toPrivateDto(repository.save(userEntity));
+    }
+
+    @Transactional
+    @Override
+    public void updateEmailById(UUID id, String email) {
+        repository.updateEmailById(id, email);
     }
 
     @Transactional
@@ -72,12 +75,6 @@ public class UnifiedUserService implements UserService, SystemUserService, Creat
         entity.setCreatorRating(creatorRating);
 
         repository.save(entity);
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public boolean existsById(UUID id) {
-        return false;
     }
 
     @Transactional(readOnly = true)

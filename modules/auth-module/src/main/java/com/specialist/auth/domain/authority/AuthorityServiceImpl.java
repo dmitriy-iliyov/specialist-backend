@@ -13,7 +13,7 @@ public class AuthorityServiceImpl implements AuthorityService {
     private final AuthorityRepository repository;
     private final AuthorityCacheService cacheService;
     public static final List<Authority> DEFAULT_USER_AUTHORITIES = new ArrayList<>(List.of(
-            Authority.SPECIALIST_CREATE_UPDATE, Authority.REVIEW_CREATE_UPDATE, Authority.TYPE_SUGGEST
+            Authority.REGISTRATION, Authority.SPECIALIST_CREATE_UPDATE, Authority.REVIEW_CREATE_UPDATE, Authority.TYPE_SUGGEST
     ));
 
     @Transactional(readOnly = true)

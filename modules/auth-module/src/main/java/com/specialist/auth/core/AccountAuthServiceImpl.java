@@ -43,7 +43,7 @@ public class AccountAuthServiceImpl implements AccountAuthService {
     }
 
     @Override
-    public void postConfirmationLogin(String email, HttpServletRequest request, HttpServletResponse response) {
+    public void postEmailConfirmationLogin(String email, HttpServletRequest request, HttpServletResponse response) {
         AccountUserDetails userDetails = (AccountUserDetails) userDetailsService.loadUserByUsername(email);
         Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);

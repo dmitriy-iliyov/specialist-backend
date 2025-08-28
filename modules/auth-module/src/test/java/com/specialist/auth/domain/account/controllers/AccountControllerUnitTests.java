@@ -1,6 +1,6 @@
 package com.specialist.auth.domain.account.controllers;
 
-import com.specialist.auth.domain.account.models.dtos.AccountUpdateDto;
+import com.specialist.auth.domain.account.models.dtos.AccountPasswordUpdateDto;
 import com.specialist.auth.domain.account.models.dtos.DefaultAccountCreateDto;
 import com.specialist.auth.domain.account.models.dtos.ShortAccountResponseDto;
 import com.specialist.auth.domain.account.services.AccountService;
@@ -72,20 +72,20 @@ public class AccountControllerUnitTests {
     }
 
     @Test
-    @DisplayName("UT: update() when dto valid should return 200")
-    public void update_whenDtoValid_shouldReturn200() {
+    @DisplayName("UT: updatePassword() when dto valid should return 200")
+    public void updatePassword_whenDtoValid_shouldReturn200() {
         UUID fixedId = UUID.fromString("123e4567-e89b-12d3-a456-426614174000");
-        AccountUpdateDto updateDto = new AccountUpdateDto("securepassword");
+        AccountPasswordUpdateDto updateDto = new AccountPasswordUpdateDto("oldpassword", "securepassword");
         LocalDateTime fixedTime = LocalDateTime.of(2023, 1, 1, 12, 0);
         ShortAccountResponseDto expectedBody = new ShortAccountResponseDto(fixedId, "email@gmail.com", fixedTime);
 
         when(principalDetails.getAccountId()).thenReturn(fixedId);
-        when(service.update(eq(updateDto))).thenReturn(expectedBody);
+        when(service.updatePassword(eq(updateDto))).thenReturn(expectedBody);
 
-        ResponseEntity<?> responseEntity = accountController.update(principalDetails, updateDto);
+        ResponseEntity<?> responseEntity = accountController.updatePassword(principalDetails, updateDto);
         ShortAccountResponseDto responseBody = (ShortAccountResponseDto) responseEntity.getBody();
 
-        verify(service, times(1)).update(eq(updateDto));
+        verify(service, times(1)).updatePassword(eq(updateDto));
         assertNotNull(responseBody);
         assertEquals(fixedId, responseBody.id());
         assertEquals(expectedBody.email(), responseBody.email());
@@ -93,27 +93,27 @@ public class AccountControllerUnitTests {
     }
 
     @Test
-    @DisplayName("UT: update() when dto invalid should return 400")
-    public void update_whenDtoInvalid_shouldReturn400() {
+    @DisplayName("UT: updatePassword() when dto invalid should return 400")
+    public void updatePassword_whenDtoInvalid_shouldReturn400() {
         UUID fixedId = UUID.fromString("123e4567-e89b-12d3-a456-426614174000");
-        AccountUpdateDto updateDto = new AccountUpdateDto("securepassword");
+        AccountPasswordUpdateDto updateDto = new AccountPasswordUpdateDto("oldpassword", "securepassword");
 
         when(principalDetails.getAccountId()).thenReturn(fixedId);
-        when(service.update(eq(updateDto))).thenThrow(RuntimeException.class);
+        when(service.updatePassword(eq(updateDto))).thenThrow(RuntimeException.class);
 
-        assertThrows(RuntimeException.class, () -> accountController.update(principalDetails, updateDto));
-        verify(service, times(1)).update(eq(updateDto));
+        assertThrows(RuntimeException.class, () -> accountController.updatePassword(principalDetails, updateDto));
+        verify(service, times(1)).updatePassword(eq(updateDto));
     }
 
     @Test
-    @DisplayName("UT: update() when id from Authenticate is invalid should return 400")
-    public void update_whenPrincipalIdInvalid_shouldReturn400() {
+    @DisplayName("UT: updatePassword() when id from Authenticate is invalid should return 400")
+    public void updatePassword_whenPrincipalIdInvalid_shouldReturn400() {
         UUID fixedId = UUID.fromString("123e4567-e89b-12d3-a456-426614174000");
-        AccountUpdateDto updateDto = new AccountUpdateDto("securepassword");
+        AccountPasswordUpdateDto updateDto = new AccountPasswordUpdateDto("oldpassword", "securepassword");
 
         when(principalDetails.getAccountId()).thenThrow(RuntimeException.class);
 
-        assertThrows(RuntimeException.class, () -> accountController.update(principalDetails, updateDto));
-        verify(service, times(0)).update(eq(updateDto));
+        assertThrows(RuntimeException.class, () -> accountController.updatePassword(principalDetails, updateDto));
+        verify(service, times(0)).updatePassword(eq(updateDto));
     }
 }

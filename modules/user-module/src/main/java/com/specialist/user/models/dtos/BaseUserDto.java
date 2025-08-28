@@ -15,10 +15,6 @@ public abstract class BaseUserDto {
         @JsonIgnore
         protected UUID id;
 
-        @Email(message = "Email should be valid.")
-        @Size(min = 11, max = 50, message = "Email length must be greater than 11 and less than 50!")
-        protected final String email;
-
         @JsonProperty("last_name")
         @NotBlank(message = "Last name shouldn't be empty or blank!")
         @Size(min = 2, max = 20, message = "Should has lengths from 2 to 20 characters!")

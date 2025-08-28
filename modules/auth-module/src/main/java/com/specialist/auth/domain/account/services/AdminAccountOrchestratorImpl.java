@@ -1,6 +1,7 @@
 package com.specialist.auth.domain.account.services;
 
 import com.specialist.auth.core.TokenManager;
+import com.specialist.auth.domain.account.models.dtos.DemodeRequest;
 import com.specialist.auth.domain.account.models.dtos.DisableRequest;
 import com.specialist.auth.domain.account.models.dtos.LockRequest;
 import lombok.RequiredArgsConstructor;
@@ -28,5 +29,12 @@ public class AdminAccountOrchestratorImpl implements AdminAccountOrchestrator {
     public void lockById(UUID id, LockRequest request) {
         accountService.lockById(id, request);
         tokenManager.revokeAll(id);
+    }
+
+    @Transactional
+    @Override
+    public void demoteById(DemodeRequest request) {
+        accountService.takeAwayAuthoritiesById(request.getAccountId(), request.getAuthorities());
+        tokenManager.revokeAll(request.getAccountId());
     }
 }

@@ -17,7 +17,7 @@ import com.specialist.auth.domain.role.RoleEntity;
 import com.specialist.auth.domain.role.RoleService;
 import com.specialist.auth.exceptions.AccountNotFoundByEmailException;
 import com.specialist.auth.exceptions.AccountNotFoundByIdException;
-import com.specialist.auth.exceptions.NonUniqueEmailException;
+import com.specialist.auth.exceptions.InvalidOldPasswordException;
 import com.specialist.utils.pagination.PageDataHolder;
 import com.specialist.utils.pagination.PageResponse;
 import lombok.RequiredArgsConstructor;
@@ -129,32 +129,43 @@ public class UnifiedAccountService implements AccountService, UserDetailsService
 
     @Transactional
     @Override
-    public ShortAccountResponseDto update(AccountUpdateDto dto) {
+    public ShortAccountResponseDto updatePassword(AccountPasswordUpdateDto dto) {
         AccountEntity entity = repository.findById(dto.getId()).orElseThrow(AccountNotFoundByIdException::new);
-        entity.setPassword(passwordEncoder.encode(dto.getPassword()));
+        if (!passwordEncoder.matches(dto.getOldPassword(), entity.getPassword())) {
+            throw new InvalidOldPasswordException("old_password");
+        }
+        entity.setPassword(passwordEncoder.encode(dto.getNewPassword()));
         repository.save(entity);
         return mapper.toShortResponseDto(entity);
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     @Override
-    public void updateEmailById(UUID id, String email) {
-        AccountEntity entity = repository.findById(id).orElseThrow(AccountNotFoundByIdException::new);
-        Optional<AccountEntity> existsByEmail = repository.findByEmail(email);
-        if (existsByEmail.isPresent() && !existsByEmail.get().getId().equals(id)) {
-            throw new NonUniqueEmailException();
+    public ShortAccountResponseDto updateEmail(AccountEmailUpdateDto dto) {
+        AccountEntity entity = repository.findById(dto.getId()).orElseThrow(AccountNotFoundByIdException::new);
+        if (!passwordEncoder.matches(dto.getPassword(), entity.getPassword())) {
+            throw new InvalidOldPasswordException("password");
         }
-        entity.setEmail(email);
+        entity.setEmail(entity.getEmail());
         entity.setEnabled(false);
         entity.setDisableReason(DisableReason.EMAIL_CONFIRMATION_REQUIRED);
         repository.save(entity);
+        return mapper.toShortResponseDto(entity);
     }
 
     @Transactional
     @Override
-    public void updatePasswordByEmail(String email, String password) {
+    public void recoverPasswordByEmail(String email, String password) {
         AccountEntity entity = repository.findByEmail(email).orElseThrow(AccountNotFoundByEmailException::new);
         entity.setPassword(passwordEncoder.encode(password));
+    }
+
+    @Transactional
+    @Override
+    public void takeAwayAuthoritiesById(UUID id, Set<Authority> authorities) {
+        AccountEntity accountEntity = repository.findById(id).orElseThrow(AccountNotFoundByIdException::new);
+        accountEntity.getAuthorities().removeIf(entity -> authorities.contains(entity.getAuthorityAsEnum()));
+        repository.save(accountEntity);
     }
 
     @Transactional

@@ -1,6 +1,7 @@
 package com.specialist.auth.domain.account.controllers;
 
 import com.specialist.auth.domain.account.models.AccountFilter;
+import com.specialist.auth.domain.account.models.dtos.DemodeRequest;
 import com.specialist.auth.domain.account.models.dtos.DisableRequest;
 import com.specialist.auth.domain.account.models.dtos.LockRequest;
 import com.specialist.auth.domain.account.models.dtos.ManagedAccountCreateDto;
@@ -48,6 +49,17 @@ public class AdminAccountController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(service.findAllByFilter(filter));
+    }
+
+    @PostMapping("/{id}/demote")
+    public ResponseEntity<?> demote(@PathVariable("id")
+                                    @ValidUuid(paramName = "id", message = "Id should have valid format.") UUID id,
+                                    @RequestBody @Valid DemodeRequest request) {
+        request.setAccountId(id);
+        adminAccountOrchestrator.demoteById(request);
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .build();
     }
 
     @PreAuthorize("hasAnyAuthority('ACCOUNT_LOCK', 'ACCOUNT_MANAGER')")

@@ -12,6 +12,7 @@ import com.specialist.auth.infrastructure.message.repositories.ConfirmationRepos
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -31,6 +32,7 @@ public class EmailConfirmationService implements ConfirmationService {
         this.accountService = accountService;
     }
 
+    @Async
     @Override
     public void sendConfirmationCode(String email) {
         if (!accountService.existsByEmail(email)) {

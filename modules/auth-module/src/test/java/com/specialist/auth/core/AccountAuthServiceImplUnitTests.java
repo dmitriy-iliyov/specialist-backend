@@ -85,7 +85,7 @@ class AccountAuthServiceImplUnitTests {
 
     @Test
     @DisplayName("UT: postConfirmationLogin() should successfully authenticate user and set tokens")
-    void postConfirmationLogin_validEmail_shouldAuthenticateAndSetTokens() {
+    void postEmailConfirmationLogin_validEmail_shouldAuthenticateAndSetTokens() {
         String email = "test@example.com";
         String accessTokenValue = "access-token-123";
         String refreshTokenValue = "refresh-token-123";
@@ -115,7 +115,7 @@ class AccountAuthServiceImplUnitTests {
             cookieFactoryMock.when(() -> AuthCookieFactory.generate(refreshTokenValue, expiresAt, TokenType.REFRESH))
                     .thenReturn(refreshCookie);
 
-            authService.postConfirmationLogin(email, request, response);
+            authService.postEmailConfirmationLogin(email, request, response);
 
             verify(userDetailsService).loadUserByUsername(email);
             verify(securityContext).setAuthentication(any(UsernamePasswordAuthenticationToken.class));
@@ -264,7 +264,7 @@ class AccountAuthServiceImplUnitTests {
 
     @Test
     @DisplayName("UT: postConfirmationLogin() should handle single token type correctly")
-    void postConfirmationLogin_singleTokenType_shouldHandleCorrectly() {
+    void postEmailConfirmationLogin_singleTokenType_shouldHandleCorrectly() {
         String email = "test@example.com";
         String accessTokenValue = "access-token-only";
         Instant expiresAt = Instant.now().plusSeconds(1800);
@@ -285,7 +285,7 @@ class AccountAuthServiceImplUnitTests {
             cookieFactoryMock.when(() -> AuthCookieFactory.generate(accessTokenValue, expiresAt, TokenType.ACCESS))
                     .thenReturn(accessCookie);
 
-            authService.postConfirmationLogin(email, request, response);
+            authService.postEmailConfirmationLogin(email, request, response);
 
             verify(userDetailsService).loadUserByUsername(email);
             verify(securityContext).setAuthentication(any(UsernamePasswordAuthenticationToken.class));

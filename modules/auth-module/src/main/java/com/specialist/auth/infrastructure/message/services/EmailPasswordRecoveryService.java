@@ -53,7 +53,7 @@ public class EmailPasswordRecoveryService implements PasswordRecoveryService {
         if (entity == null) {
             throw new CodeExpiredException();
         }
-        accountService.updatePasswordByEmail(entity.email(), request.password());
+        accountService.recoverPasswordByEmail(entity.email(), request.password());
         repository.deleteById(request.code());
     }
 }

@@ -16,7 +16,6 @@ import com.specialist.auth.domain.role.RoleEntity;
 import com.specialist.auth.domain.role.RoleService;
 import com.specialist.auth.exceptions.AccountNotFoundByEmailException;
 import com.specialist.auth.exceptions.AccountNotFoundByIdException;
-import com.specialist.auth.exceptions.NonUniqueEmailException;
 import com.specialist.utils.pagination.PageResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -263,23 +262,25 @@ public class UnifiedAccountServiceUnitTests {
     }
 
     @Test
-    @DisplayName("UT: update() when account exists should update password and return dto")
-    void update_whenAccountExists_shouldUpdatePasswordAndReturnDto() {
+    @DisplayName("UT: updatePassword() when account exists should update password and return dto")
+    void updatePassword_whenAccountExists_shouldUpdatePasswordPasswordAndReturnDto() {
         UUID id = UUID.randomUUID();
-        AccountUpdateDto dto = new AccountUpdateDto("newpass");
+        AccountPasswordUpdateDto dto = new AccountPasswordUpdateDto("oldpass", "newpass");
         dto.setId(id);
         AccountEntity entity = new AccountEntity();
         entity.setId(id);
         ShortAccountResponseDto expectedDto = new ShortAccountResponseDto(id, "mail@mail.com", LocalDateTime.now());
 
         when(repository.findById(id)).thenReturn(Optional.of(entity));
+        when(passwordEncoder.matches("oldpass", anyString())).thenReturn(true);
         when(passwordEncoder.encode("newpass")).thenReturn("encoded");
         when(mapper.toShortResponseDto(entity)).thenReturn(expectedDto);
 
-        ShortAccountResponseDto result = unifiedAccountService.update(dto);
+        ShortAccountResponseDto result = unifiedAccountService.updatePassword(dto);
 
         verify(repository, times(1)).findById(id);
         verify(passwordEncoder, times(1)).encode("newpass");
+        verify(passwordEncoder, times(1)).matches(anyString(), anyString());
         verify(repository, times(1)).save(entity);
         verify(mapper, times(1)).toShortResponseDto(entity);
         verifyNoMoreInteractions(repository, mapper, passwordEncoder);
@@ -288,15 +289,15 @@ public class UnifiedAccountServiceUnitTests {
     }
 
     @Test
-    @DisplayName("UT: update() when account not found should throw exception")
-    void update_whenNotFound_shouldThrowException() {
+    @DisplayName("UT: updatePassword() when account not found should throw exception")
+    void updatePassword_whenNotFound_shouldThrowException() {
         UUID id = UUID.randomUUID();
-        AccountUpdateDto dto = new AccountUpdateDto("newpass");
+        AccountPasswordUpdateDto dto = new AccountPasswordUpdateDto("oldpassword", "newpass");
         dto.setId(id);
 
         when(repository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(AccountNotFoundByIdException.class, () -> unifiedAccountService.update(dto));
+        assertThrows(AccountNotFoundByIdException.class, () -> unifiedAccountService.updatePassword(dto));
 
         verify(repository, times(1)).findById(id);
         verifyNoMoreInteractions(repository);
@@ -304,70 +305,8 @@ public class UnifiedAccountServiceUnitTests {
     }
 
     @Test
-    @DisplayName("UT: updateEmailById() updates email when unique")
-    void updateEmailById_whenEmailUnique_shouldUpdateAndDisable() {
-        UUID id = UUID.randomUUID();
-        String newEmail = "new@example.com";
-
-        AccountEntity entity = new AccountEntity();
-        entity.setId(id);
-        entity.setEmail("old@example.com");
-        entity.setEnabled(true);
-
-        when(repository.findById(id)).thenReturn(Optional.of(entity));
-        when(repository.findByEmail(newEmail)).thenReturn(Optional.empty());
-
-        unifiedAccountService.updateEmailById(id, newEmail);
-
-        assertEquals(newEmail, entity.getEmail());
-        assertFalse(entity.isEnabled());
-        assertEquals(DisableReason.EMAIL_CONFIRMATION_REQUIRED, entity.getDisableReason());
-
-        verify(repository, times(1)).findById(id);
-        verify(repository, times(1)).findByEmail(newEmail);
-        verify(repository, times(1)).save(entity);
-    }
-
-    @Test
-    @DisplayName("UT: updateEmailById() throws NonUniqueEmailException when email taken")
-    void updateEmailById_whenEmailTaken_shouldThrow() {
-        UUID id = UUID.randomUUID();
-        String newEmail = "taken@example.com";
-
-        AccountEntity entity = new AccountEntity();
-        entity.setId(id);
-
-        AccountEntity anotherEntity = new AccountEntity();
-        anotherEntity.setId(UUID.randomUUID());
-
-        when(repository.findById(id)).thenReturn(Optional.of(entity));
-        when(repository.findByEmail(newEmail)).thenReturn(Optional.of(anotherEntity));
-
-        assertThrows(NonUniqueEmailException.class, () -> unifiedAccountService.updateEmailById(id, newEmail));
-
-        verify(repository, times(1)).findById(id);
-        verify(repository, times(1)).findByEmail(newEmail);
-        verify(repository, never()).save(any());
-    }
-
-    @Test
-    @DisplayName("UT: updateEmailById() throws AccountNotFoundByIdException when id not found")
-    void updateEmailById_whenIdNotFound_shouldThrow() {
-        UUID id = UUID.randomUUID();
-        String newEmail = "new@example.com";
-
-        when(repository.findById(id)).thenReturn(Optional.empty());
-
-        assertThrows(AccountNotFoundByIdException.class, () -> unifiedAccountService.updateEmailById(id, newEmail));
-
-        verify(repository, times(1)).findById(id);
-        verify(repository, never()).findByEmail(any());
-        verify(repository, never()).save(any());
-    }
-
-    @Test
     @DisplayName("UT: updatePasswordByEmail() updates password correctly")
-    void updatePasswordByEmail_shouldUpdatePassword() {
+    void updatePasswordByEmail_shouldRecoverPasswordPassword() {
         String email = "user@example.com";
         String rawPassword = "newpass";
         String encodedPassword = "encodedpass";
@@ -378,7 +317,7 @@ public class UnifiedAccountServiceUnitTests {
         when(repository.findByEmail(email)).thenReturn(Optional.of(entity));
         when(passwordEncoder.encode(rawPassword)).thenReturn(encodedPassword);
 
-        unifiedAccountService.updatePasswordByEmail(email, rawPassword);
+        unifiedAccountService.recoverPasswordByEmail(email, rawPassword);
 
         assertEquals(encodedPassword, entity.getPassword());
 
@@ -388,11 +327,11 @@ public class UnifiedAccountServiceUnitTests {
 
     @Test
     @DisplayName("UT: updatePasswordByEmail() throws exception when email not found")
-    void updatePasswordByEmail_whenEmailNotFound_shouldThrow() {
+    void updatePasswordPasswordByEmail_whenEmailNotFound_shouldThrow() {
         String email = "missing@example.com";
         when(repository.findByEmail(email)).thenReturn(Optional.empty());
 
-        assertThrows(AccountNotFoundByEmailException.class, () -> unifiedAccountService.updatePasswordByEmail(email, "pass"));
+        assertThrows(AccountNotFoundByEmailException.class, () -> unifiedAccountService.recoverPasswordByEmail(email, "pass"));
 
         verify(repository, times(1)).findByEmail(email);
         verify(passwordEncoder, never()).encode(any());

@@ -7,7 +7,6 @@ import com.specialist.user.models.dtos.UserCreateDto;
 import com.specialist.user.models.dtos.UserUpdateDto;
 import com.specialist.user.services.UserOrchestrator;
 import com.specialist.user.services.UserService;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -26,7 +25,7 @@ public class PrivateUserController {
     private final UserService service;
     private final ObjectMapper mapper;
 
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER') && hasAuthority('REGISTRATION')")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE )
     public ResponseEntity<?> create(@AuthenticationPrincipal PrincipalDetails principal,
                                     @RequestPart("user") String rawDto,
@@ -58,14 +57,5 @@ public class PrivateUserController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(orchestrator.update(dto));
-    }
-
-    @PreAuthorize("hasRole('USER')")
-    @DeleteMapping
-    public ResponseEntity<?> delete(@AuthenticationPrincipal PrincipalDetails principal, HttpServletResponse response) {
-        orchestrator.delete(principal.getAccountId(), principal.getId(), response);
-        return ResponseEntity
-                .status(HttpStatus.NO_CONTENT)
-                .build();
     }
 }

@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
 public interface AccountAuthService {
-    void postConfirmationLogin(String email, HttpServletRequest request, HttpServletResponse response);
+    void postEmailConfirmationLogin(String email, HttpServletRequest request, HttpServletResponse response);
 
     void login(LoginRequest requestDto, HttpServletRequest request, HttpServletResponse response);
 

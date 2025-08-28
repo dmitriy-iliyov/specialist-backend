@@ -14,6 +14,4 @@ public interface UserOrchestrator {
     PrivateUserResponseDto update(UserUpdateDto dto);
 
     String updateAvatar(MultipartFile avatar, UUID id);
-
-    void delete(UUID id, UUID refreshTokenId, HttpServletResponse response);
 }

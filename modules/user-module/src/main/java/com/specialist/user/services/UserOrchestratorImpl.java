@@ -1,6 +1,5 @@
 package com.specialist.user.services;
 
-import com.specialist.contracts.auth.SystemAccountFacade;
 import com.specialist.user.models.dtos.BaseUserDto;
 import com.specialist.user.models.dtos.PrivateUserResponseDto;
 import com.specialist.user.models.dtos.UserUpdateDto;
@@ -24,7 +23,6 @@ public class UserOrchestratorImpl implements UserOrchestrator {
     private final UserService userService;
     private final AvatarStorage avatarStorage;
     private final Validator validator;
-    private final SystemAccountFacade accountFacade;
 
     private void validate(BaseUserDto dto) {
         Set<ConstraintViolation<BaseUserDto>> errors = validator.validate(dto);
@@ -51,7 +49,7 @@ public class UserOrchestratorImpl implements UserOrchestrator {
     public PrivateUserResponseDto update(UserUpdateDto dto) {
         validate(dto);
         saveAvatar(dto);
-        return userService.update(dto, accountFacade::updateEmailById);
+        return userService.update(dto);
     }
 
     @Override
@@ -59,13 +57,5 @@ public class UserOrchestratorImpl implements UserOrchestrator {
         String avatarUrl = avatarStorage.save(avatar, id);
         userService.updateAvatarUrlById(id, avatarUrl);
         return avatarUrl;
-    }
-
-    @Transactional
-    @Override
-    public void delete(UUID id, UUID refreshTokenId, HttpServletResponse response) {
-        userService.deleteById(id);
-        accountFacade.deleteById(id, refreshTokenId, response);
-        avatarStorage.deleteByUserId(id);
     }
 }

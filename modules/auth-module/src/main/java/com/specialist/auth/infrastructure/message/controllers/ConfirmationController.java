@@ -35,7 +35,7 @@ public class ConfirmationController {
                                      @Pattern(regexp = "^\\d{6}$", message = "Invalid code.") String code,
                                      HttpServletRequest request,
                                      HttpServletResponse response) {
-        accountAuthService.postConfirmationLogin(confirmationService.confirmEmailByCode(code), request, response);
+        accountAuthService.postEmailConfirmationLogin(confirmationService.confirmEmailByCode(code), request, response);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();

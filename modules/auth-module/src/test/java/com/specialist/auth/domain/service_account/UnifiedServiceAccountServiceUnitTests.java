@@ -121,7 +121,7 @@ class UnifiedServiceAccountServiceUnitTests {
 
     @Test
     @DisplayName("UT: save() when dto has id and entity found should update and save")
-    void save_whenDtoHasIdAndEntityFound_shouldUpdateAndSave() {
+    void save_whenDtoHasIdAndEntityFound_shouldUpdatePasswordAndSave() {
         UUID adminId = UUID.randomUUID();
         UUID dtoId = UUID.randomUUID();
         ServiceAccountDto dto = new ServiceAccountDto();

@@ -10,10 +10,9 @@ import lombok.Setter;
 public class UserUpdateDto extends BaseUserDto {
 
         @JsonCreator
-        public UserUpdateDto(String email,
-                             @JsonProperty("last_name") String lastName,
+        public UserUpdateDto(@JsonProperty("last_name") String lastName,
                              @JsonProperty("first_name") String firstName,
                              @JsonProperty("second_name") String secondName) {
-                super(email, lastName, firstName, secondName);
+                super(lastName, firstName, secondName);
         }
 }

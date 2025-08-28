@@ -13,9 +13,7 @@ import java.util.UUID;
 public interface UserService {
     PrivateUserResponseDto save(BaseUserDto dto);
 
-    PrivateUserResponseDto update(UserUpdateDto dto, EmailChangeHandler handler);
-
-    boolean existsById(UUID id);
+    PrivateUserResponseDto update(UserUpdateDto dto);
 
     PrivateUserResponseDto findPrivateById(UUID id);
 
