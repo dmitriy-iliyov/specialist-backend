@@ -8,6 +8,7 @@ import com.specialist.specialistdirectory.domain.review.models.dtos.ReviewRespon
 import com.specialist.specialistdirectory.domain.review.models.filters.ReviewSort;
 import com.specialist.utils.pagination.PageResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +24,8 @@ public class ReviewAggregatorImpl implements ReviewAggregator {
     private final ReviewService reviewService;
     private final SystemUserService systemUserService;
 
+    // @Transactional till systemUserService in the same app context
+    @Cacheable(value = "reviews", key = "#specialistId + ':' + #sort.cacheKey()")
     @Transactional(readOnly = true)
     @Override
     public PageResponse<FullReviewResponseDto> findAllWithSortBySpecialistId(UUID specialistId, ReviewSort sort) {

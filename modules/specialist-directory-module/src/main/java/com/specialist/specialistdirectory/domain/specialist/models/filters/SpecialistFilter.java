@@ -35,6 +35,7 @@ public record SpecialistFilter(
 
         @NotNull(message = "Page size is required.")
         @Min(value = 10, message = "Min page size is 10.")
+        @Max(value = 50, message = "Min page size is 50.")
         Integer pageSize
 ) implements BaseSpecialistFilter, PageDataHolder {
 

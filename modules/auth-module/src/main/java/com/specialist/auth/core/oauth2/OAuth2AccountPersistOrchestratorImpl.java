@@ -34,7 +34,7 @@ public class OAuth2AccountPersistOrchestratorImpl implements OAuth2AccountPersis
                     email,
                     provider,
                     Role.ROLE_USER,
-                    AuthorityServiceImpl.DEFAULT_USER_AUTHORITIES
+                    AuthorityServiceImpl.DEFAULT_POST_REGISTER_USER_AUTHORITIES
             );
             UUID accountId = service.save(createDto).id();
             OAuthUserEntity entity = mapper.toEntity(provider, accountId, oAuth2User);

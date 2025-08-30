@@ -1,8 +1,8 @@
 package com.specialist.specialistdirectory.domain.specialist.controllers;
 
 import com.specialist.specialistdirectory.domain.specialist.models.filters.SpecialistFilter;
+import com.specialist.specialistdirectory.domain.specialist.services.SpecialistAggregator;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistCountService;
-import com.specialist.specialistdirectory.domain.specialist.services.SpecialistService;
 import com.specialist.utils.pagination.PageRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,21 +18,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class SpecialistController {
 
-    private final SpecialistService service;
+    private final SpecialistAggregator aggregator;
     private final SpecialistCountService countService;
 
     @GetMapping
     public ResponseEntity<?> getAll(@ModelAttribute @Valid PageRequest page){
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(service.findAll(page));
+                .body(aggregator.findAll(page));
     }
 
     @GetMapping("/filter")
     public ResponseEntity<?> getAllByFilter(@ModelAttribute @Valid SpecialistFilter filter){
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(service.findAllByFilter(filter));
+                .body(aggregator.findAllByFilter(filter));
     }
 
     @GetMapping("/count")

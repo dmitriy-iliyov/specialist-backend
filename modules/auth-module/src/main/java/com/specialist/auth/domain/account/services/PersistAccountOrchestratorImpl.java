@@ -21,7 +21,7 @@ public class PersistAccountOrchestratorImpl implements PersistAccountOrchestrato
     @Override
     public ShortAccountResponseDto save(DefaultAccountCreateDto dto, HttpServletResponse response) {
         dto.setRole(Role.ROLE_USER);
-        dto.setAuthorities(AuthorityServiceImpl.DEFAULT_USER_AUTHORITIES);
+        dto.setAuthorities(AuthorityServiceImpl.DEFAULT_POST_REGISTER_USER_AUTHORITIES);
         ShortAccountResponseDto responseDto = accountService.save(dto);
         confirmationService.sendConfirmationCode(dto.getEmail());
         return responseDto;

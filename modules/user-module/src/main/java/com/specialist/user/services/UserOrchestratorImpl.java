@@ -1,10 +1,10 @@
 package com.specialist.user.services;
 
+import com.specialist.contracts.auth.AccountAuthorityFacade;
 import com.specialist.user.models.dtos.BaseUserDto;
 import com.specialist.user.models.dtos.PrivateUserResponseDto;
 import com.specialist.user.models.dtos.UserUpdateDto;
 import com.specialist.user.repositories.AvatarStorage;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
@@ -23,6 +23,7 @@ public class UserOrchestratorImpl implements UserOrchestrator {
     private final UserService userService;
     private final AvatarStorage avatarStorage;
     private final Validator validator;
+    private final AccountAuthorityFacade authorityFacade;
 
     private void validate(BaseUserDto dto) {
         Set<ConstraintViolation<BaseUserDto>> errors = validator.validate(dto);
@@ -37,11 +38,15 @@ public class UserOrchestratorImpl implements UserOrchestrator {
         }
     }
 
+    // till authorityFacade in the same application
+    @Transactional
     @Override
     public PrivateUserResponseDto save(BaseUserDto dto) {
         validate(dto);
         saveAvatar(dto);
-        return userService.save(dto);
+        PrivateUserResponseDto responseDto = userService.save(dto);
+        authorityFacade.postUserCreateDemand(responseDto.getId());
+        return responseDto;
     }
 
     @Transactional

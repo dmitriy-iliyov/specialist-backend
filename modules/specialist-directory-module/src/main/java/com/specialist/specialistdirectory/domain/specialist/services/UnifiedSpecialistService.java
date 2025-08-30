@@ -215,7 +215,6 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
         cacheService.evictCreatedCountByFilter(creatorId);
     }
 
-    @Cacheable(value = "specialists:all", key = "#page.cacheKey()", condition = "#page.pageNumber() < 3")
     @Transactional(readOnly = true)
     @Override
     public PageResponse<SpecialistResponseDto> findAll(PageRequest page) {
@@ -231,7 +230,6 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
         );
     }
 
-    @Cacheable(value = "specialists:filter", key = "#filter.cacheKey()", condition = "#filter.pageNumber() < 2")
     @Transactional(readOnly = true)
     @Override
     public PageResponse<SpecialistResponseDto> findAllByFilter(SpecialistFilter filter) {
