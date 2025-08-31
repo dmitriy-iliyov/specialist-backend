@@ -3,7 +3,7 @@ package com.specialist.specialistdirectory.domain.review.services;
 
 import com.specialist.contracts.user.PublicUserResponseDto;
 import com.specialist.contracts.user.SystemUserService;
-import com.specialist.specialistdirectory.domain.review.models.dtos.FullReviewResponseDto;
+import com.specialist.specialistdirectory.domain.review.models.dtos.ReviewAggregatedResponseDto;
 import com.specialist.specialistdirectory.domain.review.models.dtos.ReviewResponseDto;
 import com.specialist.specialistdirectory.domain.review.models.filters.ReviewSort;
 import com.specialist.utils.pagination.PageResponse;
@@ -28,13 +28,13 @@ public class ReviewAggregatorImpl implements ReviewAggregator {
     @Cacheable(value = "reviews", key = "#specialistId + ':' + #sort.cacheKey()")
     @Transactional(readOnly = true)
     @Override
-    public PageResponse<FullReviewResponseDto> findAllWithSortBySpecialistId(UUID specialistId, ReviewSort sort) {
+    public PageResponse<ReviewAggregatedResponseDto> findAllWithSortBySpecialistId(UUID specialistId, ReviewSort sort) {
         PageResponse<ReviewResponseDto> reviewsPage = reviewService.findAllWithSortBySpecialistId(specialistId, sort);
         Set<UUID> userIds = reviewsPage.data().stream().map(ReviewResponseDto::creatorId).collect(Collectors.toSet());
         Map<UUID, PublicUserResponseDto> userMap = systemUserService.findAllByIdIn(userIds);
         return new PageResponse<>(
                 reviewsPage.data().stream()
-                        .map(review -> new FullReviewResponseDto(userMap.get(review.creatorId()), review))
+                        .map(review -> new ReviewAggregatedResponseDto(userMap.get(review.creatorId()), review))
                         .toList(),
                 reviewsPage.totalPages()
         );

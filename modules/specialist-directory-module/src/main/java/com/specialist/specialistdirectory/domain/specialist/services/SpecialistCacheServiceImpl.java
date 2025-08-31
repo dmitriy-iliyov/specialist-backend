@@ -1,5 +1,6 @@
 package com.specialist.specialistdirectory.domain.specialist.services;
 
+import com.specialist.specialistdirectory.domain.specialist.models.dtos.ShortSpecialistInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
@@ -15,19 +16,18 @@ public class SpecialistCacheServiceImpl implements SpecialistCacheService {
 
 
     @Override
-    public void putCreatorId(UUID id, UUID creatorId) {
-        Cache cache = cacheManager.getCache("specialists:creator_id");
+    public void putShortInfo(UUID id, ShortSpecialistInfo info) {
+        Cache cache = cacheManager.getCache("specialists:short-info");
         if (cache != null) {
-            cache.put(id.toString(), creatorId.toString());
+            cache.put(id.toString(), info);
         }
     }
 
     @Override
-    public UUID getCreatorId(UUID id) {
-        Cache cache = cacheManager.getCache("specialists:creator_id");
+    public ShortSpecialistInfo getShortInfo(UUID id) {
+        Cache cache = cacheManager.getCache("specialists:short-info");
         if (cache != null) {
-            String uuidString = cache.get(id.toString(), String.class);
-            return uuidString != null ? UUID.fromString(uuidString) : null;
+            return cache.get(id.toString(), ShortSpecialistInfo.class);
         }
         return null;
     }

@@ -68,6 +68,7 @@ public class SpecialistUpdateDto implements SpecialistMarker {
     private String houseNumber;
 
     @Valid
+    @NotEmpty(message = "At least one contact required.")
     private final List< @Contact ContactDto> contacts;
 
     @Pattern(regexp = "^(https?:\\/\\/)?([\\w\\-]+\\.)+[\\w\\-]+(\\/\\S*)?$", message = "Site must be a valid URL.")

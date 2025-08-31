@@ -4,7 +4,7 @@ import com.specialist.auth.domain.account.services.AccountService;
 import com.specialist.auth.exceptions.AccountNotFoundByEmailException;
 import com.specialist.auth.exceptions.CodeExpiredException;
 import com.specialist.auth.exceptions.SendMessageException;
-import com.specialist.auth.infrastructure.message.CodeGenerator;
+import com.specialist.utils.CodeGenerator;
 import com.specialist.auth.infrastructure.message.configs.MessageConfig;
 import com.specialist.auth.infrastructure.message.models.MessageDto;
 import com.specialist.auth.infrastructure.message.models.PasswordRecoveryEntity;

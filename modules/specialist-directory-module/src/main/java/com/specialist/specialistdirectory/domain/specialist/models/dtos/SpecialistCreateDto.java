@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.CreatorType;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistLanguage;
+import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistStatus;
 import com.specialist.specialistdirectory.domain.specialist.models.markers.SpecialistMarker;
 import com.specialist.specialistdirectory.domain.specialist.validation.Contact;
 import com.specialist.specialistdirectory.domain.specialist.validation.Specialist;
@@ -69,11 +70,12 @@ public class SpecialistCreateDto implements SpecialistMarker {
     private String houseNumber;
 
     @Valid
+    @NotEmpty(message = "At least one contact required.")
     private final List< @Contact ContactDto> contacts;
 
     @Pattern(regexp = "^(https?:\\/\\/)?([\\w\\-]+\\.)+[\\w\\-]+(\\/\\S*)?$", message = "Site must be a valid URL.")
     private final String site;
 
     @JsonIgnore
-    private boolean approved;
+    private SpecialistStatus status;
 }

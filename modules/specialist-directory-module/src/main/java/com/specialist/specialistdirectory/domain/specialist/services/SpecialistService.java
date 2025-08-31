@@ -1,6 +1,7 @@
 package com.specialist.specialistdirectory.domain.specialist.services;
 
 import com.specialist.specialistdirectory.domain.review.models.enums.OperationType;
+import com.specialist.specialistdirectory.domain.specialist.models.dtos.ShortSpecialistInfo;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
@@ -15,21 +16,23 @@ import java.util.UUID;
 public interface SpecialistService {
     SpecialistResponseDto save(SpecialistCreateDto dto);
 
-    UUID getCreatorIdById(UUID id);
-
-    SpecialistResponseDto findByCreatorIdAndId(UUID creatorId, UUID id);
-
     void approve(UUID id, UUID approverId, ApproverType approverType);
 
-    SpecialistResponseDto update(SpecialistUpdateDto dto);
+    void manage(UUID id, UUID ownerId);
+
+    void recall(UUID id);
 
     void updateRatingById(UUID id, long rating, OperationType operationType);
 
-    SpecialistResponseDto findById(UUID id);
+    SpecialistResponseDto update(SpecialistUpdateDto dto);
 
     void updateAllByTypeIdPair(Long oldTypeId, Long newTypeId);
 
-    void deleteById(UUID id);
+    ShortSpecialistInfo getShortInfoById(UUID id);
+
+    SpecialistResponseDto findById(UUID id);
+
+    SpecialistResponseDto findByCreatorIdAndId(UUID creatorId, UUID id);
 
     PageResponse<SpecialistResponseDto> findAll(PageRequest page);
 
@@ -38,4 +41,6 @@ public interface SpecialistService {
     PageResponse<SpecialistResponseDto> findAllByCreatorId(UUID creatorId, PageRequest page);
 
     PageResponse<SpecialistResponseDto> findAllByCreatorIdAndFilter(UUID creatorId, ExtendedSpecialistFilter filter);
+
+    void deleteById(UUID id);
 }

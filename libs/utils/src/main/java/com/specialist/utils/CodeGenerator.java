@@ -1,4 +1,4 @@
-package com.specialist.auth.infrastructure.message;
+package com.specialist.utils;
 
 import lombok.experimental.UtilityClass;
 

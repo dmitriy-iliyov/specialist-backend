@@ -2,12 +2,10 @@ package com.specialist.specialistdirectory.domain.specialist.models;
 
 import com.specialist.specialistdirectory.domain.bookmark.models.BookmarkEntity;
 import com.specialist.specialistdirectory.domain.review.models.ReviewEntity;
-import com.specialist.specialistdirectory.domain.specialist.mappers.ApproverTypeConverter;
-import com.specialist.specialistdirectory.domain.specialist.mappers.CreatorTypeConverter;
+import com.specialist.specialistdirectory.domain.specialist.mappers.SpecialistStatusConverter;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.ContactDto;
-import com.specialist.specialistdirectory.domain.specialist.models.enums.ApproverType;
-import com.specialist.specialistdirectory.domain.specialist.models.enums.CreatorType;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistLanguage;
+import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistStatus;
 import com.specialist.specialistdirectory.domain.type.models.TypeEntity;
 import com.specialist.utils.UuidUtils;
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
@@ -31,18 +29,17 @@ import java.util.UUID;
 @AllArgsConstructor
 @Getter
 @Setter
-@ToString(exclude = {"type", "reviews", "bookmarks"})
+@ToString(exclude = {"type", "statistic", "reviews", "bookmarks"})
 public class SpecialistEntity {
 
     @Id
     private UUID id;
 
+    @Column(name = "owner_id", unique = true)
+    private UUID ownerId;
+
     @Column(name = "creator_id", nullable = false, updatable = false)
     private UUID creatorId;
-
-    @Column(name = "creator_type", nullable = false, updatable = false)
-    @Convert(converter = CreatorTypeConverter.class)
-    private CreatorType creatorType;
 
     @Column(name = "first_name", nullable = false, length = 20)
     private String firstName;
@@ -74,7 +71,7 @@ public class SpecialistEntity {
     @Column(nullable = false)
     private String street;
 
-    @Column(nullable = false)
+    @Column(name = "house_number", nullable = false)
     private String houseNumber;
 
     @Type(JsonBinaryType.class)
@@ -84,15 +81,9 @@ public class SpecialistEntity {
 
     private String site;
 
-    @Column(name = "approved", nullable = false)
-    private boolean approved;
-
-    @Column(name = "approver_id")
-    private UUID approverId;
-
-    @Column(name = "approver_type")
-    @Convert(converter = ApproverTypeConverter.class)
-    private ApproverType approverType;
+    @Column(name = "status", nullable = false)
+    @Convert(converter = SpecialistStatusConverter.class)
+    private SpecialistStatus status;
 
     @Column(nullable = false)
     private double rating;
@@ -102,6 +93,10 @@ public class SpecialistEntity {
 
     @Column(name = "reviews_count", nullable = false)
     private long reviewsCount;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @JoinColumn(name = "statistic_id", nullable = false)
+    private StatisticEntity statistic;
 
     @OneToMany(mappedBy = "specialist", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<ReviewEntity> reviews = new ArrayList<>();

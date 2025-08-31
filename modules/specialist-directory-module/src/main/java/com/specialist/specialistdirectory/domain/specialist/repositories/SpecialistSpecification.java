@@ -2,6 +2,7 @@ package com.specialist.specialistdirectory.domain.specialist.repositories;
 
 import com.specialist.specialistdirectory.domain.specialist.models.SpecialistEntity;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistLanguage;
+import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistStatus;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
@@ -49,8 +50,11 @@ public class SpecialistSpecification {
         return (r, q, cb) -> ids.isEmpty() ? null : r.get("id").in(ids);
     }
 
-    public static Specification<SpecialistEntity> filterByApproved(Boolean approved) {
-        return (r, q, cb) -> approved == null ? null : cb.equal(r.get("approved"), approved);
+    public static Specification<SpecialistEntity> filterByApprovedAndManaged() {
+        return (r, q, cb) -> cb.or(
+                cb.equal(r.get("status"), SpecialistStatus.APPROVED),
+                cb.equal(r.get("status"), SpecialistStatus.MANAGED)
+        );
     }
 
     public static Specification<SpecialistEntity> filterByLanguage(SpecialistLanguage lang) {

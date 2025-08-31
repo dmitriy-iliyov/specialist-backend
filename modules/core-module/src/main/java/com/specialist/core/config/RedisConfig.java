@@ -85,7 +85,7 @@ public class RedisConfig {
                 .withCacheConfiguration("specialists:types:suggested", defaultConfig)
                 .withCacheConfiguration("specialists:types:approved:all", defaultConfig)
                 .withCacheConfiguration("specialists", defaultConfig.entryTtl(Duration.ofSeconds(120)))
-                .withCacheConfiguration("specialists:creator_id", defaultConfig.entryTtl(Duration.ofSeconds(300)))
+                .withCacheConfiguration("specialists:short-info", defaultConfig.entryTtl(Duration.ofSeconds(300)))
                 .withCacheConfiguration("specialists:all", defaultConfig.entryTtl(Duration.ofSeconds(300)))
                 .withCacheConfiguration("specialists:count:total", defaultConfig.entryTtl(Duration.ofSeconds(1200)))
                 .withCacheConfiguration("specialists:filter", defaultConfig.entryTtl(Duration.ofSeconds(180)))

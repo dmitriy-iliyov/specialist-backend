@@ -3,11 +3,10 @@ package com.specialist.specialistdirectory.domain.specialist.services;
 import com.specialist.specialistdirectory.domain.review.models.enums.OperationType;
 import com.specialist.specialistdirectory.domain.specialist.mappers.SpecialistMapper;
 import com.specialist.specialistdirectory.domain.specialist.models.SpecialistEntity;
-import com.specialist.specialistdirectory.domain.specialist.models.dtos.BookmarkSpecialistResponseDto;
-import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
-import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
-import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
+import com.specialist.specialistdirectory.domain.specialist.models.StatisticEntity;
+import com.specialist.specialistdirectory.domain.specialist.models.dtos.*;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.ApproverType;
+import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistStatus;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.SpecialistFilter;
 import com.specialist.specialistdirectory.domain.specialist.repositories.SpecialistRepository;
@@ -16,7 +15,6 @@ import com.specialist.specialistdirectory.domain.type.models.dtos.TypeCreateDto;
 import com.specialist.specialistdirectory.domain.type.models.dtos.TypeResponseDto;
 import com.specialist.specialistdirectory.domain.type.services.TypeConstants;
 import com.specialist.specialistdirectory.domain.type.services.TypeService;
-import com.specialist.specialistdirectory.exceptions.SpecialistCreatorIdNotFoundByIdException;
 import com.specialist.specialistdirectory.exceptions.SpecialistNotFoundByIdException;
 import com.specialist.specialistdirectory.utils.PaginationUtils;
 import com.specialist.specialistdirectory.utils.SpecificationRepository;
@@ -61,17 +59,11 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
         entity.setSummaryRating(0);
         entity.setRating(0.0);
         entity.setReviewsCount(0);
+        entity.setStatistic(new StatisticEntity(dto.getCreatorType()));
         entity = repository.save(entity);
-        cacheService.putCreatorId(entity.getId(), entity.getCreatorId());
+        cacheService.putShortInfo(entity.getId(), new ShortSpecialistInfo(entity.getCreatorId(), dto.getStatus()));
         cacheService.evictCreatedCountByFilter(entity.getCreatorId());
         return mapper.toResponseDto(entity);
-    }
-
-    @CacheEvict(value = "specialists:created:count:total", key = "#id")
-    @Transactional
-    @Override
-    public void approve(UUID id, UUID approverId, ApproverType approverType) {
-        repository.approve(id, approverId, approverType);
     }
 
     @CachePut(value = "specialists", key = "#result.id + ':' + #result.creatorId")
@@ -106,15 +98,39 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
         entity.setSuggestedTypeId(id);
     }
 
+    @CacheEvict(value = "specialists:created:count:total", key = "#id")
+    @Transactional
+    @Override
+    public void approve(UUID id, UUID approverId, ApproverType approverType) {
+        SpecialistEntity entity = repository.findWithStatisticById(id).orElseThrow(SpecialistNotFoundByIdException::new);
+        StatisticEntity statisticEntity = entity.getStatistic();
+        statisticEntity.setApproverId(approverId);
+        statisticEntity.setApproverType(approverType);
+        entity.setStatus(SpecialistStatus.APPROVED);
+        repository.save(entity);
+    }
+
+    @Transactional
+    @Override
+    public void manage(UUID id, UUID ownerId) {
+        repository.updateStatusAndOwnerIdById(id, ownerId, SpecialistStatus.MANAGED);
+    }
+
+    @Transactional
+    @Override
+    public void recall(UUID id) {
+        repository.updateStatusById(id, SpecialistStatus.RECALL);
+    }
+
     @Transactional(readOnly = true)
     @Override
-    public UUID getCreatorIdById(UUID id) {
-        UUID creatorId = cacheService.getCreatorId(id);
-        if (creatorId == null) {
-            creatorId = repository.findCreatorIdById(id).orElseThrow(SpecialistCreatorIdNotFoundByIdException::new);
-            cacheService.putCreatorId(id, creatorId);
+    public ShortSpecialistInfo getShortInfoById(UUID id) {
+        ShortSpecialistInfo info = cacheService.getShortInfo(id);;
+        if (info == null) {
+            info = repository.findShortInfoById(id).orElseThrow(SpecialistNotFoundByIdException::new);
+            cacheService.putShortInfo(id, info);
         }
-        return creatorId;
+        return info;
     }
 
     @Cacheable(value = "specialists", key = "#id + ':' + #creatorId")
@@ -201,13 +217,13 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
         }
     }
 
-    @CacheEvict(value = "specialists:creator_id", key = "#id")
+    @CacheEvict(value = "specialists:short-info", key = "#id")
     @Transactional
     @Override
     public void deleteById(UUID id) {
-        UUID creatorId = cacheService.getCreatorId(id);
+        UUID creatorId = cacheService.getShortInfo(id).creatorId();
         if (creatorId == null) {
-            creatorId = repository.findCreatorIdById(id).orElseThrow(SpecialistCreatorIdNotFoundByIdException::new);
+            creatorId = repository.findCreatorIdById(id).orElseThrow(SpecialistNotFoundByIdException::new);
         }
         repository.deleteById(id);
         cacheService.evictSpecialist(id, creatorId);
@@ -219,7 +235,7 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
     @Override
     public PageResponse<SpecialistResponseDto> findAll(PageRequest page) {
         Specification<SpecialistEntity> specification = Specification.where(
-                SpecialistSpecification.filterByApproved(true)
+                SpecialistSpecification.filterByApprovedAndManaged()
         );
         Slice<SpecialistEntity> slice = specificationRepository.findAll(
                 specification, PaginationUtils.generatePageable(page)

@@ -13,7 +13,7 @@ import org.springframework.data.jpa.domain.Specification;
 public class PaginationUtils {
 
     public static Specification<SpecialistEntity> generateSpecification(BaseSpecialistFilter filter) {
-        return Specification.where(SpecialistSpecification.filterByApproved(true))
+        return Specification.where(SpecialistSpecification.filterByApprovedAndManaged())
                 .and(SpecialistSpecification.filterByCity(filter.city()))
                 .and(SpecialistSpecification.filterByCityCode(filter.cityCode()))
                 .and(SpecialistSpecification.filterByType(filter.typeId()))

@@ -1,7 +1,8 @@
 package com.specialist.specialistdirectory.domain.specialist.repositories;
 
 import com.specialist.specialistdirectory.domain.specialist.models.SpecialistEntity;
-import com.specialist.specialistdirectory.domain.specialist.models.enums.ApproverType;
+import com.specialist.specialistdirectory.domain.specialist.models.dtos.ShortSpecialistInfo;
+import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -22,6 +23,13 @@ public interface SpecialistRepository extends JpaRepository<SpecialistEntity, UU
         WHERE s.id = :id
     """)
     Optional<SpecialistEntity> findWithTypeById(@Param("id") UUID id);
+
+    @Query("""
+        SELECT s FROM SpecialistEntity s
+        JOIN FETCH s.statistic
+        WHERE s.id = :id
+    """)
+    Optional<SpecialistEntity> findWithStatisticById(@Param("id") UUID id);
 
     @Modifying(clearAutomatically = true)
     @Query(value = """
@@ -45,9 +53,17 @@ public interface SpecialistRepository extends JpaRepository<SpecialistEntity, UU
     @Modifying
     @Query("""
         UPDATE SpecialistEntity s 
-        SET s.approved = true, s.approverId = :approverId, s.approverType = :approverType
+        SET s.status = :status
         WHERE s.id = :id
     """)
-    void approve(@Param("id") UUID id, @Param("approverId") UUID approverId,
-                 @Param("approverType") ApproverType approverType);
+    void updateStatusById(@Param("id") UUID id, @Param("status") SpecialistStatus status);
+
+    void updateStatusAndOwnerIdById(UUID id, UUID ownerId, SpecialistStatus specialistStatus);
+
+    @Query("""
+        SELECT new com.specialist.specialistdirectory.domain.specialist.models.dtos.ShortSpecialistInfo(s.creatorId, s.status)
+        FROM SpecialistEntity s
+        WHERE s.id = :id
+    """)
+    Optional<ShortSpecialistInfo> findShortInfoById(@Param("id") UUID id);
 }

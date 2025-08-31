@@ -2,7 +2,7 @@ package com.specialist.specialistdirectory.domain.specialist.services;
 
 import com.specialist.contracts.user.PublicUserResponseDto;
 import com.specialist.contracts.user.SystemUserService;
-import com.specialist.specialistdirectory.domain.specialist.models.dtos.FullSpecialistResponseDto;
+import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistAggregatedResponseDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.SpecialistFilter;
 import com.specialist.utils.pagination.PageRequest;
@@ -28,23 +28,23 @@ public class SpecialistAggregatorImpl implements SpecialistAggregator {
     @Cacheable(value = "specialists:all", key = "#page.cacheKey()", condition = "#page.pageNumber() < 3")
     @Transactional(readOnly = true)
     @Override
-    public PageResponse<FullSpecialistResponseDto> findAll(PageRequest page) {
+    public PageResponse<SpecialistAggregatedResponseDto> findAll(PageRequest page) {
         return preparePageResponse(specialistService.findAll(page));
     }
 
     @Cacheable(value = "specialists:filter", key = "#filter.cacheKey()", condition = "#filter.pageNumber() < 2")
     @Transactional(readOnly = true)
     @Override
-    public PageResponse<FullSpecialistResponseDto> findAllByFilter(SpecialistFilter filter) {
+    public PageResponse<SpecialistAggregatedResponseDto> findAllByFilter(SpecialistFilter filter) {
         return preparePageResponse(specialistService.findAllByFilter(filter));
     }
 
-    private PageResponse<FullSpecialistResponseDto> preparePageResponse(PageResponse<SpecialistResponseDto> pageResponse) {
+    private PageResponse<SpecialistAggregatedResponseDto> preparePageResponse(PageResponse<SpecialistResponseDto> pageResponse) {
         Set<UUID> creatorIds = pageResponse.data().stream().map(SpecialistResponseDto::getCreatorId).collect(Collectors.toSet());
         Map<UUID, PublicUserResponseDto> creatorsMap = userService.findAllByIdIn(creatorIds);
         return new PageResponse<>(
                 pageResponse.data().stream()
-                        .map(dto -> new FullSpecialistResponseDto(creatorsMap.get(dto.getCreatorId()), dto))
+                        .map(dto -> new SpecialistAggregatedResponseDto(creatorsMap.get(dto.getCreatorId()), dto))
                         .toList(),
                 pageResponse.totalPages()
         );

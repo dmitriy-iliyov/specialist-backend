@@ -3,10 +3,14 @@ package com.specialist.specialistdirectory.domain.specialist.services;
 import com.specialist.specialistdirectory.domain.bookmark.models.BookmarkCreateDto;
 import com.specialist.specialistdirectory.domain.bookmark.services.BookmarkOrchestrator;
 import com.specialist.specialistdirectory.domain.review.models.enums.OperationType;
+import com.specialist.specialistdirectory.domain.specialist.models.dtos.ShortSpecialistInfo;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
+import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistStatus;
+import com.specialist.specialistdirectory.exceptions.ManagedSpecialistException;
 import com.specialist.specialistdirectory.exceptions.OwnershipException;
+import com.specialist.specialistdirectory.exceptions.RecalledSpecialistException;
 import jakarta.persistence.OptimisticLockException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -74,9 +78,15 @@ public class SpecialistCreatorOrchestratorImpl implements SpecialistCreatorOrche
     }
 
     private void assertOwnership(UUID creatorId, UUID id) {
-        UUID realCreatorId = specialistService.getCreatorIdById(id);
-        if (!realCreatorId.equals(creatorId)) {
+        ShortSpecialistInfo info = specialistService.getShortInfoById(id);
+        if (!info.creatorId().equals(creatorId)) {
             throw new OwnershipException();
+        }
+        if (info.status().equals(SpecialistStatus.MANAGED)) {
+            throw new ManagedSpecialistException();
+        }
+        if (info.status().equals(SpecialistStatus.RECALL)) {
+            //throw new RecalledSpecialistException();
         }
     }
 }

@@ -7,5 +7,4 @@ public record CreatorRatingUpdateEvent(
         UUID creatorId,
         long reviewCount,
         long earnedRating
-) {
-}
+) { }

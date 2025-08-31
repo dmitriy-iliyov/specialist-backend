@@ -2,6 +2,7 @@ package com.specialist.specialistdirectory.domain.specialist.models.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.specialist.specialistdirectory.exceptions.UnsupportedContactTypeException;
 
 import java.util.Arrays;
 
@@ -16,11 +17,11 @@ public enum ContactType {
     }
 
     @JsonCreator
-    public static ContactType toEnum(String json) {
+    public static ContactType fromJson(String json) {
         return Arrays.stream(ContactType.values())
-                .filter(contact -> contact.toString().equals(json))
+                .filter(contact -> contact.toString().equalsIgnoreCase(json))
                 .findFirst()
-                .orElse(null);
+                .orElseThrow(UnsupportedContactTypeException::new);
     }
 
     @JsonValue

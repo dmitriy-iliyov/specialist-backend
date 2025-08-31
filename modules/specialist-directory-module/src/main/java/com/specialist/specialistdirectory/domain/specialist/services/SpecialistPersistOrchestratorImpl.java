@@ -3,6 +3,7 @@ package com.specialist.specialistdirectory.domain.specialist.services;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.CreatorType;
+import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,10 +21,10 @@ public class SpecialistPersistOrchestratorImpl implements SpecialistPersistOrche
         dto.setCreatorId(creatorId);
         dto.setCreatorType(creatorType);
         if (creatorType.equals(CreatorType.USER)) {
-            dto.setApproved(false);
+            dto.setStatus(SpecialistStatus.UNAPPROVED);
             return creatorOrchestrator.save(dto);
         } else {
-            dto.setApproved(true);
+            dto.setStatus(SpecialistStatus.APPROVED);
             return service.save(dto);
         }
     }
