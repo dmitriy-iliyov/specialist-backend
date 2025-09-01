@@ -263,27 +263,35 @@ public class UnifiedAccountServiceUnitTests {
 
     @Test
     @DisplayName("UT: updatePassword() when account exists should update password and return dto")
-    void updatePassword_whenAccountExists_shouldUpdatePasswordPasswordAndReturnDto() {
+    void updatePassword_whenAccountExists_shouldUpdatePasswordAndReturnDto() {
         UUID id = UUID.randomUUID();
         AccountPasswordUpdateDto dto = new AccountPasswordUpdateDto("oldpass", "newpass");
         dto.setId(id);
+
         AccountEntity entity = new AccountEntity();
         entity.setId(id);
-        ShortAccountResponseDto expectedDto = new ShortAccountResponseDto(id, "mail@mail.com", LocalDateTime.now());
+        entity.setPassword("encodedOldPass"); // <-- важно
+
+        ShortAccountResponseDto expectedDto = new ShortAccountResponseDto(
+                id,
+                "mail@mail.com",
+                LocalDateTime.now()
+        );
 
         when(repository.findById(id)).thenReturn(Optional.of(entity));
-        when(passwordEncoder.matches("oldpass", anyString())).thenReturn(true);
+        when(passwordEncoder.matches("oldpass", "encodedOldPass")).thenReturn(true);
         when(passwordEncoder.encode("newpass")).thenReturn("encoded");
         when(mapper.toShortResponseDto(entity)).thenReturn(expectedDto);
 
         ShortAccountResponseDto result = unifiedAccountService.updatePassword(dto);
 
         verify(repository, times(1)).findById(id);
+        verify(passwordEncoder, times(1)).matches("oldpass", "encodedOldPass");
         verify(passwordEncoder, times(1)).encode("newpass");
-        verify(passwordEncoder, times(1)).matches(anyString(), anyString());
         verify(repository, times(1)).save(entity);
         verify(mapper, times(1)).toShortResponseDto(entity);
         verifyNoMoreInteractions(repository, mapper, passwordEncoder);
+
         assertEquals(expectedDto, result);
         assertEquals("encoded", entity.getPassword());
     }

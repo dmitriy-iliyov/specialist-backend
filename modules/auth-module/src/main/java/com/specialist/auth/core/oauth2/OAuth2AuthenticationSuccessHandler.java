@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -42,6 +43,7 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+        SecurityContextHolder.getContext().setAuthentication(authentication);
         DefaultOAuth2User principal = (DefaultOAuth2User) authentication.getPrincipal();
         String email = principal.getAttribute("email");
         if (email == null) {
@@ -49,7 +51,6 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
         }
         AccountUserDetails userDetails = (AccountUserDetails) userDetailsService.loadUserByUsername(email);
         Map<TokenType, Token> tokens = tokenManager.generate(userDetails);
-        csrfTokenService.onAuthentication(request, response);
         for (Token token: tokens.values()) {
             response.addCookie(AuthCookieFactory.generate(token.rawToken(), token.expiresAt(), token.type()));
         }

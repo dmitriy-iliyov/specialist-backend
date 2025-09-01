@@ -2,6 +2,7 @@ package com.specialist.specialistdirectory.config;
 
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.specialist.contracts.user.CreatorRatingUpdateEvent;
+import com.specialist.specialistdirectory.domain.specialist.models.SpecialistActionEvent;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +18,7 @@ import java.util.Map;
 public class KafkaConfig {
 
     @Bean
-    public ProducerFactory<String, CreatorRatingUpdateEvent> producerFactory() {
+    public ProducerFactory<String, Object> producerFactory() {
         Map<String, Object> configProps = new HashMap<>();
         configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
@@ -26,7 +27,7 @@ public class KafkaConfig {
     }
 
     @Bean
-    public KafkaTemplate<String, CreatorRatingUpdateEvent> kafkaTemplate(ProducerFactory<String, CreatorRatingUpdateEvent> producerFactory) {
+    public KafkaTemplate<String, Object> kafkaTemplate(ProducerFactory<String, Object> producerFactory) {
         return new KafkaTemplate<>(producerFactory);
     }
 }

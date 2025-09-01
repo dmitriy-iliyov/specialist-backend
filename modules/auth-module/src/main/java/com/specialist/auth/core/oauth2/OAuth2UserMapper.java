@@ -12,14 +12,14 @@ import java.util.UUID;
 @Service
 public final class OAuth2UserMapper {
 
-    public OAuthUserEntity toEntity(Provider provider, UUID accountId, OAuth2User oAuth2User) {
+    public OAuth2UserEntity toEntity(Provider provider, UUID accountId, OAuth2User oAuth2User) {
         if (oAuth2User == null) {
             throw new OAuth2UserNullException();
         } else if (oAuth2User.getAttributes() == null) {
             throw new OAuth2UserAttributesNullException();
         }
         Map<String, Object> attributes = oAuth2User.getAttributes();
-        OAuthUserEntity entity = new OAuthUserEntity(accountId, (String) attributes.get("email"));
+        OAuth2UserEntity entity = new OAuth2UserEntity(accountId, (String) attributes.get("email"));
         switch (provider) {
             case GOOGLE -> {
                 entity.setFirstName((String) attributes.get("given_name"));

@@ -7,6 +7,7 @@ import com.specialist.user.models.dtos.BaseUserDto;
 import com.specialist.user.models.dtos.PrivateUserResponseDto;
 import com.specialist.user.models.dtos.UserUpdateDto;
 import com.specialist.user.repositories.AvatarStorage;
+import com.specialist.contracts.user.ShortUserCreateDto;
 import com.specialist.utils.InstantToLocalDataTimeConverter;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -21,7 +22,7 @@ import java.util.List;
 )
 public interface UserMapper {
 
-    UserEntity toEntity(BaseUserDto dto);
+    UserEntity toEntity(ShortUserCreateDto dto);
 
     @Mapping(target = "fullName", expression = "java(entity.getFullName())")
     @Mapping(target = "avatarUrl", source = "avatarUrl", qualifiedByName = "resolveAvatarUrl")

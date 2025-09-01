@@ -29,7 +29,7 @@ public class ReviewEventSender {
 
     private final ReviewBufferService service;
     private final ReviewBufferMapper mapper;
-    private final KafkaTemplate<String, CreatorRatingUpdateEvent> kafkaTemplate;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
     private static final int MAX_ATTEMPT_COUNT = 2;
 
     @Scheduled(

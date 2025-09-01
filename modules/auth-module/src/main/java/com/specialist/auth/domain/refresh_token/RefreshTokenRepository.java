@@ -15,7 +15,7 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshTokenEntity
     @Query("""
         SELECT rte.id FROM RefreshTokenEntity rte WHERE rte.accountId = :accountId
     """)
-    List<UUID> findAllIdByAccountId(@Param("accountId") UUID accountId);
+    List<UUID> findAllIdByAccountId(@Param("id") UUID accountId);
 
     void deleteAllByAccountId(UUID accountId);
 }

@@ -10,7 +10,6 @@ import com.specialist.specialistdirectory.domain.specialist.models.dtos.Speciali
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistStatus;
 import com.specialist.specialistdirectory.exceptions.ManagedSpecialistException;
 import com.specialist.specialistdirectory.exceptions.OwnershipException;
-import com.specialist.specialistdirectory.exceptions.RecalledSpecialistException;
 import jakarta.persistence.OptimisticLockException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +33,6 @@ public class SpecialistCreatorOrchestratorImpl implements SpecialistCreatorOrche
 
     private final SpecialistService specialistService;
     private final BookmarkOrchestrator bookmarkOrchestrator;
-
 
     @Transactional
     @Override

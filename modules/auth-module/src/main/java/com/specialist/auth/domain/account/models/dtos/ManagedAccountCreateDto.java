@@ -20,9 +20,7 @@ public record ManagedAccountCreateDto(
         @Size(min = 10, max = 50, message = "Password length must be greater than 10 and less than 50!")
         String password,
 
-        @ValidEnum(enumClass = Role.class, message = "Unsupported role.")
-        String role,
+        Role role,
 
-        @Valid
-        List<@ValidEnum(enumClass = Authority.class, message = "Unsupported authority.") String> authorities
+        List<Authority> authorities
 ) { }

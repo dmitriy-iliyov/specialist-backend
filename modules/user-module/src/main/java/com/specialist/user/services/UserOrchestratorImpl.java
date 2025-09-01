@@ -1,6 +1,5 @@
 package com.specialist.user.services;
 
-import com.specialist.contracts.auth.AccountAuthorityFacade;
 import com.specialist.user.models.dtos.BaseUserDto;
 import com.specialist.user.models.dtos.PrivateUserResponseDto;
 import com.specialist.user.models.dtos.UserUpdateDto;
@@ -23,7 +22,6 @@ public class UserOrchestratorImpl implements UserOrchestrator {
     private final UserService userService;
     private final AvatarStorage avatarStorage;
     private final Validator validator;
-    private final AccountAuthorityFacade authorityFacade;
 
     private void validate(BaseUserDto dto) {
         Set<ConstraintViolation<BaseUserDto>> errors = validator.validate(dto);
@@ -36,17 +34,6 @@ public class UserOrchestratorImpl implements UserOrchestrator {
         if (dto.getAvatar() != null && !dto.getAvatar().isEmpty()) {
             dto.setAvatarUrl(avatarStorage.save(dto.getAvatar(), dto.getId()));
         }
-    }
-
-    // till authorityFacade in the same application
-    @Transactional
-    @Override
-    public PrivateUserResponseDto save(BaseUserDto dto) {
-        validate(dto);
-        saveAvatar(dto);
-        PrivateUserResponseDto responseDto = userService.save(dto);
-        authorityFacade.postUserCreateDemand(responseDto.getId());
-        return responseDto;
     }
 
     @Transactional

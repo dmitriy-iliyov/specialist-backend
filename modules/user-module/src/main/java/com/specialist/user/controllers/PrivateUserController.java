@@ -3,7 +3,6 @@ package com.specialist.user.controllers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.specialist.contracts.auth.PrincipalDetails;
-import com.specialist.user.models.dtos.UserCreateDto;
 import com.specialist.user.models.dtos.UserUpdateDto;
 import com.specialist.user.services.UserOrchestrator;
 import com.specialist.user.services.UserService;
@@ -25,17 +24,17 @@ public class PrivateUserController {
     private final UserService service;
     private final ObjectMapper mapper;
 
-    @PreAuthorize("hasRole('USER') && hasAuthority('REGISTRATION')")
+    @PreAuthorize("hasRole('USER')")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE )
     public ResponseEntity<?> create(@AuthenticationPrincipal PrincipalDetails principal,
                                     @RequestPart("user") String rawDto,
                                     @RequestPart(value = "avatar", required = false) MultipartFile avatar) throws JsonProcessingException {
-        UserCreateDto dto = mapper.readValue(rawDto, UserCreateDto.class);
+        UserUpdateDto dto = mapper.readValue(rawDto, UserUpdateDto.class);
         dto.setId(principal.getAccountId());
         dto.setAvatar(avatar);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(orchestrator.save(dto));
+                .body(orchestrator.update(dto));
     }
 
     @PreAuthorize("hasRole('USER')")

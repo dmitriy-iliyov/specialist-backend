@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class PersistAccountOrchestratorImplUnitTests {
+class AccountPersistOrchestratorImplUnitTests {
 
     @Mock
     AccountService accountService;
@@ -33,7 +33,7 @@ class PersistAccountOrchestratorImplUnitTests {
     ConfirmationService confirmationService;
 
     @InjectMocks
-    PersistAccountOrchestratorImpl orchestrator;
+    AccountPersistOrchestratorImpl orchestrator;
 
     @Test
     @DisplayName("UT: save(DefaultAccountCreateDto) sets role, authorities and sends confirmation code")
@@ -49,6 +49,7 @@ class PersistAccountOrchestratorImplUnitTests {
 
         assertEquals(Role.ROLE_USER, dto.getRole());
         assertEquals(List.of(
+                Authority.REGISTRATION,
                 Authority.SPECIALIST_CREATE_UPDATE,
                 Authority.REVIEW_CREATE_UPDATE,
                 Authority.TYPE_SUGGEST), dto.getAuthorities());

@@ -78,9 +78,9 @@ public class AccountSecurityFilterChainConfig {
                         .requestMatchers("/api/csrf").authenticated()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/v1/info/**").permitAll()
-                        .requestMatchers("/api/auth/login", "/api/auth/refresh", "/api/auth/oauth2/authorize",
+                        .requestMatchers("/api/auth/login", "/api/auth/oauth2/authorize",
                                          "/api/auth/oauth2/callback/**").permitAll()
-                        .requestMatchers("/api/auth/refresh", "/api/auth/logout").authenticated()
+                        .requestMatchers("/api/auth/refresh", "/api/auth/logout", "/api/auth/logout/all").authenticated()
                         .requestMatchers("/api/v1/accounts").permitAll()
                         .requestMatchers("/api/v1/accounts/me").hasRole("USER")
                         .requestMatchers("/api/v1/accounts/confirmation/**",

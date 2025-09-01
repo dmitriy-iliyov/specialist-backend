@@ -3,7 +3,6 @@ package com.specialist.specialistdirectory.domain.review.services;
 import com.specialist.specialistdirectory.domain.review.models.enums.SortType;
 import com.specialist.specialistdirectory.domain.review.models.filters.ReviewSort;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
-import com.specialist.specialistdirectory.domain.specialist.models.filters.SpecialistFilter;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistService;
 import com.specialist.utils.pagination.PageRequest;
 import com.specialist.utils.pagination.PageResponse;

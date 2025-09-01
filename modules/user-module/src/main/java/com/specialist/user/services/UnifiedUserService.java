@@ -2,13 +2,12 @@ package com.specialist.user.services;
 
 import com.specialist.contracts.user.CreatorRatingUpdateEvent;
 import com.specialist.contracts.user.PublicUserResponseDto;
+import com.specialist.contracts.user.ShortUserCreateDto;
 import com.specialist.contracts.user.SystemUserService;
 import com.specialist.user.exceptions.UserNotFoundByIdException;
 import com.specialist.user.mappers.UserMapper;
 import com.specialist.user.models.UserEntity;
-import com.specialist.user.models.dtos.BaseUserDto;
-import com.specialist.user.models.dtos.PrivateUserResponseDto;
-import com.specialist.user.models.dtos.UserUpdateDto;
+import com.specialist.user.models.dtos.*;
 import com.specialist.user.models.enums.ScopeType;
 import com.specialist.user.repositories.UserRepository;
 import com.specialist.utils.pagination.PageRequest;
@@ -34,11 +33,10 @@ public class UnifiedUserService implements UserService, SystemUserService, Creat
     private final UserRepository repository;
     private final UserMapper mapper;
 
-
     @Transactional
     @Override
-    public PrivateUserResponseDto save(BaseUserDto dto) {
-        return mapper.toPrivateDto(repository.save(mapper.toEntity(dto)));
+    public void save(ShortUserCreateDto dto) {
+        repository.save(mapper.toEntity(dto));
     }
 
     @Transactional

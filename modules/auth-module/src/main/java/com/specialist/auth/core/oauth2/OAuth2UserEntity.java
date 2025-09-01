@@ -13,8 +13,7 @@ import java.util.UUID;
 @RedisHash(value = "oauth2:users")
 @Data
 @NoArgsConstructor
-@ToString(exclude = "ttl")
-public class OAuthUserEntity {
+public class OAuth2UserEntity {
     private UUID accountId;
     @Id
     private String email;
@@ -25,7 +24,7 @@ public class OAuthUserEntity {
     @TimeToLive
     private Duration ttl;
 
-    public OAuthUserEntity(UUID accountId, String email) {
+    public OAuth2UserEntity(UUID accountId, String email) {
         this.accountId = accountId;
         this.email = email;
     }

@@ -26,7 +26,7 @@ public class SpecialistActionOrchestratorImpl implements SpecialistActionOrchest
 
     @Value("${api.kafka.topic.specialist-action}")
     public String TOPIC;
-    private final KafkaTemplate<String, SpecialistActionEvent> kafkaTemplate;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
     @Override
     public void recallRequest(UUID id, ContactType contactType) {

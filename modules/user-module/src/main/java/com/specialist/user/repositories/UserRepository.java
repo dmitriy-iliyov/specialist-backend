@@ -28,5 +28,11 @@ public interface UserRepository extends JpaRepository<UserEntity, UUID> {
     """)
     void updateAvatarUrlById(@Param("id") UUID id, @Param("avatar_url") String avatarUrl);
 
-    void updateEmailById(UUID id, String email);
+    @Modifying
+    @Query("""
+        UPDATE UserEntity u
+        SET u.email = : email
+        WHERE u.id = : id
+    """)
+    void updateEmailById(@Param("id") UUID id, @Param("email") String email);
 }

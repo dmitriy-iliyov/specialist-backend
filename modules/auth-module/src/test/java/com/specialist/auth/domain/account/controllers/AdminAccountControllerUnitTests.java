@@ -4,9 +4,10 @@ import com.specialist.auth.domain.account.models.AccountFilter;
 import com.specialist.auth.domain.account.models.dtos.*;
 import com.specialist.auth.domain.account.models.enums.DisableReason;
 import com.specialist.auth.domain.account.models.enums.LockReason;
+import com.specialist.auth.domain.account.services.AccountDeleteOrchestrator;
+import com.specialist.auth.domain.account.services.AccountPersistOrchestrator;
 import com.specialist.auth.domain.account.services.AccountService;
 import com.specialist.auth.domain.account.services.AdminAccountOrchestrator;
-import com.specialist.auth.domain.account.services.PersistAccountOrchestrator;
 import com.specialist.utils.pagination.PageRequest;
 import com.specialist.utils.pagination.PageResponse;
 import org.junit.jupiter.api.DisplayName;
@@ -29,13 +30,16 @@ import static org.mockito.Mockito.*;
 public class AdminAccountControllerUnitTests {
 
     @Mock
-    PersistAccountOrchestrator orchestrator;
+    AccountPersistOrchestrator orchestrator;
 
     @Mock
     AccountService service;
 
     @Mock
     AdminAccountOrchestrator adminAccountOrchestrator;
+
+    @Mock
+    AccountDeleteOrchestrator accountDeleteOrchestrator;
 
     @InjectMocks
     AdminAccountController controller;
@@ -175,7 +179,7 @@ public class AdminAccountControllerUnitTests {
 
         ResponseEntity<?> response = controller.delete(id);
 
-        verify(service, times(1)).deleteById(id);
+        verify(accountDeleteOrchestrator, times(1)).delete(id);
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
         assertNull(response.getBody());
     }
@@ -185,7 +189,7 @@ public class AdminAccountControllerUnitTests {
     void delete_whenInvalid_shouldThrowException() {
         UUID id = UUID.randomUUID();
 
-        doThrow(RuntimeException.class).when(service).deleteById(id);
+        doThrow(RuntimeException.class).when(accountDeleteOrchestrator).delete(id);
 
         assertThrows(RuntimeException.class, () -> controller.delete(id));
     }

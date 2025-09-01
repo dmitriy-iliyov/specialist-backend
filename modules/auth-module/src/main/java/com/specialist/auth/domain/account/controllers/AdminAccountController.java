@@ -5,9 +5,10 @@ import com.specialist.auth.domain.account.models.dtos.DemodeRequest;
 import com.specialist.auth.domain.account.models.dtos.DisableRequest;
 import com.specialist.auth.domain.account.models.dtos.LockRequest;
 import com.specialist.auth.domain.account.models.dtos.ManagedAccountCreateDto;
+import com.specialist.auth.domain.account.services.AccountDeleteOrchestrator;
+import com.specialist.auth.domain.account.services.AccountPersistOrchestrator;
 import com.specialist.auth.domain.account.services.AccountService;
 import com.specialist.auth.domain.account.services.AdminAccountOrchestrator;
-import com.specialist.auth.domain.account.services.PersistAccountOrchestrator;
 import com.specialist.utils.pagination.PageRequest;
 import com.specialist.utils.validation.annotation.ValidUuid;
 import jakarta.validation.Valid;
@@ -25,16 +26,17 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AdminAccountController {
 
-    private final PersistAccountOrchestrator orchestrator;
+    private final AccountPersistOrchestrator persistOrchestrator;
     private final AccountService service;
-    private final AdminAccountOrchestrator adminAccountOrchestrator;
+    private final AdminAccountOrchestrator adminOrchestrator;
+    private final AccountDeleteOrchestrator deleteOrchestrator;
 
     @PreAuthorize("hasAnyAuthority('ACCOUNT_CREATE', 'ACCOUNT_MANAGER')")
     @PostMapping
     public ResponseEntity<?> create(@RequestBody @Valid ManagedAccountCreateDto dto) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(orchestrator.save(dto));
+                .body(persistOrchestrator.save(dto));
     }
 
     @GetMapping
@@ -56,7 +58,7 @@ public class AdminAccountController {
                                     @ValidUuid(paramName = "id", message = "Id should have valid format.") UUID id,
                                     @RequestBody @Valid DemodeRequest request) {
         request.setAccountId(id);
-        adminAccountOrchestrator.demoteById(request);
+        adminOrchestrator.demoteById(request);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
@@ -67,7 +69,7 @@ public class AdminAccountController {
     public ResponseEntity<?> lock(@PathVariable("id")
                                   @ValidUuid(paramName = "id", message = "Id should have valid format.") UUID id,
                                   @RequestBody @Valid LockRequest request) {
-        adminAccountOrchestrator.lockById(id, request);
+        adminOrchestrator.lockById(id, request);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
@@ -88,7 +90,7 @@ public class AdminAccountController {
     public ResponseEntity<?> disable(@PathVariable("id")
                                     @ValidUuid(paramName = "id", message = "Id should have valid format.") UUID id,
                                      @RequestBody @Valid DisableRequest request) {
-        adminAccountOrchestrator.disableById(id, request);
+        adminOrchestrator.disableById(id, request);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
@@ -107,7 +109,7 @@ public class AdminAccountController {
     @PreAuthorize("hasAnyAuthority('ACCOUNT_DELETE', 'ACCOUNT_MANAGER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") UUID id) {
-        service.deleteById(id);
+        deleteOrchestrator.delete(id);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();

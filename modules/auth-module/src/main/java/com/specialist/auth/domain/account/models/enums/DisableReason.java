@@ -1,6 +1,8 @@
 package com.specialist.auth.domain.account.models.enums;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.specialist.auth.exceptions.UnknownDisableReasonTypeException;
+import com.specialist.auth.exceptions.UnsupportedDisableReasonException;
 import lombok.Getter;
 
 import java.util.Arrays;
@@ -23,5 +25,13 @@ public enum DisableReason {
                 .filter(type -> type.getCode() == code)
                 .findFirst()
                 .orElseThrow(UnknownDisableReasonTypeException::new);
+    }
+
+    @JsonCreator
+    public static DisableReason fromJson(String json) {
+        return Arrays.stream(DisableReason.values())
+                .filter(reason -> reason.name().equalsIgnoreCase(json))
+                .findFirst()
+                .orElseThrow(UnsupportedDisableReasonException::new);
     }
 }
