@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
-// all @Transactional should use till @Bean of SystemUserService is in the same app context
+// WARNING: all @Transactional should use till @Bean of SystemUserService is in the same app context
 
 @Service
 @RequiredArgsConstructor

@@ -119,7 +119,7 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
     @Transactional
     @Override
     public void recall(UUID id) {
-        repository.updateStatusById(id, SpecialistStatus.RECALL);
+        repository.updateStatusById(id, SpecialistStatus.RECALLED);
     }
 
     @Transactional(readOnly = true)
@@ -180,41 +180,6 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
     @Override
     public void updateAllByTypeIdPair(Long oldTypeId, Long newTypeId) {
         repository.updateAllByTypeTitle(oldTypeId, newTypeId);
-    }
-
-    @Transactional
-    @Override
-    public void updateRatingById(UUID id, long earnedRating, OperationType operationType) {
-        SpecialistEntity entity = repository.findById(id).orElseThrow(SpecialistNotFoundByIdException::new);
-        switch (operationType) {
-            case PERSIST -> {
-                long summaryRating = entity.getSummaryRating() + earnedRating;
-                long reviewsCount = entity.getReviewsCount() + 1;
-                double rating = (double) summaryRating / reviewsCount;
-                entity.setSummaryRating(summaryRating);
-                entity.setReviewsCount(reviewsCount);
-                entity.setRating(rating);
-                repository.save(entity);
-            }
-            case UPDATE -> {
-                long summaryRating = entity.getSummaryRating()  + earnedRating;
-                long reviewsCount = entity.getReviewsCount();
-                double rating = (double) summaryRating / reviewsCount;
-                entity.setSummaryRating(summaryRating);
-                entity.setReviewsCount(reviewsCount);
-                entity.setRating(rating);
-                repository.save(entity);
-            }
-            case DELETE -> {
-                long summaryRating = entity.getSummaryRating() + earnedRating;
-                long reviewsCount = entity.getReviewsCount() - 1;
-                double rating = (double) summaryRating / reviewsCount;
-                entity.setSummaryRating(summaryRating);
-                entity.setReviewsCount(reviewsCount);
-                entity.setRating(rating);
-                repository.save(entity);
-            }
-        }
     }
 
     @CacheEvict(value = "specialists:short-info", key = "#id")

@@ -10,6 +10,7 @@ import com.specialist.specialistdirectory.domain.specialist.models.dtos.Speciali
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistStatus;
 import com.specialist.specialistdirectory.exceptions.ManagedSpecialistException;
 import com.specialist.specialistdirectory.exceptions.OwnershipException;
+import com.specialist.specialistdirectory.exceptions.RecalledSpecialistException;
 import jakarta.persistence.OptimisticLockException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,22 +49,6 @@ public class SpecialistCreatorOrchestratorImpl implements SpecialistCreatorOrche
         return specialistService.update(dto);
     }
 
-    @Retryable(
-            retryFor = {OptimisticLockException.class},
-            maxAttempts = 4,
-            backoff = @Backoff(delay = 50)
-    )
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    @Override
-    public void updateRatingById(UUID id, long rating, OperationType operation) {
-        specialistService.updateRatingById(id, rating, operation);
-    }
-
-    @Recover
-    public void recover(OptimisticLockException e, UUID id, long rating, OperationType operation) {
-        log.error("Error when reviewing specialist: id={}, date={}, time={}", id, LocalDate.now(), LocalTime.now());
-    }
-
     @Caching(evict = {
             @CacheEvict(value = "specialists:bookmarks:count:total", key = "#creatorId"),
             @CacheEvict(value = "specialists:bookmarks:id_pairs", key = "#creatorId")}
@@ -83,8 +68,9 @@ public class SpecialistCreatorOrchestratorImpl implements SpecialistCreatorOrche
         if (info.status().equals(SpecialistStatus.MANAGED)) {
             throw new ManagedSpecialistException();
         }
-        if (info.status().equals(SpecialistStatus.RECALL)) {
-            //throw new RecalledSpecialistException();
-        }
+        // DISCUSS: should user have authority to update RECALLED spec?
+//        if (info.status().equals(SpecialistStatus.RECALLED)) {
+//            throw new RecalledSpecialistException();
+//        }
     }
 }

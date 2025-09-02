@@ -8,6 +8,8 @@ import com.specialist.auth.domain.account.services.AccountDeleteOrchestrator;
 import com.specialist.auth.domain.account.services.AccountPersistOrchestrator;
 import com.specialist.auth.domain.account.services.AccountService;
 import com.specialist.auth.domain.account.services.AdminAccountOrchestrator;
+import com.specialist.auth.domain.authority.Authority;
+import com.specialist.auth.domain.role.Role;
 import com.specialist.utils.pagination.PageRequest;
 import com.specialist.utils.pagination.PageResponse;
 import org.junit.jupiter.api.DisplayName;
@@ -47,7 +49,7 @@ public class AdminAccountControllerUnitTests {
     @Test
     @DisplayName("UT: create() when dto valid should return 201")
     void create_whenDtoValid_shouldReturn201() {
-        ManagedAccountCreateDto dto = new ManagedAccountCreateDto("test@mail.com", "securepass123", "ADMIN", List.of("ACCOUNT_CREATE"));
+        ManagedAccountCreateDto dto = new ManagedAccountCreateDto("test@mail.com", "securepass123", Role.ROLE_ADMIN, List.of(Authority.ACCOUNT_MANAGER));
         ShortAccountResponseDto expected = new ShortAccountResponseDto(UUID.randomUUID(), "test@mail.com", LocalDateTime.now());
 
         when(orchestrator.save(dto)).thenReturn(expected);
@@ -62,7 +64,7 @@ public class AdminAccountControllerUnitTests {
     @Test
     @DisplayName("UT: create() when service throws should throw exception")
     void create_whenInvalid_shouldThrowException() {
-        ManagedAccountCreateDto dto = new ManagedAccountCreateDto("mail@mail.com", "pass", "USER", List.of());
+        ManagedAccountCreateDto dto = new ManagedAccountCreateDto("mail@mail.com", "pass", Role.ROLE_USER, List.of());
 
         when(orchestrator.save(dto)).thenThrow(RuntimeException.class);
 

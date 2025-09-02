@@ -19,14 +19,14 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/specialists/{id}/action")
 @RequiredArgsConstructor
-public class SpecialistSpecialistController {
+public class SpecialistActionController {
 
-    private final SpecialistActionOrchestrator manageOrchestrator;
+    private final SpecialistActionOrchestrator orchestrator;
 
     @PostMapping("/recall/{contact_type}")
     public ResponseEntity<?> recall(@PathVariable("id") @ValidUuid(paramName = "id") String id,
                                     @PathVariable("contact_type") ContactType contactType) {
-        manageOrchestrator.recallRequest(UUID.fromString(id), contactType);
+        orchestrator.recallRequest(UUID.fromString(id), contactType);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
@@ -37,7 +37,7 @@ public class SpecialistSpecialistController {
     public ResponseEntity<?> manage(@AuthenticationPrincipal PrincipalDetails principal,
                                     @PathVariable("id") @ValidUuid(paramName = "id") String id,
                                     @PathVariable("contact_type")ContactType contactType) {
-        manageOrchestrator.manageRequest(UUID.fromString(id), principal.getAccountId(), contactType);
+        orchestrator.manageRequest(UUID.fromString(id), principal.getAccountId(), contactType);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();

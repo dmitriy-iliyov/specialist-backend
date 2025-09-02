@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class SpecialistAggregatorImpl implements SpecialistAggregator {
 
-    // @Transactional till systemUserService in the same app context
+    // WARNING: @Transactional can be till systemUserService in the same app context
     private final SpecialistService specialistService;
     private final SystemUserService userService;
 

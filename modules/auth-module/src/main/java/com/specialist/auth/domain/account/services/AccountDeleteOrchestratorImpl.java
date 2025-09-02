@@ -14,11 +14,12 @@ public class AccountDeleteOrchestratorImpl implements AccountDeleteOrchestrator 
     private final AccountService accountService;
     private final UserDeleteOrchestrator userDeleteOrchestrator;
 
-    // till in the same app context
+    // WARNING: till in the same app context
     @Transactional
     @Override
     public void delete(UUID id) {
         accountService.deleteById(id);
+        // TODO schedule delete
         userDeleteOrchestrator.delete(id);
     }
 }

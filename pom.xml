@@ -29,6 +29,7 @@
         <module>modules/specialist-directory-module</module>
         <module>app</module>
         <module>modules/tests</module>
+        <module>modules/message-module</module>
     </modules>
 
     <packaging>pom</packaging>

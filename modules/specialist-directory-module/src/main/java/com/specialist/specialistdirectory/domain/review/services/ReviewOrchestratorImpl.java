@@ -7,8 +7,10 @@ import com.specialist.specialistdirectory.domain.review.models.enums.NextOperati
 import com.specialist.specialistdirectory.domain.review.models.enums.OperationType;
 import com.specialist.specialistdirectory.domain.review.models.enums.ReviewAgeType;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistCreatorOrchestrator;
+import com.specialist.specialistdirectory.domain.specialist.services.SpecialistRatingService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.tuple.Pair;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,19 +18,26 @@ import java.util.Map;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 public class ReviewOrchestratorImpl implements ReviewOrchestrator {
 
     private final ReviewService reviewService;
-    private final SpecialistCreatorOrchestrator specialistCreatorOrchestrator;
+    private final SpecialistRatingService ratingService;
     private final ReviewBufferService reviewBufferService;
 
+    public ReviewOrchestratorImpl(ReviewService reviewService,
+                                  @Qualifier("defaultSpecialistRatingServiceDecorator")
+                                  SpecialistRatingService ratingService,
+                                  ReviewBufferService reviewBufferService) {
+        this.reviewService = reviewService;
+        this.ratingService = ratingService;
+        this.reviewBufferService = reviewBufferService;
+    }
 
     @Transactional
     @Override
     public ReviewResponseDto save(ReviewCreateDto dto) {
         ReviewResponseDto resultDto = reviewService.save(dto);
-        specialistCreatorOrchestrator.updateRatingById(dto.getSpecialistId(), dto.getRating(), OperationType.PERSIST);
+        ratingService.updateRatingById(dto.getSpecialistId(), dto.getRating(), OperationType.PERSIST);
         reviewBufferService.put(dto.getCreatorId(), dto.getRating());
         return resultDto;
     }
@@ -41,7 +50,7 @@ public class ReviewOrchestratorImpl implements ReviewOrchestrator {
         if (resultPair.getLeft().equals(NextOperationType.UPDATE)) {
             ReviewResponseDto oldDto = resultPair.getRight().get(ReviewAgeType.OLD);
             long resultRating = newDto.rating() - oldDto.rating();
-            specialistCreatorOrchestrator.updateRatingById(dto.getSpecialistId(), resultRating, OperationType.UPDATE);
+            ratingService.updateRatingById(dto.getSpecialistId(), resultRating, OperationType.UPDATE);
             reviewBufferService.put(dto.getCreatorId(), resultRating);
         }
         return newDto;
@@ -51,7 +60,7 @@ public class ReviewOrchestratorImpl implements ReviewOrchestrator {
     @Override
     public void delete(UUID creatorId, UUID specialistId, UUID id) {
         ReviewResponseDto dto = reviewService.deleteById(creatorId, specialistId, id);
-        specialistCreatorOrchestrator.updateRatingById(specialistId, -dto.rating(), OperationType.DELETE);
+        ratingService.updateRatingById(specialistId, -dto.rating(), OperationType.DELETE);
         reviewBufferService.put(creatorId, -dto.rating());
     }
 
@@ -59,7 +68,7 @@ public class ReviewOrchestratorImpl implements ReviewOrchestrator {
     @Override
     public void adminDelete(UUID specialistId, UUID id) {
         ReviewResponseDto dto = reviewService.deleteById(specialistId, id);
-        specialistCreatorOrchestrator.updateRatingById(dto.id(), -dto.rating(), OperationType.DELETE);
+        ratingService.updateRatingById(dto.id(), -dto.rating(), OperationType.DELETE);
         reviewBufferService.put(dto.creatorId(), -dto.rating());
     }
 }

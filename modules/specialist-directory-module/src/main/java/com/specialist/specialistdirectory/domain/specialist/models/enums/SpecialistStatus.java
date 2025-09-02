@@ -9,7 +9,7 @@ public enum SpecialistStatus {
     UNAPPROVED(1),
     APPROVED(2),
     MANAGED(3),
-    RECALL(4);
+    RECALLED(4);
 
     @Getter
     private final int code;

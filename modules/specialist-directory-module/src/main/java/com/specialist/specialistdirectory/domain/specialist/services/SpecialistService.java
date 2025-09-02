@@ -22,8 +22,6 @@ public interface SpecialistService {
 
     void recall(UUID id);
 
-    void updateRatingById(UUID id, long rating, OperationType operationType);
-
     SpecialistResponseDto update(SpecialistUpdateDto dto);
 
     void updateAllByTypeIdPair(Long oldTypeId, Long newTypeId);

@@ -17,7 +17,7 @@ public class EmailUpdateOrchestratorImpl implements EmailUpdateOrchestrator {
     private final SystemUserService systemUserService;
     private final ApplicationEventPublisher eventPublisher;
 
-    // till systemUserService in the same app context
+    // WARNING: till systemUserService in the same app context
     @Transactional
     @Override
     public ShortAccountResponseDto updateEmail(AccountEmailUpdateDto dto) {

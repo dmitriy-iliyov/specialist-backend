@@ -12,7 +12,5 @@ public interface SpecialistCreatorOrchestrator {
 
     SpecialistResponseDto update(SpecialistUpdateDto dto);
 
-    void updateRatingById(UUID id, long rating, OperationType operationType);
-
     void delete(UUID creatorId, UUID id);
 }

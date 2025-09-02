@@ -24,6 +24,7 @@ public class SpecialistActionOrchestratorImpl implements SpecialistActionOrchest
     private final SpecialistService specialistService;
     private final SpecialistActionRepository actionRepository;
 
+    // TODO create topic
     @Value("${api.kafka.topic.specialist-action}")
     public String TOPIC;
     private final KafkaTemplate<String, Object> kafkaTemplate;
@@ -37,6 +38,7 @@ public class SpecialistActionOrchestratorImpl implements SpecialistActionOrchest
     @Override
     public void recall(String code) {
         ActionEntity actionEntity = codeHandle(code);
+        // DISCUSS schedule delete
         specialistService.recall(actionEntity.getSpecialistId());
     }
 

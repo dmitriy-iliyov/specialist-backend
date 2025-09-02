@@ -49,7 +49,6 @@ class AccountPersistOrchestratorImplUnitTests {
 
         assertEquals(Role.ROLE_USER, dto.getRole());
         assertEquals(List.of(
-                Authority.REGISTRATION,
                 Authority.SPECIALIST_CREATE_UPDATE,
                 Authority.REVIEW_CREATE_UPDATE,
                 Authority.TYPE_SUGGEST), dto.getAuthorities());
@@ -65,9 +64,8 @@ class AccountPersistOrchestratorImplUnitTests {
     void save_withManagedAccountCreateDto_mapsAndSendsConfirmation() {
         var dto = new ManagedAccountCreateDto(
                 "admin@example.com",
-                "adminpass",
-                "ROLE_ADMIN",
-                List.of("SPECIALIST_CREATE_UPDATE", "REVIEW_CREATE_UPDATE")
+                "adminpass", Role.ROLE_ADMIN,
+                List.of(Authority.REVIEW_CREATE_UPDATE, Authority.SPECIALIST_CREATE_UPDATE)
         );
 
         var expectedResponse = new ShortAccountResponseDto(UUID.randomUUID(), "admin@example.com", LocalDateTime.now());
