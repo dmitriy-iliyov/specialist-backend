@@ -5,7 +5,6 @@ import com.specialist.auth.domain.account.models.dtos.DefaultAccountCreateDto;
 import com.specialist.auth.domain.account.models.dtos.ManagedAccountCreateDto;
 import com.specialist.auth.domain.account.models.dtos.OAuth2AccountCreateDto;
 import com.specialist.auth.domain.account.models.dtos.ShortAccountResponseDto;
-import com.specialist.auth.domain.authority.Authority;
 import com.specialist.auth.domain.authority.AuthorityServiceImpl;
 import com.specialist.auth.domain.role.Role;
 import com.specialist.auth.infrastructure.message.services.ConfirmationService;

@@ -1,6 +1,5 @@
 package com.specialist.auth.domain.account.controllers;
 
-import com.specialist.auth.domain.account.models.dtos.AccountPasswordUpdateDto;
 import com.specialist.auth.domain.account.models.dtos.DefaultAccountCreateDto;
 import com.specialist.auth.domain.account.models.dtos.ShortAccountResponseDto;
 import com.specialist.auth.domain.account.services.AccountPersistOrchestrator;
@@ -19,7 +18,6 @@ import org.springframework.http.ResponseEntity;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;

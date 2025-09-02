@@ -5,7 +5,7 @@ import com.specialist.specialistdirectory.domain.specialist.models.dtos.Speciali
 import com.specialist.specialistdirectory.domain.specialist.models.enums.ApproverType;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.CreatorType;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistPersistOrchestrator;
-import com.specialist.specialistdirectory.domain.specialist.services.SpecialistService;
+import com.specialist.specialistdirectory.domain.specialist.services.SpecialistStatusService;
 import com.specialist.utils.validation.annotation.ValidUuid;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ import java.util.UUID;
 public class ServiceSpecialistController {
 
     private final SpecialistPersistOrchestrator persistOrchestrator;
-    private final SpecialistService service;
+    private final SpecialistStatusService statusService;
 
     @PostMapping
     public ResponseEntity<?> create(@AuthenticationPrincipal PrincipalDetails principal,
@@ -37,7 +37,7 @@ public class ServiceSpecialistController {
     @PatchMapping("/{id}")
     public ResponseEntity<?> approve(@AuthenticationPrincipal PrincipalDetails principal,
                                      @PathVariable("id") @ValidUuid(paramName = "id") String id) {
-        service.approve(UUID.fromString(id), principal.getAccountId(), ApproverType.SERVICE);
+        statusService.approve(UUID.fromString(id), principal.getAccountId(), ApproverType.SERVICE);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();

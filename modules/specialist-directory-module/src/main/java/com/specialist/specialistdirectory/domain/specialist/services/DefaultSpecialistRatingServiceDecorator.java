@@ -2,7 +2,6 @@ package com.specialist.specialistdirectory.domain.specialist.services;
 
 import com.specialist.specialistdirectory.domain.review.models.enums.OperationType;
 import jakarta.persistence.OptimisticLockException;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.retry.annotation.Backoff;

@@ -2,7 +2,6 @@ package com.specialist.specialistdirectory.domain.specialist.services;
 
 import com.specialist.specialistdirectory.domain.bookmark.models.BookmarkCreateDto;
 import com.specialist.specialistdirectory.domain.bookmark.services.BookmarkOrchestrator;
-import com.specialist.specialistdirectory.domain.review.models.enums.OperationType;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.ShortSpecialistInfo;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
@@ -10,21 +9,13 @@ import com.specialist.specialistdirectory.domain.specialist.models.dtos.Speciali
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistStatus;
 import com.specialist.specialistdirectory.exceptions.ManagedSpecialistException;
 import com.specialist.specialistdirectory.exceptions.OwnershipException;
-import com.specialist.specialistdirectory.exceptions.RecalledSpecialistException;
-import jakarta.persistence.OptimisticLockException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Caching;
-import org.springframework.retry.annotation.Backoff;
-import org.springframework.retry.annotation.Recover;
-import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.UUID;
 
 @Service

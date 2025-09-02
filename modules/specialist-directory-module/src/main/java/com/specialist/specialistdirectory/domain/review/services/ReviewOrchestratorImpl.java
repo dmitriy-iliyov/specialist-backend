@@ -6,9 +6,7 @@ import com.specialist.specialistdirectory.domain.review.models.dtos.ReviewUpdate
 import com.specialist.specialistdirectory.domain.review.models.enums.NextOperationType;
 import com.specialist.specialistdirectory.domain.review.models.enums.OperationType;
 import com.specialist.specialistdirectory.domain.review.models.enums.ReviewAgeType;
-import com.specialist.specialistdirectory.domain.specialist.services.SpecialistCreatorOrchestrator;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistRatingService;
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;

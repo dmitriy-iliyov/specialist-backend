@@ -1,11 +1,8 @@
 package com.specialist.auth.core.oauth2;
 
 import com.specialist.auth.core.oauth2.provider.Provider;
-import com.specialist.auth.domain.account.models.dtos.OAuth2AccountCreateDto;
 import com.specialist.auth.domain.account.services.AccountPersistOrchestrator;
 import com.specialist.auth.domain.account.services.AccountService;
-import com.specialist.auth.domain.authority.AuthorityServiceImpl;
-import com.specialist.auth.domain.role.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.core.user.OAuth2User;

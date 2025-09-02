@@ -2,7 +2,6 @@ package com.specialist.auth.domain.account.models.dtos;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.specialist.auth.domain.account.models.enums.LockReason;
-import com.specialist.utils.validation.annotation.ValidEnum;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;

@@ -2,12 +2,11 @@ package com.specialist.user.mappers;
 
 
 import com.specialist.contracts.user.PublicUserResponseDto;
+import com.specialist.contracts.user.ShortUserCreateDto;
 import com.specialist.user.models.UserEntity;
-import com.specialist.user.models.dtos.BaseUserDto;
 import com.specialist.user.models.dtos.PrivateUserResponseDto;
 import com.specialist.user.models.dtos.UserUpdateDto;
 import com.specialist.user.repositories.AvatarStorage;
-import com.specialist.contracts.user.ShortUserCreateDto;
 import com.specialist.utils.InstantToLocalDataTimeConverter;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

@@ -22,6 +22,7 @@ import java.util.UUID;
 public class SpecialistActionOrchestratorImpl implements SpecialistActionOrchestrator {
 
     private final SpecialistService specialistService;
+    private final SpecialistStatusService specialistStatusService;
     private final SpecialistActionRepository actionRepository;
 
     // TODO create topic
@@ -39,7 +40,7 @@ public class SpecialistActionOrchestratorImpl implements SpecialistActionOrchest
     public void recall(String code) {
         ActionEntity actionEntity = codeHandle(code);
         // DISCUSS schedule delete
-        specialistService.recall(actionEntity.getSpecialistId());
+        specialistStatusService.recall(actionEntity.getSpecialistId());
     }
 
     @Override
@@ -51,7 +52,7 @@ public class SpecialistActionOrchestratorImpl implements SpecialistActionOrchest
     @Override
     public void manage(String code) {
         ActionEntity actionEntity = codeHandle(code);
-        specialistService.manage(actionEntity.getSpecialistId(), actionEntity.getAccountId());
+        specialistStatusService.manage(actionEntity.getSpecialistId(), actionEntity.getAccountId());
     }
 
     private void requestHandle(ActionEntity actionEntity, ContactType contactType) {
@@ -78,6 +79,7 @@ public class SpecialistActionOrchestratorImpl implements SpecialistActionOrchest
         if (actionEntity == null) {
             throw new CodeExpiredException();
         }
+        actionRepository.deleteById(code);
         return actionEntity;
     }
 }
