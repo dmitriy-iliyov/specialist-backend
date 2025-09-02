@@ -6,7 +6,7 @@ import com.specialist.specialistdirectory.domain.specialist.models.dtos.Speciali
 import com.specialist.specialistdirectory.domain.specialist.models.enums.CreatorType;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistCountService;
-import com.specialist.specialistdirectory.domain.specialist.services.SpecialistCreatorOrchestrator;
+import com.specialist.specialistdirectory.domain.specialist.services.CreatorSpecialistOrchestrator;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistPersistOrchestrator;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistService;
 import com.specialist.utils.validation.annotation.ValidUuid;
@@ -28,7 +28,7 @@ public class CreatorSpecialistController {
 
     private final SpecialistPersistOrchestrator persistOrchestrator;
     private final SpecialistService service;
-    private final SpecialistCreatorOrchestrator orchestrator;
+    private final CreatorSpecialistOrchestrator orchestrator;
     private final SpecialistCountService countService;
 
     @PreAuthorize("hasAuthority('SPECIALIST_CREATE_UPDATE')")

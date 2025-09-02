@@ -6,7 +6,7 @@ import com.specialist.specialistdirectory.domain.specialist.models.dtos.Speciali
 
 import java.util.UUID;
 
-public interface SpecialistCreatorOrchestrator {
+public interface CreatorSpecialistOrchestrator {
     SpecialistResponseDto save(SpecialistCreateDto dto);
 
     SpecialistResponseDto update(SpecialistUpdateDto dto);

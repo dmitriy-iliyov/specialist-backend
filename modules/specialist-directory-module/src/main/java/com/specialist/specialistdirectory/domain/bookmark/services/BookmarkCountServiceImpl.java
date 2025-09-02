@@ -16,7 +16,6 @@ public class BookmarkCountServiceImpl implements BookmarkCountService {
     
     private final BookmarkRepository repository;
 
-
     @Cacheable(value = "specialists:bookmarks:count:total", key = "#ownerId")
     @Transactional(readOnly = true)
     @Override

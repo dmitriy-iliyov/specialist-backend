@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class ReviewEventSender {
+public final class ReviewEventSender {
 
     @Value("${api.review-buffer.clean.batch-size}")
     public int CLEAN_BATCH_SIZE;

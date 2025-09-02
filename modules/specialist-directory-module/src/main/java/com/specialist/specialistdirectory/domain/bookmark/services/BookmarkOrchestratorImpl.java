@@ -12,7 +12,6 @@ public class BookmarkOrchestratorImpl implements BookmarkOrchestrator {
 
     private final BookmarkService service;
 
-
     @Override
     public BookmarkResponseDto save(BookmarkCreateDto dto) {
         if (service.existsByOwnerIdAndSpecialistId(dto.getOwnerId(), dto.getSpecialistId())) {

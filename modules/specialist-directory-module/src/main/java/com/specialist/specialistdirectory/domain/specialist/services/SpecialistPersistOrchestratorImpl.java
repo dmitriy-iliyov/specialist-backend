@@ -14,7 +14,7 @@ import java.util.UUID;
 public class SpecialistPersistOrchestratorImpl implements SpecialistPersistOrchestrator {
 
     private final SpecialistService service;
-    private final SpecialistCreatorOrchestrator creatorOrchestrator;
+    private final CreatorSpecialistOrchestrator creatorOrchestrator;
 
     @Override
     public SpecialistResponseDto save(UUID creatorId, CreatorType creatorType, SpecialistCreateDto dto) {

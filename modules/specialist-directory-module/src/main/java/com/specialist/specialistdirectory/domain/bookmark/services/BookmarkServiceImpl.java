@@ -31,7 +31,6 @@ public class BookmarkServiceImpl implements BookmarkService {
     private final BookmarkRepository bookmarkRepository;
     private final BookmarkCountService bookmarkCountService;
 
-
     @Caching(evict = {
             @CacheEvict(value = "specialists:bookmarks:count:total", key = "#dto.getOwnerId()"),
             @CacheEvict(value = "specialists:bookmarks:id_pairs", key = "#dto.getOwnerId()")}

@@ -21,7 +21,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class SpecialistCreatorOrchestratorImpl implements SpecialistCreatorOrchestrator {
+public class CreatorSpecialistOrchestratorImpl implements CreatorSpecialistOrchestrator {
 
     private final SpecialistService specialistService;
     private final BookmarkOrchestrator bookmarkOrchestrator;

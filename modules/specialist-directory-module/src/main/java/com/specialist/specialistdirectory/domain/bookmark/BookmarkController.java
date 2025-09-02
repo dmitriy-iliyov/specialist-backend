@@ -28,7 +28,6 @@ public class BookmarkController {
     private final BookmarkOrchestrator orchestrator;
     private final BookmarkCountService countService;
 
-
     @PostMapping
     public ResponseEntity<?> add(@AuthenticationPrincipal PrincipalDetails principal,
                                  @RequestBody @Valid BookmarkCreateDto dto) {
