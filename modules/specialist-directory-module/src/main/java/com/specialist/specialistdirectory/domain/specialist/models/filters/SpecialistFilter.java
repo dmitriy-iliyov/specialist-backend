@@ -2,6 +2,7 @@ package com.specialist.specialistdirectory.domain.specialist.models.filters;
 
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistLanguage;
 import com.specialist.utils.pagination.PageDataHolder;
+import com.specialist.utils.pagination.PageRequest;
 import jakarta.validation.constraints.*;
 
 @com.specialist.specialistdirectory.domain.specialist.validation.SpecialistFilter
@@ -50,5 +51,9 @@ public record SpecialistFilter(
                         lang == null &&
                         minRating == null &&
                         maxRating == null;
+        }
+
+        public PageRequest toPageRequest() {
+                return new PageRequest(this.pageNumber(), this.pageSize(), this.asc());
         }
 }

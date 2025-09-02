@@ -3,7 +3,6 @@ package com.specialist.specialistdirectory.domain.specialist.controllers;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.SpecialistFilter;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistAggregator;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistCountService;
-import com.specialist.utils.pagination.PageRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,7 +25,7 @@ public class SpecialistController {
         if (filter.isEmpty()) {
             return ResponseEntity
                     .status(HttpStatus.OK)
-                    .body(aggregator.findAll(filter));
+                    .body(aggregator.findAll(filter.toPageRequest()));
         }
         return ResponseEntity
                 .status(HttpStatus.OK)

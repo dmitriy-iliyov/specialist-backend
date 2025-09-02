@@ -5,7 +5,6 @@ import com.specialist.contracts.user.SystemUserService;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistAggregatedResponseDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.SpecialistFilter;
-import com.specialist.utils.pagination.PageDataHolder;
 import com.specialist.utils.pagination.PageRequest;
 import com.specialist.utils.pagination.PageResponse;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +28,7 @@ public class SpecialistAggregatorImpl implements SpecialistAggregator {
     @Cacheable(value = "specialists:all", key = "#page.cacheKey()", condition = "#page.pageNumber() < 3")
     @Transactional(readOnly = true)
     @Override
-    public PageResponse<SpecialistAggregatedResponseDto> findAll(PageDataHolder page) {
+    public PageResponse<SpecialistAggregatedResponseDto> findAll(PageRequest page) {
         return preparePageResponse(specialistService.findAll(page));
     }
 

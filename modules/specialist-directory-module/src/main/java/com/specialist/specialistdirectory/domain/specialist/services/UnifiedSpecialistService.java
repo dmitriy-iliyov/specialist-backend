@@ -15,7 +15,6 @@ import com.specialist.specialistdirectory.domain.type.services.TypeService;
 import com.specialist.specialistdirectory.exceptions.SpecialistNotFoundByIdException;
 import com.specialist.specialistdirectory.utils.PaginationUtils;
 import com.specialist.specialistdirectory.utils.SpecificationRepository;
-import com.specialist.utils.pagination.PageDataHolder;
 import com.specialist.utils.pagination.PageRequest;
 import com.specialist.utils.pagination.PageResponse;
 import lombok.RequiredArgsConstructor;
@@ -172,7 +171,7 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
 
     @Transactional(readOnly = true)
     @Override
-    public PageResponse<SpecialistResponseDto> findAll(PageDataHolder page) {
+    public PageResponse<SpecialistResponseDto> findAll(PageRequest page) {
         Specification<SpecialistEntity> specification = Specification.where(
                 SpecialistSpecification.filterByApprovedAndManaged()
         );
