@@ -1,5 +1,6 @@
 package com.specialist.auth.infrastructure.message.services;
 
+import com.specialist.auth.domain.account.services.AccountConfirmationService;
 import com.specialist.auth.domain.account.services.AccountService;
 import com.specialist.auth.exceptions.AccountNotFoundByEmailException;
 import com.specialist.auth.exceptions.CodeExpiredException;
@@ -24,12 +25,15 @@ public class EmailConfirmationService implements ConfirmationService {
     private final MessageService messageService;
     private final ConfirmationRepository repository;
     private final AccountService accountService;
+    private final AccountConfirmationService confirmationService;
 
     public EmailConfirmationService(@Qualifier("emailService") MessageService messageService,
-                                    ConfirmationRepository repository, AccountService accountService) {
+                                    ConfirmationRepository repository, AccountService accountService,
+                                    AccountConfirmationService confirmationService) {
         this.messageService = messageService;
         this.repository = repository;
         this.accountService = accountService;
+        this.confirmationService = confirmationService;
     }
 
     @Async
@@ -57,7 +61,7 @@ public class EmailConfirmationService implements ConfirmationService {
             throw new CodeExpiredException();
         }
         String email = entity.email();
-        accountService.confirmEmail(email);
+        confirmationService.confirmEmail(email);
         repository.deleteById(code);
         return email;
     }

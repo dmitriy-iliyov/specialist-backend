@@ -5,50 +5,33 @@ import com.specialist.auth.domain.authority.AuthorityEntity;
 import com.specialist.auth.domain.authority.AuthorityService;
 import com.specialist.auth.domain.role.RoleEntity;
 import com.specialist.auth.domain.role.RoleService;
-import com.specialist.auth.domain.service_account.models.*;
+import com.specialist.auth.domain.service_account.models.SecretServiceAccountResponseDto;
+import com.specialist.auth.domain.service_account.models.ServiceAccountDto;
+import com.specialist.auth.domain.service_account.models.ServiceAccountEntity;
+import com.specialist.auth.domain.service_account.models.ServiceAccountResponseDto;
 import com.specialist.auth.exceptions.ServiceAccountNotFoundByIdException;
 import com.specialist.utils.pagination.PageRequest;
 import com.specialist.utils.pagination.PageResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.SecureRandom;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class UnifiedServiceAccountService implements ServiceAccountService, UserDetailsService {
+public class UnifiedServiceAccountService implements ServiceAccountService {
 
     private final ServiceAccountRepository repository;
     private final ServiceAccountMapper mapper;
+    private final SecretGenerationStrategy secretGenerationStrategy;
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
     private final AuthorityService authorityService;
-
-    @Transactional(readOnly = true)
-    @Override
-    public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
-        ServiceAccountEntity entity = repository.findById(UUID.fromString(id)).orElseThrow(ServiceAccountNotFoundByIdException::new);
-        var authorities = new ArrayList<>(entity.getAuthorities().stream()
-                .map(AuthorityEntity::getAuthority)
-                .map(SimpleGrantedAuthority::new)
-                .toList());
-        authorities.add(new SimpleGrantedAuthority(entity.getRole().getAuthority()));
-        return new ServiceAccountUserDetails(
-                entity.getId(),
-                entity.getSecret(),
-                authorities
-        );
-    }
 
     @Transactional
     @Override
@@ -64,24 +47,19 @@ public class UnifiedServiceAccountService implements ServiceAccountService, User
         RoleEntity roleEntity = roleService.getReferenceByRole(dto.getRole());
         List<AuthorityEntity> authorities = authorityService.getReferenceAllByAuthorityIn(dto.getAuthorities().stream().toList());
 
-        String secret = generateSecret();
+        String secret = secretGenerationStrategy.generate();
         entity.setSecret(passwordEncoder.encode(secret));
         entity.setRole(roleEntity);
         entity.setAuthorities(authorities);
         entity.setUpdaterId(adminId);
         entity = repository.save(entity);
         ServiceAccountResponseDto responseDto = mapper.toResponseDto(
-                authorityService.findAllByServiceAccountIdIn(new HashSet<>(Set.of(entity.getId())))
-                        .get(entity.getId()),
+                entity.getAuthorities().stream()
+                        .map(AuthorityEntity::getAuthorityAsEnum)
+                        .toList(),
                 entity
         );
         return new SecretServiceAccountResponseDto(secret, responseDto);
-    }
-
-    private String generateSecret() {
-        byte [] secretBytes = new byte[48];
-        new SecureRandom().nextBytes(secretBytes);
-        return Base64.getUrlEncoder().encodeToString(secretBytes);
     }
 
     @Transactional(readOnly = true)

@@ -6,7 +6,6 @@ import com.specialist.auth.domain.account.models.AccountEntity;
 import com.specialist.auth.domain.account.models.AccountFilter;
 import com.specialist.auth.domain.account.models.dtos.*;
 import com.specialist.auth.domain.account.models.enums.DisableReason;
-import com.specialist.auth.domain.account.models.enums.LockReason;
 import com.specialist.auth.domain.account.repositories.AccountRepository;
 import com.specialist.auth.domain.authority.Authority;
 import com.specialist.auth.domain.authority.AuthorityEntity;
@@ -14,7 +13,6 @@ import com.specialist.auth.domain.authority.AuthorityService;
 import com.specialist.auth.domain.role.Role;
 import com.specialist.auth.domain.role.RoleEntity;
 import com.specialist.auth.domain.role.RoleService;
-import com.specialist.auth.exceptions.AccountNotFoundByEmailException;
 import com.specialist.auth.exceptions.AccountNotFoundByIdException;
 import com.specialist.utils.pagination.PageResponse;
 import org.junit.jupiter.api.AfterEach;
@@ -30,12 +28,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -68,54 +64,6 @@ public class UnifiedAccountServiceUnitTests {
     @AfterEach
     void tearDown() throws Exception {
         verifyNoMoreInteractions(repository, passwordEncoder, mapper, roleService, authorityService);
-    }
-
-    @Test
-    @DisplayName("UT: loadUserByUsername() when email exists returns UserDetails")
-    void loadUserByUsername_whenEmailExists_shouldReturnUserDetails() {
-        String email = "user@example.com";
-        UUID id = UUID.randomUUID();
-
-        RoleEntity roleEntity = new RoleEntity();
-        roleEntity.setRole(Role.ROLE_USER);
-
-        AuthorityEntity authEntity = new AuthorityEntity();
-        authEntity.setAuthority(Authority.REVIEW_CREATE_UPDATE);
-
-        AccountEntity entity = new AccountEntity();
-        entity.setId(id);
-        entity.setEmail(email);
-        entity.setPassword("encodedPass");
-        entity.setRole(roleEntity);
-        entity.setAuthorities(List.of(authEntity));
-        entity.setLocked(false);
-        entity.setEnabled(true);
-
-        when(repository.findByEmail(email)).thenReturn(Optional.of(entity));
-
-        UserDetails userDetails = unifiedAccountService.loadUserByUsername(email);
-
-        assertEquals(email, userDetails.getUsername());
-        assertEquals("encodedPass", userDetails.getPassword());
-        assertTrue(userDetails.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_USER")));
-        assertTrue(userDetails.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("REVIEW_CREATE_UPDATE")));
-
-        verify(repository, times(1)).findByEmail(email);
-    }
-
-    @Test
-    @DisplayName("UT: loadUserByUsername() when email not found throws exception")
-    void loadUserByUsername_whenEmailNotFound_shouldThrow() {
-        String email = "missing@example.com";
-        when(repository.findByEmail(email)).thenReturn(Optional.empty());
-
-        assertThrows(AccountNotFoundByEmailException.class, () -> {
-            unifiedAccountService.loadUserByUsername(email);
-        });
-
-        verify(repository, times(1)).findByEmail(email);
     }
 
     @Test
@@ -252,16 +200,6 @@ public class UnifiedAccountServiceUnitTests {
     }
 
     @Test
-    @DisplayName("UT: confirmEmail() should call repository.enableByEmail() once")
-    void confirmEmail_shouldCallRepository() {
-        unifiedAccountService.confirmEmail("test@mail.com");
-
-        verify(repository, times(1)).enableByEmail("test@mail.com");
-        verifyNoMoreInteractions(repository);
-        verifyNoInteractions(mapper, passwordEncoder);
-    }
-
-    @Test
     @DisplayName("UT: updatePassword() when account exists should update password and return dto")
     void updatePassword_whenAccountExists_shouldUpdatePasswordAndReturnDto() {
         UUID id = UUID.randomUUID();
@@ -310,39 +248,6 @@ public class UnifiedAccountServiceUnitTests {
         verify(repository, times(1)).findById(id);
         verifyNoMoreInteractions(repository);
         verifyNoInteractions(mapper, passwordEncoder);
-    }
-
-    @Test
-    @DisplayName("UT: updatePasswordByEmail() updates password correctly")
-    void updatePasswordByEmail_shouldRecoverPasswordPassword() {
-        String email = "user@example.com";
-        String rawPassword = "newpass";
-        String encodedPassword = "encodedpass";
-
-        AccountEntity entity = new AccountEntity();
-        entity.setEmail(email);
-
-        when(repository.findByEmail(email)).thenReturn(Optional.of(entity));
-        when(passwordEncoder.encode(rawPassword)).thenReturn(encodedPassword);
-
-        unifiedAccountService.recoverPasswordByEmail(email, rawPassword);
-
-        assertEquals(encodedPassword, entity.getPassword());
-
-        verify(repository, times(1)).findByEmail(email);
-        verify(passwordEncoder, times(1)).encode(rawPassword);
-    }
-
-    @Test
-    @DisplayName("UT: updatePasswordByEmail() throws exception when email not found")
-    void updatePasswordPasswordByEmail_whenEmailNotFound_shouldThrow() {
-        String email = "missing@example.com";
-        when(repository.findByEmail(email)).thenReturn(Optional.empty());
-
-        assertThrows(AccountNotFoundByEmailException.class, () -> unifiedAccountService.recoverPasswordByEmail(email, "pass"));
-
-        verify(repository, times(1)).findByEmail(email);
-        verify(passwordEncoder, never()).encode(any());
     }
 
     @Test

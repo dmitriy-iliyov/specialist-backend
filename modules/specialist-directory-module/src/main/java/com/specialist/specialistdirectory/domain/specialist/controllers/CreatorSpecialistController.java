@@ -5,8 +5,8 @@ import com.specialist.specialistdirectory.domain.specialist.models.dtos.Speciali
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.CreatorType;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
-import com.specialist.specialistdirectory.domain.specialist.services.SpecialistCountService;
 import com.specialist.specialistdirectory.domain.specialist.services.CreatorSpecialistOrchestrator;
+import com.specialist.specialistdirectory.domain.specialist.services.SpecialistCountService;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistPersistOrchestrator;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistService;
 import com.specialist.utils.validation.annotation.ValidUuid;

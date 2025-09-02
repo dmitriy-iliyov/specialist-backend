@@ -24,7 +24,7 @@ public class AdminAccountController {
 
     private final AccountPersistOrchestrator persistOrchestrator;
     private final AccountService service;
-    private final AdminAccountService accountService;
+    private final AdminAccountService adminService;
     private final AdminAccountFacade adminOrchestrator;
     private final AccountDeleteFacade deleteOrchestrator;
 
@@ -43,7 +43,7 @@ public class AdminAccountController {
                 .body(service.findAllByFilter(filter));
     }
 
-    @PostMapping("/{id}/demote")
+    @PatchMapping("/{id}/demote")
     public ResponseEntity<?> demote(@PathVariable("id")
                                     @ValidUuid(paramName = "id", message = "Id should have valid format.") UUID id,
                                     @RequestBody @Valid DemodeRequest request) {
@@ -55,7 +55,7 @@ public class AdminAccountController {
     }
 
     @PreAuthorize("hasAnyAuthority('ACCOUNT_LOCK', 'ACCOUNT_MANAGER')")
-    @PostMapping("/{id}/lock")
+    @PatchMapping("/{id}/lock")
     public ResponseEntity<?> lock(@PathVariable("id")
                                   @ValidUuid(paramName = "id", message = "Id should have valid format.") UUID id,
                                   @RequestBody @Valid LockRequest request) {
@@ -66,19 +66,19 @@ public class AdminAccountController {
     }
 
     @PreAuthorize("hasAnyAuthority('ACCOUNT_LOCK', 'ACCOUNT_MANAGER')")
-    @PostMapping("/{id}/unlock")
+    @PatchMapping("/{id}/unlock")
     public ResponseEntity<?> unlock(@PathVariable("id")
                                     @ValidUuid(paramName = "id", message = "Id should have valid format.") UUID id) {
-        accountService.unlockById(id);
+        adminService.unlockById(id);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
     }
 
     @PreAuthorize("hasAnyAuthority('ACCOUNT_DISABLE', 'ACCOUNT_MANAGER')")
-    @PostMapping("/{id}/disable")
+    @PatchMapping("/{id}/disable")
     public ResponseEntity<?> disable(@PathVariable("id")
-                                    @ValidUuid(paramName = "id", message = "Id should have valid format.") UUID id,
+                                     @ValidUuid(paramName = "id", message = "Id should have valid format.") UUID id,
                                      @RequestBody @Valid DisableRequest request) {
         adminOrchestrator.disableById(id, request);
         return ResponseEntity
@@ -87,10 +87,10 @@ public class AdminAccountController {
     }
 
     @PreAuthorize("hasAnyAuthority('ACCOUNT_DISABLE', 'ACCOUNT_MANAGER')")
-    @PostMapping("/{id}/enable")
+    @PatchMapping("/{id}/enable")
     public ResponseEntity<?> enable(@PathVariable("id")
                                     @ValidUuid(paramName = "id", message = "Id should have valid format.") UUID id) {
-        accountService.enableById(id);
+        adminService.enableById(id);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
@@ -98,7 +98,8 @@ public class AdminAccountController {
 
     @PreAuthorize("hasAnyAuthority('ACCOUNT_DELETE', 'ACCOUNT_MANAGER')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") UUID id) {
+    public ResponseEntity<?> delete(@PathVariable("id")
+                                    @ValidUuid(paramName = "id", message = "Id should have valid format.") UUID id) {
         deleteOrchestrator.delete(id);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)

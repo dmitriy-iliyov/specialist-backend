@@ -32,7 +32,7 @@ public class AccountAuthServiceImpl implements AccountAuthService {
     private final TokenManager tokenManager;
     private final CsrfTokenService csrfTokenService;
 
-    public AccountAuthServiceImpl(@Qualifier("unifiedAccountService") UserDetailsService userDetailsService,
+    public AccountAuthServiceImpl(@Qualifier("accountUserDetailsService") UserDetailsService userDetailsService,
                                   @Qualifier("accountAuthenticationManager") AuthenticationManager authenticationManager,
                                   AccountService accountService, TokenManager tokenManager, CsrfTokenService csrfTokenService) {
         this.userDetailsService = userDetailsService;

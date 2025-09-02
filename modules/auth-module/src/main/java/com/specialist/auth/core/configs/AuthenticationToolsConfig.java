@@ -25,7 +25,7 @@ public class AuthenticationToolsConfig {
 
     @Bean("accountAuthenticationManager")
     public AuthenticationManager accountAuthenticationManager(
-            @Qualifier("unifiedAccountService") UserDetailsService accountUserDetailsService,
+            @Qualifier("accountUserDetailsService") UserDetailsService accountUserDetailsService,
             PasswordEncoder passwordEncoder, RefreshTokenService service,
             OAuth2LoginAuthenticationProvider oAuth2LoginAuthenticationProvider) {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
@@ -48,7 +48,7 @@ public class AuthenticationToolsConfig {
 
     @Bean("serviceAccountAuthenticationManager")
     public AuthenticationManager serviceAccountAuthenticationManager(
-            @Qualifier("unifiedServiceAccountService") UserDetailsService serviceAccountUserDetailsService,
+            @Qualifier("serviceAccountUserDetailsService") UserDetailsService serviceAccountUserDetailsService,
             PasswordEncoder passwordEncoder,
             RefreshTokenService service) {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();

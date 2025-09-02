@@ -31,7 +31,7 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
     private final OAuth2UserRepository oAuth2UserRepository;
     private final ObjectMapper objectMapper;
 
-    public OAuth2AuthenticationSuccessHandler(@Qualifier("unifiedAccountService") UserDetailsService userDetailsService,
+    public OAuth2AuthenticationSuccessHandler(@Qualifier("accountUserDetailsService") UserDetailsService userDetailsService,
                                               TokenManager tokenManager, CsrfTokenService csrfTokenService,
                                               OAuth2UserRepository oAuth2UserRepository, ObjectMapper objectMapper) {
         this.userDetailsService = userDetailsService;

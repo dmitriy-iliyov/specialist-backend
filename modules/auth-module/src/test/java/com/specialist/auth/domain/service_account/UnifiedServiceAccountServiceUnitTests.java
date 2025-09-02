@@ -7,7 +7,10 @@ import com.specialist.auth.domain.authority.AuthorityService;
 import com.specialist.auth.domain.role.Role;
 import com.specialist.auth.domain.role.RoleEntity;
 import com.specialist.auth.domain.role.RoleService;
-import com.specialist.auth.domain.service_account.models.*;
+import com.specialist.auth.domain.service_account.models.SecretServiceAccountResponseDto;
+import com.specialist.auth.domain.service_account.models.ServiceAccountDto;
+import com.specialist.auth.domain.service_account.models.ServiceAccountEntity;
+import com.specialist.auth.domain.service_account.models.ServiceAccountResponseDto;
 import com.specialist.auth.exceptions.ServiceAccountNotFoundByIdException;
 import com.specialist.utils.pagination.PageRequest;
 import com.specialist.utils.pagination.PageResponse;
@@ -20,8 +23,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.*;
@@ -42,6 +43,9 @@ class UnifiedServiceAccountServiceUnitTests {
     PasswordEncoder passwordEncoder;
 
     @Mock
+    SecretGenerationStrategy secretGenerationStrategy;
+
+    @Mock
     RoleService roleService;
 
     @Mock
@@ -49,75 +53,6 @@ class UnifiedServiceAccountServiceUnitTests {
 
     @InjectMocks
     UnifiedServiceAccountService service;
-
-    @Test
-    @DisplayName("UT: loadUserByUsername() when service account found should return UserDetails")
-    void loadUserByUsername_whenFound_shouldReturnUserDetails() {
-        UUID id = UUID.randomUUID();
-        RoleEntity roleEntity = mock(RoleEntity.class);
-        when(roleEntity.getAuthority()).thenReturn("ROLE_ADMIN");
-
-        AuthorityEntity authEntity = mock(AuthorityEntity.class);
-        when(authEntity.getAuthority()).thenReturn("AUTH_READ");
-
-        ServiceAccountEntity entity = new ServiceAccountEntity();
-        entity.setId(id);
-        entity.setSecret("encodedSecret");
-        entity.setRole(roleEntity);
-        entity.setAuthorities(List.of(authEntity));
-
-        when(repository.findById(id)).thenReturn(Optional.of(entity));
-
-        UserDetails userDetails = service.loadUserByUsername(id.toString());
-
-        assertNotNull(userDetails);
-        assertTrue(userDetails instanceof ServiceAccountUserDetails);
-        assertEquals(id.toString(), userDetails.getUsername());
-        assertEquals("encodedSecret", userDetails.getPassword());
-
-        assertTrue(userDetails.getAuthorities().stream()
-                .anyMatch(a -> ((SimpleGrantedAuthority) a).getAuthority().equals("AUTH_READ")));
-        assertTrue(userDetails.getAuthorities().stream()
-                .anyMatch(a -> ((SimpleGrantedAuthority) a).getAuthority().equals("ROLE_ADMIN")));
-
-        verify(repository, times(1)).findById(id);
-    }
-
-    @Test
-    @DisplayName("UT: loadUserByUsername() when service account not found should throw exception")
-    void loadUserByUsername_whenNotFound_shouldThrow() {
-        UUID id = UUID.randomUUID();
-        when(repository.findById(id)).thenReturn(Optional.empty());
-
-        assertThrows(ServiceAccountNotFoundByIdException.class,
-                () -> service.loadUserByUsername(id.toString()));
-
-        verify(repository, times(1)).findById(id);
-    }
-
-    @Test
-    @DisplayName("UT: loadUserByUsername() when authorities empty should return UserDetails with only role")
-    void loadUserByUsername_whenAuthoritiesEmpty_shouldReturnUserDetailsWithRoleOnly() {
-        UUID id = UUID.randomUUID();
-        RoleEntity roleEntity = mock(RoleEntity.class);
-        when(roleEntity.getAuthority()).thenReturn("ROLE_USER");
-
-        ServiceAccountEntity entity = new ServiceAccountEntity();
-        entity.setId(id);
-        entity.setSecret("secret");
-        entity.setRole(roleEntity);
-        entity.setAuthorities(Collections.emptyList());
-
-        when(repository.findById(id)).thenReturn(Optional.of(entity));
-
-        UserDetails userDetails = service.loadUserByUsername(id.toString());
-
-        assertNotNull(userDetails);
-        assertTrue(userDetails.getAuthorities().stream()
-                .anyMatch(a -> ((SimpleGrantedAuthority) a).getAuthority().equals("ROLE_USER")));
-
-        verify(repository).findById(id);
-    }
 
     @Test
     @DisplayName("UT: save() when dto has id and entity found should update and save")
@@ -135,14 +70,8 @@ class UnifiedServiceAccountServiceUnitTests {
         RoleEntity roleEntity = mock(RoleEntity.class);
         when(roleService.getReferenceByRole(dto.getRole())).thenReturn(roleEntity);
 
-        AuthorityEntity authEntity = mock(AuthorityEntity.class);
-        when(authorityService.getReferenceAllByAuthorityIn(anyList())).thenReturn(List.of(authEntity));
-
         when(repository.findById(dtoId)).thenReturn(Optional.of(existingEntity));when(repository.save(existingEntity)).thenReturn(existingEntity);
-
-        Map<UUID, List<Authority>> map = new HashMap<>();
-        map.put(dtoId, List.of(Authority.REVIEW_CREATE_UPDATE));
-        when(authorityService.findAllByServiceAccountIdIn(anySet())).thenReturn(map);
+        when(secretGenerationStrategy.generate()).thenReturn("random-secret-string");
 
         when(mapper.toResponseDto(anyList(), eq(existingEntity))).thenReturn(
                 new ServiceAccountResponseDto(dtoId, "account-name", dto.getRole(), List.of(Authority.REVIEW_CREATE_UPDATE),
@@ -159,7 +88,7 @@ class UnifiedServiceAccountServiceUnitTests {
         verify(repository).save(existingEntity);
         verify(roleService).getReferenceByRole(dto.getRole());
         verify(authorityService).getReferenceAllByAuthorityIn(anyList());
-        verify(authorityService).findAllByServiceAccountIdIn(anySet());
+        verify(secretGenerationStrategy, times(1)).generate();
         verify(mapper).toResponseDto(anyList(), eq(existingEntity));
     }
 
@@ -179,11 +108,10 @@ class UnifiedServiceAccountServiceUnitTests {
 
         ServiceAccountEntity savedEntity = new ServiceAccountEntity();
         savedEntity.setId(UUID.randomUUID());
+        savedEntity.setAuthorities(List.of(new AuthorityEntity(Authority.REVIEW_CREATE_UPDATE)));
         when(repository.save(any(ServiceAccountEntity.class))).thenReturn(savedEntity);
 
-        Map<UUID, List<Authority>> map = new HashMap<>();
-        map.put(savedEntity.getId(), List.of(Authority.REVIEW_CREATE_UPDATE));
-        when(authorityService.findAllByServiceAccountIdIn(anySet())).thenReturn(map);
+        when(secretGenerationStrategy.generate()).thenReturn("random-secret-string");
 
         when(mapper.toResponseDto(anyList(), any(ServiceAccountEntity.class))).thenReturn(
                 new ServiceAccountResponseDto(savedEntity.getId(), "account-name", dto.getRole(), List.of(Authority.REVIEW_CREATE_UPDATE),
@@ -198,7 +126,7 @@ class UnifiedServiceAccountServiceUnitTests {
         verify(roleService).getReferenceByRole(dto.getRole());
         verify(authorityService).getReferenceAllByAuthorityIn(anyList());
         verify(repository).save(any(ServiceAccountEntity.class));
-        verify(authorityService).findAllByServiceAccountIdIn(anySet());
+        verify(secretGenerationStrategy, times(1)).generate();
         verify(mapper).toResponseDto(anyList(), any(ServiceAccountEntity.class));
     }
 

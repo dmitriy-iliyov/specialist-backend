@@ -4,7 +4,6 @@ import com.specialist.auth.core.oauth2.provider.Provider;
 import com.specialist.auth.domain.account.mappers.AccountMapper;
 import com.specialist.auth.domain.account.models.AccountEntity;
 import com.specialist.auth.domain.account.models.AccountFilter;
-import com.specialist.auth.domain.account.models.AccountUserDetails;
 import com.specialist.auth.domain.account.models.dtos.*;
 import com.specialist.auth.domain.account.models.enums.DisableReason;
 import com.specialist.auth.domain.account.models.enums.LockReason;
@@ -27,22 +26,20 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.ZoneId;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class UnifiedAccountService implements AccountService, UserDetailsService {
+public class UnifiedAccountService implements AccountService {
 
     private final PasswordEncoder passwordEncoder;
     private final AccountRepository repository;
@@ -50,29 +47,6 @@ public class UnifiedAccountService implements AccountService, UserDetailsService
     private final AccountCacheService cacheService;
     private final RoleService roleService;
     private final AuthorityService authorityService;
-
-    @Transactional(readOnly = true)
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        AccountEntity entity = repository.findByEmail(email).orElseThrow(AccountNotFoundByEmailException::new);
-        var authorities = new ArrayList<>(entity.getAuthorities().stream()
-                .map(AuthorityEntity::getAuthority)
-                .map(SimpleGrantedAuthority::new)
-                .toList());
-        authorities.add(new SimpleGrantedAuthority(entity.getRole().getAuthority()));
-        return new AccountUserDetails(
-                entity.getId(),
-                entity.getEmail(),
-                entity.getPassword(),
-                entity.getProvider(),
-                authorities,
-                entity.isLocked(),
-                entity.getLockReason(),
-                entity.getLockTerm(),
-                entity.isEnabled(),
-                entity.getDisableReason()
-        );
-    }
 
     @Transactional
     @Override
@@ -123,12 +97,6 @@ public class UnifiedAccountService implements AccountService, UserDetailsService
 
     @Transactional
     @Override
-    public void confirmEmail(String email) {
-        repository.enableByEmail(email);
-    }
-
-    @Transactional
-    @Override
     public ShortAccountResponseDto updatePassword(AccountPasswordUpdateDto dto) {
         AccountEntity entity = repository.findById(dto.getId()).orElseThrow(AccountNotFoundByIdException::new);
         if (!passwordEncoder.matches(dto.getOldPassword(), entity.getPassword())) {
@@ -151,13 +119,6 @@ public class UnifiedAccountService implements AccountService, UserDetailsService
         entity.setDisableReason(DisableReason.EMAIL_CONFIRMATION_REQUIRED);
         repository.save(entity);
         return mapper.toShortResponseDto(entity);
-    }
-
-    @Transactional
-    @Override
-    public void recoverPasswordByEmail(String email, String password) {
-        AccountEntity entity = repository.findByEmail(email).orElseThrow(AccountNotFoundByEmailException::new);
-        entity.setPassword(passwordEncoder.encode(password));
     }
 
     @Transactional(readOnly = true)

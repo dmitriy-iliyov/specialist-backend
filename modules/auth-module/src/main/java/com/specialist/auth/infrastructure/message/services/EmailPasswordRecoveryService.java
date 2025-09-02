@@ -1,5 +1,6 @@
 package com.specialist.auth.infrastructure.message.services;
 
+import com.specialist.auth.domain.account.services.AccountPasswordRecoveryService;
 import com.specialist.auth.domain.account.services.AccountService;
 import com.specialist.auth.exceptions.AccountNotFoundByEmailException;
 import com.specialist.auth.exceptions.CodeExpiredException;
@@ -24,12 +25,15 @@ public class EmailPasswordRecoveryService implements PasswordRecoveryService {
     private final MessageService messageService;
     private final PasswordRecoveryRepository repository;
     private final AccountService accountService;
+    private final AccountPasswordRecoveryService passwordRecoveryService;
 
     public EmailPasswordRecoveryService(@Qualifier("emailService") MessageService messageService,
-                                        PasswordRecoveryRepository repository, AccountService accountService) {
+                                        PasswordRecoveryRepository repository, AccountService accountService,
+                                        AccountPasswordRecoveryService passwordRecoveryService) {
         this.messageService = messageService;
         this.repository = repository;
         this.accountService = accountService;
+        this.passwordRecoveryService = passwordRecoveryService;
     }
 
     @Override
@@ -53,7 +57,7 @@ public class EmailPasswordRecoveryService implements PasswordRecoveryService {
         if (entity == null) {
             throw new CodeExpiredException();
         }
-        accountService.recoverPasswordByEmail(entity.email(), request.password());
+        passwordRecoveryService.recoverByEmail(entity.email(), request.password());
         repository.deleteById(request.code());
     }
 }
