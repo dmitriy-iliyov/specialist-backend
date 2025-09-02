@@ -12,9 +12,9 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class AdminAccountOrchestratorImpl implements AdminAccountOrchestrator {
+public class AdminAccountFacadeImpl implements AdminAccountFacade {
 
-    private final AccountService accountService;
+    private final AdminAccountService accountService;
     private final TokenManager tokenManager;
 
     @Transactional

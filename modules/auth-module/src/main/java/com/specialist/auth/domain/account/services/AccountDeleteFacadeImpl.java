@@ -1,6 +1,6 @@
 package com.specialist.auth.domain.account.services;
 
-import com.specialist.contracts.user.UserDeleteOrchestrator;
+import com.specialist.contracts.user.UserDeleteFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,10 +9,10 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class AccountDeleteOrchestratorImpl implements AccountDeleteOrchestrator {
+public class AccountDeleteFacadeImpl implements AccountDeleteFacade {
 
     private final AccountService accountService;
-    private final UserDeleteOrchestrator userDeleteOrchestrator;
+    private final UserDeleteFacade userDeleteFacade;
 
     // WARNING: till in the same app context
     @Transactional
@@ -20,6 +20,6 @@ public class AccountDeleteOrchestratorImpl implements AccountDeleteOrchestrator 
     public void delete(UUID id) {
         accountService.deleteById(id);
         // TODO schedule delete
-        userDeleteOrchestrator.delete(id);
+        userDeleteFacade.delete(id);
     }
 }

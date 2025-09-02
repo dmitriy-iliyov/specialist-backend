@@ -4,13 +4,12 @@ import com.specialist.auth.domain.account.models.AccountFilter;
 import com.specialist.auth.domain.account.models.dtos.*;
 import com.specialist.auth.domain.account.models.enums.DisableReason;
 import com.specialist.auth.domain.account.models.enums.LockReason;
-import com.specialist.auth.domain.account.services.AccountDeleteOrchestrator;
+import com.specialist.auth.domain.account.services.AccountDeleteFacade;
 import com.specialist.auth.domain.account.services.AccountPersistOrchestrator;
 import com.specialist.auth.domain.account.services.AccountService;
-import com.specialist.auth.domain.account.services.AdminAccountOrchestrator;
+import com.specialist.auth.domain.account.services.AdminAccountFacade;
 import com.specialist.auth.domain.authority.Authority;
 import com.specialist.auth.domain.role.Role;
-import com.specialist.utils.pagination.PageRequest;
 import com.specialist.utils.pagination.PageResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,10 +37,10 @@ public class AdminAccountControllerUnitTests {
     AccountService service;
 
     @Mock
-    AdminAccountOrchestrator adminAccountOrchestrator;
+    AdminAccountFacade adminAccountFacade;
 
     @Mock
-    AccountDeleteOrchestrator accountDeleteOrchestrator;
+    AccountDeleteFacade accountDeleteFacade;
 
     @InjectMocks
     AdminAccountController controller;
@@ -72,33 +71,8 @@ public class AdminAccountControllerUnitTests {
     }
 
     @Test
-    @DisplayName("UT: findAll() when valid should return 200")
-    void findAll_whenValid_shouldReturn200() {
-        PageRequest request = new PageRequest(0, 10, true);
-        PageResponse<AccountResponseDto> expected = new PageResponse<>(List.of(), 0);
-
-        when(service.findAll(request)).thenReturn(expected);
-
-        ResponseEntity<?> response = controller.findAll(request);
-
-        verify(service, times(1)).findAll(request);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expected, response.getBody());
-    }
-
-    @Test
-    @DisplayName("UT: findAll() when service throws should throw exception")
-    void findAll_whenInvalid_shouldThrowException() {
-        PageRequest request = new PageRequest(0, 10, true);
-
-        when(service.findAll(request)).thenThrow(RuntimeException.class);
-
-        assertThrows(RuntimeException.class, () -> controller.findAll(request));
-    }
-
-    @Test
     @DisplayName("UT: findAllByFilter() when valid should return 200")
-    void findAllByFilter_whenValid_shouldReturn200() {
+    void findAll_whenValid_shouldReturn200() {
         AccountFilter filter = new AccountFilter(true, "USER_REQUEST", false,
                 "PASSWORD_EXPIRED",  0, 20, true
         );
@@ -106,7 +80,7 @@ public class AdminAccountControllerUnitTests {
 
         when(service.findAllByFilter(filter)).thenReturn(expected);
 
-        ResponseEntity<?> response = controller.findAllByFilter(filter);
+        ResponseEntity<?> response = controller.findAll(filter);
 
         verify(service, times(1)).findAllByFilter(filter);
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -115,14 +89,14 @@ public class AdminAccountControllerUnitTests {
 
     @Test
     @DisplayName("UT: findAllByFilter() when service throws should throw exception")
-    void findAllByFilter_whenInvalid_shouldThrowException() {
+    void findAll_whenInvalid_shouldThrowException() {
         AccountFilter filter = new AccountFilter(true, "USER_REQUEST", false,
                 "PASSWORD_EXPIRED",  0, 20, true
         );
 
         when(service.findAllByFilter(filter)).thenThrow(RuntimeException.class);
 
-        assertThrows(RuntimeException.class, () -> controller.findAllByFilter(filter));
+        assertThrows(RuntimeException.class, () -> controller.findAll(filter));
     }
 
     @Test
@@ -133,8 +107,8 @@ public class AdminAccountControllerUnitTests {
 
         ResponseEntity<?> response = controller.lock(id, request);
 
-        verify(adminAccountOrchestrator, times(1)).lockById(id, request);
-        verifyNoMoreInteractions(adminAccountOrchestrator);
+        verify(adminAccountFacade, times(1)).lockById(id, request);
+        verifyNoMoreInteractions(adminAccountFacade);
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
         assertNull(response.getBody());
     }
@@ -145,7 +119,7 @@ public class AdminAccountControllerUnitTests {
         UUID id = UUID.randomUUID();
         LockRequest request = new LockRequest(LockReason.ABUSE, LocalDateTime.now());
 
-        doThrow(RuntimeException.class).when(adminAccountOrchestrator).lockById(id, request);
+        doThrow(RuntimeException.class).when(adminAccountFacade).lockById(id, request);
 
         assertThrows(RuntimeException.class, () -> controller.lock(id, request));
     }
@@ -158,8 +132,8 @@ public class AdminAccountControllerUnitTests {
 
         ResponseEntity<?> response = controller.disable(id, request);
 
-        verify(adminAccountOrchestrator, times(1)).disableById(id, request);
-        verifyNoMoreInteractions(adminAccountOrchestrator);        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        verify(adminAccountFacade, times(1)).disableById(id, request);
+        verifyNoMoreInteractions(adminAccountFacade);        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
         assertNull(response.getBody());
     }
 
@@ -169,7 +143,7 @@ public class AdminAccountControllerUnitTests {
         UUID id = UUID.randomUUID();
         DisableRequest request = new DisableRequest(DisableReason.PERMANENTLY_ABUSE);
 
-        doThrow(RuntimeException.class).when(adminAccountOrchestrator).disableById(id, request);
+        doThrow(RuntimeException.class).when(adminAccountFacade).disableById(id, request);
 
         assertThrows(RuntimeException.class, () -> controller.disable(id, request));
     }
@@ -181,7 +155,7 @@ public class AdminAccountControllerUnitTests {
 
         ResponseEntity<?> response = controller.delete(id);
 
-        verify(accountDeleteOrchestrator, times(1)).delete(id);
+        verify(accountDeleteFacade, times(1)).delete(id);
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
         assertNull(response.getBody());
     }
@@ -191,7 +165,7 @@ public class AdminAccountControllerUnitTests {
     void delete_whenInvalid_shouldThrowException() {
         UUID id = UUID.randomUUID();
 
-        doThrow(RuntimeException.class).when(accountDeleteOrchestrator).delete(id);
+        doThrow(RuntimeException.class).when(accountDeleteFacade).delete(id);
 
         assertThrows(RuntimeException.class, () -> controller.delete(id));
     }

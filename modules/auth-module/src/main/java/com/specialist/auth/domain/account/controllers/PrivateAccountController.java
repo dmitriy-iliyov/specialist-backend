@@ -4,9 +4,9 @@ import com.specialist.auth.core.AccountAuthService;
 import com.specialist.auth.domain.account.models.dtos.AccountEmailUpdateDto;
 import com.specialist.auth.domain.account.models.dtos.AccountPasswordUpdateDto;
 import com.specialist.auth.domain.account.models.dtos.ShortAccountResponseDto;
-import com.specialist.auth.domain.account.services.AccountDeleteOrchestrator;
+import com.specialist.auth.domain.account.services.AccountDeleteFacade;
 import com.specialist.auth.domain.account.services.AccountService;
-import com.specialist.auth.domain.account.services.EmailUpdateOrchestrator;
+import com.specialist.auth.domain.account.services.EmailUpdateFacade;
 import com.specialist.contracts.auth.PrincipalDetails;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -26,9 +26,9 @@ import java.util.UUID;
 public class PrivateAccountController {
 
     private final AccountService service;
-    private final EmailUpdateOrchestrator emailUpdateOrchestrator;
+    private final EmailUpdateFacade emailUpdateFacade;
     private final AccountAuthService authService;
-    private final AccountDeleteOrchestrator deleteOrchestrator;
+    private final AccountDeleteFacade deleteOrchestrator;
 
     @PatchMapping("/password")
     public ResponseEntity<?> updatePassword(@AuthenticationPrincipal PrincipalDetails principal,
@@ -44,7 +44,7 @@ public class PrivateAccountController {
                                          @RequestBody @Valid AccountEmailUpdateDto dto, HttpServletResponse response) {
         UUID accountId = principal.getAccountId();
         dto.setId(accountId);
-        ShortAccountResponseDto responseDto = emailUpdateOrchestrator.updateEmail(dto);
+        ShortAccountResponseDto responseDto = emailUpdateFacade.updateEmail(dto);
         authService.logoutFromAll(accountId, response);
         return ResponseEntity
                 .status(HttpStatus.OK)

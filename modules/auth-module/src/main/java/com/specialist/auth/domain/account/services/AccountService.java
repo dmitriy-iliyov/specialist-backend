@@ -16,31 +16,19 @@ public interface AccountService {
 
     boolean existsByEmail(String email);
 
-    void takeAwayAuthoritiesById(UUID id, Set<Authority> authorities);
-
-    void lockById(UUID id, LockRequest request);
-
-    void deleteById(UUID id);
+    Provider findProviderByEmail(String email);
 
     UUID findIdByEmail(String email);
 
-    void confirmEmail(String email);
+    PageResponse<AccountResponseDto> findAllByFilter(AccountFilter filter);
 
     ShortAccountResponseDto updatePassword(AccountPasswordUpdateDto dto);
 
     ShortAccountResponseDto updateEmail(AccountEmailUpdateDto dto);
 
+    void deleteById(UUID id);
+
+    void confirmEmail(String email);
+
     void recoverPasswordByEmail(String email, String password);
-
-    PageResponse<AccountResponseDto> findAll(com.specialist.utils.pagination.PageRequest page);
-
-    PageResponse<AccountResponseDto> findAllByFilter(AccountFilter filter);
-
-    void unlockById(UUID id);
-
-    void disableById(UUID id, DisableRequest request);
-
-    void enableById(UUID id);
-
-    Provider findProviderByEmail(String email);
 }

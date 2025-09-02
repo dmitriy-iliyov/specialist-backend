@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class EmailUpdateOrchestratorImpl implements EmailUpdateOrchestrator {
+public class EmailUpdateFacadeImpl implements EmailUpdateFacade {
 
     private final AccountService accountService;
     private final SystemUserService systemUserService;

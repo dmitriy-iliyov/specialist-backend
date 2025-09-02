@@ -5,11 +5,7 @@ import com.specialist.auth.domain.account.models.dtos.DemodeRequest;
 import com.specialist.auth.domain.account.models.dtos.DisableRequest;
 import com.specialist.auth.domain.account.models.dtos.LockRequest;
 import com.specialist.auth.domain.account.models.dtos.ManagedAccountCreateDto;
-import com.specialist.auth.domain.account.services.AccountDeleteOrchestrator;
-import com.specialist.auth.domain.account.services.AccountPersistOrchestrator;
-import com.specialist.auth.domain.account.services.AccountService;
-import com.specialist.auth.domain.account.services.AdminAccountOrchestrator;
-import com.specialist.utils.pagination.PageRequest;
+import com.specialist.auth.domain.account.services.*;
 import com.specialist.utils.validation.annotation.ValidUuid;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,8 +24,9 @@ public class AdminAccountController {
 
     private final AccountPersistOrchestrator persistOrchestrator;
     private final AccountService service;
-    private final AdminAccountOrchestrator adminOrchestrator;
-    private final AccountDeleteOrchestrator deleteOrchestrator;
+    private final AdminAccountService accountService;
+    private final AdminAccountFacade adminOrchestrator;
+    private final AccountDeleteFacade deleteOrchestrator;
 
     @PreAuthorize("hasAnyAuthority('ACCOUNT_CREATE', 'ACCOUNT_MANAGER')")
     @PostMapping
@@ -40,14 +37,7 @@ public class AdminAccountController {
     }
 
     @GetMapping
-    public ResponseEntity<?> findAll(@ModelAttribute @Valid PageRequest pageRequest) {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(service.findAll(pageRequest));
-    }
-
-    @GetMapping("/filter")
-    public ResponseEntity<?> findAllByFilter(@ModelAttribute @Valid AccountFilter filter) {
+    public ResponseEntity<?> findAll(@ModelAttribute @Valid AccountFilter filter) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(service.findAllByFilter(filter));
@@ -79,7 +69,7 @@ public class AdminAccountController {
     @PostMapping("/{id}/unlock")
     public ResponseEntity<?> unlock(@PathVariable("id")
                                     @ValidUuid(paramName = "id", message = "Id should have valid format.") UUID id) {
-        service.unlockById(id);
+        accountService.unlockById(id);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
@@ -100,7 +90,7 @@ public class AdminAccountController {
     @PostMapping("/{id}/enable")
     public ResponseEntity<?> enable(@PathVariable("id")
                                     @ValidUuid(paramName = "id", message = "Id should have valid format.") UUID id) {
-        service.enableById(id);
+        accountService.enableById(id);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();

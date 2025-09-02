@@ -2,6 +2,6 @@ package com.specialist.contracts.user;
 
 import java.util.UUID;
 
-public interface UserDeleteOrchestrator {
+public interface UserDeleteFacade {
     void delete(UUID id);
 }

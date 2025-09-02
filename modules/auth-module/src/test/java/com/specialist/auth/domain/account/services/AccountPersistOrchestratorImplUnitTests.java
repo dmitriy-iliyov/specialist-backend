@@ -7,6 +7,8 @@ import com.specialist.auth.domain.account.models.dtos.ShortAccountResponseDto;
 import com.specialist.auth.domain.authority.Authority;
 import com.specialist.auth.domain.role.Role;
 import com.specialist.auth.infrastructure.message.services.ConfirmationService;
+import com.specialist.contracts.user.ShortUserCreateDto;
+import com.specialist.contracts.user.SystemUserService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,6 +34,9 @@ class AccountPersistOrchestratorImplUnitTests {
     @Mock
     ConfirmationService confirmationService;
 
+    @Mock
+    SystemUserService systemUserService;
+
     @InjectMocks
     AccountPersistOrchestratorImpl orchestrator;
 
@@ -42,6 +47,7 @@ class AccountPersistOrchestratorImplUnitTests {
 
         var expectedResponse = new ShortAccountResponseDto(UUID.randomUUID(), "admin@example.com", LocalDateTime.now());
         when(accountService.save(any(DefaultAccountCreateDto.class))).thenReturn(expectedResponse);
+        doNothing().when(systemUserService).save(any(ShortUserCreateDto.class));
 
         var responseMock = mock(HttpServletResponse.class);
 
@@ -54,8 +60,8 @@ class AccountPersistOrchestratorImplUnitTests {
                 Authority.TYPE_SUGGEST), dto.getAuthorities());
 
         verify(accountService).save(dto);
-        verify(confirmationService).sendConfirmationCode("test@example.com");
-
+        verify(confirmationService, times(1)).sendConfirmationCode("test@example.com");
+        verify(systemUserService, times(1)).save(any(ShortUserCreateDto.class));
         assertSame(expectedResponse, actual);
     }
 
@@ -65,11 +71,12 @@ class AccountPersistOrchestratorImplUnitTests {
         var dto = new ManagedAccountCreateDto(
                 "admin@example.com",
                 "adminpass", Role.ROLE_ADMIN,
-                List.of(Authority.REVIEW_CREATE_UPDATE, Authority.SPECIALIST_CREATE_UPDATE)
+                List.of(Authority.SPECIALIST_CREATE_UPDATE, Authority.REVIEW_CREATE_UPDATE)
         );
 
         var expectedResponse = new ShortAccountResponseDto(UUID.randomUUID(), "admin@example.com", LocalDateTime.now());
         when(accountService.save(any(DefaultAccountCreateDto.class))).thenReturn(expectedResponse);
+        doNothing().when(systemUserService).save(any(ShortUserCreateDto.class));
 
         var actual = orchestrator.save(dto);
 

@@ -146,7 +146,7 @@ public class UnifiedAccountService implements AccountService, UserDetailsService
         if (!passwordEncoder.matches(dto.getPassword(), entity.getPassword())) {
             throw new InvalidOldPasswordException("password");
         }
-        entity.setEmail(entity.getEmail());
+        entity.setEmail(dto.getEmail());
         entity.setEnabled(false);
         entity.setDisableReason(DisableReason.EMAIL_CONFIRMATION_REQUIRED);
         repository.save(entity);
@@ -160,38 +160,6 @@ public class UnifiedAccountService implements AccountService, UserDetailsService
         entity.setPassword(passwordEncoder.encode(password));
     }
 
-    @Transactional
-    @Override
-    public void takeAwayAuthoritiesById(UUID id, Set<Authority> authorities) {
-        AccountEntity accountEntity = repository.findById(id).orElseThrow(AccountNotFoundByIdException::new);
-        accountEntity.getAuthorities().removeIf(entity -> authorities.contains(entity.getAuthorityAsEnum()));
-        repository.save(accountEntity);
-    }
-
-    @Transactional
-    @Override
-    public void lockById(UUID id, LockRequest request) {
-        repository.lockById(id, request.reason(), request.term().atZone(ZoneId.systemDefault()).toInstant());
-    }
-
-    @Transactional
-    @Override
-    public void unlockById(UUID id) {
-        repository.unlockById(id);
-    }
-
-    @Transactional
-    @Override
-    public void disableById(UUID id, DisableRequest request) {
-        repository.disableById(id, request.reason());
-    }
-
-    @Transactional
-    @Override
-    public void enableById(UUID id) {
-        repository.enableById(id);
-    }
-
     @Transactional(readOnly = true)
     @Override
     public Provider findProviderByEmail(String email) {
@@ -202,14 +170,6 @@ public class UnifiedAccountService implements AccountService, UserDetailsService
     @Override
     public void deleteById(UUID id) {
         repository.deleteById(id);
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public PageResponse<AccountResponseDto> findAll(com.specialist.utils.pagination.PageRequest pageRequest) {
-        Page<AccountEntity> entityPage = repository.findAll(generatePageable(pageRequest));
-        Map<UUID, List<Authority>> authoritiesMap = loadAuthorities(entityPage.getContent());
-        return toPageResponse(entityPage, authoritiesMap);
     }
 
     @Transactional(readOnly = true)

@@ -358,45 +358,6 @@ public class UnifiedAccountServiceUnitTests {
     }
 
     @Test
-    @DisplayName("UT: findAll() returns paged response")
-    void findAll_shouldReturnPageResponse() {
-        var pageRequest = new com.specialist.utils.pagination.PageRequest(0, 10, true);
-
-        AccountEntity entity = new AccountEntity();
-        entity.setId(UUID.randomUUID());
-
-        Page<AccountEntity> page = new PageImpl<>(List.of(entity), PageRequest.of(0, 10), 1);
-
-        Map<UUID, List<Authority>> authoritiesMap = Map.of(entity.getId(), List.of(Authority.REVIEW_CREATE_UPDATE));
-
-        when(repository.findAll(any(Pageable.class))).thenReturn(page);
-        when(authorityService.findAllByAccountIdIn(Set.of(entity.getId()))).thenReturn(authoritiesMap);
-        when(mapper.toResponseDto(any(), eq(entity))).thenReturn(new AccountResponseDto(
-                UUID.randomUUID(),
-                "user@example.com",
-                "encodedPassword",
-                Role.ROLE_USER,
-                List.of(Authority.REVIEW_CREATE_UPDATE),
-                false,
-                null,
-                null,
-                true,
-                null,
-                Instant.now(),
-                Instant.now()
-        ));
-
-        PageResponse<AccountResponseDto> response = unifiedAccountService.findAll(pageRequest);
-
-        assertNotNull(response);
-        assertEquals(1, response.totalPages());
-
-        verify(repository, times(1)).findAll(any(Pageable.class));
-        verify(authorityService, times(1)).findAllByAccountIdIn(Set.of(entity.getId()));
-        verify(mapper, times(1)).toResponseDto(any(), eq(entity));
-    }
-
-    @Test
     @DisplayName("UT: findAllByFilter() returns filtered paged response")
     void findAllByFilter_shouldReturnFilteredPageResponse() {
         AccountFilter filter = new AccountFilter(true, "ABUSE", false,
@@ -434,40 +395,6 @@ public class UnifiedAccountServiceUnitTests {
         verify(repository, times(1)).findAll(any(Specification.class), any(Pageable.class));
         verify(authorityService, times(1)).findAllByAccountIdIn(Set.of(entity.getId()));
         verify(mapper, times(1)).toResponseDto(any(), eq(entity));
-    }
-
-    @Test
-    @DisplayName("UT: lockById() calls repository with correct params")
-    void lockById_shouldCallRepository() {
-        UUID id = UUID.randomUUID();
-        var lockRequest = new LockRequest(LockReason.REVIEW_SPAM, LocalDateTime.now());
-
-        doNothing().when(repository).lockById(
-                id,
-                lockRequest.reason(),
-                lockRequest.term().atZone(ZoneId.systemDefault()).toInstant()
-        );
-
-        unifiedAccountService.lockById(id, lockRequest);
-
-        verify(repository, times(1)).lockById(
-                id,
-                lockRequest.reason(),
-                lockRequest.term().atZone(ZoneId.systemDefault()).toInstant()
-        );
-    }
-
-    @Test
-    @DisplayName("UT: setUnableById() calls repository with correct params")
-    void setUnableById_shouldCallRepository() {
-        UUID id = UUID.randomUUID();
-        var unableRequest = new DisableRequest(DisableReason.EMAIL_CONFIRMATION_REQUIRED);
-
-        doNothing().when(repository).disableById(id, DisableReason.EMAIL_CONFIRMATION_REQUIRED);
-
-        unifiedAccountService.disableById(id, unableRequest);
-
-        verify(repository, times(1)).disableById(id, DisableReason.EMAIL_CONFIRMATION_REQUIRED);
     }
 }
 
