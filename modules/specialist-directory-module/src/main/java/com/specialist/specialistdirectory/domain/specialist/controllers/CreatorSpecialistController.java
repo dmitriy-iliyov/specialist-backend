@@ -9,7 +9,6 @@ import com.specialist.specialistdirectory.domain.specialist.services.SpecialistC
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistCreatorOrchestrator;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistPersistOrchestrator;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistService;
-import com.specialist.utils.pagination.PageRequest;
 import com.specialist.utils.validation.annotation.ValidUuid;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -71,23 +70,15 @@ public class CreatorSpecialistController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getAllCreated(@AuthenticationPrincipal PrincipalDetails principal,
-                                           @ModelAttribute @Valid PageRequest page) {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(service.findAllByCreatorId(principal.getAccountId(), page));
-    }
-
-    @GetMapping("/filter")
-    public ResponseEntity<?> getAllCreatedByFilter(@AuthenticationPrincipal PrincipalDetails principal,
-                                                   @ModelAttribute @Valid ExtendedSpecialistFilter filter) {
+    public ResponseEntity<?> getAll(@AuthenticationPrincipal PrincipalDetails principal,
+                                    @ModelAttribute @Valid ExtendedSpecialistFilter filter) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(service.findAllByCreatorIdAndFilter(principal.getAccountId(), filter));
     }
 
     @GetMapping("/count")
-    public ResponseEntity<?> countByCreatorId(@AuthenticationPrincipal PrincipalDetails principal){
+    public ResponseEntity<?> count(@AuthenticationPrincipal PrincipalDetails principal){
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(countService.countByCreatorId(principal.getAccountId()));

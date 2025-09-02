@@ -2,7 +2,7 @@ package com.specialist.specialistdirectory.utils;
 
 import com.specialist.specialistdirectory.domain.specialist.models.SpecialistEntity;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
-import com.specialist.specialistdirectory.domain.specialist.models.markers.BaseSpecialistFilter;
+import com.specialist.specialistdirectory.domain.specialist.models.filters.BaseSpecialistFilter;
 import com.specialist.specialistdirectory.domain.specialist.repositories.SpecialistSpecification;
 import com.specialist.utils.pagination.PageDataHolder;
 import org.springframework.data.domain.Pageable;

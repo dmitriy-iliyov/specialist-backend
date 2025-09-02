@@ -1,7 +1,6 @@
 package com.specialist.specialistdirectory.domain.specialist.models.filters;
 
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistLanguage;
-import com.specialist.specialistdirectory.domain.specialist.models.markers.BaseSpecialistFilter;
 import com.specialist.specialistdirectory.domain.specialist.validation.SpecialistFilter;
 import com.specialist.utils.pagination.PageDataHolder;
 import jakarta.validation.constraints.*;

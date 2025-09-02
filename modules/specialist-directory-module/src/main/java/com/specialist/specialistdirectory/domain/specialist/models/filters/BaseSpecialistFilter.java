@@ -1,4 +1,4 @@
-package com.specialist.specialistdirectory.domain.specialist.models.markers;
+package com.specialist.specialistdirectory.domain.specialist.models.filters;
 
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistLanguage;
 

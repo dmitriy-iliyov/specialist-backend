@@ -22,14 +22,12 @@ public class SpecialistController {
     private final SpecialistCountService countService;
 
     @GetMapping
-    public ResponseEntity<?> getAll(@ModelAttribute @Valid PageRequest page){
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(aggregator.findAll(page));
-    }
-
-    @GetMapping("/filter")
-    public ResponseEntity<?> getAllByFilter(@ModelAttribute @Valid SpecialistFilter filter){
+    public ResponseEntity<?> getAllByFilter(@ModelAttribute @Valid SpecialistFilter filter) {
+        if (filter.isEmpty()) {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(aggregator.findAll(filter));
+        }
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(aggregator.findAllByFilter(filter));

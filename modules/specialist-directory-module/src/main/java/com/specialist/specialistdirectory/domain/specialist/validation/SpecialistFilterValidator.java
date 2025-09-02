@@ -1,6 +1,6 @@
 package com.specialist.specialistdirectory.domain.specialist.validation;
 
-import com.specialist.specialistdirectory.domain.specialist.models.markers.BaseSpecialistFilter;
+import com.specialist.specialistdirectory.domain.specialist.models.filters.BaseSpecialistFilter;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 

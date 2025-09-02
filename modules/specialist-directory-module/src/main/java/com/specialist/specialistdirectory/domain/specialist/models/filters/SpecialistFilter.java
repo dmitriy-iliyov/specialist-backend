@@ -1,7 +1,6 @@
 package com.specialist.specialistdirectory.domain.specialist.models.filters;
 
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistLanguage;
-import com.specialist.specialistdirectory.domain.specialist.models.markers.BaseSpecialistFilter;
 import com.specialist.utils.pagination.PageDataHolder;
 import jakarta.validation.constraints.*;
 
@@ -42,5 +41,14 @@ public record SpecialistFilter(
         public String cacheKey() {
                 return ":c:" + city + ":t:" + typeId + ":mir:" + minRating +
                        ":mar:" + maxRating + ":a:" + asc + ":pn:" + pageNumber + ":ps:" + pageSize;
+        }
+
+        public boolean isEmpty() {
+                return city == null &&
+                        cityCode == null &&
+                        typeId == null &&
+                        lang == null &&
+                        minRating == null &&
+                        maxRating == null;
         }
 }
