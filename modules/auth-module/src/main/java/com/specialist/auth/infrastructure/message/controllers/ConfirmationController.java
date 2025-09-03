@@ -1,6 +1,7 @@
 package com.specialist.auth.infrastructure.message.controllers;
 
-import com.specialist.auth.core.AccountAuthService;
+import com.specialist.auth.core.AccountLoginOrchestrator;
+import com.specialist.auth.infrastructure.message.services.ConfirmationFacade;
 import com.specialist.auth.infrastructure.message.services.ConfirmationService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ConfirmationController {
 
     private final ConfirmationService confirmationService;
-    private final AccountAuthService accountAuthService;
+    private final ConfirmationFacade confirmationFacade;
 
     @PostMapping("/request")
     public ResponseEntity<?> request(@RequestParam("email") @NotBlank(message = "Email is required.") String email) {
@@ -35,7 +36,7 @@ public class ConfirmationController {
                                      @Pattern(regexp = "^\\d{6}$", message = "Invalid code.") String code,
                                      HttpServletRequest request,
                                      HttpServletResponse response) {
-        accountAuthService.postEmailConfirmationLogin(confirmationService.confirmEmailByCode(code), request, response);
+        confirmationFacade.confirm(code, request, response);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
