@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class AccountDeleteFacadeImpl implements AccountDeleteFacade {
+public class DefaultAccountDeleteFacade implements AccountDeleteFacade {
 
     private final AccountService accountService;
     private final UserDeleteFacade userDeleteFacade;

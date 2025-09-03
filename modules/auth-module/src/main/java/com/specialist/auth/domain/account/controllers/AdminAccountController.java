@@ -9,6 +9,7 @@ import com.specialist.auth.domain.account.services.*;
 import com.specialist.utils.validation.annotation.ValidUuid;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,14 +20,23 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/admin/v1/accounts")
 @PreAuthorize("hasRole('ADMIN')")
-@RequiredArgsConstructor
 public class AdminAccountController {
 
     private final AccountPersistOrchestrator persistOrchestrator;
     private final AccountService service;
     private final AdminAccountService adminService;
-    private final AdminAccountFacade adminOrchestrator;
-    private final AccountDeleteFacade deleteOrchestrator;
+    private final AdminAccountFacade accountFacade;
+    private final AccountDeleteFacade deleteFacade;
+
+    public AdminAccountController(AccountPersistOrchestrator persistOrchestrator, AccountService service,
+                                  AdminAccountService adminService, AdminAccountFacade accountFacade,
+                                  @Qualifier("defaultAccountDeleteFacadeAdminDecorator") AccountDeleteFacade deleteFacade) {
+        this.persistOrchestrator = persistOrchestrator;
+        this.service = service;
+        this.adminService = adminService;
+        this.accountFacade = accountFacade;
+        this.deleteFacade = deleteFacade;
+    }
 
     @PreAuthorize("hasAnyAuthority('ACCOUNT_CREATE', 'ACCOUNT_MANAGER')")
     @PostMapping
@@ -48,7 +58,7 @@ public class AdminAccountController {
                                     @ValidUuid(paramName = "id", message = "Id should have valid format.") UUID id,
                                     @RequestBody @Valid DemodeRequest request) {
         request.setAccountId(id);
-        adminOrchestrator.demoteById(request);
+        accountFacade.demoteById(request);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
@@ -59,7 +69,7 @@ public class AdminAccountController {
     public ResponseEntity<?> lock(@PathVariable("id")
                                   @ValidUuid(paramName = "id", message = "Id should have valid format.") UUID id,
                                   @RequestBody @Valid LockRequest request) {
-        adminOrchestrator.lockById(id, request);
+        accountFacade.lockById(id, request);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
@@ -80,7 +90,7 @@ public class AdminAccountController {
     public ResponseEntity<?> disable(@PathVariable("id")
                                      @ValidUuid(paramName = "id", message = "Id should have valid format.") UUID id,
                                      @RequestBody @Valid DisableRequest request) {
-        adminOrchestrator.disableById(id, request);
+        accountFacade.disableById(id, request);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
@@ -100,7 +110,7 @@ public class AdminAccountController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id")
                                     @ValidUuid(paramName = "id", message = "Id should have valid format.") UUID id) {
-        deleteOrchestrator.delete(id);
+        deleteFacade.delete(id);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
