@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class AccountAuthOrchestratorImplUnitTests {
+class DefaultAccountLoginOrchestratorUnitTests {
 
     @Mock
     private UserDetailsService userDetailsService;
@@ -70,16 +70,17 @@ class AccountAuthOrchestratorImplUnitTests {
     @Mock
     private AccountUserDetails userDetails;
 
-    private AccountAuthOrchestratorImpl authService;
+    @Mock
+    private SessionCookieManager sessionCookieManager;
+
+    private DefaultAccountLoginOrchestrator authService;
 
     @BeforeEach
     void setUp() {
-        authService = new AccountAuthOrchestratorImpl(
-                userDetailsService,
+        authService = new DefaultAccountLoginOrchestrator(
                 authenticationManager,
                 accountService,
-                tokenManager,
-                csrfTokenService
+                sessionCookieManager
         );
     }
 
@@ -246,9 +247,9 @@ class AccountAuthOrchestratorImplUnitTests {
             Cookie emptyRefreshCookie = new Cookie("__Host-refresh-token", "");
             Cookie emptyAccessCookie = new Cookie("__Host-access-token", "");
 
-            cookieFactoryMock.when(() -> CookieManagerImpl.generateEmpty(TokenType.REFRESH))
+            cookieFactoryMock.when(() -> CookieManagerImpl.clean(TokenType.REFRESH))
                     .thenReturn(emptyRefreshCookie);
-            cookieFactoryMock.when(() -> CookieManagerImpl.generateEmpty(TokenType.ACCESS))
+            cookieFactoryMock.when(() -> CookieManagerImpl.clean(TokenType.ACCESS))
                     .thenReturn(emptyAccessCookie);
 
             RefreshTokenExpiredException thrownException = assertThrows(RefreshTokenExpiredException.class,

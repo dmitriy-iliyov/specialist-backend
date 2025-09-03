@@ -28,7 +28,7 @@ import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class ServiceAccountAuthOrchestratorImplUnitTests {
+public class ServiceDefaultAccountLoginOrchestratorUnitTests {
 
     @Mock
     AuthenticationManager authenticationManager;
@@ -43,7 +43,7 @@ public class ServiceAccountAuthOrchestratorImplUnitTests {
     Authentication authentication;
 
     @InjectMocks
-    ServiceAccountAuthServiceImpl service;
+    ServiceAccountLoginOrchestratorImpl service;
 
     @Test
     @DisplayName("UT: login() when authentication successful should return tokens map")

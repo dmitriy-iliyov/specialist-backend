@@ -18,7 +18,7 @@ import static org.mockito.Mockito.*;
 public class ServiceAccountAuthControllerUnitTests {
 
     @Mock
-    ServiceAccountAuthService service;
+    ServiceAccountLoginOrchestrator service;
 
     @Mock
     HttpServletRequest httpServletRequest;
