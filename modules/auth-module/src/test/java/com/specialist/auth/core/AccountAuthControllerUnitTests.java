@@ -1,7 +1,6 @@
 package com.specialist.auth.core;
 
 import com.specialist.auth.core.models.LoginRequest;
-import com.specialist.auth.domain.refresh_token.models.RefreshTokenUserDetails;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.Test;
@@ -12,10 +11,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 
-import java.util.UUID;
-
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 @ExtendWith(MockitoExtension.class)
 class AccountAuthControllerUnitTests {
@@ -39,19 +37,6 @@ class AccountAuthControllerUnitTests {
         ResponseEntity<?> response = controller.login(request, httpRequest, httpResponse);
 
         verify(service).login(request, httpRequest, httpResponse);
-        assertEquals(response.getStatusCode(), HttpStatusCode.valueOf(204));
-        verifyNoMoreInteractions(service);
-    }
-
-    @Test
-    void refresh_shouldReturnNoContent() {
-        RefreshTokenUserDetails principal = mock(RefreshTokenUserDetails.class);
-        UUID id = UUID.randomUUID();
-        when(principal.getId()).thenReturn(id);
-
-        ResponseEntity<?> response = controller.refresh(principal, httpResponse);
-
-        verify(service).refresh(id, httpResponse);
         assertEquals(response.getStatusCode(), HttpStatusCode.valueOf(204));
         verifyNoMoreInteractions(service);
     }

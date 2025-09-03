@@ -32,11 +32,10 @@ public class CookieAuthenticationEntryPoint implements AuthenticationEntryPoint 
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         if (authException instanceof RefreshTokenExpiredException) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.addCookie(cookieManager.clean(TokenType.REFRESH));
-            response.addCookie(cookieManager.clean(TokenType.ACCESS));
+            cookieManager.cleanAll(response);
         } else if (authException instanceof AccessTokenExpiredException) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.addCookie(cookieManager.clean(TokenType.ACCESS));
+            response.addCookie(cookieManager.clean(TokenType.ACCESS.getCookieType()));
         } else if (authException instanceof InvalidJwtSignatureException) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         } else if (authException instanceof JwtParseException) {

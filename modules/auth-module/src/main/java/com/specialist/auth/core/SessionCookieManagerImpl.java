@@ -25,7 +25,7 @@ public class SessionCookieManagerImpl implements SessionCookieManager {
     public void create(AccountUserDetails userDetails, HttpServletRequest request, HttpServletResponse response) {
         Map<TokenType, Token> tokens = tokenManager.generate(userDetails);
         for (Token token: tokens.values()) {
-            response.addCookie(cookieManager.generate(token.rawToken(), token.expiresAt(), token.type()));
+            response.addCookie(cookieManager.generate(token.rawToken(), token.expiresAt(), token.type().getCookieType()));
         }
         csrfTokenService.onAuthentication(request, response);
     }
@@ -34,9 +34,9 @@ public class SessionCookieManagerImpl implements SessionCookieManager {
     public void refresh(UUID refreshTokenId, HttpServletResponse response) {
         try {
             Token token = tokenManager.refresh(refreshTokenId);
-            response.addCookie(cookieManager.generate(token.rawToken(), token.expiresAt(), token.type()));
+            response.addCookie(cookieManager.generate(token.rawToken(), token.expiresAt(), token.type().getCookieType()));
         } catch (RefreshTokenExpiredException e) {
-            cleanCookie(response);
+            cookieManager.cleanAll(response);
             throw e;
         }
     }
@@ -44,19 +44,12 @@ public class SessionCookieManagerImpl implements SessionCookieManager {
     @Override
     public void terminate(UUID refreshTokenId, HttpServletResponse response) {
         tokenManager.deactivate(refreshTokenId);
-        cleanCookie(response);
+        cookieManager.cleanAll(response);
     }
 
     @Override
     public void terminateAll(UUID accountId, HttpServletResponse response) {
         tokenManager.deactivateAll(accountId);
-        cleanCookie(response);
-    }
-
-    private void cleanCookie(HttpServletResponse response) {
-        for (TokenType type: TokenType.values()) {
-            response.addCookie(cookieManager.clean(type));
-        }
-        response.addCookie(cookieManager.cleanCsrf());
+        cookieManager.cleanAll(response);
     }
 }

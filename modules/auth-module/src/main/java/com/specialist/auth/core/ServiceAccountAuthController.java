@@ -1,7 +1,6 @@
 package com.specialist.auth.core;
 
 import com.specialist.auth.core.models.ServiceLoginRequest;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

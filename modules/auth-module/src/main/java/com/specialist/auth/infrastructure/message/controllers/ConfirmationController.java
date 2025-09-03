@@ -1,6 +1,5 @@
 package com.specialist.auth.infrastructure.message.controllers;
 
-import com.specialist.auth.core.AccountLoginOrchestrator;
 import com.specialist.auth.infrastructure.message.services.ConfirmationFacade;
 import com.specialist.auth.infrastructure.message.services.ConfirmationService;
 import jakarta.servlet.http.HttpServletRequest;

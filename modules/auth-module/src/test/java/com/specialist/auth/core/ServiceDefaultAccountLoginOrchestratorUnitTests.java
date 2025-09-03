@@ -62,7 +62,7 @@ public class ServiceDefaultAccountLoginOrchestratorUnitTests {
         when(authentication.getPrincipal()).thenReturn(userDetails);
         when(tokenManager.generate(userDetails)).thenReturn(token);
 
-        Map<String, String> result = service.login(requestDto, httpServletRequest);
+        Map<String, String> result = service.login(requestDto);
 
         assertEquals(token.rawToken(), result.get("access_token"));
         assertEquals(authentication, SecurityContextHolder.getContext().getAuthentication());
@@ -84,7 +84,7 @@ public class ServiceDefaultAccountLoginOrchestratorUnitTests {
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
                 .thenThrow(new AuthenticationException("Bad credentials") {});
 
-        assertThrows(AuthenticationException.class, () -> service.login(requestDto, httpServletRequest));
+        assertThrows(AuthenticationException.class, () -> service.login(requestDto));
 
         assertEquals(null, SecurityContextHolder.getContext().getAuthentication());
 

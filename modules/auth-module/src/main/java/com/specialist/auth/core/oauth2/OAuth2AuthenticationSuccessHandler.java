@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.specialist.auth.core.SessionCookieManager;
 import com.specialist.auth.domain.account.models.AccountUserDetails;
 import com.specialist.auth.exceptions.OAuth2UserNullEmailException;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -35,7 +34,7 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
     }
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         DefaultOAuth2User principal = (DefaultOAuth2User) authentication.getPrincipal();
         String email = principal.getAttribute("email");

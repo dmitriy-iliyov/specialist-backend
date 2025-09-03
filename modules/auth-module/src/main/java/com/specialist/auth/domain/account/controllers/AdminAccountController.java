@@ -8,7 +8,6 @@ import com.specialist.auth.domain.account.models.dtos.ManagedAccountCreateDto;
 import com.specialist.auth.domain.account.services.*;
 import com.specialist.utils.validation.annotation.ValidUuid;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

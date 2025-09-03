@@ -1,7 +1,6 @@
 package com.specialist.auth.core.oauth2;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +18,7 @@ public class OAuth2AuthenticationFailureHandler implements AuthenticationFailure
     private ObjectMapper mapper;
 
     @Override
-    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
+    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException {
         SecurityContextHolder.clearContext();
         response.setStatus(401);
         response.setContentType("application/json");

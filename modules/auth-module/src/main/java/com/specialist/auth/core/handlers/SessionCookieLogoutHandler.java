@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
-public final class AuthenticationSessionLogoutHandler implements LogoutHandler {
+public final class SessionCookieLogoutHandler implements LogoutHandler {
 
     private final SessionCookieManager sessionManager;
 

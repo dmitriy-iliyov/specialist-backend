@@ -15,7 +15,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFilter;
-import org.springframework.security.web.authentication.logout.CookieClearingLogoutHandler;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.csrf.CsrfFilter;
@@ -33,7 +32,7 @@ public class AccountSecurityFilterChainConfig {
     private final AuthenticationFilter authenticationFilter;
     private final AuthenticationEntryPoint authenticationEntryPoint;
     private final DefaultAccessDeniedHandler accessDeniedHandler;
-    private final LogoutHandler authenticationSessionLogoutHandler;
+    private final LogoutHandler sessionCookieLogoutHandler;
     private final LogoutSuccessHandler logoutSuccessHandler;
 
     public AccountSecurityFilterChainConfig(CorsConfigurationSource configurationSource, CsrfTokenRepository csrfTokenRepository,
@@ -41,7 +40,7 @@ public class AccountSecurityFilterChainConfig {
                                             @Qualifier("accountAuthenticationManager") AuthenticationManager authenticationManager,
                                             @Qualifier("accountAuthenticationFilter") AuthenticationFilter authenticationFilter,
                                             @Qualifier("cookieAuthenticationEntryPoint") AuthenticationEntryPoint authenticationEntryPoint,
-                                            @Qualifier("authenticationSessionLogoutHandler") LogoutHandler authenticationSessionLogoutHandler,
+                                            @Qualifier("sessionCookieLogoutHandler") LogoutHandler sessionCookieLogoutHandler,
                                             LogoutSuccessHandler logoutSuccessHandler, DefaultAccessDeniedHandler accessDeniedHandler) {
         this.corsConfigurationSource = configurationSource;
         this.csrfTokenRepository = csrfTokenRepository;
@@ -50,7 +49,7 @@ public class AccountSecurityFilterChainConfig {
         this.authenticationFilter = authenticationFilter;
         this.authenticationEntryPoint = authenticationEntryPoint;
         this.accessDeniedHandler = accessDeniedHandler;
-        this.authenticationSessionLogoutHandler = authenticationSessionLogoutHandler;
+        this.sessionCookieLogoutHandler = sessionCookieLogoutHandler;
         this.logoutSuccessHandler = logoutSuccessHandler;
     }
 
@@ -98,9 +97,9 @@ public class AccountSecurityFilterChainConfig {
                 )
                 .logout(logout -> logout
                         .logoutUrl("/api/auth/logout")
-                        .addLogoutHandler(new CookieClearingLogoutHandler(
-                                "__Host-access-token", "__Host-refresh-token", "XSRF-TOKEN"))
-                        .addLogoutHandler(authenticationSessionLogoutHandler)
+//                        .addLogoutHandler(new CookieClearingLogoutHandler(
+//                                "__Host-access-token", "__Host-refresh-token", "XSRF-TOKEN"))
+                        .addLogoutHandler(sessionCookieLogoutHandler)
                         .logoutSuccessHandler(logoutSuccessHandler)
                 )
                 .exceptionHandling(ex -> ex

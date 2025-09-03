@@ -1,7 +1,6 @@
 package com.specialist.auth.core;
 
 import com.specialist.auth.core.models.ServiceLoginRequest;
-import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,9 +19,6 @@ public class ServiceAccountAuthControllerUnitTests {
     @Mock
     ServiceAccountLoginOrchestrator service;
 
-    @Mock
-    HttpServletRequest httpServletRequest;
-
     @InjectMocks
     ServiceAccountAuthController controller;
 
@@ -31,12 +27,12 @@ public class ServiceAccountAuthControllerUnitTests {
     public void login_shouldCallServiceAndReturnNoContent() {
         ServiceLoginRequest requestDto = new ServiceLoginRequest("client-id", "client-secret");
 
-        ResponseEntity<?> response = controller.login(requestDto, httpServletRequest);
+        ResponseEntity<?> response = controller.login(requestDto);
 
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
         assertEquals(null, response.getBody());
 
-        verify(service, times(1)).login(requestDto, httpServletRequest);
+        verify(service, times(1)).login(requestDto);
         verifyNoMoreInteractions(service);
     }
 }

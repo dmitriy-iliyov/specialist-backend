@@ -1,23 +1,28 @@
 package com.specialist.auth.core;
 
-import com.specialist.auth.core.models.TokenType;
+import com.specialist.auth.core.models.CookieType;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Map;
 
 @Service
+@Slf4j
 public final class CookieManagerImpl implements CookieManager {
 
+    private final Map<CookieType, String> cookieNames = Map.of(
+            CookieType.REFRESH_TOKEN, "__Host-refresh-token",
+            CookieType.ACCESS_TOKEN, "__Host-access-token",
+            CookieType.CSRF_TOKEN, "XSRF_TOKEN"
+    );
+
     @Override
-    public Cookie generate(String rawToken, Instant expiresAt, TokenType type) {
-        Cookie cookie;
-        if (type.equals(TokenType.REFRESH)) {
-            cookie = new Cookie("__Host-refresh-token", rawToken);
-        } else {
-            cookie = new Cookie("__Host-access-token", rawToken);
-        }
+    public Cookie generate(String rawToken, Instant expiresAt, CookieType type) {
+        Cookie cookie = new Cookie(getCookieName(type), rawToken);
         cookie.setPath("/");
         cookie.setDomain(null);
         cookie.setSecure(true);
@@ -27,13 +32,8 @@ public final class CookieManagerImpl implements CookieManager {
     }
 
     @Override
-    public Cookie clean(TokenType type) {
-        Cookie cookie;
-        if (type.equals(TokenType.REFRESH)) {
-            cookie = new Cookie("__Host-refresh-token", "");
-        } else {
-            cookie = new Cookie("__Host-access-token", "");
-        }
+    public Cookie clean(CookieType type) {
+        Cookie cookie = new Cookie(getCookieName(type), "");
         cookie.setPath("/");
         cookie.setDomain(null);
         cookie.setSecure(true);
@@ -42,14 +42,18 @@ public final class CookieManagerImpl implements CookieManager {
         return cookie;
     }
 
+    private String getCookieName(CookieType type) {
+        String cookieName = cookieNames.get(type);
+        if (cookieName == null) {
+            log.error("Cookie name is null, tokenType:{}, time:{}", type, Instant.now());
+        }
+        return cookieName;
+    }
+
     @Override
-    public Cookie cleanCsrf() {
-        Cookie cookie = new Cookie("XSRF-TOKEN", "");
-        cookie.setPath("/");
-        cookie.setDomain(null);
-        cookie.setSecure(true);
-        cookie.setHttpOnly(true);
-        cookie.setMaxAge(0);
-        return cookie;
+    public void cleanAll(HttpServletResponse response) {
+        for (CookieType type: cookieNames.keySet()) {
+            response.addCookie(clean(type));
+        }
     }
 }

@@ -4,20 +4,27 @@ import com.specialist.auth.core.models.TokenType;
 import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Instant;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+@ExtendWith(MockitoExtension.class)
 public class CookieGeneratorUnitTests {
+
+    @InjectMocks
+    CookieManagerImpl cookieManager;
 
     @Test
     @DisplayName("UT: generate() with REFRESH should create correct cookie")
     public void generate_refreshToken_shouldCreateCorrectCookie() {
         Instant expiresAt = Instant.now().plusSeconds(3600);
 
-        Cookie cookie = CookieManagerImpl.generate("refreshTokenValue", expiresAt, TokenType.REFRESH);
+        Cookie cookie = cookieManager.generate("refreshTokenValue", expiresAt, TokenType.REFRESH.getCookieType());
 
         assertEquals("__Host-refresh-token", cookie.getName());
         assertEquals("refreshTokenValue", cookie.getValue());
@@ -33,7 +40,7 @@ public class CookieGeneratorUnitTests {
     public void generate_accessToken_shouldCreateCorrectCookie() {
         Instant expiresAt = Instant.now().plusSeconds(1800);
 
-        Cookie cookie = CookieManagerImpl.generate("accessTokenValue", expiresAt, TokenType.ACCESS);
+        Cookie cookie = cookieManager.generate("accessTokenValue", expiresAt, TokenType.ACCESS.getCookieType());
 
         assertEquals("__Host-access-token", cookie.getName());
         assertEquals("accessTokenValue", cookie.getValue());
@@ -47,7 +54,7 @@ public class CookieGeneratorUnitTests {
     @Test
     @DisplayName("UT: generateEmpty() with REFRESH should create empty cookie with maxAge=0")
     public void generateEmpty_refreshToken_shouldCreateEmptyCookie() {
-        Cookie cookie = CookieManagerImpl.clean(TokenType.REFRESH);
+        Cookie cookie = cookieManager.clean(TokenType.REFRESH.getCookieType());
 
         assertEquals("__Host-refresh-token", cookie.getName());
         assertEquals("", cookie.getValue());
@@ -61,7 +68,7 @@ public class CookieGeneratorUnitTests {
     @Test
     @DisplayName("UT: generateEmpty() with ACCESS should create empty cookie with maxAge=0")
     public void generateEmpty_accessToken_shouldCreateEmptyCookie() {
-        Cookie cookie = CookieManagerImpl.clean(TokenType.ACCESS);
+        Cookie cookie = cookieManager.clean(TokenType.ACCESS.getCookieType());
 
         assertEquals("__Host-access-token", cookie.getName());
         assertEquals("", cookie.getValue());
