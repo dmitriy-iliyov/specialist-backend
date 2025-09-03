@@ -5,6 +5,6 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.Map;
 
-public interface ServiceAccountAuthService {
-    Map<String, String> login(ServiceLoginRequest requestDto, HttpServletRequest request);
+public interface ServiceAccountLoginOrchestrator {
+    Map<String, String> login(ServiceLoginRequest loginRequest);
 }

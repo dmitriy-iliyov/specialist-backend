@@ -10,14 +10,14 @@ import java.time.Instant;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class AuthCookieFactoryUnitTests {
+public class CookieGeneratorImplUnitTests {
 
     @Test
     @DisplayName("UT: generate() with REFRESH should create correct cookie")
     public void generate_refreshToken_shouldCreateCorrectCookie() {
         Instant expiresAt = Instant.now().plusSeconds(3600);
 
-        Cookie cookie = AuthCookieFactory.generate("refreshTokenValue", expiresAt, TokenType.REFRESH);
+        Cookie cookie = CookieGeneratorImpl.generate("refreshTokenValue", expiresAt, TokenType.REFRESH);
 
         assertEquals("__Host-refresh-token", cookie.getName());
         assertEquals("refreshTokenValue", cookie.getValue());
@@ -33,7 +33,7 @@ public class AuthCookieFactoryUnitTests {
     public void generate_accessToken_shouldCreateCorrectCookie() {
         Instant expiresAt = Instant.now().plusSeconds(1800);
 
-        Cookie cookie = AuthCookieFactory.generate("accessTokenValue", expiresAt, TokenType.ACCESS);
+        Cookie cookie = CookieGeneratorImpl.generate("accessTokenValue", expiresAt, TokenType.ACCESS);
 
         assertEquals("__Host-access-token", cookie.getName());
         assertEquals("accessTokenValue", cookie.getValue());
@@ -47,7 +47,7 @@ public class AuthCookieFactoryUnitTests {
     @Test
     @DisplayName("UT: generateEmpty() with REFRESH should create empty cookie with maxAge=0")
     public void generateEmpty_refreshToken_shouldCreateEmptyCookie() {
-        Cookie cookie = AuthCookieFactory.generateEmpty(TokenType.REFRESH);
+        Cookie cookie = CookieGeneratorImpl.generateEmpty(TokenType.REFRESH);
 
         assertEquals("__Host-refresh-token", cookie.getName());
         assertEquals("", cookie.getValue());
@@ -61,7 +61,7 @@ public class AuthCookieFactoryUnitTests {
     @Test
     @DisplayName("UT: generateEmpty() with ACCESS should create empty cookie with maxAge=0")
     public void generateEmpty_accessToken_shouldCreateEmptyCookie() {
-        Cookie cookie = AuthCookieFactory.generateEmpty(TokenType.ACCESS);
+        Cookie cookie = CookieGeneratorImpl.generateEmpty(TokenType.ACCESS);
 
         assertEquals("__Host-access-token", cookie.getName());
         assertEquals("", cookie.getValue());

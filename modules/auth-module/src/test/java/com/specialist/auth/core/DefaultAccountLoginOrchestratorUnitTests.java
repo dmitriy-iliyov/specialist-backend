@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class AccountAuthServiceImplUnitTests {
+class AccountAuthOrchestratorImplUnitTests {
 
     @Mock
     private UserDetailsService userDetailsService;
@@ -70,11 +70,11 @@ class AccountAuthServiceImplUnitTests {
     @Mock
     private AccountUserDetails userDetails;
 
-    private AccountAuthServiceImpl authService;
+    private AccountAuthOrchestratorImpl authService;
 
     @BeforeEach
     void setUp() {
-        authService = new AccountAuthServiceImpl(
+        authService = new AccountAuthOrchestratorImpl(
                 userDetailsService,
                 authenticationManager,
                 accountService,
@@ -104,15 +104,15 @@ class AccountAuthServiceImplUnitTests {
         when(tokenManager.generate(userDetails)).thenReturn(tokens);
 
         try (MockedStatic<SecurityContextHolder> securityContextHolderMock = mockStatic(SecurityContextHolder.class);
-             MockedStatic<AuthCookieFactory> cookieFactoryMock = mockStatic(AuthCookieFactory.class)) {
+             MockedStatic<CookieManagerImpl> cookieFactoryMock = mockStatic(CookieManagerImpl.class)) {
 
             Cookie accessCookie = new Cookie("__Host-access-token", accessTokenValue);
             Cookie refreshCookie = new Cookie("__Host-refresh-token", refreshTokenValue);
 
             securityContextHolderMock.when(SecurityContextHolder::getContext).thenReturn(securityContext);
-            cookieFactoryMock.when(() -> AuthCookieFactory.generate(accessTokenValue, expiresAt, TokenType.ACCESS))
+            cookieFactoryMock.when(() -> CookieManagerImpl.generate(accessTokenValue, expiresAt, TokenType.ACCESS))
                     .thenReturn(accessCookie);
-            cookieFactoryMock.when(() -> AuthCookieFactory.generate(refreshTokenValue, expiresAt, TokenType.REFRESH))
+            cookieFactoryMock.when(() -> CookieManagerImpl.generate(refreshTokenValue, expiresAt, TokenType.REFRESH))
                     .thenReturn(refreshCookie);
 
             authService.postEmailConfirmationLogin(email, request, response);
@@ -148,15 +148,15 @@ class AccountAuthServiceImplUnitTests {
         when(tokenManager.generate(userDetails)).thenReturn(tokens);
 
         try (MockedStatic<SecurityContextHolder> securityContextHolderMock = mockStatic(SecurityContextHolder.class);
-             MockedStatic<AuthCookieFactory> cookieFactoryMock = mockStatic(AuthCookieFactory.class)) {
+             MockedStatic<CookieManagerImpl> cookieFactoryMock = mockStatic(CookieManagerImpl.class)) {
 
             Cookie accessCookie = new Cookie("__Host-access-token", accessTokenValue);
             Cookie refreshCookie = new Cookie("__Host-refresh-token", refreshTokenValue);
 
             securityContextHolderMock.when(SecurityContextHolder::getContext).thenReturn(securityContext);
-            cookieFactoryMock.when(() -> AuthCookieFactory.generate(accessTokenValue, expiresAt, TokenType.ACCESS))
+            cookieFactoryMock.when(() -> CookieManagerImpl.generate(accessTokenValue, expiresAt, TokenType.ACCESS))
                     .thenReturn(accessCookie);
-            cookieFactoryMock.when(() -> AuthCookieFactory.generate(refreshTokenValue, expiresAt, TokenType.REFRESH))
+            cookieFactoryMock.when(() -> CookieManagerImpl.generate(refreshTokenValue, expiresAt, TokenType.REFRESH))
                     .thenReturn(refreshCookie);
 
             authService.login(loginRequest, request, response);
@@ -221,9 +221,9 @@ class AccountAuthServiceImplUnitTests {
 
         when(tokenManager.refresh(refreshTokenId)).thenReturn(newAccessToken);
 
-        try (MockedStatic<AuthCookieFactory> cookieFactoryMock = mockStatic(AuthCookieFactory.class)) {
+        try (MockedStatic<CookieManagerImpl> cookieFactoryMock = mockStatic(CookieManagerImpl.class)) {
             Cookie accessCookie = new Cookie("__Host-access-token", newAccessTokenValue);
-            cookieFactoryMock.when(() -> AuthCookieFactory.generate(newAccessTokenValue, expiresAt, TokenType.ACCESS))
+            cookieFactoryMock.when(() -> CookieManagerImpl.generate(newAccessTokenValue, expiresAt, TokenType.ACCESS))
                     .thenReturn(accessCookie);
 
             authService.refresh(refreshTokenId, response);
@@ -242,13 +242,13 @@ class AccountAuthServiceImplUnitTests {
 
         when(tokenManager.refresh(refreshTokenId)).thenThrow(expiredException);
 
-        try (MockedStatic<AuthCookieFactory> cookieFactoryMock = mockStatic(AuthCookieFactory.class)) {
+        try (MockedStatic<CookieManagerImpl> cookieFactoryMock = mockStatic(CookieManagerImpl.class)) {
             Cookie emptyRefreshCookie = new Cookie("__Host-refresh-token", "");
             Cookie emptyAccessCookie = new Cookie("__Host-access-token", "");
 
-            cookieFactoryMock.when(() -> AuthCookieFactory.generateEmpty(TokenType.REFRESH))
+            cookieFactoryMock.when(() -> CookieManagerImpl.generateEmpty(TokenType.REFRESH))
                     .thenReturn(emptyRefreshCookie);
-            cookieFactoryMock.when(() -> AuthCookieFactory.generateEmpty(TokenType.ACCESS))
+            cookieFactoryMock.when(() -> CookieManagerImpl.generateEmpty(TokenType.ACCESS))
                     .thenReturn(emptyAccessCookie);
 
             RefreshTokenExpiredException thrownException = assertThrows(RefreshTokenExpiredException.class,
@@ -277,12 +277,12 @@ class AccountAuthServiceImplUnitTests {
         when(tokenManager.generate(userDetails)).thenReturn(tokens);
 
         try (MockedStatic<SecurityContextHolder> securityContextHolderMock = mockStatic(SecurityContextHolder.class);
-             MockedStatic<AuthCookieFactory> cookieFactoryMock = mockStatic(AuthCookieFactory.class)) {
+             MockedStatic<CookieManagerImpl> cookieFactoryMock = mockStatic(CookieManagerImpl.class)) {
 
             Cookie accessCookie = new Cookie("__Host-access-token", accessTokenValue);
 
             securityContextHolderMock.when(SecurityContextHolder::getContext).thenReturn(securityContext);
-            cookieFactoryMock.when(() -> AuthCookieFactory.generate(accessTokenValue, expiresAt, TokenType.ACCESS))
+            cookieFactoryMock.when(() -> CookieManagerImpl.generate(accessTokenValue, expiresAt, TokenType.ACCESS))
                     .thenReturn(accessCookie);
 
             authService.postEmailConfirmationLogin(email, request, response);

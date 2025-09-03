@@ -1,7 +1,7 @@
 package com.specialist.auth.core.handlers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.specialist.auth.core.AuthCookieFactory;
+import com.specialist.auth.core.CookieManager;
 import com.specialist.auth.core.models.TokenType;
 import com.specialist.auth.exceptions.AccessTokenExpiredException;
 import com.specialist.auth.exceptions.InvalidJwtSignatureException;
@@ -25,17 +25,18 @@ import java.util.Map;
 @Slf4j
 public class CookieAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
+    private final CookieManager cookieManager;
     private final ObjectMapper mapper;
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         if (authException instanceof RefreshTokenExpiredException) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.addCookie(AuthCookieFactory.generateEmpty(TokenType.REFRESH));
-            response.addCookie(AuthCookieFactory.generateEmpty(TokenType.ACCESS));
+            response.addCookie(cookieManager.clean(TokenType.REFRESH));
+            response.addCookie(cookieManager.clean(TokenType.ACCESS));
         } else if (authException instanceof AccessTokenExpiredException) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.addCookie(AuthCookieFactory.generateEmpty(TokenType.ACCESS));
+            response.addCookie(cookieManager.clean(TokenType.ACCESS));
         } else if (authException instanceof InvalidJwtSignatureException) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         } else if (authException instanceof JwtParseException) {

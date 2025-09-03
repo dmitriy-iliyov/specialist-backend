@@ -33,7 +33,7 @@ public class AccountSecurityFilterChainConfig {
     private final AuthenticationFilter authenticationFilter;
     private final AuthenticationEntryPoint authenticationEntryPoint;
     private final DefaultAccessDeniedHandler accessDeniedHandler;
-    private final LogoutHandler refreshTokenLogoutHandler;
+    private final LogoutHandler authenticationSessionLogoutHandler;
     private final LogoutSuccessHandler logoutSuccessHandler;
 
     public AccountSecurityFilterChainConfig(CorsConfigurationSource configurationSource, CsrfTokenRepository csrfTokenRepository,
@@ -41,7 +41,7 @@ public class AccountSecurityFilterChainConfig {
                                             @Qualifier("accountAuthenticationManager") AuthenticationManager authenticationManager,
                                             @Qualifier("accountAuthenticationFilter") AuthenticationFilter authenticationFilter,
                                             @Qualifier("cookieAuthenticationEntryPoint") AuthenticationEntryPoint authenticationEntryPoint,
-                                            @Qualifier("refreshTokenLogoutHandler") LogoutHandler refreshTokenLogoutHandler,
+                                            @Qualifier("authenticationSessionLogoutHandler") LogoutHandler authenticationSessionLogoutHandler,
                                             LogoutSuccessHandler logoutSuccessHandler, DefaultAccessDeniedHandler accessDeniedHandler) {
         this.corsConfigurationSource = configurationSource;
         this.csrfTokenRepository = csrfTokenRepository;
@@ -50,7 +50,7 @@ public class AccountSecurityFilterChainConfig {
         this.authenticationFilter = authenticationFilter;
         this.authenticationEntryPoint = authenticationEntryPoint;
         this.accessDeniedHandler = accessDeniedHandler;
-        this.refreshTokenLogoutHandler = refreshTokenLogoutHandler;
+        this.authenticationSessionLogoutHandler = authenticationSessionLogoutHandler;
         this.logoutSuccessHandler = logoutSuccessHandler;
     }
 
@@ -100,7 +100,7 @@ public class AccountSecurityFilterChainConfig {
                         .logoutUrl("/api/auth/logout")
                         .addLogoutHandler(new CookieClearingLogoutHandler(
                                 "__Host-access-token", "__Host-refresh-token", "XSRF-TOKEN"))
-                        .addLogoutHandler(refreshTokenLogoutHandler)
+                        .addLogoutHandler(authenticationSessionLogoutHandler)
                         .logoutSuccessHandler(logoutSuccessHandler)
                 )
                 .exceptionHandling(ex -> ex

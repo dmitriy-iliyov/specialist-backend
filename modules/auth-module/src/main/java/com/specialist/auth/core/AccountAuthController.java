@@ -6,7 +6,7 @@ import com.specialist.auth.domain.refresh_token.models.RefreshTokenUserDetails;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,15 +17,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/auth")
-@RequiredArgsConstructor
 public class AccountAuthController {
 
-    private final AccountAuthService service;
+    private final AccountLoginOrchestrator orchestrator;
+    private final SessionCookieManager sessionCookieManager;
+
+    public AccountAuthController(@Qualifier("defaultAccountLoginOrchestrator") AccountLoginOrchestrator orchestrator,
+                                 SessionCookieManager sessionCookieManager) {
+        this.orchestrator = orchestrator;
+        this.sessionCookieManager = sessionCookieManager;
+    }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody @Valid LoginRequest requestDto, HttpServletRequest request,
                                    HttpServletResponse response) {
-        service.login(requestDto, request, response);
+        orchestrator.login(requestDto, request, response);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
@@ -34,7 +40,7 @@ public class AccountAuthController {
     @PostMapping("/refresh")
     public ResponseEntity<?> refresh(@AuthenticationPrincipal RefreshTokenUserDetails principal,
                                      HttpServletResponse response) {
-        service.refresh(principal.getId(), response);
+        sessionCookieManager.refresh(principal.getId(), response);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
@@ -43,7 +49,7 @@ public class AccountAuthController {
     @PostMapping("/logout/all")
     public ResponseEntity<?> logoutFromAll(@AuthenticationPrincipal AccessTokenUserDetails principal,
                                            HttpServletResponse response) {
-        service.logoutFromAll(principal.getAccountId(), response);
+        sessionCookieManager.terminateAll(principal.getAccountId(), response);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();

@@ -28,7 +28,7 @@ import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class ServiceAccountAuthServiceImplUnitTests {
+public class ServiceAccountAuthOrchestratorImplUnitTests {
 
     @Mock
     AuthenticationManager authenticationManager;
