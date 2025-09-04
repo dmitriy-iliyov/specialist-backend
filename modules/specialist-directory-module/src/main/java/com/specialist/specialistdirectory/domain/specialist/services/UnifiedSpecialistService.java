@@ -95,6 +95,12 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
         entity.setSuggestedTypeId(id);
     }
 
+    @Transactional
+    @Override
+    public void updateAllByTypeIdPair(Long oldTypeId, Long newTypeId) {
+        repository.updateAllByTypeTitle(oldTypeId, newTypeId);
+    }
+
     @Transactional(readOnly = true)
     @Override
     public ShortSpecialistInfo getShortInfoById(UUID id) {
@@ -149,26 +155,6 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
         return repository.getReferenceById(id);
     }
 
-    @Transactional
-    @Override
-    public void updateAllByTypeIdPair(Long oldTypeId, Long newTypeId) {
-        repository.updateAllByTypeTitle(oldTypeId, newTypeId);
-    }
-
-    @CacheEvict(value = "specialists:short-info", key = "#id")
-    @Transactional
-    @Override
-    public void deleteById(UUID id) {
-        UUID creatorId = cacheService.getShortInfo(id).creatorId();
-        if (creatorId == null) {
-            creatorId = repository.findCreatorIdById(id).orElseThrow(SpecialistNotFoundByIdException::new);
-        }
-        repository.deleteById(id);
-        cacheService.evictSpecialist(id, creatorId);
-        cacheService.evictTotalCreatedCount(creatorId);
-        cacheService.evictCreatedCountByFilter(creatorId);
-    }
-
     @Transactional(readOnly = true)
     @Override
     public PageResponse<SpecialistResponseDto> findAll(PageRequest page) {
@@ -220,6 +206,20 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
         Specification<SpecialistEntity> specification = PaginationUtils.generateSpecification(filter)
                 .and(SpecialistSpecification.filterByIdIn(ids));
         return repository.findAll(specification, PaginationUtils.generatePageable(filter));
+    }
+
+    @CacheEvict(value = "specialists:short-info", key = "#id")
+    @Transactional
+    @Override
+    public void deleteById(UUID id) {
+        UUID creatorId = cacheService.getShortInfo(id).creatorId();
+        if (creatorId == null) {
+            creatorId = repository.findCreatorIdById(id).orElseThrow(SpecialistNotFoundByIdException::new);
+        }
+        repository.deleteById(id);
+        cacheService.evictSpecialist(id, creatorId);
+        cacheService.evictTotalCreatedCount(creatorId);
+        cacheService.evictCreatedCountByFilter(creatorId);
     }
 
     @Override

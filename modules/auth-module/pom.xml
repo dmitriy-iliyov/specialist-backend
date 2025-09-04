@@ -48,11 +48,6 @@
             <artifactId>testcontainers</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-mail</artifactId>
-        </dependency>
-
         <!-- json web token-->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
@@ -86,6 +81,12 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-oauth2-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.specialist</groupId>
+            <artifactId>message-core</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

@@ -23,24 +23,15 @@ public class UserOrchestratorImpl implements UserOrchestrator {
     private final AvatarStorage avatarStorage;
     private final Validator validator;
 
-    private void validate(BaseUserDto dto) {
+    @Transactional
+    @Override
+    public PrivateUserResponseDto update(UserUpdateDto dto) {
         Set<ConstraintViolation<BaseUserDto>> errors = validator.validate(dto);
         if (!errors.isEmpty()) {
             throw new ConstraintViolationException(errors);
         }
-    }
-
-    private void saveAvatar(BaseUserDto dto) {
-        if (dto.getAvatar() != null && !dto.getAvatar().isEmpty()) {
-            dto.setAvatarUrl(avatarStorage.save(dto.getAvatar(), dto.getId()));
-        }
-    }
-
-    @Transactional
-    @Override
-    public PrivateUserResponseDto update(UserUpdateDto dto) {
-        validate(dto);
-        saveAvatar(dto);
+        String avatarUrl = avatarStorage.save(dto.getAvatar(), dto.getId());
+        dto.setAvatarUrl(avatarUrl);
         return userService.update(dto);
     }
 

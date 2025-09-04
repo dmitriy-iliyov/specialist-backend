@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class AccountControllerUnitTests {
+public class AccountRegistrationControllerUnitTests {
 
     @Mock
     AccountPersistOrchestrator orchestrator;
@@ -38,7 +38,7 @@ public class AccountControllerUnitTests {
     PrincipalDetails principalDetails;
 
     @InjectMocks
-    AccountController accountController;
+    AccountRegistrationController accountRegistrationController;
 
     @Test
     @DisplayName("UT: create() when dto valid should return 201")
@@ -51,7 +51,7 @@ public class AccountControllerUnitTests {
 
         when(orchestrator.save(eq(createDto), any())).thenReturn(expectedResponse);
 
-        ResponseEntity<?> responseEntity = accountController.register(createDto, response);
+        ResponseEntity<?> responseEntity = accountRegistrationController.register(createDto, response);
 
         verify(orchestrator, times(1)).save(eq(createDto), any());
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
@@ -64,7 +64,7 @@ public class AccountControllerUnitTests {
 
         when(orchestrator.save(eq(createDto), any())).thenThrow(RuntimeException.class);
 
-        assertThrows(RuntimeException.class, () -> accountController.register(createDto, response));
+        assertThrows(RuntimeException.class, () -> accountRegistrationController.register(createDto, response));
 
         verify(orchestrator, times(1)).save(eq(createDto), any());
     }

@@ -4,9 +4,10 @@ import com.azure.storage.blob.BlobClient;
 import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.models.BlobErrorCode;
 import com.azure.storage.blob.models.BlobStorageException;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,14 +24,17 @@ public class AvatarAzureBlobStorage implements AvatarStorage {
     private static final String DEFAULT_AVATAR_NAME = "default-avatar.jpg";
     private String defaultAvatarUrl;
 
-
-    @PostConstruct
+    @EventListener(ApplicationReadyEvent.class)
+    @Override
     public void setUpDefaultUrl() {
         defaultAvatarUrl = containerClient.getBlobContainerUrl() + "/" + DEFAULT_AVATAR_NAME;
     }
 
     @Override
     public String save(MultipartFile avatar, UUID userId) {
+        if (avatar == null || avatar.isEmpty()) {
+            return defaultAvatarUrl;
+        }
         try {
             BlobClient blobClient = containerClient.getBlobClient(AVATAR_FILE_NAME_TEMPLATE.formatted(userId));
             blobClient.upload(avatar.getInputStream(), avatar.getSize(), true);

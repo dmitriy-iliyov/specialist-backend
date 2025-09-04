@@ -72,4 +72,10 @@ public interface SpecialistRepository extends JpaRepository<SpecialistEntity, UU
         WHERE s.id = :id
     """)
     Optional<ShortSpecialistInfo> findShortInfoById(@Param("id") UUID id);
+
+    @Query("""
+        SELECT s.status FROM SpecialistEntity s
+        WHERE s.id = :id
+    """)
+    Optional<SpecialistStatus> findStatusById(@Param("id") UUID id);
 }

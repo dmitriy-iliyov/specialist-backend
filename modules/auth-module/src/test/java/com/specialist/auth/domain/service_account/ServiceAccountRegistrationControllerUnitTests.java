@@ -31,7 +31,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class ServiceAccountControllerUnitTests {
+class ServiceAccountRegistrationControllerUnitTests {
 
     @Mock
     private ServiceAccountService mockService;

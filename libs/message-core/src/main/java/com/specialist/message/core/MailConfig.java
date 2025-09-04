@@ -1,4 +1,4 @@
-package com.specialist.auth.infrastructure.message.configs;
+package com.specialist.message.core;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

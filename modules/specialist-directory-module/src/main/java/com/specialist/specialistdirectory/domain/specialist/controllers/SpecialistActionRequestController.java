@@ -17,15 +17,15 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/specialists/{id}/action")
+@RequestMapping("/api/v1/specialists/{id}")
 @RequiredArgsConstructor
-public class SpecialistActionController {
+public class SpecialistActionRequestController {
 
     private final SpecialistActionOrchestrator orchestrator;
 
-    @PostMapping("/recall/{contact_type}")
-    public ResponseEntity<?> recall(@PathVariable("id") @ValidUuid(paramName = "id") String id,
-                                    @PathVariable("contact_type") ContactType contactType) {
+    @PostMapping("/recall/request/{contact_type}")
+    public ResponseEntity<?> recallRequest(@PathVariable("id") @ValidUuid(paramName = "id") String id,
+                                           @PathVariable("contact_type") ContactType contactType) {
         orchestrator.recallRequest(UUID.fromString(id), contactType);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
@@ -33,10 +33,10 @@ public class SpecialistActionController {
     }
 
     @PreAuthorize("hasRole('SPECIALIST')")
-    @PostMapping("/manage/{contact_type}")
-    public ResponseEntity<?> manage(@AuthenticationPrincipal PrincipalDetails principal,
-                                    @PathVariable("id") @ValidUuid(paramName = "id") String id,
-                                    @PathVariable("contact_type")ContactType contactType) {
+    @PostMapping("/manage/request/{contact_type}")
+    public ResponseEntity<?> manageRequest(@AuthenticationPrincipal PrincipalDetails principal,
+                                           @PathVariable("id") @ValidUuid(paramName = "id") String id,
+                                           @PathVariable("contact_type") ContactType contactType) {
         orchestrator.manageRequest(UUID.fromString(id), principal.getAccountId(), contactType);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)

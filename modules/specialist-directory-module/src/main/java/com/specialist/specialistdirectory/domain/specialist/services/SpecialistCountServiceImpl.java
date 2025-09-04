@@ -20,7 +20,6 @@ public class SpecialistCountServiceImpl implements SpecialistCountService {
 
     private final SpecialistRepository repository;
 
-
     @Cacheable(value = "specialists:count:total")
     @Transactional(readOnly = true)
     @Override

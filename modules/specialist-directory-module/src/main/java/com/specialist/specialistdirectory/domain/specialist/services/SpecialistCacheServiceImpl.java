@@ -14,7 +14,6 @@ public class SpecialistCacheServiceImpl implements SpecialistCacheService {
 
     private final CacheManager cacheManager;
 
-
     @Override
     public void putShortInfo(UUID id, ShortSpecialistInfo info) {
         Cache cache = cacheManager.getCache("specialists:short-info");

@@ -5,7 +5,7 @@ import com.specialist.specialistdirectory.domain.specialist.models.StatisticEnti
 import com.specialist.specialistdirectory.domain.specialist.models.enums.ApproverType;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistStatus;
 import com.specialist.specialistdirectory.domain.specialist.repositories.SpecialistRepository;
-import com.specialist.specialistdirectory.exceptions.SpecialistNotFoundByIdException;
+import com.specialist.specialistdirectory.exceptions.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
@@ -23,23 +23,38 @@ public class SpecialistStatusServiceImpl implements SpecialistStatusService {
     @Transactional
     @Override
     public void approve(UUID id, UUID approverId, ApproverType approverType) {
-        SpecialistEntity entity = repository.findWithStatisticById(id).orElseThrow(SpecialistNotFoundByIdException::new);
-        StatisticEntity statisticEntity = entity.getStatistic();
+        SpecialistEntity specialistEntity = repository.findWithStatisticById(id).orElseThrow(SpecialistNotFoundByIdException::new);
+        if (!specialistEntity.getStatus().equals(SpecialistStatus.UNAPPROVED)) {
+            throw new UnableSpecialistApproveException();
+        }
+        StatisticEntity statisticEntity = specialistEntity.getStatistic();
         statisticEntity.setApproverId(approverId);
         statisticEntity.setApproverType(approverType);
-        entity.setStatus(SpecialistStatus.APPROVED);
-        repository.save(entity);
+        specialistEntity.setStatus(SpecialistStatus.APPROVED);
+        repository.save(specialistEntity);
     }
 
     @Transactional
     @Override
     public void manage(UUID id, UUID ownerId) {
+        SpecialistStatus status = repository.findStatusById(id).orElseThrow(
+                SpecialistStatusNotFoundByIdException::new
+        );
+        if (!status.equals(SpecialistStatus.APPROVED)) {
+            throw new UnableSpecialistManageException();
+        }
         repository.updateStatusAndOwnerIdById(id, ownerId, SpecialistStatus.MANAGED);
     }
 
     @Transactional
     @Override
     public void recall(UUID id) {
+        SpecialistStatus status = repository.findStatusById(id).orElseThrow(
+                SpecialistStatusNotFoundByIdException::new
+        );
+        if (!status.equals(SpecialistStatus.APPROVED)) {
+            throw new UnableSpecialistRecallException();
+        }
         repository.updateStatusById(id, SpecialistStatus.RECALLED);
     }
 }

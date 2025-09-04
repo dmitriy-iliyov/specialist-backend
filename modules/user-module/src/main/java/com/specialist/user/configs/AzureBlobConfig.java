@@ -16,7 +16,6 @@ public class AzureBlobConfig {
     @Value("${spring.cloud.azure.storage.blob.container-name}")
     private String containerName;
 
-
     @Bean
     public BlobServiceClient blobServiceClient() {
         return new BlobServiceClientBuilder().connectionString(blobConnectionString).buildClient();
