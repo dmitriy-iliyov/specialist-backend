@@ -1,6 +1,7 @@
-package com.specialist.auth.core.oauth2;
+package com.specialist.auth.core.oauth2.mappers;
 
-import com.specialist.auth.core.oauth2.provider.Provider;
+import com.specialist.auth.core.oauth2.models.OAuth2UserEntity;
+import com.specialist.auth.core.oauth2.models.Provider;
 import com.specialist.auth.exceptions.OAuth2UserAttributesNullException;
 import com.specialist.auth.exceptions.OAuth2UserNullException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -19,7 +20,7 @@ public final class OAuth2UserMapper {
             throw new OAuth2UserAttributesNullException();
         }
         Map<String, Object> attributes = oAuth2User.getAttributes();
-        OAuth2UserEntity entity = new OAuth2UserEntity(accountId, (String) attributes.get("email"));
+        OAuth2UserEntity entity = new OAuth2UserEntity(accountId);
         switch (provider) {
             case GOOGLE -> {
                 entity.setFirstName((String) attributes.get("given_name"));

@@ -49,18 +49,14 @@ public class RedisConfig {
     @Bean
     @Primary
     public RedisCacheConfiguration defaultRedisCacheConfiguration() {
-
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-
         mapper.activateDefaultTyping(
                 BasicPolymorphicTypeValidator.builder().allowIfBaseType(Object.class).build(),
                 ObjectMapper.DefaultTyping.EVERYTHING, JsonTypeInfo.As.PROPERTY
         );
-
         return RedisCacheConfiguration.defaultCacheConfig()
-                //.disableCachingNullValues()
                 .serializeKeysWith(RedisSerializationContext
                         .SerializationPair.fromSerializer(new StringRedisSerializer()))
                 .serializeValuesWith(RedisSerializationContext.
@@ -100,6 +96,9 @@ public class RedisConfig {
                 .withCacheConfiguration("accounts:emails", defaultConfig.entryTtl(Duration.ofSeconds(120)))
                 .withCacheConfiguration("accounts:roles:id", defaultConfig)
                 .withCacheConfiguration("accounts:authorities:id", defaultConfig)
+
+                .withCacheConfiguration("providers", defaultConfig)
+                .withCacheConfiguration("providers:paths", defaultConfig)
 
                 .withCacheConfiguration("refresh-tokens", defaultConfig)
                 .withCacheConfiguration("refresh-tokens:active", defaultConfig)

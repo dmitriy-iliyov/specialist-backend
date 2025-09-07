@@ -1,6 +1,6 @@
 package com.specialist.auth.domain.account.models.dtos;
 
-import com.specialist.auth.core.oauth2.provider.Provider;
+import com.specialist.auth.core.oauth2.models.Provider;
 import com.specialist.auth.domain.authority.Authority;
 import com.specialist.auth.domain.role.Role;
 

@@ -1,5 +1,6 @@
 package com.specialist.auth.domain.refresh_token.models;
 
+import com.specialist.contracts.auth.PrincipalDetails;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,7 +12,7 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 @Data
-public class RefreshTokenUserDetails implements UserDetails {
+public class RefreshTokenUserDetails implements UserDetails, PrincipalDetails {
 
     private final UUID id;
     private final UUID accountId;

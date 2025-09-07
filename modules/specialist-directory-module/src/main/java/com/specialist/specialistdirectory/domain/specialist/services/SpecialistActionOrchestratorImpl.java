@@ -1,6 +1,6 @@
 package com.specialist.specialistdirectory.domain.specialist.services;
 
-import com.specialist.specialistdirectory.domain.specialist.models.ActionEntity;
+import com.specialist.specialistdirectory.domain.specialist.models.SpecialistActionEntity;
 import com.specialist.specialistdirectory.domain.specialist.models.SpecialistActionEvent;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.ContactDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
@@ -32,54 +32,54 @@ public class SpecialistActionOrchestratorImpl implements SpecialistActionOrchest
 
     @Override
     public void recallRequest(UUID id, ContactType contactType) {
-        ActionEntity actionEntity = new ActionEntity(ActionType.RECALL, id, null, 300L);
-        requestHandle(actionEntity, contactType);
+        SpecialistActionEntity specialistActionEntity = new SpecialistActionEntity(ActionType.RECALL, id, null, 300L);
+        requestHandle(specialistActionEntity, contactType);
     }
 
     @Override
     public void recall(String code) {
-        ActionEntity actionEntity = codeHandle(code);
+        SpecialistActionEntity specialistActionEntity = codeHandle(code);
         // DISCUSS schedule delete
-        specialistStatusService.recall(actionEntity.getSpecialistId());
+        specialistStatusService.recall(specialistActionEntity.getSpecialistId());
     }
 
     @Override
     public void manageRequest(UUID id, UUID accountId, ContactType contactType) {
-        ActionEntity actionEntity = new ActionEntity(ActionType.MANAGE, id, accountId, 600L);
-        requestHandle(actionEntity, contactType);
+        SpecialistActionEntity specialistActionEntity = new SpecialistActionEntity(ActionType.MANAGE, id, accountId, 600L);
+        requestHandle(specialistActionEntity, contactType);
     }
 
     @Override
     public void manage(String code) {
-        ActionEntity actionEntity = codeHandle(code);
-        specialistStatusService.manage(actionEntity.getSpecialistId(), actionEntity.getAccountId());
+        SpecialistActionEntity specialistActionEntity = codeHandle(code);
+        specialistStatusService.manage(specialistActionEntity.getSpecialistId(), specialistActionEntity.getAccountId());
     }
 
-    private void requestHandle(ActionEntity actionEntity, ContactType contactType) {
+    private void requestHandle(SpecialistActionEntity specialistActionEntity, ContactType contactType) {
         String code = CodeGenerator.generate();
-        SpecialistResponseDto specialistDto = specialistService.findById(actionEntity.getSpecialistId());
+        SpecialistResponseDto specialistDto = specialistService.findById(specialistActionEntity.getSpecialistId());
         ContactDto contactDto = specialistDto.getContacts().stream()
                 .filter(contact -> contact.type().equals(contactType))
                 .findFirst()
                 .orElseThrow(NoSuchSpecialistContactException::new);
-        actionEntity.setCode(code);
-        actionRepository.save(actionEntity);
+        specialistActionEntity.setCode(code);
+        actionRepository.save(specialistActionEntity);
         kafkaTemplate.send(
                 TOPIC,
                 new SpecialistActionEvent(
-                        actionEntity.getType(),
+                        specialistActionEntity.getType(),
                         contactDto.value(),
                         contactDto.type(),
                         code)
         );
     }
 
-    private ActionEntity codeHandle(String code) {
-        ActionEntity actionEntity = actionRepository.findById(code).orElse(null);
-        if (actionEntity == null) {
+    private SpecialistActionEntity codeHandle(String code) {
+        SpecialistActionEntity specialistActionEntity = actionRepository.findById(code).orElse(null);
+        if (specialistActionEntity == null) {
             throw new CodeExpiredException();
         }
         actionRepository.deleteById(code);
-        return actionEntity;
+        return specialistActionEntity;
     }
 }

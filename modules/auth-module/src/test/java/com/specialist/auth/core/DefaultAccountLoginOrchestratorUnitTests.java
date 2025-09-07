@@ -3,10 +3,10 @@ package com.specialist.auth.core;
 import com.specialist.auth.core.models.LoginRequest;
 import com.specialist.auth.core.models.Token;
 import com.specialist.auth.core.models.TokenType;
-import com.specialist.auth.core.oauth2.provider.Provider;
+import com.specialist.auth.core.oauth2.models.Provider;
 import com.specialist.auth.domain.account.models.AccountUserDetails;
 import com.specialist.auth.domain.account.services.AccountService;
-import com.specialist.auth.exceptions.OAuth2RegisteredAttemptedToLocalLoginException;
+import com.specialist.auth.exceptions.InvalidProviderException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -112,7 +112,7 @@ class DefaultAccountLoginOrchestratorUnitTests {
         LoginRequest loginRequest = new LoginRequest("test@example.com", "password123");
         when(accountService.findProviderByEmail(loginRequest.email())).thenReturn(Provider.GOOGLE);
 
-        assertThrows(OAuth2RegisteredAttemptedToLocalLoginException.class,
+        assertThrows(InvalidProviderException.class,
                 () -> orchestrator.login(loginRequest, request, response));
 
         verify(accountService).findProviderByEmail(loginRequest.email());

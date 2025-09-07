@@ -97,8 +97,6 @@ public class AccountSecurityFilterChainConfig {
                 )
                 .logout(logout -> logout
                         .logoutUrl("/api/auth/logout")
-//                        .addLogoutHandler(new CookieClearingLogoutHandler(
-//                                "__Host-access-token", "__Host-refresh-token", "XSRF-TOKEN"))
                         .addLogoutHandler(sessionCookieLogoutHandler)
                         .logoutSuccessHandler(logoutSuccessHandler)
                 )

@@ -1,6 +1,6 @@
 //package com.specialist.auth.core.oauth2;
 //
-//import com.specialist.auth.core.oauth2.provider.Provider;
+//import com.specialist.auth.core.oauth2.models.Provider;
 //import com.specialist.auth.domain.account.models.dtos.OAuth2AccountCreateDto;
 //import com.specialist.auth.domain.account.models.dtos.ShortAccountResponseDto;
 //import com.specialist.auth.domain.account.services.AccountService;

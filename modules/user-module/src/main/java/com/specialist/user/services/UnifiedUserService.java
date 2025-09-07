@@ -2,8 +2,6 @@ package com.specialist.user.services;
 
 import com.specialist.contracts.user.CreatorRatingUpdateEvent;
 import com.specialist.contracts.user.PublicUserResponseDto;
-import com.specialist.contracts.user.ShortUserCreateDto;
-import com.specialist.contracts.user.SystemUserService;
 import com.specialist.user.exceptions.UserNotFoundByIdException;
 import com.specialist.user.mappers.UserMapper;
 import com.specialist.user.models.UserEntity;
@@ -20,25 +18,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Service("unifiedUserService")
 @RequiredArgsConstructor
-public class UnifiedUserService implements UserService, SystemUserService, CreatorRatingService {
+public class UnifiedUserService implements UserService, CreatorRatingService {
 
     private final UserRepository repository;
     private final UserMapper mapper;
-
-    @Transactional
-    @Override
-    public void save(ShortUserCreateDto dto) {
-        repository.save(mapper.toEntity(dto));
-    }
 
     @Transactional
     @Override
@@ -46,12 +33,6 @@ public class UnifiedUserService implements UserService, SystemUserService, Creat
         UserEntity userEntity = repository.findById(dto.getId()).orElseThrow(UserNotFoundByIdException::new);
         mapper.updateEntityFromDto(dto, userEntity);
         return mapper.toPrivateDto(repository.save(userEntity));
-    }
-
-    @Transactional
-    @Override
-    public void updateEmailById(UUID id, String email) {
-        repository.updateEmailById(id, email);
     }
 
     @Transactional
@@ -112,14 +93,6 @@ public class UnifiedUserService implements UserService, SystemUserService, Creat
                 mapper.toPrivateDtoList(entityPage.getContent()),
                 entityPage.getTotalPages()
         );
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public Map<UUID, PublicUserResponseDto> findAllByIdIn(Set<UUID> ids) {
-        List<UserEntity> entityList = repository.findAllByIdIn(ids);
-        return mapper.toPublicDtoList(entityList).stream()
-                .collect(Collectors.toMap(PublicUserResponseDto::getId, Function.identity()));
     }
 
     @Transactional

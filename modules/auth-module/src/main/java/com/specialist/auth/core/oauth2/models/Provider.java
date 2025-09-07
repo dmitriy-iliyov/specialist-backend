@@ -1,4 +1,4 @@
-package com.specialist.auth.core.oauth2.provider;
+package com.specialist.auth.core.oauth2.models;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.specialist.auth.exceptions.UnsupportedProviderException;
@@ -29,9 +29,9 @@ public enum Provider {
     }
 
     @JsonCreator
-    public static Provider fromName(String name) {
+    public static Provider fromJson(String json) {
         return Arrays.stream(Provider.values())
-                .filter(provider -> provider.name().equalsIgnoreCase(name))
+                .filter(provider -> provider.getRegistrationId().equalsIgnoreCase(json))
                 .findFirst()
                 .orElseThrow(UnsupportedProviderException::new);
     }

@@ -1,10 +1,11 @@
-package com.specialist.auth.core.oauth2;
+package com.specialist.auth.core.oauth2.services;
 
-import com.specialist.auth.core.oauth2.provider.Provider;
+import com.specialist.auth.core.oauth2.models.OAuth2QueryParams;
+import com.specialist.auth.core.oauth2.models.Provider;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-public interface OAuth2AccountAuthService {
+public interface OAuth2AccountAuthorizeOrchestrator {
     String authorize(Provider provider, HttpServletRequest request);
 
     void callback(Provider provider, OAuth2QueryParams params, HttpServletRequest request, HttpServletResponse response);

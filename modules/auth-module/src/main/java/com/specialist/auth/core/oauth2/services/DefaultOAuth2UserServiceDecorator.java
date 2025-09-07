@@ -1,6 +1,6 @@
-package com.specialist.auth.core.oauth2;
+package com.specialist.auth.core.oauth2.services;
 
-import com.specialist.auth.core.oauth2.provider.Provider;
+import com.specialist.auth.core.oauth2.models.Provider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -18,7 +18,7 @@ public class DefaultOAuth2UserServiceDecorator extends DefaultOAuth2UserService 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         DefaultOAuth2User oAuth2User = (DefaultOAuth2User) super.loadUser(userRequest);
-        Provider provider = Provider.fromName(userRequest.getClientRegistration().getRegistrationId());
+        Provider provider = Provider.fromJson(userRequest.getClientRegistration().getRegistrationId());
         persistOrchestrator.saveIfNonExists(provider, oAuth2User);
         return oAuth2User;
     }

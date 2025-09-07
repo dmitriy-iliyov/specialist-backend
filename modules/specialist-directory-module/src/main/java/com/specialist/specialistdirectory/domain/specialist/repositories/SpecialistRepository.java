@@ -26,10 +26,10 @@ public interface SpecialistRepository extends JpaRepository<SpecialistEntity, UU
 
     @Query("""
         SELECT s FROM SpecialistEntity s
-        JOIN FETCH s.statistic
+        JOIN FETCH s.info
         WHERE s.id = :id
     """)
-    Optional<SpecialistEntity> findWithStatisticById(@Param("id") UUID id);
+    Optional<SpecialistEntity> findWithInfoById(@Param("id") UUID id);
 
     @Modifying(clearAutomatically = true)
     @Query(value = """

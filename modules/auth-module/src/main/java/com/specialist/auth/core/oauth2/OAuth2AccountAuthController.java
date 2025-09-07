@@ -1,6 +1,8 @@
 package com.specialist.auth.core.oauth2;
 
-import com.specialist.auth.core.oauth2.provider.Provider;
+import com.specialist.auth.core.oauth2.models.OAuth2QueryParams;
+import com.specialist.auth.core.oauth2.models.Provider;
+import com.specialist.auth.core.oauth2.services.OAuth2AccountAuthorizeOrchestrator;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class OAuth2AccountAuthController {
 
-    private final OAuth2AccountAuthService service;
+    private final OAuth2AccountAuthorizeOrchestrator service;
 
     @PostMapping("/authorize")
     public ResponseEntity<?> authorize(@RequestParam("provider") Provider provider, HttpServletRequest request) {
@@ -22,19 +24,10 @@ public class OAuth2AccountAuthController {
                 .body(service.authorize(provider, request));
     }
 
-    @GetMapping("/callback/google")
-    public ResponseEntity<?> googleCallback(@ModelAttribute OAuth2QueryParams params, HttpServletRequest request,
-                                                  HttpServletResponse response) {
-        service.callback(Provider.GOOGLE, params, request, response);
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .build();
-    }
-
-    @GetMapping("/callback/facebook")
-    public ResponseEntity<?> facebookCallback(@ModelAttribute OAuth2QueryParams params, HttpServletRequest request,
-                                                    HttpServletResponse response) {
-        service.callback(Provider.FACEBOOK, params, request, response);
+    @GetMapping("/callback")
+    public ResponseEntity<?> callback(@RequestParam("provider") Provider provider, @ModelAttribute OAuth2QueryParams params,
+                                      HttpServletRequest request, HttpServletResponse response) {
+        service.callback(provider, params, request, response);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .build();

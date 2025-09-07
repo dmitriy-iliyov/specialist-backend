@@ -2,7 +2,7 @@ package com.specialist.specialistdirectory.domain.specialist.services;
 
 import com.specialist.specialistdirectory.domain.specialist.mappers.SpecialistMapper;
 import com.specialist.specialistdirectory.domain.specialist.models.SpecialistEntity;
-import com.specialist.specialistdirectory.domain.specialist.models.StatisticEntity;
+import com.specialist.specialistdirectory.domain.specialist.models.SpecialistInfoEntity;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.*;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.SpecialistFilter;
@@ -56,7 +56,7 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
         entity.setSummaryRating(0);
         entity.setRating(0.0);
         entity.setReviewsCount(0);
-        entity.setStatistic(new StatisticEntity(dto.getCreatorType()));
+        entity.setInfo(new SpecialistInfoEntity(dto.getCreatorType()));
         entity = repository.save(entity);
         cacheService.putShortInfo(entity.getId(), new ShortSpecialistInfo(entity.getCreatorId(), dto.getStatus()));
         cacheService.evictCreatedCountByFilter(entity.getCreatorId());
@@ -68,7 +68,6 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
     @Override
     public SpecialistResponseDto update(SpecialistUpdateDto dto) {
         SpecialistEntity entity = repository.findWithTypeById(dto.getId()).orElseThrow(SpecialistNotFoundByIdException::new);
-        // compare and early return ?
         Long inputTypeId = dto.getTypeId();
         Long existedTypeId = entity.getType().getId();
         if (!existedTypeId.equals(inputTypeId)) {

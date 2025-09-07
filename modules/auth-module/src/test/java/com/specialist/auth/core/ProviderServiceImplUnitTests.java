@@ -1,6 +1,6 @@
 package com.specialist.auth.core;
 
-import com.specialist.auth.core.oauth2.provider.ProviderServiceImpl;
+import com.specialist.auth.core.oauth2.services.ProviderServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

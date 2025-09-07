@@ -1,16 +1,11 @@
 package com.specialist.auth.core.oauth2;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.specialist.auth.core.SessionCookieManager;
 import com.specialist.auth.domain.account.models.AccountUserDetails;
-import com.specialist.auth.exceptions.OAuth2UserNullEmailException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
@@ -19,16 +14,10 @@ import java.io.IOException;
 @Component("oAuth2AuthenticationSuccessHandler")
 public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
-    private final UserDetailsService userDetailsService;
-    private final SessionCookieManager sessionCookieManager;
     private final OAuth2UserRepository oAuth2UserRepository;
     private final ObjectMapper objectMapper;
 
-    public OAuth2AuthenticationSuccessHandler(@Qualifier("accountUserDetailsService") UserDetailsService userDetailsService,
-                                              SessionCookieManager sessionCookieManager,
-                                              OAuth2UserRepository oAuth2UserRepository, ObjectMapper objectMapper) {
-        this.userDetailsService = userDetailsService;
-        this.sessionCookieManager = sessionCookieManager;
+    public OAuth2AuthenticationSuccessHandler(OAuth2UserRepository oAuth2UserRepository, ObjectMapper objectMapper) {
         this.oAuth2UserRepository = oAuth2UserRepository;
         this.objectMapper = objectMapper;
     }
@@ -36,13 +25,7 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        DefaultOAuth2User principal = (DefaultOAuth2User) authentication.getPrincipal();
-        String email = principal.getAttribute("email");
-        if (email == null) {
-            throw new OAuth2UserNullEmailException();
-        }
-        AccountUserDetails userDetails = (AccountUserDetails) userDetailsService.loadUserByUsername(email);
-        sessionCookieManager.create(userDetails, request, response);
+        String email= ((AccountUserDetails) authentication.getPrincipal()).getEmail();
         response.setContentType("application/json");
         response.getWriter().write(objectMapper.writeValueAsString(oAuth2UserRepository.findById(email)));
     }

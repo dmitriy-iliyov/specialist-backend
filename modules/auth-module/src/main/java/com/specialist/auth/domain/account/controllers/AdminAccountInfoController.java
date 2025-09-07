@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/admin/v1/auth")
+@RequestMapping("/api/admin/v1/info")
 @PreAuthorize("hasRole('ADMIN') && hasAnyAuthority({'ACCOUNT_CREATE', 'SERVICE_ACCOUNT_MANAGER'})")
 public class AdminAccountInfoController {
 
@@ -31,7 +31,7 @@ public class AdminAccountInfoController {
     }
 
     @PreAuthorize("hasAuthority('ACCOUNT_UNABLE')")
-    @GetMapping("/disable-reasons")
+    @GetMapping("/reasons/disable")
     public ResponseEntity<?> getDisableReasonTypes() {
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -39,7 +39,7 @@ public class AdminAccountInfoController {
     }
 
     @PreAuthorize("hasAuthority('ACCOUNT_LOCK')")
-    @GetMapping("/lock-reasons")
+    @GetMapping("/reasons/lock")
     public ResponseEntity<?> getLockReasonTypes() {
         return ResponseEntity
                 .status(HttpStatus.OK)

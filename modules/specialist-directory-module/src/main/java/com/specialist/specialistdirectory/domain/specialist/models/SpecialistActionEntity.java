@@ -14,7 +14,7 @@ import java.util.UUID;
 @RedisHash("specialists:action")
 @Data
 @NoArgsConstructor
-public class ActionEntity {
+public class SpecialistActionEntity {
 
     @Id
     private String code;
@@ -31,7 +31,7 @@ public class ActionEntity {
     private Long ttl;
 
     @JsonCreator
-    public ActionEntity(
+    public SpecialistActionEntity(
             @JsonProperty("code") String code,
             @JsonProperty("type") ActionType type,
             @JsonProperty("specialist_id") UUID specialistId,
@@ -45,7 +45,7 @@ public class ActionEntity {
         this.ttl = ttl;
     }
 
-    public ActionEntity(ActionType type, UUID specialistId, UUID accountId, Long ttl) {
+    public SpecialistActionEntity(ActionType type, UUID specialistId, UUID accountId, Long ttl) {
         this.type = type;
         this.specialistId = specialistId;
         this.accountId = accountId;

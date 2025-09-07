@@ -29,7 +29,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Getter
 @Setter
-@ToString(exclude = {"type", "statistic", "reviews", "bookmarks"})
+@ToString(exclude = {"type", "systemInfo", "reviews", "bookmarks"})
 public class SpecialistEntity {
 
     @Id
@@ -95,8 +95,8 @@ public class SpecialistEntity {
     private long reviewsCount;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    @JoinColumn(name = "statistic_id", nullable = false)
-    private StatisticEntity statistic;
+    @JoinColumn(name = "info_id", nullable = false)
+    private SpecialistInfoEntity info;
 
     @OneToMany(mappedBy = "specialist", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<ReviewEntity> reviews = new ArrayList<>();

@@ -1,10 +1,10 @@
 package com.specialist.auth.core;
 
 import com.specialist.auth.core.models.LoginRequest;
-import com.specialist.auth.core.oauth2.provider.Provider;
+import com.specialist.auth.core.oauth2.models.Provider;
 import com.specialist.auth.domain.account.models.AccountUserDetails;
 import com.specialist.auth.domain.account.services.AccountService;
-import com.specialist.auth.exceptions.OAuth2RegisteredAttemptedToLocalLoginException;
+import com.specialist.auth.exceptions.InvalidProviderException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -31,8 +31,9 @@ public class DefaultAccountLoginOrchestrator implements AccountLoginOrchestrator
 
     @Override
     public void login(LoginRequest loginRequest, HttpServletRequest request, HttpServletResponse response) {
-        if (!accountService.findProviderByEmail(loginRequest.email()).equals(Provider.LOCAL)) {
-            throw new OAuth2RegisteredAttemptedToLocalLoginException();
+        Provider provider = accountService.findProviderByEmail(loginRequest.email());
+        if (!provider.equals(Provider.LOCAL)) {
+            throw new InvalidProviderException(provider);
         }
         AccountUserDetails userDetails;
         try {

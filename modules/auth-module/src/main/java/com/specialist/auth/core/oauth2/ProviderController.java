@@ -1,6 +1,7 @@
-package com.specialist.auth.core.oauth2.provider;
+package com.specialist.auth.core.oauth2;
 
 
+import com.specialist.auth.core.oauth2.services.ProviderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,5 +21,12 @@ public class ProviderController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(service.findAll());
+    }
+
+    @GetMapping("/paths")
+    public ResponseEntity<?> getAllPaths() {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(service.findAllPaths());
     }
 }

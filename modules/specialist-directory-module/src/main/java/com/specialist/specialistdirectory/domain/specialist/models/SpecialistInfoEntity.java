@@ -14,11 +14,11 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Entity
-@Table(name = "specialists_statistic")
+@Table(name = "specialists_info")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class StatisticEntity {
+public class SpecialistInfoEntity {
 
     @Id
     private UUID id;
@@ -40,10 +40,10 @@ public class StatisticEntity {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
-    @OneToOne(mappedBy = "statistic", optional = false)
+    @OneToOne(mappedBy = "info", optional = false)
     private SpecialistEntity specialist;
 
-    public StatisticEntity(CreatorType creatorType) {
+    public SpecialistInfoEntity(CreatorType creatorType) {
         this.creatorType = creatorType;
     }
 

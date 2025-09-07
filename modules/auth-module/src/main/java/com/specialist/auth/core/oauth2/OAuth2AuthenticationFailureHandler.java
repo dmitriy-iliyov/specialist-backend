@@ -15,13 +15,13 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class OAuth2AuthenticationFailureHandler implements AuthenticationFailureHandler {
 
-    private ObjectMapper mapper;
+    private final ObjectMapper mapper;
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException {
         SecurityContextHolder.clearContext();
         response.setStatus(401);
         response.setContentType("application/json");
-        response.getWriter().write(mapper.writeValueAsString("OAuth2.0 authorization filed."));
+        response.getWriter().write(mapper.writeValueAsString("OAuth2.0 authorization failed, reason:" + exception.getMessage()));
     }
 }

@@ -2,7 +2,7 @@ package com.specialist.auth.core;
 
 import com.specialist.auth.core.models.LoginRequest;
 import com.specialist.auth.domain.access_token.models.AccessTokenUserDetails;
-import com.specialist.auth.domain.refresh_token.models.RefreshTokenUserDetails;
+import com.specialist.contracts.auth.PrincipalDetails;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -37,8 +37,11 @@ public class AccountAuthController {
                 .build();
     }
 
+    /*
+    * @AuthenticationPrincipal can be AccessTokenUserDetails.class or RefreshTokenUserDetails.class
+    */
     @PostMapping("/refresh")
-    public ResponseEntity<?> refresh(@AuthenticationPrincipal RefreshTokenUserDetails principal,
+    public ResponseEntity<?> refresh(@AuthenticationPrincipal PrincipalDetails principal,
                                      HttpServletResponse response) {
         sessionCookieManager.refresh(principal.getId(), response);
         return ResponseEntity
