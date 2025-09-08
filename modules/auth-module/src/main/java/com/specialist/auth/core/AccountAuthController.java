@@ -3,6 +3,7 @@ package com.specialist.auth.core;
 import com.specialist.auth.core.models.LoginRequest;
 import com.specialist.auth.domain.access_token.models.AccessTokenUserDetails;
 import com.specialist.contracts.auth.PrincipalDetails;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -15,23 +16,27 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/api/auth")
 public class AccountAuthController {
 
-    private final AccountLoginOrchestrator orchestrator;
+    private final AccountLoginOrchestrator loginOrchestrator;
+    private final AccountLogoutOrchestrator logoutOrchestrator;
     private final SessionCookieManager sessionCookieManager;
 
-    public AccountAuthController(@Qualifier("defaultAccountLoginOrchestrator") AccountLoginOrchestrator orchestrator,
-                                 SessionCookieManager sessionCookieManager) {
-        this.orchestrator = orchestrator;
+    public AccountAuthController(@Qualifier("defaultAccountLoginOrchestrator") AccountLoginOrchestrator loginOrchestrator,
+                                 AccountLogoutOrchestrator logoutOrchestrator, SessionCookieManager sessionCookieManager) {
+        this.loginOrchestrator = loginOrchestrator;
+        this.logoutOrchestrator = logoutOrchestrator;
         this.sessionCookieManager = sessionCookieManager;
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody @Valid LoginRequest requestDto, HttpServletRequest request,
                                    HttpServletResponse response) {
-        orchestrator.login(requestDto, request, response);
+        loginOrchestrator.login(requestDto, request, response);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
@@ -44,6 +49,14 @@ public class AccountAuthController {
     public ResponseEntity<?> refresh(@AuthenticationPrincipal PrincipalDetails principal,
                                      HttpServletResponse response) {
         sessionCookieManager.refresh(principal.getId(), response);
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .build();
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        logoutOrchestrator.logout(request, response);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();

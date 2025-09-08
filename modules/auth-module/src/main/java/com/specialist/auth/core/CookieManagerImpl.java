@@ -17,7 +17,7 @@ public final class CookieManagerImpl implements CookieManager {
     private final Map<CookieType, String> cookieNames = Map.of(
             CookieType.REFRESH_TOKEN, "__Host-refresh-token",
             CookieType.ACCESS_TOKEN, "__Host-access-token",
-            CookieType.CSRF_TOKEN, "XSRF_TOKEN"
+            CookieType.CSRF_TOKEN, "XSRF-TOKEN"
     );
 
     @Override

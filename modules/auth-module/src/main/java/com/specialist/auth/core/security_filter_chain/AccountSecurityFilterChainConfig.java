@@ -32,16 +32,13 @@ public class AccountSecurityFilterChainConfig {
     private final AuthenticationFilter authenticationFilter;
     private final AuthenticationEntryPoint authenticationEntryPoint;
     private final DefaultAccessDeniedHandler accessDeniedHandler;
-    private final LogoutHandler sessionCookieLogoutHandler;
-    private final LogoutSuccessHandler logoutSuccessHandler;
 
     public AccountSecurityFilterChainConfig(CorsConfigurationSource configurationSource, CsrfTokenRepository csrfTokenRepository,
                                             RateLimitFilter rateLimitFilter,
                                             @Qualifier("accountAuthenticationManager") AuthenticationManager authenticationManager,
                                             @Qualifier("accountAuthenticationFilter") AuthenticationFilter authenticationFilter,
                                             @Qualifier("cookieAuthenticationEntryPoint") AuthenticationEntryPoint authenticationEntryPoint,
-                                            @Qualifier("sessionCookieLogoutHandler") LogoutHandler sessionCookieLogoutHandler,
-                                            LogoutSuccessHandler logoutSuccessHandler, DefaultAccessDeniedHandler accessDeniedHandler) {
+                                            DefaultAccessDeniedHandler accessDeniedHandler) {
         this.corsConfigurationSource = configurationSource;
         this.csrfTokenRepository = csrfTokenRepository;
         this.rateLimitFilter = rateLimitFilter;
@@ -49,8 +46,6 @@ public class AccountSecurityFilterChainConfig {
         this.authenticationFilter = authenticationFilter;
         this.authenticationEntryPoint = authenticationEntryPoint;
         this.accessDeniedHandler = accessDeniedHandler;
-        this.sessionCookieLogoutHandler = sessionCookieLogoutHandler;
-        this.logoutSuccessHandler = logoutSuccessHandler;
     }
 
     @Order(2)
@@ -94,11 +89,6 @@ public class AccountSecurityFilterChainConfig {
                         .requestMatchers("/api/v1/me/specialists", "/api/v1/me/specialists/**").hasRole("USER")
                         .requestMatchers("/api/v1/specialists", "/api/v1/specialists/**").permitAll()
                         .requestMatchers("/api/v1/types/**").permitAll()
-                )
-                .logout(logout -> logout
-                        .logoutUrl("/api/auth/logout")
-                        .addLogoutHandler(sessionCookieLogoutHandler)
-                        .logoutSuccessHandler(logoutSuccessHandler)
                 )
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint(authenticationEntryPoint)

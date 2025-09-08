@@ -32,7 +32,7 @@ public class CookieAccessTokenAuthenticationConverter implements AuthenticationC
                     rawRefreshToken = cookie.getValue();
                 }
             }
-            if (rawRefreshToken != null) {
+            if (rawRefreshToken != null && request.getRequestURI().contains("/api/auth/refresh")) {
                 return new PreAuthenticatedAuthenticationToken(rawRefreshToken, "__Host-refresh-token");
             }
         }
