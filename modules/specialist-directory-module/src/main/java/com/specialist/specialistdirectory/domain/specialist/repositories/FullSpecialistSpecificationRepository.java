@@ -15,11 +15,10 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class SpecialistSpecificationRepository implements SpecificationRepository<SpecialistEntity> {
+public class FullSpecialistSpecificationRepository implements SpecificationRepository<SpecialistEntity> {
 
     @PersistenceContext
     private EntityManager entityManager;
-
 
     @Override
     public Slice<SpecialistEntity> findAll(Specification<SpecialistEntity> specification, Pageable pageable) {
@@ -35,6 +34,7 @@ public class SpecialistSpecificationRepository implements SpecificationRepositor
         q.orderBy(QueryUtils.toOrders(pageable.getSort(), r, cb));
 
         r.fetch("type", JoinType.LEFT);
+        r.fetch("info", JoinType.LEFT);
 
         TypedQuery<SpecialistEntity> tq = entityManager.createQuery(q);
         tq.setFirstResult((int) pageable.getOffset());

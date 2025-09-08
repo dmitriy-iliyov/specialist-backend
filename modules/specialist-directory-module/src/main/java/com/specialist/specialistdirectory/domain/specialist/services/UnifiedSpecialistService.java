@@ -6,19 +6,20 @@ import com.specialist.specialistdirectory.domain.specialist.models.SpecialistInf
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.*;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.SpecialistFilter;
+import com.specialist.specialistdirectory.domain.specialist.repositories.PaginationUtils;
 import com.specialist.specialistdirectory.domain.specialist.repositories.SpecialistRepository;
 import com.specialist.specialistdirectory.domain.specialist.repositories.SpecialistSpecification;
+import com.specialist.specialistdirectory.domain.specialist.repositories.SpecificationRepository;
 import com.specialist.specialistdirectory.domain.type.models.dtos.TypeCreateDto;
 import com.specialist.specialistdirectory.domain.type.models.dtos.TypeResponseDto;
 import com.specialist.specialistdirectory.domain.type.services.TypeConstants;
 import com.specialist.specialistdirectory.domain.type.services.TypeService;
 import com.specialist.specialistdirectory.exceptions.SpecialistNotFoundByIdException;
-import com.specialist.specialistdirectory.utils.PaginationUtils;
-import com.specialist.specialistdirectory.utils.SpecificationRepository;
 import com.specialist.utils.pagination.PageRequest;
 import com.specialist.utils.pagination.PageResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -32,7 +33,6 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
 public class UnifiedSpecialistService implements SpecialistService, SystemSpecialistService {
 
@@ -42,6 +42,19 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
     private final SpecialistMapper mapper;
     private final SpecialistCacheService cacheService;
     private final TypeService typeService;
+
+    public UnifiedSpecialistService(SpecialistRepository repository,
+                                    @Qualifier("specialistSpecificationRepository")
+                                    SpecificationRepository<SpecialistEntity> specificationRepository,
+                                    SpecialistCountService countService, SpecialistMapper mapper,
+                                    SpecialistCacheService cacheService, TypeService typeService) {
+        this.repository = repository;
+        this.specificationRepository = specificationRepository;
+        this.countService = countService;
+        this.mapper = mapper;
+        this.cacheService = cacheService;
+        this.typeService = typeService;
+    }
 
     @CachePut(value = "specialists", key = "#result.id + ':' + #result.creatorId")
     @Transactional
@@ -178,21 +191,17 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
         return new PageResponse<>(
                 mapper.toResponseDtoList(slice.getContent()),
                 (countService.countByFilter(filter) + filter.pageSize() - 1) / filter.pageSize()
-
         );
     }
 
     @Transactional(readOnly = true)
     @Override
     public PageResponse<SpecialistResponseDto> findAllByCreatorIdAndFilter(UUID creatorId, ExtendedSpecialistFilter filter) {
-
         Specification<SpecialistEntity> specification = PaginationUtils.generateSpecification(filter)
                 .and(SpecialistSpecification.filterByCreatorId(creatorId));
-
         Slice<SpecialistEntity> slice = specificationRepository.findAll(
                 specification, PaginationUtils.generatePageable(filter)
         );
-
         return new PageResponse<>(
                 mapper.toResponseDtoList(slice.getContent()),
                 (countService.countByCreatorIdAndFilter(creatorId, filter) + filter.pageSize() - 1) / filter.pageSize()

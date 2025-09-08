@@ -24,7 +24,7 @@ public class ReviewAggregatorImpl implements ReviewAggregator {
     private final ReviewService reviewService;
     private final SystemUserService systemUserService;
 
-    // @Transactional till systemUserService in the same app context
+    // WARNING: @Transactional till systemUserService in the same app context
     @Cacheable(value = "reviews", key = "#specialistId + ':' + #sort.cacheKey()")
     @Transactional(readOnly = true)
     @Override

@@ -71,4 +71,8 @@ public class SpecialistSpecification {
                     )
             );
         };    }
+
+    public static Specification<SpecialistEntity> filterByStatus(SpecialistStatus status) {
+        return (r, q, cb) -> status == null ? null : cb.equal(r.get("status"), status);
+    }
 }

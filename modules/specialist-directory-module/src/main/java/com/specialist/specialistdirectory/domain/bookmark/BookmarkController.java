@@ -6,7 +6,6 @@ import com.specialist.specialistdirectory.domain.bookmark.services.BookmarkCount
 import com.specialist.specialistdirectory.domain.bookmark.services.BookmarkOrchestrator;
 import com.specialist.specialistdirectory.domain.bookmark.services.BookmarkService;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
-import com.specialist.utils.pagination.PageRequest;
 import com.specialist.utils.validation.annotation.ValidUuid;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +28,8 @@ public class BookmarkController {
     private final BookmarkCountService countService;
 
     @PostMapping
-    public ResponseEntity<?> add(@AuthenticationPrincipal PrincipalDetails principal,
-                                 @RequestBody @Valid BookmarkCreateDto dto) {
+    public ResponseEntity<?> create(@AuthenticationPrincipal PrincipalDetails principal,
+                                    @RequestBody @Valid BookmarkCreateDto dto) {
         dto.setOwnerId(principal.getAccountId());
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -48,15 +47,7 @@ public class BookmarkController {
 
     @GetMapping
     public ResponseEntity<?> getAll(@AuthenticationPrincipal PrincipalDetails principal,
-                                    @ModelAttribute @Valid PageRequest page) {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(service.findAllByOwnerId(principal.getAccountId(), page));
-    }
-
-    @GetMapping("/filter")
-    public ResponseEntity<?> getAllByFilter(@AuthenticationPrincipal PrincipalDetails principal,
-                                            @ModelAttribute @Valid ExtendedSpecialistFilter filter) {
+                                    @ModelAttribute @Valid ExtendedSpecialistFilter filter) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(service.findAllByOwnerIdAndFilter(principal.getAccountId(), filter));

@@ -2,11 +2,11 @@ package com.specialist.specialistdirectory.domain.specialist.models.filters;
 
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistLanguage;
 
-public interface BaseSpecialistFilter {
-    String city();
-    String cityCode();
-    Long typeId();
-    SpecialistLanguage lang();
-    Integer minRating();
-    Integer maxRating();
+public interface BaseSpecialistFilter extends BaseFilter {
+    String getCity();
+    String getCityCode();
+    Long getTypeId();
+    SpecialistLanguage getLang();
+    Integer getMinRating();
+    Integer getMaxRating();
 }

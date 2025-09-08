@@ -6,7 +6,7 @@ import com.specialist.utils.pagination.PageRequest;
 import com.specialist.utils.pagination.PageResponse;
 
 public interface SpecialistAggregator {
-    PageResponse<SpecialistAggregatedResponseDto> findAll(PageRequest page);
+    PageResponse<SpecialistAggregatedResponseDto> aggregate(PageRequest page);
 
-    PageResponse<SpecialistAggregatedResponseDto> findAllByFilter(SpecialistFilter filter);
+    PageResponse<SpecialistAggregatedResponseDto> aggregate(SpecialistFilter filter);
 }

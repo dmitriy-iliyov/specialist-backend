@@ -21,15 +21,15 @@ public class SpecialistController {
     private final SpecialistCountService countService;
 
     @GetMapping
-    public ResponseEntity<?> getAllByFilter(@ModelAttribute @Valid SpecialistFilter filter) {
+    public ResponseEntity<?> getAll(@ModelAttribute @Valid SpecialistFilter filter) {
         if (filter.isEmpty()) {
             return ResponseEntity
                     .status(HttpStatus.OK)
-                    .body(aggregator.findAll(filter.toPageRequest()));
+                    .body(aggregator.aggregate(filter.toPageRequest()));
         }
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(aggregator.findAllByFilter(filter));
+                .body(aggregator.aggregate(filter));
     }
 
     @GetMapping("/count")

@@ -5,6 +5,8 @@ import com.specialist.specialistdirectory.domain.specialist.models.dtos.Speciali
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.ApproverType;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.CreatorType;
+import com.specialist.specialistdirectory.domain.specialist.models.filters.AdminSpecialistFilter;
+import com.specialist.specialistdirectory.domain.specialist.services.AdminSpecialistQueryOrchestrator;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistPersistOrchestrator;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistService;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistStatusService;
@@ -28,6 +30,7 @@ public class AdminSpecialistController {
     private final SpecialistService service;
     private final SpecialistStatusService statusService;
     private final SpecialistPersistOrchestrator persistOrchestrator;
+    private final AdminSpecialistQueryOrchestrator queryOrchestrator;
 
     @PostMapping
     public ResponseEntity<?> create(@AuthenticationPrincipal PrincipalDetails principal,
@@ -44,7 +47,14 @@ public class AdminSpecialistController {
                 .body(service.findById(UUID.fromString(id)));
     }
 
-    @PatchMapping("/{id}")
+    @GetMapping
+    public ResponseEntity<?> getAll(@ModelAttribute @Valid AdminSpecialistFilter filter) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(queryOrchestrator.findAll(filter));
+    }
+
+    @PatchMapping("/approve/{id}")
     public ResponseEntity<?> approve(@AuthenticationPrincipal PrincipalDetails principal,
                                      @PathVariable("id") @ValidUuid(paramName = "id") String id) {
         statusService.approve(UUID.fromString(id), principal.getAccountId(), ApproverType.ADMIN);

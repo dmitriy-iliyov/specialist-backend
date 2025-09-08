@@ -28,14 +28,14 @@ public class SpecialistAggregatorImpl implements SpecialistAggregator {
     @Cacheable(value = "specialists:all", key = "#page.cacheKey()", condition = "#page.pageNumber() < 3")
     @Transactional(readOnly = true)
     @Override
-    public PageResponse<SpecialistAggregatedResponseDto> findAll(PageRequest page) {
+    public PageResponse<SpecialistAggregatedResponseDto> aggregate(PageRequest page) {
         return preparePageResponse(specialistService.findAll(page));
     }
 
     @Cacheable(value = "specialists:filter", key = "#filter.cacheKey()", condition = "#filter.pageNumber() < 2")
     @Transactional(readOnly = true)
     @Override
-    public PageResponse<SpecialistAggregatedResponseDto> findAllByFilter(SpecialistFilter filter) {
+    public PageResponse<SpecialistAggregatedResponseDto> aggregate(SpecialistFilter filter) {
         return preparePageResponse(specialistService.findAllByFilter(filter));
     }
 

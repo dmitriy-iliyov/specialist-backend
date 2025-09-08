@@ -55,13 +55,13 @@ public class SpecialistResponseDto {
                                      @JsonProperty("full_name") String fullName,
                                      @JsonProperty("type_title") String typeTitle,
                                      @JsonProperty("another_type") String anotherType,
-                                     List<SpecialistLanguage> languages,
+                                     @JsonProperty("languages") List<SpecialistLanguage> languages,
                                      @JsonProperty("city_title") String cityTitle,
                                      @JsonProperty("city_code") String cityCode,
-                                     String address,
-                                     List<ContactDto> contacts,
+                                     @JsonProperty("address") String address,
+                                     @JsonProperty("contacts") List<ContactDto> contacts,
                                      @JsonProperty("site") String site,
-                                     SpecialistStatus status,
+                                     @JsonProperty("status") SpecialistStatus status,
                                      @JsonProperty("total_rating") double totalRating,
                                      @JsonProperty("reviews_count") long reviewsCount) {
                 this.id = id;

@@ -8,13 +8,11 @@ import com.specialist.specialistdirectory.domain.bookmark.models.BookmarkRespons
 import com.specialist.specialistdirectory.domain.specialist.models.SpecialistEntity;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
 import com.specialist.specialistdirectory.domain.specialist.services.SystemSpecialistService;
-import com.specialist.utils.pagination.PageRequest;
 import com.specialist.utils.pagination.PageResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,22 +55,6 @@ public class BookmarkServiceImpl implements BookmarkService {
     @Override
     public void deleteById(UUID ownerId, UUID id) {
         bookmarkRepository.deleteById(id);
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public PageResponse<BookmarkResponseDto> findAllByOwnerId(UUID ownerId, PageRequest page) {
-        List<BookmarkResponseDto> dtoPage = bookmarkRepository
-                .findAllByOwnerId(ownerId, Pageable.ofSize(page.pageSize()).withPage(page.pageNumber()))
-                .getContent().stream()
-                .map(entity -> new BookmarkResponseDto(
-                        entity.getId(), specialistService.toResponseDto(entity.getSpecialist()))
-                )
-                .toList();
-        return new PageResponse<>(
-                dtoPage,
-                (bookmarkCountService.countByOwnerId(ownerId) + page.pageSize() - 1) / page.pageSize()
-        );
     }
 
     @Transactional(readOnly = true)

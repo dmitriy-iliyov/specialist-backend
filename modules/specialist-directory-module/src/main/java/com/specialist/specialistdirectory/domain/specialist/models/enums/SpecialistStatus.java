@@ -1,5 +1,6 @@
 package com.specialist.specialistdirectory.domain.specialist.models.enums;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.specialist.specialistdirectory.exceptions.UnknownSpecialistStatusCodeException;
 import lombok.Getter;
 
@@ -23,5 +24,13 @@ public enum SpecialistStatus {
                 .filter(status -> status.getCode() == code)
                 .findFirst()
                 .orElseThrow(UnknownSpecialistStatusCodeException::new);
+    }
+
+    @JsonCreator
+    public static SpecialistStatus fromJson(String json) {
+        return Arrays.stream(SpecialistStatus.values())
+                .filter(status -> status.name().equalsIgnoreCase(json))
+                .findFirst()
+                .orElse(null);
     }
 }

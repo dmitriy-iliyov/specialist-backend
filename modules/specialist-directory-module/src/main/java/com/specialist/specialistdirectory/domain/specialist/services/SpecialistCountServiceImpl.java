@@ -1,11 +1,12 @@
 package com.specialist.specialistdirectory.domain.specialist.services;
 
 import com.specialist.specialistdirectory.domain.specialist.models.SpecialistEntity;
+import com.specialist.specialistdirectory.domain.specialist.models.filters.AdminSpecialistFilter;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.SpecialistFilter;
+import com.specialist.specialistdirectory.domain.specialist.repositories.PaginationUtils;
 import com.specialist.specialistdirectory.domain.specialist.repositories.SpecialistRepository;
 import com.specialist.specialistdirectory.domain.specialist.repositories.SpecialistSpecification;
-import com.specialist.specialistdirectory.utils.PaginationUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.domain.Specification;
@@ -24,7 +25,10 @@ public class SpecialistCountServiceImpl implements SpecialistCountService {
     @Transactional(readOnly = true)
     @Override
     public long countAll() {
-        return repository.count();
+        Specification<SpecialistEntity> specification = Specification.where(
+                SpecialistSpecification.filterByApprovedAndManaged()
+        );
+        return repository.count(specification);
     }
 
     @Cacheable(value = "specialists:count:filter", key = "#filter.cacheKey()")
@@ -48,6 +52,15 @@ public class SpecialistCountServiceImpl implements SpecialistCountService {
         Specification<SpecialistEntity> specification = PaginationUtils
                 .generateSpecification(filter)
                 .and(SpecialistSpecification.filterByCreatorId(creatorId));
+        return repository.count(specification);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public long countByAdminFilter(AdminSpecialistFilter filter) {
+        Specification<SpecialistEntity> specification = PaginationUtils
+                .generateSpecification(filter)
+                .and(SpecialistSpecification.filterByStatus(filter.getStatus()));
         return repository.count(specification);
     }
 }

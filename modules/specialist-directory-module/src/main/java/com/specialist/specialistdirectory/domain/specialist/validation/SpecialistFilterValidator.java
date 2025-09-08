@@ -6,15 +6,18 @@ import jakarta.validation.ConstraintValidatorContext;
 
 public class SpecialistFilterValidator implements ConstraintValidator<SpecialistFilter, BaseSpecialistFilter> {
 
-
     @Override
     public boolean isValid(BaseSpecialistFilter filter, ConstraintValidatorContext context) {
         boolean hasErrors = false;
 
         context.disableDefaultConstraintViolation();
 
-        if (filter.minRating() != null && filter.maxRating() != null) {
-            if (filter.minRating() > filter.maxRating()) {
+        if (filter.isEmpty()) {
+            return true;
+        }
+
+        if (filter.getMinRating() != null && filter.getMaxRating() != null) {
+            if (filter.getMinRating() > filter.getMaxRating()) {
                 hasErrors = true;
                 context.buildConstraintViolationWithTemplate("Min rating cannot be greater than max rating.")
                         .addPropertyNode("minRating")
@@ -22,8 +25,8 @@ public class SpecialistFilterValidator implements ConstraintValidator<Specialist
             }
         }
 
-        boolean cityBlank = filter.city() == null || filter.city().isBlank();
-        boolean cityCodeBlank = filter.cityCode() == null || filter.cityCode().isBlank();
+        boolean cityBlank = filter.getCity() == null || filter.getCity().isBlank();
+        boolean cityCodeBlank = filter.getCityCode() == null || filter.getCityCode().isBlank();
 
         if (cityBlank && cityCodeBlank) {
             hasErrors = true;

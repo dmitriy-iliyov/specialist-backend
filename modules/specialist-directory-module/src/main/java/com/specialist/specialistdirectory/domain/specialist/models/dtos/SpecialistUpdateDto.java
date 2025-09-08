@@ -6,6 +6,7 @@ import com.specialist.specialistdirectory.domain.specialist.models.enums.Special
 import com.specialist.specialistdirectory.domain.specialist.models.markers.SpecialistMarker;
 import com.specialist.specialistdirectory.domain.specialist.validation.Contact;
 import com.specialist.specialistdirectory.domain.specialist.validation.Specialist;
+import com.specialist.specialistdirectory.domain.specialist.validation.SpecialistLang;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.Data;
@@ -48,12 +49,13 @@ public class SpecialistUpdateDto implements SpecialistMarker {
     @Size(min = 5, max = 20, message = "Another type must be between 5 and 20 characters.")
     private final String anotherType;
 
+    @Valid
     @NotEmpty(message = "At least one language required.")
-    private final List<SpecialistLanguage> languages;
+    private final List<@SpecialistLang SpecialistLanguage> languages;
 
     @JsonProperty("city_title")
     @NotBlank(message = "City title is required.")
-    @Size(min = 5, max = 20, message = "City title must be between 5 and 20 characters.")
+    @Size(min = 4, max = 20, message = "City title must be between 4 and 20 characters.")
     private final String cityTitle;
 
     @JsonProperty("city_code")
@@ -71,6 +73,6 @@ public class SpecialistUpdateDto implements SpecialistMarker {
     @NotEmpty(message = "At least one contact required.")
     private final List< @Contact ContactDto> contacts;
 
-    @Pattern(regexp = "^(https?:\\/\\/)?([\\w\\-]+\\.)+[\\w\\-]+(\\/\\S*)?$", message = "Site must be a valid URL.")
+    @Pattern(regexp = "^(https?:\\//)?([\\w\\-]+\\.)+[\\w\\-]+(/\\S*)?$", message = "Site must be a valid URL.")
     private final String site;
 }

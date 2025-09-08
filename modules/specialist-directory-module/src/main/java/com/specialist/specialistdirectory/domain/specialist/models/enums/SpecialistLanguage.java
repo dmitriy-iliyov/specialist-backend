@@ -1,7 +1,7 @@
 package com.specialist.specialistdirectory.domain.specialist.models.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.specialist.specialistdirectory.exceptions.UnsupportedLanguageException;
+import com.specialist.specialistdirectory.exceptions.UnknownSpecialistLanguageException;
 import lombok.Getter;
 
 import java.util.Arrays;
@@ -23,7 +23,7 @@ public enum SpecialistLanguage {
         return Arrays.stream(SpecialistLanguage.values())
                 .filter(language -> language.getCode() == code)
                 .findFirst()
-                .orElseThrow(UnsupportedLanguageException::new);
+                .orElseThrow(UnknownSpecialistLanguageException::new);
     }
 
     @JsonCreator
@@ -31,6 +31,6 @@ public enum SpecialistLanguage {
         return Arrays.stream(SpecialistLanguage.values())
                 .filter(l -> l.name().equalsIgnoreCase(language))
                 .findFirst()
-                .orElseThrow(UnsupportedLanguageException::new);
+                .orElse(null);
     }
 }

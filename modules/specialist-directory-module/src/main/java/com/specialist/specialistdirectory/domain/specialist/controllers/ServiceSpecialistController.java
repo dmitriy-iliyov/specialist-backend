@@ -4,6 +4,7 @@ import com.specialist.contracts.auth.PrincipalDetails;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.ApproverType;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.CreatorType;
+import com.specialist.specialistdirectory.domain.specialist.models.filters.AdminSpecialistFilter;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistPersistOrchestrator;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistStatusService;
 import com.specialist.utils.validation.annotation.ValidUuid;
@@ -34,7 +35,7 @@ public class ServiceSpecialistController {
                 .body(persistOrchestrator.save(principal.getAccountId(), CreatorType.SERVICE, dto));
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping("/approve/{id}")
     public ResponseEntity<?> approve(@AuthenticationPrincipal PrincipalDetails principal,
                                      @PathVariable("id") @ValidUuid(paramName = "id") String id) {
         statusService.approve(UUID.fromString(id), principal.getAccountId(), ApproverType.SERVICE);
