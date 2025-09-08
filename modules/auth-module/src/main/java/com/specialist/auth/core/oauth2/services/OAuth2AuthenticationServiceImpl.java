@@ -36,8 +36,10 @@ public class OAuth2AuthenticationServiceImpl implements OAuth2AuthenticationServ
     }
 
     @Override
-    public Authentication authenticate(OAuth2QueryParams params, OAuth2InitialRequestEntity initialRequest, Provider provider) {
-        ClientRegistration clientRegistration = clientRegistrationRepository.findByRegistrationId(provider.getRegistrationId());
+    public Authentication authenticate(OAuth2QueryParams params, OAuth2InitialRequestEntity initialRequest) {
+        ClientRegistration clientRegistration = clientRegistrationRepository.findByRegistrationId(
+                params.provider().getRegistrationId()
+        );
         OAuth2AuthorizationRequest authorizationRequest = OAuth2AuthorizationRequest
                 .authorizationCode()
                 .authorizationUri(clientRegistration.getProviderDetails().getAuthorizationUri())
@@ -61,7 +63,7 @@ public class OAuth2AuthenticationServiceImpl implements OAuth2AuthenticationServ
         }
         AccountUserDetails userDetails = (AccountUserDetails) userDetailsService.loadUserByUsername(email);
         if (userDetails.getProvider().equals(Provider.LOCAL)) {
-            throw new InvalidProviderException(provider);
+            throw new InvalidProviderException(params.provider());
         }
         return new PreAuthenticatedAuthenticationToken(userDetails, "none");
     }

@@ -63,7 +63,7 @@ public class AccountSecurityFilterChainConfig {
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(csrfTokenRepository)
                         .ignoringRequestMatchers("/api/v1/accounts", "/api/csrf", "/api/auth/login",
-                                                 "/api/auth/oauth2/authorize", "/api/auth/oauth2/callback/**",
+                                                 "/api/auth/oauth2/authorize", "/api/auth/oauth2/callback",
                                                  "/api/v1/accounts/confirmation/**",
                                                  "/api/v1/accounts/password-recovery/**", "/api/auth/refresh")
                         .csrfTokenRequestHandler(new XorCsrfTokenRequestAttributeHandler())
@@ -78,7 +78,7 @@ public class AccountSecurityFilterChainConfig {
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/v1/info/**").permitAll()
                         .requestMatchers("/api/auth/login", "/api/auth/oauth2/authorize",
-                                         "/api/auth/oauth2/callback/**").permitAll()
+                                         "/api/auth/oauth2/callback").permitAll()
                         .requestMatchers("/api/auth/refresh", "/api/auth/logout", "/api/auth/logout/all").authenticated()
                         .requestMatchers("/api/v1/accounts").permitAll()
                         .requestMatchers("/api/v1/accounts/me").hasRole("USER")
@@ -88,9 +88,9 @@ public class AccountSecurityFilterChainConfig {
                         .requestMatchers("/api/v1/users", "/api/v1/users/**").permitAll()
                         .requestMatchers("/api/v1/me/bookmarks", "/api/v1/me/bookmarks/**").authenticated()
                         .requestMatchers("/api/v1/languages", "/api/v1/languages/**", "/api/v1/contacts/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/specialists/**/reviews").permitAll()
-                        .requestMatchers("/api/v1/specialists/**/reviews",
-                                         "/api/v1/specialists/**/reviews/**").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/specialists/{specialist_id}/reviews").permitAll()
+                        .requestMatchers("/api/v1/specialists/{specialist_id}/reviews",
+                                         "/api/v1/specialists/{specialist_id}/reviews/**").authenticated()
                         .requestMatchers("/api/v1/me/specialists", "/api/v1/me/specialists/**").hasRole("USER")
                         .requestMatchers("/api/v1/specialists", "/api/v1/specialists/**").permitAll()
                         .requestMatchers("/api/v1/types/**").permitAll()

@@ -8,5 +8,5 @@ import jakarta.servlet.http.HttpServletResponse;
 public interface OAuth2AccountAuthorizeOrchestrator {
     String authorize(Provider provider, HttpServletRequest request);
 
-    void callback(Provider provider, OAuth2QueryParams params, HttpServletRequest request, HttpServletResponse response);
+    void callback(OAuth2QueryParams params, HttpServletRequest request, HttpServletResponse response);
 }

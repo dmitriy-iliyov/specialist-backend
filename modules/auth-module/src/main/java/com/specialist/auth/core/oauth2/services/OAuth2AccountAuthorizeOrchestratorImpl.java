@@ -64,14 +64,14 @@ public class OAuth2AccountAuthorizeOrchestratorImpl implements OAuth2AccountAuth
     }
 
     @Override
-    public void callback(Provider provider, OAuth2QueryParams params, HttpServletRequest request, HttpServletResponse response) {
+    public void callback(OAuth2QueryParams params, HttpServletRequest request, HttpServletResponse response) {
         OAuth2InitialRequestEntity requestEntity = initialRequestRepository.findById(params.state()).orElse(null);
         if (requestEntity == null) {
             throw new AuthenticationServiceException("Invalid state.");
         }
         initialRequestRepository.deleteById(requestEntity.state());
         try {
-            Authentication authentication = authenticationService.authenticate(params, requestEntity, provider);
+            Authentication authentication = authenticationService.authenticate(params, requestEntity);
             sessionCookieManager.create((AccountUserDetails) authentication.getPrincipal(), request, response);
             successHandler.onAuthenticationSuccess(request, response, authentication);
         } catch (AuthenticationException | IOException | ServletException e) {

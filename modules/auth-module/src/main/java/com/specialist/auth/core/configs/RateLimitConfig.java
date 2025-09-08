@@ -67,12 +67,12 @@ public class RateLimitConfig {
         );
     }
 
-    @Bean("oAuth2LoginRedisRateLimitRepository")
-    public RedisRateLimitRepository oAuth2LoginRedisRateLimitRepository(RedisTemplate<String, String> redisTemplate) {
+    @Bean("oAuth2AuthorizeRedisRateLimitRepository")
+    public RedisRateLimitRepository oAuth2AuthorizeRedisRateLimitRepository(RedisTemplate<String, String> redisTemplate) {
         return new RedisRateLimitRepository(
                 redisTemplate,
-                "/api/auth/oauth2/login",
-                "rate-limit:oauth2-login",
+                "/api/auth/oauth2/authorize",
+                "rate-limit:oauth2-authorize",
                 5L,
                 60L,
                 600L

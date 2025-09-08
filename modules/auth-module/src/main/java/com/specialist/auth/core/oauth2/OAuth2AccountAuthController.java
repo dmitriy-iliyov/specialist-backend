@@ -25,9 +25,9 @@ public class OAuth2AccountAuthController {
     }
 
     @GetMapping("/callback")
-    public ResponseEntity<?> callback(@RequestParam("provider") Provider provider, @ModelAttribute OAuth2QueryParams params,
+    public ResponseEntity<?> callback(@ModelAttribute OAuth2QueryParams params,
                                       HttpServletRequest request, HttpServletResponse response) {
-        service.callback(provider, params, request, response);
+        service.callback(params, request, response);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .build();
