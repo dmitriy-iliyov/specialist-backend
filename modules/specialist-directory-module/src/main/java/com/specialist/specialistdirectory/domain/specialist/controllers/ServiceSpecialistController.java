@@ -4,7 +4,6 @@ import com.specialist.contracts.auth.PrincipalDetails;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.ApproverType;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.CreatorType;
-import com.specialist.specialistdirectory.domain.specialist.models.filters.AdminSpecialistFilter;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistPersistOrchestrator;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistStatusService;
 import com.specialist.utils.validation.annotation.ValidUuid;
@@ -20,13 +19,14 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/system/v1/specialists")
-@PreAuthorize("hasRole('SERVICE') && hasAuthority('SPECIALIST_CREATE')")
+@PreAuthorize("hasRole('SERVICE')")
 @RequiredArgsConstructor
 public class ServiceSpecialistController {
 
     private final SpecialistPersistOrchestrator persistOrchestrator;
     private final SpecialistStatusService statusService;
 
+    @PreAuthorize("hasAuthority('SPECIALIST_CREATE')")
     @PostMapping
     public ResponseEntity<?> create(@AuthenticationPrincipal PrincipalDetails principal,
                                     @RequestBody @Valid SpecialistCreateDto dto) {
@@ -35,6 +35,7 @@ public class ServiceSpecialistController {
                 .body(persistOrchestrator.save(principal.getAccountId(), CreatorType.SERVICE, dto));
     }
 
+    @PreAuthorize("hasAuthority('SPECIALIST_APPROVE')")
     @PatchMapping("/approve/{id}")
     public ResponseEntity<?> approve(@AuthenticationPrincipal PrincipalDetails principal,
                                      @PathVariable("id") @ValidUuid(paramName = "id") String id) {

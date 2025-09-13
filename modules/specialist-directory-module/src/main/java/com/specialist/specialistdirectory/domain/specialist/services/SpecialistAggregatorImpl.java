@@ -1,13 +1,13 @@
 package com.specialist.specialistdirectory.domain.specialist.services;
 
-import com.specialist.contracts.user.PublicUserResponseDto;
-import com.specialist.contracts.user.SystemUserService;
+import com.specialist.contracts.user.SystemUserReadService;
+import com.specialist.contracts.user.dto.PublicUserResponseDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistAggregatedResponseDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.SpecialistFilter;
 import com.specialist.utils.pagination.PageRequest;
 import com.specialist.utils.pagination.PageResponse;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,12 +18,17 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class SpecialistAggregatorImpl implements SpecialistAggregator {
 
     // WARNING: @Transactional can be till systemUserService in the same app context
     private final SpecialistService specialistService;
-    private final SystemUserService userService;
+    private final SystemUserReadService userQueryService;
+
+    public SpecialistAggregatorImpl(SpecialistService specialistService,
+                                    @Qualifier("compositeSystemUserReadService") SystemUserReadService userQueryService) {
+        this.specialistService = specialistService;
+        this.userQueryService = userQueryService;
+    }
 
     @Cacheable(value = "specialists:all", key = "#page.cacheKey()", condition = "#page.pageNumber() < 3")
     @Transactional(readOnly = true)
@@ -41,7 +46,7 @@ public class SpecialistAggregatorImpl implements SpecialistAggregator {
 
     private PageResponse<SpecialistAggregatedResponseDto> preparePageResponse(PageResponse<SpecialistResponseDto> pageResponse) {
         Set<UUID> creatorIds = pageResponse.data().stream().map(SpecialistResponseDto::getCreatorId).collect(Collectors.toSet());
-        Map<UUID, PublicUserResponseDto> creatorsMap = userService.findAllByIdIn(creatorIds);
+        Map<UUID, PublicUserResponseDto> creatorsMap = userQueryService.findAllByIdIn(creatorIds);
         return new PageResponse<>(
                 pageResponse.data().stream()
                         .map(dto -> new SpecialistAggregatedResponseDto(creatorsMap.get(dto.getCreatorId()), dto))

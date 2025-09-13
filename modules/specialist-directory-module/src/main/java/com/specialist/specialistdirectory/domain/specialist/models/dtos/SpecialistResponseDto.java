@@ -9,6 +9,8 @@ import lombok.Data;
 import java.util.List;
 import java.util.UUID;
 
+// FIXME : add if specialist is managed return actual specialist id
+
 @Data
 public class SpecialistResponseDto {
 

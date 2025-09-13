@@ -36,28 +36,28 @@ public class CreatorSpecialistOrchestratorImpl implements CreatorSpecialistOrche
 
     @Override
     public SpecialistResponseDto update(SpecialistUpdateDto dto) {
-        this.assertOwnership(dto.getCreatorId(), dto.getId());
+        this.validate(dto.getAccountId(), dto.getId());
         return specialistService.update(dto);
     }
 
     @Caching(evict = {
-            @CacheEvict(value = "specialists:bookmarks:count:total", key = "#creatorId"),
-            @CacheEvict(value = "specialists:bookmarks:id_pairs", key = "#creatorId")}
+            @CacheEvict(value = "specialists:bookmarks:count:total", key = "#accountId"),
+            @CacheEvict(value = "specialists:bookmarks:id_pairs", key = "#accountId")}
     )
     @Transactional
     @Override
-    public void delete(UUID creatorId, UUID id) {
-        assertOwnership(creatorId, id);
+    public void delete(UUID accountId, UUID id) {
+        validate(accountId, id);
         specialistService.deleteById(id);
     }
 
-    private void assertOwnership(UUID creatorId, UUID id) {
+    private void validate(UUID accountId, UUID id) {
         ShortSpecialistInfo info = specialistService.getShortInfoById(id);
-        if (!info.creatorId().equals(creatorId)) {
-            throw new OwnershipException();
-        }
         if (info.status().equals(SpecialistStatus.MANAGED)) {
             throw new ManagedSpecialistException();
+        }
+        if (!info.ownerId().equals(accountId)) {
+            throw new OwnershipException();
         }
         // DISCUSS: should user have authority to update RECALLED spec?
 //        if (info.status().equals(SpecialistStatus.RECALLED)) {

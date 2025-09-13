@@ -1,2 +1,41 @@
-package com.specialist.specialistdirectory.domain.specialist.mappers;public class ManagedSpecialistMapperImpl {
+package com.specialist.specialistdirectory.domain.specialist.mappers;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.specialist.contracts.specialistdirectory.ManagedSpecialistResponseDto;
+import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class PreSerializedManagedSpecialistMapper implements ManagedSpecialistMapper {
+
+    private final ObjectMapper mapper;
+
+    @Override
+    public ManagedSpecialistResponseDto toManagedDto(SpecialistResponseDto dto) {
+        try {
+            String jsonLanguages = mapper.writeValueAsString(dto.getLanguages());
+            String jsonContacts = mapper.writeValueAsString(dto.getContacts());
+            return new ManagedSpecialistResponseDto(
+                    dto.getId(),
+                    dto.getCreatorId(),
+                    dto.getFullName(),
+                    dto.getTypeTitle(),
+                    dto.getAnotherType(),
+                    jsonLanguages,
+                    dto.getCityTitle(),
+                    dto.getCityCode(),
+                    dto.getAddress(),
+                    jsonContacts,
+                    dto.getSite(),
+                    dto.getStatus().toString(),
+                    dto.getTotalRating(),
+                    dto.getReviewsCount()
+            );
+        } catch (JsonProcessingException e) {
+            throw new IllegalArgumentException("Failed to serialize to JSON", e);
+        }
+    }
 }

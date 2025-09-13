@@ -2,7 +2,6 @@ package com.specialist.specialistdirectory.domain.specialist.controllers;
 
 import com.specialist.contracts.auth.PrincipalDetails;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
-import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.CreatorType;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
 import com.specialist.specialistdirectory.domain.specialist.services.CreatorSpecialistOrchestrator;
@@ -31,7 +30,7 @@ public class CreatorSpecialistController {
     private final CreatorSpecialistOrchestrator orchestrator;
     private final SpecialistCountService countService;
 
-    @PreAuthorize("hasAuthority('SPECIALIST_CREATE_UPDATE')")
+    @PreAuthorize("hasAuthority('SPECIALIST_CREATE')")
     @PostMapping
     public ResponseEntity<?> create(@AuthenticationPrincipal PrincipalDetails principal,
                                     @RequestBody @Valid SpecialistCreateDto dto) {
@@ -46,27 +45,6 @@ public class CreatorSpecialistController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(service.findByCreatorIdAndId(principal.getAccountId(), UUID.fromString(id)));
-    }
-
-    @PreAuthorize("hasAuthority('SPECIALIST_CREATE_UPDATE')")
-    @PutMapping("/{id}")
-    public ResponseEntity<?> update(@AuthenticationPrincipal PrincipalDetails principal,
-                                    @PathVariable("id") @ValidUuid(paramName = "id") String id,
-                                    @RequestBody @Valid SpecialistUpdateDto dto) {
-        dto.setCreatorId(principal.getAccountId());
-        dto.setId(UUID.fromString(id));
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(orchestrator.update(dto));
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@AuthenticationPrincipal PrincipalDetails principal,
-                                    @PathVariable("id") @ValidUuid(paramName = "id") String id) {
-        orchestrator.delete(principal.getAccountId(), UUID.fromString(id));
-        return ResponseEntity
-                .status(HttpStatus.NO_CONTENT)
-                .build();
     }
 
     @GetMapping

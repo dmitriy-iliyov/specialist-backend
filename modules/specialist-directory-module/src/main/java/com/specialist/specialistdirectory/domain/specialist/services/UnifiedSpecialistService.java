@@ -17,7 +17,6 @@ import com.specialist.specialistdirectory.domain.type.services.TypeService;
 import com.specialist.specialistdirectory.exceptions.SpecialistNotFoundByIdException;
 import com.specialist.utils.pagination.PageRequest;
 import com.specialist.utils.pagination.PageResponse;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.CacheEvict;
@@ -69,9 +68,13 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
         entity.setSummaryRating(0);
         entity.setRating(0.0);
         entity.setReviewsCount(0);
+        entity.setOwnerId(dto.getCreatorId());
         entity.setInfo(new SpecialistInfoEntity(dto.getCreatorType()));
         entity = repository.save(entity);
-        cacheService.putShortInfo(entity.getId(), new ShortSpecialistInfo(entity.getCreatorId(), dto.getStatus()));
+        cacheService.putShortInfo(
+                entity.getId(),
+                new ShortSpecialistInfo(entity.getCreatorId(), entity.getOwnerId(), dto.getStatus())
+        );
         cacheService.evictCreatedCountByFilter(entity.getCreatorId());
         return mapper.toResponseDto(entity);
     }
@@ -85,7 +88,7 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
         Long existedTypeId = entity.getType().getId();
         if (!existedTypeId.equals(inputTypeId)) {
             if (!existedTypeId.equals(TypeConstants.OTHER_TYPE_ID) && inputTypeId.equals(TypeConstants.OTHER_TYPE_ID)) {
-                saveSuggestedType(entity, dto.getCreatorId(), dto.getAnotherType());
+                saveSuggestedType(entity, dto.getAccountId(), dto.getAnotherType());
             } else if (existedTypeId.equals(TypeConstants.OTHER_TYPE_ID)) {
                 entity.setSuggestedTypeId(null);
             }
@@ -93,7 +96,7 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
         } else if (existedTypeId.equals(TypeConstants.OTHER_TYPE_ID)) {
             TypeResponseDto typeDto = typeService.findSuggestedById(entity.getSuggestedTypeId());
             if (!typeDto.title().equalsIgnoreCase(dto.getAnotherType())) {
-                saveSuggestedType(entity, dto.getCreatorId(), dto.getAnotherType());
+                saveSuggestedType(entity, dto.getAccountId(), dto.getAnotherType());
             }
         }
         mapper.updateEntityFromDto(dto, entity);

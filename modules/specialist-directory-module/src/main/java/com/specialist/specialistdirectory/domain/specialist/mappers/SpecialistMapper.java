@@ -31,6 +31,8 @@ public interface SpecialistMapper {
     List<SpecialistResponseDto> toResponseDtoList(List<SpecialistEntity> content);
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "ownerId", ignore = true)
+    @Mapping(target = "creatorId", ignore = true)
     @Mapping(target = "type", ignore = true)
     @Mapping(target = "summaryRating", ignore = true)
     @Mapping(target = "rating", ignore = true)

@@ -6,5 +6,6 @@ import java.util.UUID;
 
 public record ShortSpecialistInfo(
         UUID creatorId,
+        UUID ownerId,
         SpecialistStatus status
 ) { }

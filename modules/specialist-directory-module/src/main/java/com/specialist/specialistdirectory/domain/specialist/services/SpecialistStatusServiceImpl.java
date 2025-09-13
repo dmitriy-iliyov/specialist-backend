@@ -7,7 +7,6 @@ import com.specialist.specialistdirectory.domain.specialist.models.enums.Special
 import com.specialist.specialistdirectory.domain.specialist.repositories.SpecialistRepository;
 import com.specialist.specialistdirectory.exceptions.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,8 +17,8 @@ import java.util.UUID;
 public class SpecialistStatusServiceImpl implements SpecialistStatusService {
 
     private final SpecialistRepository repository;
+    private final SpecialistCacheService cacheService;
 
-    @CacheEvict(value = "specialists:created:count:total", key = "#id")
     @Transactional
     @Override
     public void approve(UUID id, UUID approverId, ApproverType approverType) {
@@ -32,6 +31,7 @@ public class SpecialistStatusServiceImpl implements SpecialistStatusService {
         infoEntity.setApproverType(approverType);
         specialistEntity.setStatus(SpecialistStatus.APPROVED);
         repository.save(specialistEntity);
+        cacheService.evictTotalCreatedCount(specialistEntity.getCreatorId());
     }
 
     @Transactional

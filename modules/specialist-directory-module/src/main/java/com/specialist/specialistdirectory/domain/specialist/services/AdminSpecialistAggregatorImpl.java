@@ -1,12 +1,12 @@
 package com.specialist.specialistdirectory.domain.specialist.services;
 
-import com.specialist.contracts.user.PublicUserResponseDto;
-import com.specialist.contracts.user.SystemUserService;
+import com.specialist.contracts.user.SystemUserReadService;
+import com.specialist.contracts.user.dto.PublicUserResponseDto;
+import com.specialist.specialistdirectory.domain.specialist.models.dtos.AdminSpecialistAggregatedResponseDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.FullSpecialistResponseDto;
-import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistAggregatedResponseDto;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.AdminSpecialistFilter;
 import com.specialist.utils.pagination.PageResponse;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,23 +17,29 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class AdminSpecialistAggregatorImpl implements AdminSpecialistAggregator {
 
-    private final AdminSpecialistQueryService queryService;
-    private final SystemUserService userService;
+    private final AdminSpecialistQueryService specialistQueryService;
+    private final SystemUserReadService userQueryService;
+
+    public AdminSpecialistAggregatorImpl(AdminSpecialistQueryService specialistQueryService,
+                                         @Qualifier("compositeSystemUserReadService")
+                                         SystemUserReadService userQueryService) {
+        this.specialistQueryService = specialistQueryService;
+        this.userQueryService = userQueryService;
+    }
 
     // WARNING: transaction can be till userService in the same app context
     @Transactional(readOnly = true)
     @Override
-    public PageResponse<SpecialistAggregatedResponseDto> aggregate(AdminSpecialistFilter filter) {
-        PageResponse<FullSpecialistResponseDto> page = queryService.findAll(filter);
+    public PageResponse<AdminSpecialistAggregatedResponseDto> aggregate(AdminSpecialistFilter filter) {
+        PageResponse<FullSpecialistResponseDto> page = specialistQueryService.findAll(filter);
         Set<UUID> creatorIds = page.data().stream()
                 .map(FullSpecialistResponseDto::getCreatorId)
                 .collect(Collectors.toSet());
-        Map<UUID, PublicUserResponseDto> creators = userService.findAllByIdIn(creatorIds);
-        List<SpecialistAggregatedResponseDto> aggregatedDtos = page.data().stream()
-                .map(dto -> new SpecialistAggregatedResponseDto(creators.get(dto.getCreatorId()), dto))
+        Map<UUID, PublicUserResponseDto> creators = userQueryService.findAllByIdIn(creatorIds);
+        List<AdminSpecialistAggregatedResponseDto> aggregatedDtos = page.data().stream()
+                .map(dto -> new AdminSpecialistAggregatedResponseDto(creators.get(dto.getCreatorId()), dto))
                 .toList();
         return new PageResponse<>(aggregatedDtos, page.totalPages());
     }

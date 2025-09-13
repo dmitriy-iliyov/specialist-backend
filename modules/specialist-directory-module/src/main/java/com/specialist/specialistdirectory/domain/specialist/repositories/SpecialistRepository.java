@@ -67,7 +67,7 @@ public interface SpecialistRepository extends JpaRepository<SpecialistEntity, UU
     void updateStatusAndOwnerIdById(UUID id, UUID ownerId, SpecialistStatus status);
 
     @Query("""
-        SELECT new com.specialist.specialistdirectory.domain.specialist.models.dtos.ShortSpecialistInfo(s.creatorId, s.status)
+        SELECT new com.specialist.specialistdirectory.domain.specialist.models.dtos.ShortSpecialistInfo(s.creatorId, s.ownerId, s.status)
         FROM SpecialistEntity s
         WHERE s.id = :id
     """)

@@ -24,7 +24,7 @@ public class SpecialistUpdateDto implements SpecialistMarker {
     private UUID id;
 
     @JsonIgnore
-    private UUID creatorId;
+    private UUID accountId;
 
     @JsonProperty("first_name")
     @NotBlank(message = "First name is required.")

@@ -29,13 +29,13 @@ import java.util.UUID;
 @AllArgsConstructor
 @Getter
 @Setter
-@ToString(exclude = {"type", "systemInfo", "reviews", "bookmarks"})
+@ToString(exclude = {"type", "info", "reviews", "bookmarks"})
 public class SpecialistEntity {
 
     @Id
     private UUID id;
 
-    @Column(name = "owner_id", unique = true)
+    @Column(name = "owner_id", nullable = false)
     private UUID ownerId;
 
     @Column(name = "creator_id", nullable = false, updatable = false)
