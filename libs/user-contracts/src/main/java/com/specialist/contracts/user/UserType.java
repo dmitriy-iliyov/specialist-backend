@@ -1,28 +1,28 @@
-package com.specialist.user.models.enums;
+package com.specialist.contracts.user;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.specialist.user.exceptions.UnknownUserTypeCodeException;
-import com.specialist.user.exceptions.UnsupportedUserTypeException;
 import lombok.Getter;
 
 import java.util.Arrays;
 
+@Getter
 public enum UserType {
-    USER(1),
-    SPECIALIST(2);
+    USER(1, "ROLE_USER"),
+    SPECIALIST(2, "ROLE_SPECIALIST");
 
-    @Getter
     private final int code;
+    private final String stringRole;
 
-    UserType(int code) {
+    UserType(int code, String stringRole) {
         this.code = code;
+        this.stringRole = stringRole;
     }
 
     public static UserType fromCode(int code) {
         return Arrays.stream(UserType.values())
                 .filter(type -> type.getCode() == code)
                 .findFirst()
-                .orElseThrow(UnknownUserTypeCodeException::new);
+                .orElse(null);
     }
 
     @JsonCreator
@@ -30,6 +30,13 @@ public enum UserType {
         return Arrays.stream(UserType.values())
                 .filter(role -> role.name().equalsIgnoreCase(json))
                 .findFirst()
-                .orElseThrow(UnsupportedUserTypeException::new);
+                .orElse(null);
+    }
+
+    public static UserType fromStringRole(String stringRole) {
+        return Arrays.stream(UserType.values())
+                .filter(role -> role.getStringRole().equalsIgnoreCase(stringRole))
+                .findFirst()
+                .orElse(null);
     }
 }

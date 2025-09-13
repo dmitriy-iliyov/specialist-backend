@@ -1,4 +1,4 @@
-package com.specialist.contracts.user;
+package com.specialist.contracts.user.dto;
 
 import java.util.UUID;
 

@@ -1,6 +1,4 @@
-package com.specialist.user.services.system;
-
-import com.specialist.contracts.user.UserType;
+package com.specialist.contracts.user;
 
 import java.util.UUID;
 

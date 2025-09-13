@@ -1,6 +1,4 @@
-package com.specialist.user.models.dtos;
-
-import com.specialist.contracts.user.BaseResponseDto;
+package com.specialist.contracts.user.dto;
 
 import java.util.UUID;
 
