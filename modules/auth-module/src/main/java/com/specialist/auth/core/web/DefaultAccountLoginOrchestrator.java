@@ -1,6 +1,5 @@
-package com.specialist.auth.core;
+package com.specialist.auth.core.web;
 
-import com.specialist.auth.core.models.LoginRequest;
 import com.specialist.auth.core.oauth2.models.Provider;
 import com.specialist.auth.domain.account.models.AccountUserDetails;
 import com.specialist.auth.domain.account.services.AccountService;

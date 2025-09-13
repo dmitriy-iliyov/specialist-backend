@@ -6,7 +6,7 @@ import com.specialist.auth.domain.account.models.dtos.LockRequest;
 
 import java.util.UUID;
 
-public interface AdminAccountFacade {
+public interface AdminAccountManagementFacade {
     void disableById(UUID id, DisableRequest request);
 
     void lockById(UUID id, LockRequest request);

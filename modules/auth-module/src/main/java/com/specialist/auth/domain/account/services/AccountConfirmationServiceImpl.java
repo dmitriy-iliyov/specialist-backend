@@ -13,7 +13,7 @@ public class AccountConfirmationServiceImpl implements AccountConfirmationServic
 
     @Transactional
     @Override
-    public void confirmEmail(String email) {
+    public void confirmByEmail(String email) {
         repository.enableByEmail(email);
     }
 }

@@ -1,6 +1,6 @@
-package com.specialist.auth.core.handlers;
+package com.specialist.auth.core.web.handlers;
 
-import com.specialist.auth.core.SessionCookieManager;
+import com.specialist.auth.core.web.SessionCookieManager;
 import com.specialist.auth.domain.access_token.models.AccessTokenUserDetails;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

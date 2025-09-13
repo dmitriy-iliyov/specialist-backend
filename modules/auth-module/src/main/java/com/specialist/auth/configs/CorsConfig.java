@@ -1,4 +1,4 @@
-package com.specialist.auth.core.configs;
+package com.specialist.auth.configs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

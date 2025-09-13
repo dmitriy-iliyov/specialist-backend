@@ -1,6 +1,6 @@
 package com.specialist.auth.domain.refresh_token;
 
-import com.specialist.auth.core.models.BaseUserDetails;
+import com.specialist.auth.core.BaseUserDetails;
 import com.specialist.auth.domain.refresh_token.models.RefreshToken;
 import com.specialist.auth.domain.refresh_token.models.RefreshTokenEntity;
 import org.junit.jupiter.api.DisplayName;

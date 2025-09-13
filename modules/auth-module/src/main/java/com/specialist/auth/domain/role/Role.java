@@ -6,7 +6,7 @@ import com.specialist.auth.exceptions.UnsupportedRoleException;
 import java.util.Arrays;
 
 public enum Role {
-    ROLE_USER, ROLE_ADMIN, ROLE_SERVICE, ROLE_SPECIALIST;
+    ROLE_UNCOMPLETED_USER, ROLE_USER, ROLE_ADMIN, ROLE_SERVICE, ROLE_SPECIALIST;
 
     @JsonCreator
     public static Role fromJson(String json) {

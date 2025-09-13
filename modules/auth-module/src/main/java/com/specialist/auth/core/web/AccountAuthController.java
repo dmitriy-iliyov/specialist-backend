@@ -1,6 +1,5 @@
-package com.specialist.auth.core;
+package com.specialist.auth.core.web;
 
-import com.specialist.auth.core.models.LoginRequest;
 import com.specialist.auth.domain.access_token.models.AccessTokenUserDetails;
 import com.specialist.auth.domain.refresh_token.models.RefreshTokenIdHolder;
 import jakarta.servlet.ServletException;
@@ -43,6 +42,7 @@ public class AccountAuthController {
                 .build();
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER', 'SPECIALIST')")
     @PostMapping("/refresh")
     public ResponseEntity<?> refresh(@AuthenticationPrincipal RefreshTokenIdHolder principal,
                                      HttpServletResponse response) {

@@ -1,5 +1,6 @@
-package com.specialist.auth.core.models;
+package com.specialist.auth.core;
 
+import com.specialist.auth.core.web.CookieType;
 import lombok.Getter;
 
 public enum TokenType {

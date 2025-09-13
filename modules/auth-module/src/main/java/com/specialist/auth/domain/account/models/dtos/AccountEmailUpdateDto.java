@@ -2,6 +2,7 @@ package com.specialist.auth.domain.account.models.dtos;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.specialist.auth.domain.account.validation.UniqueEmail;
+import com.specialist.contracts.user.UserType;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -14,6 +15,9 @@ public class AccountEmailUpdateDto {
 
     @JsonIgnore
     private UUID id;
+
+    @JsonIgnore
+    private UserType type;
 
     @NotBlank(message = "Password is required.")
     @Size(min = 10, max = 50, message = "Password length must be greater than 10 and less than 50!")

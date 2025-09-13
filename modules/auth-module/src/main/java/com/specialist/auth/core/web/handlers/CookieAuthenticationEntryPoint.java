@@ -1,8 +1,8 @@
-package com.specialist.auth.core.handlers;
+package com.specialist.auth.core.web.handlers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.specialist.auth.core.CookieManager;
-import com.specialist.auth.core.models.TokenType;
+import com.specialist.auth.core.TokenType;
+import com.specialist.auth.core.web.CookieManager;
 import com.specialist.auth.exceptions.AccessTokenExpiredException;
 import com.specialist.auth.exceptions.InvalidJwtSignatureException;
 import com.specialist.auth.exceptions.JwtParseException;

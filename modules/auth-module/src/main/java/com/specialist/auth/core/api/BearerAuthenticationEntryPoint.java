@@ -1,4 +1,4 @@
-package com.specialist.auth.core.handlers;
+package com.specialist.auth.core.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.specialist.auth.exceptions.InvalidJwtSignatureException;

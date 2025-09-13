@@ -1,4 +1,4 @@
-package com.specialist.auth.core.models;
+package com.specialist.auth.core;
 
 import java.time.Instant;
 

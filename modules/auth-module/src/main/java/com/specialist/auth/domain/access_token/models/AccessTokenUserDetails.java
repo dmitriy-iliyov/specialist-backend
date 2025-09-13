@@ -1,8 +1,12 @@
 package com.specialist.auth.domain.access_token.models;
 
+import com.specialist.auth.domain.refresh_token.models.RefreshTokenIdHolder;
+import com.specialist.auth.domain.role.Role;
+import com.specialist.auth.exceptions.RoleNotFoundException;
 import com.specialist.contracts.auth.PrincipalDetails;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -11,12 +15,12 @@ import java.util.List;
 import java.util.UUID;
 
 @Builder
-public class AccessTokenUserDetails implements UserDetails, PrincipalDetails {
+@Getter
+@Slf4j
+public class AccessTokenUserDetails implements UserDetails, RefreshTokenIdHolder, PrincipalDetails {
 
-    @Getter
     private UUID id;
     private List<? extends GrantedAuthority> authorities;
-    @Getter
     private UUID accountId;
 
     @Override
@@ -32,5 +36,22 @@ public class AccessTokenUserDetails implements UserDetails, PrincipalDetails {
     @Override
     public String getUsername() {
         return accountId.toString();
+    }
+
+    public Role getRole() {
+        return authorities.stream()
+                .map(GrantedAuthority::getAuthority)
+                .filter(authority -> authority.startsWith("ROLE_"))
+                .findFirst()
+                .map(Role::fromJson)
+                .orElseThrow(() -> {
+                    log.error("Account with id {} hasn't role.", accountId);
+                    return new RoleNotFoundException();
+                });
+    }
+
+    @Override
+    public String getStringRole() {
+        return getRole().toString();
     }
 }

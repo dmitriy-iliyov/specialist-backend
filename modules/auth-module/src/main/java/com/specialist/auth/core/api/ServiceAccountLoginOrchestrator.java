@@ -1,6 +1,4 @@
-package com.specialist.auth.core;
-
-import com.specialist.auth.core.models.ServiceLoginRequest;
+package com.specialist.auth.core.api;
 
 import java.util.Map;
 

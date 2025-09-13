@@ -1,4 +1,4 @@
-package com.specialist.auth.infrastructure;
+package com.specialist.auth.infrastructure.initializer;
 
 import com.specialist.auth.domain.authority.Authority;
 import com.specialist.auth.domain.authority.AuthorityEntity;

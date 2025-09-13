@@ -1,6 +1,6 @@
-package com.specialist.auth.core;
+package com.specialist.auth.core.api;
 
-import com.specialist.auth.core.models.ServiceLoginRequest;
+import com.specialist.auth.core.TokenManager;
 import com.specialist.auth.domain.service_account.models.ServiceAccountUserDetails;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;

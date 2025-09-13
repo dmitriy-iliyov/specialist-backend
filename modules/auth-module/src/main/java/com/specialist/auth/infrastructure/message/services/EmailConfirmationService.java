@@ -62,7 +62,7 @@ public class EmailConfirmationService implements ConfirmationService {
             throw new CodeExpiredException();
         }
         String email = entity.email();
-        confirmationService.confirmEmail(email);
+        confirmationService.confirmByEmail(email);
         repository.deleteById(code);
         return email;
     }

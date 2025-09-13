@@ -1,8 +1,7 @@
 package com.specialist.auth.core;
 
-import com.specialist.auth.core.models.ServiceLoginRequest;
-import com.specialist.auth.core.models.Token;
-import com.specialist.auth.core.models.TokenType;
+import com.specialist.auth.core.api.ServiceAccountLoginOrchestratorImpl;
+import com.specialist.auth.core.api.ServiceLoginRequest;
 import com.specialist.auth.domain.service_account.models.ServiceAccountUserDetails;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.DisplayName;

@@ -1,6 +1,5 @@
-package com.specialist.auth.core;
+package com.specialist.auth.core.web;
 
-import com.specialist.auth.core.models.LoginRequest;
 import com.specialist.auth.domain.account.models.AccountUserDetails;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

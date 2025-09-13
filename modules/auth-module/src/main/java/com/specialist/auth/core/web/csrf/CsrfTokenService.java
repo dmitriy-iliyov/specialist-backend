@@ -1,4 +1,4 @@
-package com.specialist.auth.core.csrf;
+package com.specialist.auth.core.web.csrf;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

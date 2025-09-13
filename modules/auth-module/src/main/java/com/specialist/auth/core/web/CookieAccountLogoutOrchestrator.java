@@ -1,4 +1,4 @@
-package com.specialist.auth.core;
+package com.specialist.auth.core.web;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

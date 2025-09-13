@@ -5,35 +5,36 @@ import com.specialist.auth.domain.account.models.dtos.DefaultAccountCreateDto;
 import com.specialist.auth.domain.account.models.dtos.ManagedAccountCreateDto;
 import com.specialist.auth.domain.account.models.dtos.OAuth2AccountCreateDto;
 import com.specialist.auth.domain.account.models.dtos.ShortAccountResponseDto;
-import com.specialist.auth.domain.authority.AuthorityServiceImpl;
+import com.specialist.auth.domain.account.models.events.AccountCreateEvent;
 import com.specialist.auth.domain.role.Role;
-import com.specialist.auth.infrastructure.message.services.ConfirmationService;
-import com.specialist.contracts.user.ShortUserCreateDto;
-import com.specialist.contracts.user.SystemUserService;
+import com.specialist.contracts.user.SystemUserPersistService;
+import com.specialist.contracts.user.dto.ShortUserCreateDto;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 
 // WARNING: all @Transactional should use till @Bean of SystemUserService is in the same app context
-
 @Service
 @RequiredArgsConstructor
 public class AccountPersistOrchestratorImpl implements AccountPersistOrchestrator {
 
     private final AccountService accountService;
-    private final SystemUserService systemUserService;
-    private final ConfirmationService confirmationService;
+    private final SystemUserPersistService systemUserPersistService;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
     @Override
     public ShortAccountResponseDto save(DefaultAccountCreateDto dto, HttpServletResponse response) {
-        dto.setRole(Role.ROLE_USER);
-        dto.setAuthorities(AuthorityServiceImpl.DEFAULT_POST_REGISTER_USER_AUTHORITIES);
+        dto.setRole(Role.ROLE_UNCOMPLETED_USER);
+        dto.setAuthorities(List.of());
         ShortAccountResponseDto responseDto = accountService.save(dto);
-        systemUserService.save(new ShortUserCreateDto(responseDto.id(), responseDto.email()));
-        confirmationService.sendConfirmationCode(dto.getEmail());
+        systemUserPersistService.save(new ShortUserCreateDto(responseDto.id(), responseDto.email()));
+        eventPublisher.publishEvent(new AccountCreateEvent(dto.getEmail()));
         return responseDto;
     }
 
@@ -43,11 +44,11 @@ public class AccountPersistOrchestratorImpl implements AccountPersistOrchestrato
         OAuth2AccountCreateDto dto = new OAuth2AccountCreateDto(
                 email,
                 provider,
-                Role.ROLE_USER,
-                AuthorityServiceImpl.DEFAULT_POST_REGISTER_USER_AUTHORITIES
+                Role.ROLE_UNCOMPLETED_USER,
+                List.of()
         );
         ShortAccountResponseDto responseDto = accountService.save(dto);
-        systemUserService.save(new ShortUserCreateDto(responseDto.id(), responseDto.email()));
+        systemUserPersistService.save(new ShortUserCreateDto(responseDto.id(), responseDto.email()));
         return responseDto;
     }
 
@@ -61,8 +62,8 @@ public class AccountPersistOrchestratorImpl implements AccountPersistOrchestrato
                 dto.authorities()
         );
         ShortAccountResponseDto responseDto = accountService.save(createDto);
-        systemUserService.save(new ShortUserCreateDto(responseDto.id(), responseDto.email()));
-        confirmationService.sendConfirmationCode(dto.email());
+        systemUserPersistService.save(new ShortUserCreateDto(responseDto.id(), responseDto.email()));
+        eventPublisher.publishEvent(new AccountCreateEvent(dto.email()));
         return responseDto;
     }
 }

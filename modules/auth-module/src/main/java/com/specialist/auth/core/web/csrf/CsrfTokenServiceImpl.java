@@ -1,4 +1,4 @@
-package com.specialist.auth.core.csrf;
+package com.specialist.auth.core.web.csrf;
 
 import com.specialist.auth.exceptions.CsrfTokenMaskingException;
 import com.specialist.auth.exceptions.CsrfTokenNullException;

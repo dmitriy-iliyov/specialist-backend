@@ -1,4 +1,4 @@
-package com.specialist.auth.core.handlers;
+package com.specialist.auth.core;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.specialist.core.exceptions.models.dto.ErrorDto;
@@ -24,7 +24,6 @@ public class DefaultAccessDeniedHandler implements org.springframework.security.
 
     private final MessageSource messageSource;
     private final ObjectMapper mapper;
-
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException {

@@ -1,4 +1,4 @@
-package com.specialist.auth.core.configs;
+package com.specialist.auth.configs;
 
 import com.specialist.auth.domain.access_token.AccessTokenAuthenticationFailureHandler;
 import com.specialist.auth.domain.access_token.AccessTokenAuthenticationSuccessHandler;

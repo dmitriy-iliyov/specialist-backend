@@ -1,7 +1,7 @@
 package com.specialist.auth.infrastructure.message.services;
 
-import com.specialist.auth.core.AccountLoginOrchestrator;
-import com.specialist.auth.core.models.LoginRequest;
+import com.specialist.auth.core.web.AccountLoginOrchestrator;
+import com.specialist.auth.core.web.LoginRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Qualifier;

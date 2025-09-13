@@ -1,6 +1,6 @@
 package com.specialist.auth.domain.account.models;
 
-import com.specialist.auth.core.models.BaseUserDetails;
+import com.specialist.auth.core.BaseUserDetails;
 import com.specialist.auth.core.oauth2.models.Provider;
 import com.specialist.auth.domain.account.models.enums.DisableReason;
 import com.specialist.auth.domain.account.models.enums.LockReason;

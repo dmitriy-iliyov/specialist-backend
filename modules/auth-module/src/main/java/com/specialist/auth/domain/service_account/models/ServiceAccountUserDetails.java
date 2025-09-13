@@ -1,6 +1,6 @@
 package com.specialist.auth.domain.service_account.models;
 
-import com.specialist.auth.core.models.BaseUserDetails;
+import com.specialist.auth.core.BaseUserDetails;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.security.core.CredentialsContainer;

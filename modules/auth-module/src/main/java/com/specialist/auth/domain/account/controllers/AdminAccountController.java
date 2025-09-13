@@ -22,18 +22,18 @@ import java.util.UUID;
 public class AdminAccountController {
 
     private final AccountPersistOrchestrator persistOrchestrator;
-    private final AccountService service;
-    private final AdminAccountService adminService;
-    private final AdminAccountFacade accountFacade;
+    private final AccountService defaultService;
+    private final AdminAccountManagementService adminService;
+    private final AdminAccountManagementFacade managementFacade;
     private final AccountDeleteFacade deleteFacade;
 
-    public AdminAccountController(AccountPersistOrchestrator persistOrchestrator, AccountService service,
-                                  AdminAccountService adminService, AdminAccountFacade accountFacade,
-                                  @Qualifier("defaultAccountDeleteFacadeAdminDecorator") AccountDeleteFacade deleteFacade) {
+    public AdminAccountController(AccountPersistOrchestrator persistOrchestrator, AccountService defaultService,
+                                  AdminAccountManagementService adminService, AdminAccountManagementFacade managementFacade,
+                                  @Qualifier("adminDefaultAccountDeleteFacadeDecorator") AccountDeleteFacade deleteFacade) {
         this.persistOrchestrator = persistOrchestrator;
-        this.service = service;
+        this.defaultService = defaultService;
         this.adminService = adminService;
-        this.accountFacade = accountFacade;
+        this.managementFacade = managementFacade;
         this.deleteFacade = deleteFacade;
     }
 
@@ -49,7 +49,7 @@ public class AdminAccountController {
     public ResponseEntity<?> findAll(@ModelAttribute @Valid AccountFilter filter) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(service.findAllByFilter(filter));
+                .body(defaultService.findAllByFilter(filter));
     }
 
     @PatchMapping("/{id}/demote")
@@ -57,7 +57,7 @@ public class AdminAccountController {
                                     @ValidUuid(paramName = "id", message = "Id should have valid format.") UUID id,
                                     @RequestBody @Valid DemodeRequest request) {
         request.setAccountId(id);
-        accountFacade.demoteById(request);
+        managementFacade.demoteById(request);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
@@ -68,7 +68,7 @@ public class AdminAccountController {
     public ResponseEntity<?> lock(@PathVariable("id")
                                   @ValidUuid(paramName = "id", message = "Id should have valid format.") UUID id,
                                   @RequestBody @Valid LockRequest request) {
-        accountFacade.lockById(id, request);
+        managementFacade.lockById(id, request);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
@@ -89,7 +89,7 @@ public class AdminAccountController {
     public ResponseEntity<?> disable(@PathVariable("id")
                                      @ValidUuid(paramName = "id", message = "Id should have valid format.") UUID id,
                                      @RequestBody @Valid DisableRequest request) {
-        accountFacade.disableById(id, request);
+        managementFacade.disableById(id, request);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();

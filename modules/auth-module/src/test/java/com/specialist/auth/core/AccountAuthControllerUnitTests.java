@@ -1,6 +1,8 @@
 package com.specialist.auth.core;
 
-import com.specialist.auth.core.models.LoginRequest;
+import com.specialist.auth.core.web.AccountAuthController;
+import com.specialist.auth.core.web.AccountLoginOrchestrator;
+import com.specialist.auth.core.web.LoginRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.Test;

@@ -4,6 +4,7 @@ import com.specialist.auth.core.oauth2.models.Provider;
 import com.specialist.auth.domain.account.models.AccountEntity;
 import com.specialist.auth.domain.account.models.enums.DisableReason;
 import com.specialist.auth.domain.account.models.enums.LockReason;
+import com.specialist.auth.domain.role.RoleEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -74,4 +75,12 @@ public interface AccountRepository extends JpaRepository<AccountEntity, UUID>, J
         WHERE a.id = :id
     """)
     void unlockById(UUID id);
+
+    @EntityGraph(attributePaths = {"type", "authorities"})
+    @Query("SELECT a FROM AccountEntity a WHERE a.id =: id")
+    Optional<AccountEntity> findByIdWithRoleAndAuthorities(@Param("id") UUID id);
+
+    @EntityGraph(attributePaths = "type")
+    @Query("SELECT a.role FROM AccountEntity a WHERE a.id = :id")
+    Optional<RoleEntity> findRoleById(@Param("id") UUID id);
 }

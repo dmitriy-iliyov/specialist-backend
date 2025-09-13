@@ -7,7 +7,7 @@ import com.specialist.auth.domain.authority.Authority;
 import java.util.Set;
 import java.util.UUID;
 
-public interface AdminAccountService {
+public interface AdminAccountManagementService {
     void takeAwayAuthoritiesById(UUID id, Set<Authority> authorities);
 
     void lockById(UUID id, LockRequest request);

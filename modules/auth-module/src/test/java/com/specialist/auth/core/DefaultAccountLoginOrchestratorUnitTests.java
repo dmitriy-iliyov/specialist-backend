@@ -1,9 +1,9 @@
 package com.specialist.auth.core;
 
-import com.specialist.auth.core.models.LoginRequest;
-import com.specialist.auth.core.models.Token;
-import com.specialist.auth.core.models.TokenType;
 import com.specialist.auth.core.oauth2.models.Provider;
+import com.specialist.auth.core.web.DefaultAccountLoginOrchestrator;
+import com.specialist.auth.core.web.LoginRequest;
+import com.specialist.auth.core.web.SessionCookieManager;
 import com.specialist.auth.domain.account.models.AccountUserDetails;
 import com.specialist.auth.domain.account.services.AccountService;
 import com.specialist.auth.exceptions.InvalidProviderException;

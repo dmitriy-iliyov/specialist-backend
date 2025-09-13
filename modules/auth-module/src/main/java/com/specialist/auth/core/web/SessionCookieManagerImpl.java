@@ -1,8 +1,9 @@
-package com.specialist.auth.core;
+package com.specialist.auth.core.web;
 
-import com.specialist.auth.core.csrf.CsrfTokenService;
-import com.specialist.auth.core.models.Token;
-import com.specialist.auth.core.models.TokenType;
+import com.specialist.auth.core.Token;
+import com.specialist.auth.core.TokenManager;
+import com.specialist.auth.core.TokenType;
+import com.specialist.auth.core.web.csrf.CsrfTokenService;
 import com.specialist.auth.domain.account.models.AccountUserDetails;
 import com.specialist.auth.exceptions.RefreshTokenExpiredException;
 import jakarta.servlet.http.HttpServletRequest;

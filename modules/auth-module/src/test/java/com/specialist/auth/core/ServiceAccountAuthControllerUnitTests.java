@@ -1,6 +1,8 @@
 package com.specialist.auth.core;
 
-import com.specialist.auth.core.models.ServiceLoginRequest;
+import com.specialist.auth.core.api.ServiceAccountAuthController;
+import com.specialist.auth.core.api.ServiceAccountLoginOrchestrator;
+import com.specialist.auth.core.api.ServiceLoginRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

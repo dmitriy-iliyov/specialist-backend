@@ -1,6 +1,6 @@
 package com.specialist.auth.core.security_filter_chain;
 
-import com.specialist.auth.core.handlers.DefaultAccessDeniedHandler;
+import com.specialist.auth.core.DefaultAccessDeniedHandler;
 import com.specialist.auth.core.rate_limit.RateLimitFilter;
 import com.specialist.auth.core.xss.XssFilter;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -74,7 +74,7 @@ public class AccountSecurityFilterChainConfig {
                                          "/api/auth/oauth2/callback").permitAll()
                         .requestMatchers("/api/auth/refresh", "/api/auth/logout", "/api/auth/logout/all").authenticated()
                         .requestMatchers("/api/v1/accounts").permitAll()
-                        .requestMatchers("/api/v1/accounts/me").hasRole("USER")
+                        .requestMatchers("/api/v1/accounts/me").hasAnyRole("USER", "SPECIALIST")
                         .requestMatchers("/api/v1/accounts/confirmation/**",
                                          "/api/v1/accounts/password-recovery/**").permitAll()
                         .requestMatchers("/api/v1/users/me", "/api/v1/users/me/avatar").authenticated()

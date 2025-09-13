@@ -1,4 +1,4 @@
-package com.specialist.auth.core.configs;
+package com.specialist.auth.configs;
 
 import com.specialist.auth.core.rate_limit.RedisRateLimitRepository;
 import org.springframework.context.annotation.Bean;

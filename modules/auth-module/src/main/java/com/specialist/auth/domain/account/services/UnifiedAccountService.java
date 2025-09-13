@@ -12,11 +12,13 @@ import com.specialist.auth.domain.account.repositories.AccountSpecification;
 import com.specialist.auth.domain.authority.Authority;
 import com.specialist.auth.domain.authority.AuthorityEntity;
 import com.specialist.auth.domain.authority.AuthorityService;
+import com.specialist.auth.domain.role.Role;
 import com.specialist.auth.domain.role.RoleEntity;
 import com.specialist.auth.domain.role.RoleService;
 import com.specialist.auth.exceptions.AccountNotFoundByEmailException;
 import com.specialist.auth.exceptions.AccountNotFoundByIdException;
 import com.specialist.auth.exceptions.InvalidOldPasswordException;
+import com.specialist.auth.exceptions.RoleNotFoundException;
 import com.specialist.utils.pagination.PageDataHolder;
 import com.specialist.utils.pagination.PageResponse;
 import lombok.RequiredArgsConstructor;
@@ -31,10 +33,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -119,6 +118,25 @@ public class UnifiedAccountService implements AccountService {
         entity.setDisableReason(DisableReason.EMAIL_CONFIRMATION_REQUIRED);
         repository.save(entity);
         return mapper.toShortResponseDto(entity);
+    }
+
+    @Transactional
+    @Override
+    public ShortAccountResponseDto updateRoleAndAuthoritiesById(UUID id, Role role, Set<Authority> authorities) {
+        AccountEntity accountEntity = repository.findByIdWithRoleAndAuthorities(id).orElseThrow(
+                AccountNotFoundByIdException::new
+        );
+        accountEntity.setRole(roleService.getReferenceByRole(role));
+        accountEntity.setAuthorities(authorityService.getReferenceAllByAuthorityIn(authorities.stream().toList()));
+        return mapper.toShortResponseDto(repository.save(accountEntity));
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Role findRoleById(UUID id) {
+        return repository.findRoleById(id)
+                .orElseThrow(RoleNotFoundException::new)
+                .getRole();
     }
 
     @Transactional(readOnly = true)

@@ -1,12 +1,14 @@
 package com.specialist.auth.domain.account.controllers;
 
-import com.specialist.auth.core.SessionCookieManager;
+import com.specialist.auth.core.web.SessionCookieManager;
+import com.specialist.auth.domain.access_token.models.AccessTokenUserDetails;
 import com.specialist.auth.domain.account.models.dtos.AccountEmailUpdateDto;
 import com.specialist.auth.domain.account.models.dtos.AccountPasswordUpdateDto;
 import com.specialist.auth.domain.account.services.AccountDeleteFacade;
 import com.specialist.auth.domain.account.services.AccountService;
 import com.specialist.auth.domain.account.services.EmailUpdateFacade;
 import com.specialist.contracts.auth.PrincipalDetails;
+import com.specialist.contracts.user.UserType;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -20,7 +22,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/accounts/me")
-@PreAuthorize("hasRole('USER')")
+@PreAuthorize("hasAnyRole('USER', 'SPECIALIST')")
 public class PrivateAccountController {
 
     private final AccountService service;
@@ -47,10 +49,11 @@ public class PrivateAccountController {
     }
 
     @PatchMapping("/email")
-    public ResponseEntity<?> updateEmail(@AuthenticationPrincipal PrincipalDetails principal,
+    public ResponseEntity<?> updateEmail(@AuthenticationPrincipal AccessTokenUserDetails principal,
                                          @RequestBody @Valid AccountEmailUpdateDto dto) {
         UUID accountId = principal.getAccountId();
         dto.setId(accountId);
+        dto.setType(UserType.fromStringRole(principal.getRole().toString()));
         // FIXME: user still have auth-tokens in cookie when change email,
         //  this is ok while auth-tokens don't depends on user email
         return ResponseEntity

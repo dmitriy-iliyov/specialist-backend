@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class AdminAccountServiceImpl implements AdminAccountService {
+public class AdminAccountManagementServiceImpl implements AdminAccountManagementService {
 
     private final AccountRepository repository;
 

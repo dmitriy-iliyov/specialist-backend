@@ -1,4 +1,4 @@
-package com.specialist.auth.core;
+package com.specialist.auth.domain.refresh_token.models;
 
 import java.util.UUID;
 

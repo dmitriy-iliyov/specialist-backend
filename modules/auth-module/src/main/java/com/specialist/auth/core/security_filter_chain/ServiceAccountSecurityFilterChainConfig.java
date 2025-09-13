@@ -1,6 +1,6 @@
 package com.specialist.auth.core.security_filter_chain;
 
-import com.specialist.auth.core.handlers.DefaultAccessDeniedHandler;
+import com.specialist.auth.core.DefaultAccessDeniedHandler;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

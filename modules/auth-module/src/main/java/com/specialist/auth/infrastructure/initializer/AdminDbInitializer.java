@@ -1,4 +1,4 @@
-package com.specialist.auth.infrastructure;
+package com.specialist.auth.infrastructure.initializer;
 
 import com.specialist.auth.core.oauth2.models.Provider;
 import com.specialist.auth.domain.account.models.AccountEntity;

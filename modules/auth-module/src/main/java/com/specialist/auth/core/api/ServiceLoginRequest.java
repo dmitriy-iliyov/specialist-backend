@@ -1,4 +1,4 @@
-package com.specialist.auth.core.models;
+package com.specialist.auth.core.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.specialist.utils.validation.annotation.ValidUuid;

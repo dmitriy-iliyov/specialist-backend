@@ -7,7 +7,7 @@ import com.specialist.auth.domain.account.models.enums.LockReason;
 import com.specialist.auth.domain.account.services.AccountDeleteFacade;
 import com.specialist.auth.domain.account.services.AccountPersistOrchestrator;
 import com.specialist.auth.domain.account.services.AccountService;
-import com.specialist.auth.domain.account.services.AdminAccountFacade;
+import com.specialist.auth.domain.account.services.AdminAccountManagementFacade;
 import com.specialist.auth.domain.authority.Authority;
 import com.specialist.auth.domain.role.Role;
 import com.specialist.utils.pagination.PageResponse;
@@ -37,7 +37,7 @@ public class AdminAccountRegistrationControllerUnitTests {
     AccountService service;
 
     @Mock
-    AdminAccountFacade adminAccountFacade;
+    AdminAccountManagementFacade adminAccountManagementFacade;
 
     @Mock
     AccountDeleteFacade accountDeleteFacade;
@@ -107,8 +107,8 @@ public class AdminAccountRegistrationControllerUnitTests {
 
         ResponseEntity<?> response = controller.lock(id, request);
 
-        verify(adminAccountFacade, times(1)).lockById(id, request);
-        verifyNoMoreInteractions(adminAccountFacade);
+        verify(adminAccountManagementFacade, times(1)).lockById(id, request);
+        verifyNoMoreInteractions(adminAccountManagementFacade);
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
         assertNull(response.getBody());
     }
@@ -119,7 +119,7 @@ public class AdminAccountRegistrationControllerUnitTests {
         UUID id = UUID.randomUUID();
         LockRequest request = new LockRequest(LockReason.ABUSE, LocalDateTime.now());
 
-        doThrow(RuntimeException.class).when(adminAccountFacade).lockById(id, request);
+        doThrow(RuntimeException.class).when(adminAccountManagementFacade).lockById(id, request);
 
         assertThrows(RuntimeException.class, () -> controller.lock(id, request));
     }
@@ -132,8 +132,8 @@ public class AdminAccountRegistrationControllerUnitTests {
 
         ResponseEntity<?> response = controller.disable(id, request);
 
-        verify(adminAccountFacade, times(1)).disableById(id, request);
-        verifyNoMoreInteractions(adminAccountFacade);        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        verify(adminAccountManagementFacade, times(1)).disableById(id, request);
+        verifyNoMoreInteractions(adminAccountManagementFacade);        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
         assertNull(response.getBody());
     }
 
@@ -143,7 +143,7 @@ public class AdminAccountRegistrationControllerUnitTests {
         UUID id = UUID.randomUUID();
         DisableRequest request = new DisableRequest(DisableReason.PERMANENTLY_ABUSE);
 
-        doThrow(RuntimeException.class).when(adminAccountFacade).disableById(id, request);
+        doThrow(RuntimeException.class).when(adminAccountManagementFacade).disableById(id, request);
 
         assertThrows(RuntimeException.class, () -> controller.disable(id, request));
     }
