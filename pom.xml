@@ -23,6 +23,7 @@
         <module>libs/utils</module>
         <module>libs/auth-contracts</module>
         <module>libs/user-contracts</module>
+        <module>libs/specialist-directory-contracts</module>
         <module>libs/message-core</module>
         <module>modules/core-module</module>
         <module>modules/auth-module</module>

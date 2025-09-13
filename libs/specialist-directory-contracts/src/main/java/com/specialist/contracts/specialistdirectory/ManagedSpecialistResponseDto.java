@@ -2,9 +2,16 @@ package com.specialist.contracts.specialistdirectory;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
 
 import java.util.UUID;
 
+/**
+ * Transport DTO for specialist data between modules.
+ * Complex fields (jsonLanguages, jsonContacts) are pre-serialized as JSON strings
+ * for direct pass-through to external APIs without additional parsing.
+ */
+@Getter
 public class ManagedSpecialistResponseDto {
 
     private final UUID id;
@@ -48,19 +55,19 @@ public class ManagedSpecialistResponseDto {
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
     public ManagedSpecialistResponseDto(@JsonProperty("id") UUID id,
-                                 @JsonProperty("creator_id") UUID creatorId,
-                                 @JsonProperty("full_name") String fullName,
-                                 @JsonProperty("type_title") String typeTitle,
-                                 @JsonProperty("another_type") String anotherType,
-                                 @JsonProperty("json_languages") String jsonLanguages,
-                                 @JsonProperty("city_title") String cityTitle,
-                                 @JsonProperty("city_code") String cityCode,
-                                 @JsonProperty("address") String address,
-                                 @JsonProperty("json_contacts") String jsonContacts,
-                                 @JsonProperty("site") String site,
-                                 @JsonProperty("status") String status,
-                                 @JsonProperty("total_rating") double totalRating,
-                                 @JsonProperty("reviews_count") long reviewsCount) {
+                                        @JsonProperty("creator_id") UUID creatorId,
+                                        @JsonProperty("full_name") String fullName,
+                                        @JsonProperty("type_title") String typeTitle,
+                                        @JsonProperty("another_type") String anotherType,
+                                        @JsonProperty("json_languages") String jsonLanguages,
+                                        @JsonProperty("city_title") String cityTitle,
+                                        @JsonProperty("city_code") String cityCode,
+                                        @JsonProperty("address") String address,
+                                        @JsonProperty("json_contacts") String jsonContacts,
+                                        @JsonProperty("site") String site,
+                                        @JsonProperty("status") String status,
+                                        @JsonProperty("total_rating") double totalRating,
+                                        @JsonProperty("reviews_count") long reviewsCount) {
         this.id = id;
         this.creatorId = creatorId;
         this.fullName = fullName;
