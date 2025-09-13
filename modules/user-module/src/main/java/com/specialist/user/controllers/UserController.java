@@ -1,6 +1,7 @@
 package com.specialist.user.controllers;
 
 import com.specialist.user.models.enums.ScopeType;
+import com.specialist.user.services.UserReadOrchestrator;
 import com.specialist.user.services.UserService;
 import com.specialist.utils.pagination.PageRequest;
 import jakarta.validation.Valid;
@@ -17,13 +18,14 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserController {
 
+    private final UserReadOrchestrator orchestrator;
     private final UserService service;
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable("id") @NotNull(message = "Id is required.") String id) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(service.findPublicById(UUID.fromString(id)));
+                .body(orchestrator.findPublicById(UUID.fromString(id)));
     }
 
     @GetMapping

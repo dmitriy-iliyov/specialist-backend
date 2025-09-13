@@ -1,31 +1,22 @@
 package com.specialist.user.models.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import com.specialist.contracts.user.UserType;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@RequiredArgsConstructor
-@Data
-public class PrivateUserResponseDto {
-    private final UUID id;
-
-    @JsonProperty("full_name")
-    private final String fullName;
-
-    private final String email;
-
-    @JsonProperty("avatar_url")
-    private String avatarUrl;
+@Getter
+@Setter
+public class PrivateUserResponseDto extends BasePrivateResponseDto {
 
     @JsonProperty("creator_rating")
     private final double creatorRating;
 
-    @JsonProperty("created_at")
-    private final LocalDateTime createdAt;
-
-    @JsonProperty("updated_at")
-    private final LocalDateTime updatedAt;
+    public PrivateUserResponseDto(UUID id, UserType type, String fullName, String email, LocalDateTime createdAt, LocalDateTime updatedAt, double creatorRating) {
+        super(id, type, fullName, email, createdAt, updatedAt);
+        this.creatorRating = creatorRating;
+    }
 }

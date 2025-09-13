@@ -1,7 +1,7 @@
 package com.specialist.user.infrastructure;
 
 import com.specialist.contracts.user.CreatorRatingUpdateEvent;
-import com.specialist.user.services.CreatorRatingService;
+import com.specialist.user.services.rating.CreatorRatingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -14,7 +14,7 @@ public class UserKafkaListener {
     private final CreatorRatingService creatorRatingService;
 
     @Autowired
-    public UserKafkaListener(@Qualifier("creatorRatingServiceDecorator") CreatorRatingService creatorRatingService) {
+    public UserKafkaListener(@Qualifier("defaultCreatorRatingServiceDecorator") CreatorRatingService creatorRatingService) {
         this.creatorRatingService = creatorRatingService;
     }
 

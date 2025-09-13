@@ -1,5 +1,6 @@
 package com.specialist.user.repositories;
 
+import com.specialist.user.models.ShortUserProjection;
 import com.specialist.user.models.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -18,7 +19,14 @@ public interface UserRepository extends JpaRepository<UserEntity, UUID> {
     @NonNull
     Optional<UserEntity> findById(@NonNull UUID id);
 
-    List<UserEntity> findAllByIdIn(Set<UUID> ids);
+    @Query("""
+        SELECT u.id as id, u.type as type, u.firstName as firstName,
+               u.secondName as secondName, u.lastName as lastName,
+               u.avatarUrl as avatarUrl, u.creatorRating as creatorRating
+        FROM UserEntity u 
+        WHERE u.id IN :ids
+    """)
+    List<ShortUserProjection> findAllByIdIn(@Param("ids") Set<UUID> ids);
 
     @Modifying
     @Query("""

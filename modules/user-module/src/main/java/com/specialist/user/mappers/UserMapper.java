@@ -1,10 +1,10 @@
 package com.specialist.user.mappers;
 
 
-import com.specialist.contracts.user.PublicUserResponseDto;
-import com.specialist.contracts.user.ShortUserCreateDto;
+import com.specialist.contracts.user.dto.PublicUserResponseDto;
 import com.specialist.user.models.UserEntity;
 import com.specialist.user.models.dtos.PrivateUserResponseDto;
+import com.specialist.user.models.dtos.UserCreateDto;
 import com.specialist.user.models.dtos.UserUpdateDto;
 import com.specialist.user.repositories.AvatarStorage;
 import com.specialist.utils.InstantToLocalDataTimeConverter;
@@ -21,7 +21,7 @@ import java.util.List;
 )
 public interface UserMapper {
 
-    UserEntity toEntity(ShortUserCreateDto dto);
+    UserEntity toEntity(UserCreateDto dto);
 
     @Mapping(target = "fullName", expression = "java(entity.getFullName())")
     @Mapping(target = "avatarUrl", source = "avatarUrl", qualifiedByName = "resolveAvatarUrl")

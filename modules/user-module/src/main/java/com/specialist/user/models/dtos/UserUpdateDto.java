@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UserUpdateDto extends BaseUserDto {
+public class UserUpdateDto extends BaseDto {
 
         @JsonCreator
         public UserUpdateDto(@JsonProperty("last_name") String lastName,

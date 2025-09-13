@@ -1,8 +1,10 @@
 package com.specialist.user.controllers;
 
 import com.specialist.user.models.enums.ScopeType;
+import com.specialist.user.services.SpecialistService;
 import com.specialist.user.services.UserService;
 import com.specialist.utils.pagination.PageRequest;
+import com.specialist.utils.validation.annotation.ValidUuid;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +22,11 @@ import java.util.UUID;
 public class AdminUserController {
 
     private final UserService service;
+    private final SpecialistService specialistService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getById(@PathVariable("id") @NotNull(message = "Id is required.") String id) {
+    public ResponseEntity<?> getById(@PathVariable("id") @NotNull(message = "Id is required.")
+                                     @ValidUuid(paramName = "id") String id) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(service.findPrivateById(UUID.fromString(id)));
@@ -33,5 +37,14 @@ public class AdminUserController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(service.findAll(ScopeType.PRIVATE, page));
+    }
+
+    @PatchMapping("/specialists/approve/{id}")
+    public ResponseEntity<?> approveSpecialist(@PathVariable("id") @NotNull(message = "Id is required.")
+                                               @ValidUuid(paramName = "id") String id) {
+        specialistService.approve(UUID.fromString(id));
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .build();
     }
 }

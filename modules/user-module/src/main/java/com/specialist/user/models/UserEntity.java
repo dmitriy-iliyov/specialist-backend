@@ -1,37 +1,21 @@
 package com.specialist.user.models;
 
+import com.specialist.contracts.user.UserType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
-import java.util.UUID;
 
 @Entity
-@Table(name = "users")
+@Table(name = "user_profiles")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class UserEntity {
-
-    @Id
-    private UUID id;
-
-    @Column(name = "first_name", length = 20)
-    private String firstName;
-
-    @Column(name = "second_name", length = 20)
-    private String secondName;
-
-    @Column(name = "last_name", length = 20)
-    private String lastName;
-
-    @Column(nullable = false, unique = true)
-    private String email;
-
-    @Column(name = "avatar_url")
-    private String avatarUrl;
+@EqualsAndHashCode(callSuper = true)
+public class UserEntity extends BaseEntity {
 
     @Column(name = "creator_rating", nullable = false)
     private double creatorRating;
@@ -42,20 +26,14 @@ public class UserEntity {
     @Column(name = "specialist_review_count", nullable = false)
     private long specialistReviewCount;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private Instant createdAt;
-
-    @Column(name = "updated_at", nullable = false)
-    private Instant updatedAt;
-
     @Version
     private Long version;
-
 
     @PrePersist
     public void prePersist() {
         createdAt = Instant.now();
         updatedAt = createdAt;
+        type = UserType.USER;
         creatorRating = 0;
         summarySpecialistRating = 0;
         specialistReviewCount = 0;
@@ -64,11 +42,5 @@ public class UserEntity {
     @PreUpdate
     public void preUpdate() {
         updatedAt = Instant.now();
-    }
-
-    public String getFullName() {
-        if (secondName == null)
-            return lastName + " " + firstName;
-        return lastName + " " + firstName + " " + secondName;
     }
 }

@@ -1,6 +1,7 @@
 package com.specialist.user.services;
 
-import com.specialist.contracts.user.PublicUserResponseDto;
+import com.specialist.contracts.user.UserType;
+import com.specialist.contracts.user.dto.PublicUserResponseDto;
 import com.specialist.user.models.dtos.PrivateUserResponseDto;
 import com.specialist.user.models.dtos.UserUpdateDto;
 import com.specialist.user.models.enums.ScopeType;
@@ -18,7 +19,7 @@ public interface UserService {
 
     PageResponse<?> findAll(ScopeType scope, PageRequest page);
 
-    void deleteById(UUID id);
-
     void updateAvatarUrlById(UUID id, String avatarUrl);
+
+    UserType getType();
 }
