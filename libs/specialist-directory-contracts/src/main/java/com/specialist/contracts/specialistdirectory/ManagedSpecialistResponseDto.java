@@ -8,16 +8,15 @@ import java.util.UUID;
 
 /**
  * Transport DTO for specialist data between modules.
- * Complex fields (jsonLanguages, jsonContacts) are pre-serialized as JSON strings
- * for direct pass-through to external APIs without additional parsing.
+ * Complex fields (jsonLanguages, jsonContacts) are pre-serialized as JSON strings.
  */
 @Getter
 public class ManagedSpecialistResponseDto {
 
     private final UUID id;
 
-    @JsonProperty("creator_id")
-    private final UUID creatorId;
+    @JsonProperty("owner_id")
+    private final UUID ownerId;
 
     @JsonProperty("full_name")
     private final String fullName;
@@ -55,7 +54,7 @@ public class ManagedSpecialistResponseDto {
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
     public ManagedSpecialistResponseDto(@JsonProperty("id") UUID id,
-                                        @JsonProperty("creator_id") UUID creatorId,
+                                        @JsonProperty("owner_id") UUID ownerId,
                                         @JsonProperty("full_name") String fullName,
                                         @JsonProperty("type_title") String typeTitle,
                                         @JsonProperty("another_type") String anotherType,
@@ -69,7 +68,7 @@ public class ManagedSpecialistResponseDto {
                                         @JsonProperty("total_rating") double totalRating,
                                         @JsonProperty("reviews_count") long reviewsCount) {
         this.id = id;
-        this.creatorId = creatorId;
+        this.ownerId = ownerId;
         this.fullName = fullName;
         this.typeTitle = typeTitle;
         this.anotherType = anotherType;

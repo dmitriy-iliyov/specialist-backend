@@ -1,7 +1,7 @@
 package com.specialist.contracts.user;
 
-import com.specialist.contracts.user.dto.ShortUserCreateDto;
+import com.specialist.contracts.user.dto.ShortProfileCreateDto;
 
-public interface SystemUserPersistService {
-    void save(ShortUserCreateDto dto);
+public interface SystemProfilePersistService {
+    void save(ShortProfileCreateDto dto);
 }

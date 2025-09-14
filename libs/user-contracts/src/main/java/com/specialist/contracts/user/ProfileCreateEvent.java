@@ -5,8 +5,8 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.UUID;
 
-public record UserCompleteEvent(
-        UUID userId,
+public record ProfileCreateEvent(
+        UUID accountId,
         ProfileType profileType,
         HttpServletRequest request,
         HttpServletResponse response

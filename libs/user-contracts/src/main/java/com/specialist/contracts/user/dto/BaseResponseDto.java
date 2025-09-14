@@ -1,7 +1,7 @@
 package com.specialist.contracts.user.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.specialist.contracts.user.UserType;
+import com.specialist.contracts.user.ProfileType;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
@@ -13,7 +13,7 @@ public abstract class BaseResponseDto {
 
     private final UUID id;
 
-    private final UserType type;
+    private final ProfileType type;
 
     @JsonProperty("full_name")
     private final String fullName;
