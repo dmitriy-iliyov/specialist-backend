@@ -104,6 +104,7 @@ public class RedisConfig {
                 .withCacheConfiguration("refresh-tokens:active", defaultConfig)
 
                 .withCacheConfiguration("users:events:creator-rating-update:processed", defaultConfig.entryTtl(Duration.ofSeconds(3600)))
+                .withCacheConfiguration("profiles:emails", defaultConfig)
                 .build();
     }
 }
