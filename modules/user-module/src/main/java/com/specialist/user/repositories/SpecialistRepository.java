@@ -1,6 +1,6 @@
 package com.specialist.user.repositories;
 
-import com.specialist.user.models.ShortUserProjection;
+import com.specialist.user.models.ShortProfileProjection;
 import com.specialist.user.models.SpecialistEntity;
 import com.specialist.user.models.enums.SpecialistStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -27,7 +27,7 @@ public interface SpecialistRepository extends JpaRepository<SpecialistEntity, UU
         FROM SpecialistEntity s 
         WHERE s.id IN :ids
     """)
-    List<ShortUserProjection> findAllByIdIn(@Param("ids") Set<UUID> ids);
+    List<ShortProfileProjection> findAllByIdIn(@Param("ids") Set<UUID> ids);
 
     @Modifying
     @Query("""

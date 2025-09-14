@@ -1,7 +1,7 @@
 package com.specialist.user.services.system;
 
+import com.specialist.contracts.user.ProfileType;
 import com.specialist.contracts.user.SystemEmailUpdateOrchestrator;
-import com.specialist.contracts.user.UserType;
 import com.specialist.user.exceptions.SystemEmailUpdateServiceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class SystemEmailUpdateOrchestratorImpl implements SystemEmailUpdateOrchestrator {
 
-    private final Map<UserType, SystemEmailUpdateService> serviceMap;
+    private final Map<ProfileType, SystemEmailUpdateService> serviceMap;
 
     public SystemEmailUpdateOrchestratorImpl(List<SystemEmailUpdateService> services) {
         this.serviceMap = services.stream()
@@ -24,7 +24,7 @@ public class SystemEmailUpdateOrchestratorImpl implements SystemEmailUpdateOrche
     }
 
     @Override
-    public void updateById(UserType type, UUID id, String email) {
+    public void updateById(ProfileType type, UUID id, String email) {
         SystemEmailUpdateService service = serviceMap.get(type);
         if (service == null) {
             log.error("SystemEmailUpdateServiceNotFoundException for user type {}", type);

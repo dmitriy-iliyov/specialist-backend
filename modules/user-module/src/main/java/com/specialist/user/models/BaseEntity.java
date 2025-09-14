@@ -1,7 +1,9 @@
 package com.specialist.user.models;
 
-import com.specialist.contracts.user.UserType;
+import com.specialist.contracts.user.ProfileType;
+import com.specialist.user.mappers.ProfileTypeConverter;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
@@ -18,8 +20,9 @@ public abstract class BaseEntity {
     @Id
     protected UUID id;
 
+    @Convert(converter = ProfileTypeConverter.class)
     @Column(nullable = false, updatable = false)
-    protected UserType type;
+    protected ProfileType type;
 
     @Column(nullable = false, name = "first_name", length = 30)
     protected String firstName;

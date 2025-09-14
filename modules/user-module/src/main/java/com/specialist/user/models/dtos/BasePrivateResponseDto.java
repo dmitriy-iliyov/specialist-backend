@@ -1,7 +1,7 @@
 package com.specialist.user.models.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.specialist.contracts.user.UserType;
+import com.specialist.contracts.user.ProfileType;
 import com.specialist.contracts.user.dto.BaseResponseDto;
 import lombok.Getter;
 
@@ -19,7 +19,7 @@ public abstract class BasePrivateResponseDto extends BaseResponseDto {
     @JsonProperty("updated_at")
     private final LocalDateTime updatedAt;
 
-    public BasePrivateResponseDto(UUID id, UserType type, String fullName, String email, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public BasePrivateResponseDto(UUID id, ProfileType type, String fullName, String email, LocalDateTime createdAt, LocalDateTime updatedAt) {
         super(id, type, fullName);
         this.email = email;
         this.createdAt = createdAt;

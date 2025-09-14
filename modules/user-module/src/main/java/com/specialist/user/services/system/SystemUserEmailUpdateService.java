@@ -1,6 +1,6 @@
 package com.specialist.user.services.system;
 
-import com.specialist.contracts.user.UserType;
+import com.specialist.contracts.user.ProfileType;
 import com.specialist.user.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,7 @@ public class SystemUserEmailUpdateService implements SystemEmailUpdateService {
     }
 
     @Override
-    public UserType getType() {
-        return UserType.USER;
+    public ProfileType getType() {
+        return ProfileType.USER;
     }
 }

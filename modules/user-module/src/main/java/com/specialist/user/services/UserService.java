@@ -1,8 +1,8 @@
 package com.specialist.user.services;
 
-import com.specialist.contracts.user.UserType;
-import com.specialist.contracts.user.dto.PublicUserResponseDto;
+import com.specialist.contracts.user.ProfileType;
 import com.specialist.user.models.dtos.PrivateUserResponseDto;
+import com.specialist.user.models.dtos.PublicUserResponseDto;
 import com.specialist.user.models.dtos.UserUpdateDto;
 import com.specialist.user.models.enums.ScopeType;
 import com.specialist.utils.pagination.PageRequest;
@@ -21,5 +21,5 @@ public interface UserService {
 
     void updateAvatarUrlById(UUID id, String avatarUrl);
 
-    UserType getType();
+    ProfileType getType();
 }

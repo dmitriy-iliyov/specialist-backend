@@ -1,11 +1,11 @@
 package com.specialist.user.services;
 
-import com.specialist.contracts.user.UserType;
-import com.specialist.contracts.user.dto.PublicUserResponseDto;
+import com.specialist.contracts.user.ProfileType;
 import com.specialist.user.exceptions.UserNotFoundByIdException;
 import com.specialist.user.mappers.UserMapper;
 import com.specialist.user.models.UserEntity;
 import com.specialist.user.models.dtos.PrivateUserResponseDto;
+import com.specialist.user.models.dtos.PublicUserResponseDto;
 import com.specialist.user.models.dtos.UserCreateDto;
 import com.specialist.user.models.dtos.UserUpdateDto;
 import com.specialist.user.models.enums.ScopeType;
@@ -23,8 +23,8 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService, UserPersistService<UserCreateDto, PrivateUserResponseDto>,
-                                        UserDeleteService {
+public class UserServiceImpl implements UserService, ProfilePersistService<UserCreateDto, PrivateUserResponseDto>,
+                                        ProfileDeleteService {
 
     private final UserRepository repository;
     private final UserMapper mapper;
@@ -36,8 +36,8 @@ public class UserServiceImpl implements UserService, UserPersistService<UserCrea
     }
 
     @Override
-    public UserType getType() {
-        return UserType.USER;
+    public ProfileType getType() {
+        return ProfileType.USER;
     }
 
     @Transactional

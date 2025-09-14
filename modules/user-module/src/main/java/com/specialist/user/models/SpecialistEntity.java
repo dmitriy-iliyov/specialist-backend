@@ -1,6 +1,6 @@
 package com.specialist.user.models;
 
-import com.specialist.contracts.user.UserType;
+import com.specialist.contracts.user.ProfileType;
 import com.specialist.user.mappers.SpecialistStatusConverter;
 import com.specialist.user.models.enums.SpecialistStatus;
 import jakarta.persistence.*;
@@ -13,7 +13,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Entity
-@Table(name = "specialist_pforiles")
+@Table(name = "specialist_profiles")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -37,7 +37,7 @@ public class SpecialistEntity extends BaseEntity {
     public void prePersist() {
         createdAt = Instant.now();
         updatedAt = createdAt;
-        type = UserType.SPECIALIST;
+        type = ProfileType.SPECIALIST;
     }
 
     @PreUpdate

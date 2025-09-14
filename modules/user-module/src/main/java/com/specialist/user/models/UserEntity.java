@@ -1,6 +1,6 @@
 package com.specialist.user.models;
 
-import com.specialist.contracts.user.UserType;
+import com.specialist.contracts.user.ProfileType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,7 +33,7 @@ public class UserEntity extends BaseEntity {
     public void prePersist() {
         createdAt = Instant.now();
         updatedAt = createdAt;
-        type = UserType.USER;
+        type = ProfileType.USER;
         creatorRating = 0;
         summarySpecialistRating = 0;
         specialistReviewCount = 0;

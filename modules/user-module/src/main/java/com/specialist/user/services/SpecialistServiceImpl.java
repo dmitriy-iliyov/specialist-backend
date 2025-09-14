@@ -1,7 +1,7 @@
 package com.specialist.user.services;
 
-import com.specialist.contracts.user.SystemSpecialistCardService;
-import com.specialist.contracts.user.UserType;
+import com.specialist.contracts.user.ProfileType;
+import com.specialist.contracts.user.SystemSpecialistProfileService;
 import com.specialist.user.exceptions.SpecialistNotFoundByIdException;
 import com.specialist.user.mappers.SpecialistMapper;
 import com.specialist.user.models.SpecialistEntity;
@@ -20,8 +20,8 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class SpecialistServiceImpl implements SpecialistService,
-                                              UserPersistService<SpecialistCreateDto, PrivateSpecialistResponseDto>,
-                                              UserDeleteService, SystemSpecialistCardService {
+                                              ProfilePersistService<SpecialistCreateDto, PrivateSpecialistResponseDto>,
+                                              ProfileDeleteService, SystemSpecialistProfileService {
 
     private final SpecialistRepository repository;
     private final SpecialistMapper mapper;
@@ -43,13 +43,13 @@ public class SpecialistServiceImpl implements SpecialistService,
 
     @Transactional
     @Override
-    public void set(UUID cardId) {
+    public void setSpecialistCardId(UUID cardId) {
         repository.updateCardId(cardId);
     }
 
     @Override
-    public UserType getType() {
-        return UserType.SPECIALIST;
+    public ProfileType getType() {
+        return ProfileType.SPECIALIST;
     }
 
     @Transactional

@@ -1,7 +1,7 @@
 package com.specialist.user.controllers;
 
 import com.specialist.user.models.enums.ScopeType;
-import com.specialist.user.services.UserReadOrchestrator;
+import com.specialist.user.services.ProfileReadOrchestrator;
 import com.specialist.user.services.UserService;
 import com.specialist.utils.pagination.PageRequest;
 import jakarta.validation.Valid;
@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping("/api/v1/profiles")
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserReadOrchestrator orchestrator;
+    private final ProfileReadOrchestrator orchestrator;
     private final UserService service;
 
     @GetMapping("/{id}")
@@ -28,7 +28,7 @@ public class UserController {
                 .body(orchestrator.findPublicById(UUID.fromString(id)));
     }
 
-    @GetMapping
+    @GetMapping("/users")
     public ResponseEntity<?> getAll(@ModelAttribute @Valid PageRequest page) {
         return ResponseEntity
                 .status(HttpStatus.OK)

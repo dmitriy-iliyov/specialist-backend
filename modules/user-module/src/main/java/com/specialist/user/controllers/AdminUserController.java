@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/admin/v1/users")
+@RequestMapping("/api/admin/v1/profiles")
 @PreAuthorize("hasRole('ADMIN')")
 @RequiredArgsConstructor
 public class AdminUserController {
@@ -24,7 +24,7 @@ public class AdminUserController {
     private final UserService service;
     private final SpecialistService specialistService;
 
-    @GetMapping("/{id}")
+    @GetMapping("/users/{id}")
     public ResponseEntity<?> getById(@PathVariable("id") @NotNull(message = "Id is required.")
                                      @ValidUuid(paramName = "id") String id) {
         return ResponseEntity
@@ -32,7 +32,7 @@ public class AdminUserController {
                 .body(service.findPrivateById(UUID.fromString(id)));
     }
 
-    @GetMapping
+    @GetMapping("/users")
     public ResponseEntity<?> getAll(@ModelAttribute @Valid PageRequest page) {
         return ResponseEntity
                 .status(HttpStatus.OK)

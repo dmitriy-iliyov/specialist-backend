@@ -1,6 +1,6 @@
 package com.specialist.user.models.dtos;
 
-import com.specialist.contracts.user.UserType;
+import com.specialist.contracts.user.ProfileType;
 import com.specialist.user.models.enums.SpecialistStatus;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,7 +18,7 @@ public class PrivateSpecialistResponseDto extends BasePrivateResponseDto {
 
     private final boolean hasCard;
 
-    public PrivateSpecialistResponseDto(UUID id, UserType type, String fullName, String email,
+    public PrivateSpecialistResponseDto(UUID id, ProfileType type, String fullName, String email,
                                         SpecialistStatus status, String aboutMe, boolean hasCard,
                                         LocalDateTime createdAt, LocalDateTime updatedAt) {
         super(id, type, fullName, email, createdAt, updatedAt);

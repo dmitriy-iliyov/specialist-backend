@@ -1,9 +1,9 @@
 package com.specialist.user.mappers;
 
 
-import com.specialist.contracts.user.dto.PublicUserResponseDto;
 import com.specialist.user.models.UserEntity;
 import com.specialist.user.models.dtos.PrivateUserResponseDto;
+import com.specialist.user.models.dtos.PublicUserResponseDto;
 import com.specialist.user.models.dtos.UserCreateDto;
 import com.specialist.user.models.dtos.UserUpdateDto;
 import com.specialist.user.repositories.AvatarStorage;

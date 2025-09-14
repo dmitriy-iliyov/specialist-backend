@@ -1,7 +1,7 @@
 package com.specialist.user.models.dtos;
 
 import com.specialist.contracts.specialistdirectory.ManagedSpecialistResponseDto;
-import com.specialist.contracts.user.UserType;
+import com.specialist.contracts.user.ProfileType;
 import com.specialist.user.models.enums.SpecialistStatus;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,7 +15,7 @@ public class PrivateSpecialistAggregatedResponseDto extends PrivateSpecialistRes
 
     private final ManagedSpecialistResponseDto card;
 
-    public PrivateSpecialistAggregatedResponseDto(UUID id, UserType type, String fullName, String email,
+    public PrivateSpecialistAggregatedResponseDto(UUID id, ProfileType type, String fullName, String email,
                                                   SpecialistStatus status, String aboutMe, boolean hasCard,
                                                   ManagedSpecialistResponseDto card,
                                                   LocalDateTime createdAt, LocalDateTime updatedAt) {
