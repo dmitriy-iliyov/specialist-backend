@@ -9,7 +9,8 @@ import java.util.Arrays;
 public enum CreatorType {
     USER(1),
     ADMIN(2),
-    SERVICE(3);
+    SERVICE(3),
+    SPECIALIST(4);
 
     private final int code;
 

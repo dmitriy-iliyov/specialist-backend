@@ -3,7 +3,7 @@ package com.specialist.specialistdirectory.domain.bookmark;
 import com.specialist.contracts.auth.PrincipalDetails;
 import com.specialist.specialistdirectory.domain.bookmark.models.BookmarkCreateDto;
 import com.specialist.specialistdirectory.domain.bookmark.services.BookmarkCountService;
-import com.specialist.specialistdirectory.domain.bookmark.services.BookmarkOrchestrator;
+import com.specialist.specialistdirectory.domain.bookmark.services.BookmarkPersistOrchestrator;
 import com.specialist.specialistdirectory.domain.bookmark.services.BookmarkService;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
 import com.specialist.utils.validation.annotation.ValidUuid;
@@ -19,12 +19,12 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/me/bookmarks")
-@PreAuthorize("hasRole('USER')")
+@PreAuthorize("hasAnyRole('USER', 'SPECIALIST')")
 @RequiredArgsConstructor
 public class BookmarkController {
 
     private final BookmarkService service;
-    private final BookmarkOrchestrator orchestrator;
+    private final BookmarkPersistOrchestrator orchestrator;
     private final BookmarkCountService countService;
 
     @PostMapping

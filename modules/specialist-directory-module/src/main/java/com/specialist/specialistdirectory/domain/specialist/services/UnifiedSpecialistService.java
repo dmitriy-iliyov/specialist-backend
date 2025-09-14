@@ -55,7 +55,7 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
         this.typeService = typeService;
     }
 
-    @CachePut(value = "specialists", key = "#result.id + ':' + #result.creatorId")
+    @CachePut(value = "specialists", key = "#result.id + ':' + #result.ownerId")
     @Transactional
     @Override
     public SpecialistResponseDto save(SpecialistCreateDto dto) {
@@ -79,7 +79,7 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
         return mapper.toResponseDto(entity);
     }
 
-    @CachePut(value = "specialists", key = "#result.id + ':' + #result.creatorId")
+    @CachePut(value = "specialists", key = "#result.id + ':' + #result.ownerId")
     @Transactional
     @Override
     public SpecialistResponseDto update(SpecialistUpdateDto dto) {

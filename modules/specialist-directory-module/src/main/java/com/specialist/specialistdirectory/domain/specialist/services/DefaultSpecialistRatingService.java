@@ -18,9 +18,9 @@ public class DefaultSpecialistRatingService implements SpecialistRatingService {
 
     @Transactional
     @Override
-    public void updateRatingById(UUID id, long earnedRating, OperationType operationType) {
+    public UUID updateRatingById(UUID id, long earnedRating, OperationType operationType) {
         SpecialistEntity entity = repository.findById(id).orElseThrow(SpecialistNotFoundByIdException::new);
-        switch (operationType) {
+        return switch (operationType) {
             case PERSIST -> {
                 long summaryRating = entity.getSummaryRating() + earnedRating;
                 long reviewsCount = entity.getReviewsCount() + 1;
@@ -29,6 +29,7 @@ public class DefaultSpecialistRatingService implements SpecialistRatingService {
                 entity.setReviewsCount(reviewsCount);
                 entity.setRating(rating);
                 repository.save(entity);
+                yield entity.getCreatorId();
             }
             case UPDATE -> {
                 long summaryRating = entity.getSummaryRating()  + earnedRating;
@@ -38,6 +39,7 @@ public class DefaultSpecialistRatingService implements SpecialistRatingService {
                 entity.setReviewsCount(reviewsCount);
                 entity.setRating(rating);
                 repository.save(entity);
+                yield entity.getCreatorId();
             }
             case DELETE -> {
                 long summaryRating = entity.getSummaryRating() + earnedRating;
@@ -47,7 +49,8 @@ public class DefaultSpecialistRatingService implements SpecialistRatingService {
                 entity.setReviewsCount(reviewsCount);
                 entity.setRating(rating);
                 repository.save(entity);
+                yield entity.getCreatorId();
             }
-        }
+        };
     }
 }

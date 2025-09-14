@@ -35,8 +35,8 @@ public class ReviewOrchestratorImpl implements ReviewOrchestrator {
     @Override
     public ReviewResponseDto save(ReviewCreateDto dto) {
         ReviewResponseDto resultDto = reviewService.save(dto);
-        ratingService.updateRatingById(dto.getSpecialistId(), dto.getRating(), OperationType.PERSIST);
-        reviewBufferService.put(dto.getCreatorId(), dto.getRating());
+        UUID specialistCreatorId = ratingService.updateRatingById(dto.getSpecialistId(), dto.getRating(), OperationType.PERSIST);
+        reviewBufferService.put(specialistCreatorId, dto.getRating());
         return resultDto;
     }
 
@@ -48,8 +48,8 @@ public class ReviewOrchestratorImpl implements ReviewOrchestrator {
         if (resultPair.getLeft().equals(NextOperationType.UPDATE)) {
             ReviewResponseDto oldDto = resultPair.getRight().get(ReviewAgeType.OLD);
             long resultRating = newDto.rating() - oldDto.rating();
-            ratingService.updateRatingById(dto.getSpecialistId(), resultRating, OperationType.UPDATE);
-            reviewBufferService.put(dto.getCreatorId(), resultRating);
+            UUID specialistCreatorId = ratingService.updateRatingById(dto.getSpecialistId(), resultRating, OperationType.UPDATE);
+            reviewBufferService.put(specialistCreatorId, resultRating);
         }
         return newDto;
     }
@@ -58,15 +58,7 @@ public class ReviewOrchestratorImpl implements ReviewOrchestrator {
     @Override
     public void delete(UUID creatorId, UUID specialistId, UUID id) {
         ReviewResponseDto dto = reviewService.deleteById(creatorId, specialistId, id);
-        ratingService.updateRatingById(specialistId, -dto.rating(), OperationType.DELETE);
-        reviewBufferService.put(creatorId, -dto.rating());
-    }
-
-    @Transactional
-    @Override
-    public void adminDelete(UUID specialistId, UUID id) {
-        ReviewResponseDto dto = reviewService.deleteById(specialistId, id);
-        ratingService.updateRatingById(dto.id(), -dto.rating(), OperationType.DELETE);
-        reviewBufferService.put(dto.creatorId(), -dto.rating());
+        UUID specialistCreatorId = ratingService.updateRatingById(specialistId, -dto.rating(), OperationType.DELETE);
+        reviewBufferService.put(specialistCreatorId, -dto.rating());
     }
 }

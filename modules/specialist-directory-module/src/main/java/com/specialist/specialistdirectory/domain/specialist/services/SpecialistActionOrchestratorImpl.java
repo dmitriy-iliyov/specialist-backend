@@ -1,5 +1,6 @@
 package com.specialist.specialistdirectory.domain.specialist.services;
 
+import com.specialist.contracts.user.SystemSpecialistProfileService;
 import com.specialist.specialistdirectory.domain.specialist.models.SpecialistActionEntity;
 import com.specialist.specialistdirectory.domain.specialist.models.SpecialistActionEvent;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.ContactDto;
@@ -24,6 +25,7 @@ public class SpecialistActionOrchestratorImpl implements SpecialistActionOrchest
     private final SpecialistService specialistService;
     private final SpecialistStatusService specialistStatusService;
     private final SpecialistActionRepository actionRepository;
+    private final SystemSpecialistProfileService specialistProfileService;
 
     // TODO create topic
     @Value("${api.kafka.topic.specialist-action}")
@@ -53,6 +55,7 @@ public class SpecialistActionOrchestratorImpl implements SpecialistActionOrchest
     public void manage(String code) {
         SpecialistActionEntity specialistActionEntity = codeHandle(code);
         specialistStatusService.manage(specialistActionEntity.getSpecialistId(), specialistActionEntity.getAccountId());
+        specialistProfileService.setSpecialistCardId(specialistActionEntity.getSpecialistId());
     }
 
     private void requestHandle(SpecialistActionEntity specialistActionEntity, ContactType contactType) {

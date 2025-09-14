@@ -1,7 +1,7 @@
 package com.specialist.specialistdirectory.domain.specialist.services;
 
-import com.specialist.contracts.user.SystemUserReadService;
-import com.specialist.contracts.user.dto.PublicUserResponseDto;
+import com.specialist.contracts.user.SystemProfileReadService;
+import com.specialist.contracts.user.dto.UnifiedProfileResponseDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistAggregatedResponseDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.SpecialistFilter;
@@ -20,14 +20,14 @@ import java.util.stream.Collectors;
 @Service
 public class SpecialistAggregatorImpl implements SpecialistAggregator {
 
-    // WARNING: @Transactional can be till systemUserService in the same app context
+    // WARNING: @Transactional can be till profileQueryService in the same app context
     private final SpecialistService specialistService;
-    private final SystemUserReadService userQueryService;
+    private final SystemProfileReadService profileQueryService;
 
     public SpecialistAggregatorImpl(SpecialistService specialistService,
-                                    @Qualifier("compositeSystemUserReadService") SystemUserReadService userQueryService) {
+                                    @Qualifier("defaultSystemProfileReadService") SystemProfileReadService profileQueryService) {
         this.specialistService = specialistService;
-        this.userQueryService = userQueryService;
+        this.profileQueryService = profileQueryService;
     }
 
     @Cacheable(value = "specialists:all", key = "#page.cacheKey()", condition = "#page.pageNumber() < 3")
@@ -45,11 +45,11 @@ public class SpecialistAggregatorImpl implements SpecialistAggregator {
     }
 
     private PageResponse<SpecialistAggregatedResponseDto> preparePageResponse(PageResponse<SpecialistResponseDto> pageResponse) {
-        Set<UUID> creatorIds = pageResponse.data().stream().map(SpecialistResponseDto::getCreatorId).collect(Collectors.toSet());
-        Map<UUID, PublicUserResponseDto> creatorsMap = userQueryService.findAllByIdIn(creatorIds);
+        Set<UUID> ownersIds = pageResponse.data().stream().map(SpecialistResponseDto::getOwnerId).collect(Collectors.toSet());
+        Map<UUID, UnifiedProfileResponseDto> ownersMap = profileQueryService.findAllByIdIn(ownersIds);
         return new PageResponse<>(
                 pageResponse.data().stream()
-                        .map(dto -> new SpecialistAggregatedResponseDto(creatorsMap.get(dto.getCreatorId()), dto))
+                        .map(dto -> new SpecialistAggregatedResponseDto(ownersMap.get(dto.getOwnerId()), dto))
                         .toList(),
                 pageResponse.totalPages()
         );

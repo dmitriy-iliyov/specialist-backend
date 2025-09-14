@@ -33,8 +33,8 @@ public class DefaultSpecialistRatingServiceDecorator implements SpecialistRating
     )
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
-    public void updateRatingById(UUID id, long earnedRating, OperationType operationType) {
-        service.updateRatingById(id, earnedRating, operationType);
+    public UUID updateRatingById(UUID id, long earnedRating, OperationType operationType) {
+        return service.updateRatingById(id, earnedRating, operationType);
     }
 
     @Recover

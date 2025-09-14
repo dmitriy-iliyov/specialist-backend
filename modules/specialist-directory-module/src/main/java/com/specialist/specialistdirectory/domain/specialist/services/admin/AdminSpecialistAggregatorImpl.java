@@ -1,4 +1,4 @@
-package com.specialist.specialistdirectory.domain.specialist.services;
+package com.specialist.specialistdirectory.domain.specialist.services.admin;
 
 import com.specialist.contracts.user.SystemProfileReadService;
 import com.specialist.contracts.user.dto.UnifiedProfileResponseDto;
@@ -34,12 +34,12 @@ public class AdminSpecialistAggregatorImpl implements AdminSpecialistAggregator 
     @Override
     public PageResponse<AdminSpecialistAggregatedResponseDto> aggregate(AdminSpecialistFilter filter) {
         PageResponse<FullSpecialistResponseDto> page = specialistQueryService.findAll(filter);
-        Set<UUID> creatorIds = page.data().stream()
+        Set<UUID> ownersIds = page.data().stream()
                 .map(FullSpecialistResponseDto::getOwnerId)
                 .collect(Collectors.toSet());
-        Map<UUID, UnifiedProfileResponseDto> creators = profileReadService.findAllByIdIn(creatorIds);
+        Map<UUID, UnifiedProfileResponseDto> ownersMap = profileReadService.findAllByIdIn(ownersIds);
         List<AdminSpecialistAggregatedResponseDto> aggregatedDtos = page.data().stream()
-                .map(dto -> new AdminSpecialistAggregatedResponseDto(creators.get(dto.getOwnerId()), dto))
+                .map(dto -> new AdminSpecialistAggregatedResponseDto(ownersMap.get(dto.getOwnerId()), dto))
                 .toList();
         return new PageResponse<>(aggregatedDtos, page.totalPages());
     }

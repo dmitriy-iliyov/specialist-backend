@@ -1,4 +1,4 @@
-package com.specialist.specialistdirectory.domain.specialist.services;
+package com.specialist.specialistdirectory.domain.specialist.services.service;
 
 public interface ServiceSpecialistService {
 }

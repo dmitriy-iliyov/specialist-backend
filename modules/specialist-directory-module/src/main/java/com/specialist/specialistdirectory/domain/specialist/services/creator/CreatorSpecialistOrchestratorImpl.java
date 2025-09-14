@@ -1,4 +1,4 @@
-package com.specialist.specialistdirectory.domain.specialist.services;
+package com.specialist.specialistdirectory.domain.specialist.services.creator;
 
 import com.specialist.specialistdirectory.domain.bookmark.models.BookmarkCreateDto;
 import com.specialist.specialistdirectory.domain.bookmark.services.BookmarkPersistOrchestrator;
@@ -8,12 +8,12 @@ import com.specialist.specialistdirectory.domain.specialist.models.dtos.Speciali
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.CreatorType;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistStatus;
+import com.specialist.specialistdirectory.domain.specialist.services.SpecialistPersistService;
+import com.specialist.specialistdirectory.domain.specialist.services.SpecialistService;
 import com.specialist.specialistdirectory.exceptions.ManagedSpecialistException;
 import com.specialist.specialistdirectory.exceptions.OwnershipException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,10 +47,6 @@ public class CreatorSpecialistOrchestratorImpl implements CreatorSpecialistOrche
         return specialistService.update(dto);
     }
 
-    @Caching(evict = {
-            @CacheEvict(value = "specialists:bookmarks:count:total", key = "#accountId"),
-            @CacheEvict(value = "specialists:bookmarks:id_pairs", key = "#accountId")}
-    )
     @Transactional
     @Override
     public void delete(UUID accountId, UUID id) {

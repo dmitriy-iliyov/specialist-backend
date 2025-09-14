@@ -25,9 +25,10 @@ public class SpecialistActionVerifyController {
                 .build();
     }
 
-    @PreAuthorize("hasRole('SPECIALIST')")
+    @PreAuthorize("hasRole('SPECIALIST') && hasAuthority('SPECIALIST_CREATE')")
     @PostMapping("/manage/{code}")
     public ResponseEntity<?> manage(@PathVariable("code") String code) {
+        // FIXME: demand  SPECIALIST_CREATE authority
         orchestrator.manage(code);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)

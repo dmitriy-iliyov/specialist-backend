@@ -5,5 +5,5 @@ import com.specialist.specialistdirectory.domain.review.models.enums.OperationTy
 import java.util.UUID;
 
 public interface SpecialistRatingService {
-    void updateRatingById(UUID id, long earnedRating, OperationType operationType);
+    UUID updateRatingById(UUID id, long earnedRating, OperationType operationType);
 }

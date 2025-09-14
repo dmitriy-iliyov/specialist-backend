@@ -1,4 +1,4 @@
-package com.specialist.specialistdirectory.domain.specialist.services;
+package com.specialist.specialistdirectory.domain.specialist.services.creator;
 
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;

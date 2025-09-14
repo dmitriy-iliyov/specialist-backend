@@ -16,8 +16,8 @@ public class SpecialistResponseDto {
 
         private final UUID id;
 
-        @JsonProperty("creator_id")
-        private final UUID creatorId;
+        @JsonProperty("owner_id")
+        private final UUID ownerId;
 
         @JsonProperty("full_name")
         private final String fullName;
@@ -53,7 +53,7 @@ public class SpecialistResponseDto {
 
         @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
         public SpecialistResponseDto(@JsonProperty("id") UUID id,
-                                     @JsonProperty("creator_id") UUID creatorId,
+                                     @JsonProperty("owner_id") UUID ownerId,
                                      @JsonProperty("full_name") String fullName,
                                      @JsonProperty("type_title") String typeTitle,
                                      @JsonProperty("another_type") String anotherType,
@@ -67,7 +67,7 @@ public class SpecialistResponseDto {
                                      @JsonProperty("total_rating") double totalRating,
                                      @JsonProperty("reviews_count") long reviewsCount) {
                 this.id = id;
-                this.creatorId = creatorId;
+                this.ownerId = ownerId;
                 this.fullName = fullName;
                 this.typeTitle = typeTitle;
                 this.anotherType = anotherType;

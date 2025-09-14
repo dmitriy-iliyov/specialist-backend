@@ -1,8 +1,8 @@
 package com.specialist.specialistdirectory.domain.review.models.dtos;
 
-import com.specialist.contracts.user.dto.PublicUserResponseDto;
+import com.specialist.contracts.user.dto.UnifiedProfileResponseDto;
 
 public record ReviewAggregatedResponseDto(
-        PublicUserResponseDto user,
+        UnifiedProfileResponseDto user,
         ReviewResponseDto review
 ) { }

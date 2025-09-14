@@ -1,8 +1,10 @@
 package com.specialist.specialistdirectory.domain.specialist.services;
 
-import com.specialist.contracts.user.UserType;
+import com.specialist.contracts.user.ProfileType;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
+import com.specialist.specialistdirectory.domain.specialist.services.creator.CreatorSpecialistOrchestrator;
+import com.specialist.specialistdirectory.domain.specialist.services.specialist.ManagedSpecialistOrchestrator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +18,7 @@ public class SpecialistManagementOrchestratorImpl implements SpecialistManagemen
     private final ManagedSpecialistOrchestrator managedOrchestrator;
 
     @Override
-    public SpecialistResponseDto update(SpecialistUpdateDto dto, UserType type) {
+    public SpecialistResponseDto update(SpecialistUpdateDto dto, ProfileType type) {
         return switch (type) {
             case USER -> creatorOrchestrator.update(dto);
             case SPECIALIST -> managedOrchestrator.update(dto);
@@ -24,7 +26,7 @@ public class SpecialistManagementOrchestratorImpl implements SpecialistManagemen
     }
 
     @Override
-    public void delete(UUID accountId, UUID id, UserType type) {
+    public void delete(UUID accountId, UUID id, ProfileType type) {
         switch (type) {
             case USER -> creatorOrchestrator.delete(accountId, id);
             case SPECIALIST -> managedOrchestrator.delete(accountId, id);

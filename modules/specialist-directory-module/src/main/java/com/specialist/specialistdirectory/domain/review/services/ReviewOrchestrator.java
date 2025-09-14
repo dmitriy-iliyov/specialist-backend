@@ -12,6 +12,4 @@ public interface ReviewOrchestrator {
     ReviewResponseDto update(ReviewUpdateDto dto);
 
     void delete(UUID creatorId, UUID specialistId, UUID id);
-
-    void adminDelete(UUID specialistId, UUID id);
 }

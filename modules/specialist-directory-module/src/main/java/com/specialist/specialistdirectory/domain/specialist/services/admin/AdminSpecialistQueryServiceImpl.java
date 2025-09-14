@@ -1,4 +1,4 @@
-package com.specialist.specialistdirectory.domain.specialist.services;
+package com.specialist.specialistdirectory.domain.specialist.services.admin;
 
 import com.specialist.specialistdirectory.domain.specialist.mappers.FullSpecialistMapper;
 import com.specialist.specialistdirectory.domain.specialist.models.SpecialistEntity;
@@ -7,6 +7,7 @@ import com.specialist.specialistdirectory.domain.specialist.models.filters.Admin
 import com.specialist.specialistdirectory.domain.specialist.repositories.PaginationUtils;
 import com.specialist.specialistdirectory.domain.specialist.repositories.SpecialistSpecification;
 import com.specialist.specialistdirectory.domain.specialist.repositories.SpecificationRepository;
+import com.specialist.specialistdirectory.domain.specialist.services.SpecialistCountService;
 import com.specialist.utils.pagination.PageResponse;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Slice;

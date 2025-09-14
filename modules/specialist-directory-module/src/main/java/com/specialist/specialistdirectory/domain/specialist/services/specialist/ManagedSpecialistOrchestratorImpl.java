@@ -1,4 +1,4 @@
-package com.specialist.specialistdirectory.domain.specialist.services;
+package com.specialist.specialistdirectory.domain.specialist.services.specialist;
 
 import com.specialist.contracts.user.SystemSpecialistProfileService;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.ShortSpecialistInfo;
@@ -7,6 +7,8 @@ import com.specialist.specialistdirectory.domain.specialist.models.dtos.Speciali
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.CreatorType;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistStatus;
+import com.specialist.specialistdirectory.domain.specialist.services.SpecialistPersistService;
+import com.specialist.specialistdirectory.domain.specialist.services.SpecialistService;
 import com.specialist.specialistdirectory.exceptions.OwnershipException;
 import com.specialist.specialistdirectory.exceptions.UnexpectedNonManagedSpecialistException;
 import lombok.RequiredArgsConstructor;

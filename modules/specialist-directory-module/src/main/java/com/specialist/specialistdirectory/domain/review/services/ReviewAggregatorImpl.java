@@ -1,8 +1,8 @@
 package com.specialist.specialistdirectory.domain.review.services;
 
 
-import com.specialist.contracts.user.SystemUserReadService;
-import com.specialist.contracts.user.dto.PublicUserResponseDto;
+import com.specialist.contracts.user.SystemProfileReadService;
+import com.specialist.contracts.user.dto.UnifiedProfileResponseDto;
 import com.specialist.specialistdirectory.domain.review.models.dtos.ReviewAggregatedResponseDto;
 import com.specialist.specialistdirectory.domain.review.models.dtos.ReviewResponseDto;
 import com.specialist.specialistdirectory.domain.review.models.filters.ReviewSort;
@@ -21,25 +21,25 @@ import java.util.stream.Collectors;
 public class ReviewAggregatorImpl implements ReviewAggregator {
 
     private final ReviewService reviewService;
-    private final SystemUserReadService systemUserReadService;
+    private final SystemProfileReadService profileReadService;
 
     public ReviewAggregatorImpl(ReviewService reviewService,
-                                @Qualifier("defaultSystemUserReadService") SystemUserReadService systemUserReadService) {
+                                @Qualifier("defaultSystemProfileReadService") SystemProfileReadService profileReadService) {
         this.reviewService = reviewService;
-        this.systemUserReadService = systemUserReadService;
+        this.profileReadService = profileReadService;
     }
 
-    // WARNING: @Transactional till SystemUserQueryService in the same app context
+    // WARNING: @Transactional till SystemProfileReadService in the same app context
     @Cacheable(value = "reviews", key = "#specialistId + ':' + #sort.cacheKey()")
     @Transactional(readOnly = true)
     @Override
     public PageResponse<ReviewAggregatedResponseDto> findAllWithSortBySpecialistId(UUID specialistId, ReviewSort sort) {
         PageResponse<ReviewResponseDto> reviewsPage = reviewService.findAllWithSortBySpecialistId(specialistId, sort);
-        Set<UUID> userIds = reviewsPage.data().stream().map(ReviewResponseDto::creatorId).collect(Collectors.toSet());
-        Map<UUID, PublicUserResponseDto> userMap = systemUserReadService.findAllByIdIn(userIds);
+        Set<UUID> creatorIds = reviewsPage.data().stream().map(ReviewResponseDto::creatorId).collect(Collectors.toSet());
+        Map<UUID, UnifiedProfileResponseDto> creatorsMap = profileReadService.findAllByIdIn(creatorIds);
         return new PageResponse<>(
                 reviewsPage.data().stream()
-                        .map(review -> new ReviewAggregatedResponseDto(userMap.get(review.creatorId()), review))
+                        .map(review -> new ReviewAggregatedResponseDto(creatorsMap.get(review.creatorId()), review))
                         .toList(),
                 reviewsPage.totalPages()
         );

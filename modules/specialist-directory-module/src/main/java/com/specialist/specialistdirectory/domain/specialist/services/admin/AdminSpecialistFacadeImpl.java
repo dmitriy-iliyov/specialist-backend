@@ -1,4 +1,4 @@
-package com.specialist.specialistdirectory.domain.specialist.services;
+package com.specialist.specialistdirectory.domain.specialist.services.admin;
 
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
@@ -6,6 +6,9 @@ import com.specialist.specialistdirectory.domain.specialist.models.dtos.Speciali
 import com.specialist.specialistdirectory.domain.specialist.models.enums.ApproverType;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.CreatorType;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.AdminSpecialistFilter;
+import com.specialist.specialistdirectory.domain.specialist.services.SpecialistPersistOrchestrator;
+import com.specialist.specialistdirectory.domain.specialist.services.SpecialistService;
+import com.specialist.specialistdirectory.domain.specialist.services.SpecialistStatusService;
 import com.specialist.utils.pagination.PageResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,8 +25,8 @@ public class AdminSpecialistFacadeImpl implements AdminSpecialistFacade {
     private final AdminSpecialistQueryOrchestrator queryOrchestrator;
 
     @Override
-    public SpecialistResponseDto save(UUID creatorId, CreatorType creatorType, SpecialistCreateDto dto) {
-        return persistOrchestrator.save(creatorId, creatorType, dto);
+    public SpecialistResponseDto save(UUID creatorId, SpecialistCreateDto dto) {
+        return persistOrchestrator.save(creatorId, CreatorType.ADMIN, dto);
     }
 
     @Override

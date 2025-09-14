@@ -20,7 +20,7 @@ public class PreSerializedManagedSpecialistMapper implements ManagedSpecialistMa
             String jsonContacts = mapper.writeValueAsString(dto.getContacts());
             return new ManagedSpecialistResponseDto(
                     dto.getId(),
-                    dto.getCreatorId(),
+                    dto.getOwnerId(),
                     dto.getFullName(),
                     dto.getTypeTitle(),
                     dto.getAnotherType(),

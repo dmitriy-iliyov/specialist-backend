@@ -2,12 +2,8 @@ package com.specialist.specialistdirectory.domain.specialist.controllers;
 
 import com.specialist.contracts.auth.PrincipalDetails;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
-import com.specialist.specialistdirectory.domain.specialist.models.enums.CreatorType;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
-import com.specialist.specialistdirectory.domain.specialist.services.CreatorSpecialistOrchestrator;
-import com.specialist.specialistdirectory.domain.specialist.services.SpecialistCountService;
-import com.specialist.specialistdirectory.domain.specialist.services.SpecialistPersistOrchestrator;
-import com.specialist.specialistdirectory.domain.specialist.services.SpecialistService;
+import com.specialist.specialistdirectory.domain.specialist.services.creator.CreatorSpecialistFacade;
 import com.specialist.utils.validation.annotation.ValidUuid;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,10 +21,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CreatorSpecialistController {
 
-    private final SpecialistPersistOrchestrator persistOrchestrator;
-    private final SpecialistService service;
-    private final CreatorSpecialistOrchestrator orchestrator;
-    private final SpecialistCountService countService;
+    private final CreatorSpecialistFacade facade;
 
     @PreAuthorize("hasAuthority('SPECIALIST_CREATE')")
     @PostMapping
@@ -36,7 +29,7 @@ public class CreatorSpecialistController {
                                     @RequestBody @Valid SpecialistCreateDto dto) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(persistOrchestrator.save(principal.getAccountId(), CreatorType.USER, dto));
+                .body(facade.save(principal.getAccountId(), dto));
     }
 
     @GetMapping("/{id}")
@@ -44,7 +37,7 @@ public class CreatorSpecialistController {
                                  @PathVariable("id") @ValidUuid(paramName = "id") String id) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(service.findByCreatorIdAndId(principal.getAccountId(), UUID.fromString(id)));
+                .body(facade.findById(principal.getAccountId(), UUID.fromString(id)));
     }
 
     @GetMapping
@@ -52,13 +45,13 @@ public class CreatorSpecialistController {
                                     @ModelAttribute @Valid ExtendedSpecialistFilter filter) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(service.findAllByCreatorIdAndFilter(principal.getAccountId(), filter));
+                .body(facade.findAllByFilter(principal.getAccountId(), filter));
     }
 
     @GetMapping("/count")
     public ResponseEntity<?> count(@AuthenticationPrincipal PrincipalDetails principal){
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(countService.countByCreatorId(principal.getAccountId()));
+                .body(facade.count(principal.getAccountId()));
     }
 }

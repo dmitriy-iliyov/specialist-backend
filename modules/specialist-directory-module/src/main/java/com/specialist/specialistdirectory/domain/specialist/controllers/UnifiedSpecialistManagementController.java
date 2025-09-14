@@ -19,7 +19,7 @@ import java.util.UUID;
 @RequestMapping("/api/v1/me/specialists")
 @PreAuthorize("hasAnyRole('USER', 'SPECIALIST')")
 @RequiredArgsConstructor
-public class SpecialistManagementController {
+public class UnifiedSpecialistManagementController {
 
     private final SpecialistManagementOrchestrator orchestrator;
 

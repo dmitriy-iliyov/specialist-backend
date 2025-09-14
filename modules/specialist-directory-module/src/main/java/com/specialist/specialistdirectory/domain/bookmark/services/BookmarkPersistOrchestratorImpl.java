@@ -5,13 +5,15 @@ import com.specialist.specialistdirectory.domain.bookmark.models.BookmarkRespons
 import com.specialist.specialistdirectory.exceptions.AlreadyExistsException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
-public class BookmarkOrchestratorImpl implements BookmarkOrchestrator {
+public class BookmarkPersistOrchestratorImpl implements BookmarkPersistOrchestrator {
 
     private final BookmarkService service;
 
+    @Transactional
     @Override
     public BookmarkResponseDto save(BookmarkCreateDto dto) {
         if (service.existsByOwnerIdAndSpecialistId(dto.getOwnerId(), dto.getSpecialistId())) {
@@ -20,6 +22,7 @@ public class BookmarkOrchestratorImpl implements BookmarkOrchestrator {
         return service.save(dto);
     }
 
+    @Transactional
     @Override
     public void saveAfterSpecialistCreate(BookmarkCreateDto dto) {
         if (service.existsByOwnerIdAndSpecialistId(dto.getOwnerId(), dto.getSpecialistId())) {

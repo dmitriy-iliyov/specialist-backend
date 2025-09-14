@@ -3,13 +3,8 @@ package com.specialist.specialistdirectory.domain.specialist.controllers;
 import com.specialist.contracts.auth.PrincipalDetails;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
-import com.specialist.specialistdirectory.domain.specialist.models.enums.ApproverType;
-import com.specialist.specialistdirectory.domain.specialist.models.enums.CreatorType;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.AdminSpecialistFilter;
-import com.specialist.specialistdirectory.domain.specialist.services.AdminSpecialistQueryOrchestrator;
-import com.specialist.specialistdirectory.domain.specialist.services.SpecialistPersistOrchestrator;
-import com.specialist.specialistdirectory.domain.specialist.services.SpecialistService;
-import com.specialist.specialistdirectory.domain.specialist.services.SpecialistStatusService;
+import com.specialist.specialistdirectory.domain.specialist.services.admin.AdminSpecialistFacade;
 import com.specialist.utils.validation.annotation.ValidUuid;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,37 +22,34 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AdminSpecialistController {
 
-    private final SpecialistService service;
-    private final SpecialistStatusService statusService;
-    private final SpecialistPersistOrchestrator persistOrchestrator;
-    private final AdminSpecialistQueryOrchestrator queryOrchestrator;
+    private final AdminSpecialistFacade facade;
 
     @PostMapping
     public ResponseEntity<?> create(@AuthenticationPrincipal PrincipalDetails principal,
                                     @RequestBody @Valid SpecialistCreateDto dto) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(persistOrchestrator.save(principal.getAccountId(), CreatorType.ADMIN, dto));
+                .body(facade.save(principal.getAccountId(), dto));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> get(@PathVariable("id") @ValidUuid(paramName = "id") String id) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(service.findById(UUID.fromString(id)));
+                .body(facade.findById(UUID.fromString(id)));
     }
 
     @GetMapping
     public ResponseEntity<?> getAll(@ModelAttribute @Valid AdminSpecialistFilter filter) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(queryOrchestrator.findAll(filter));
+                .body(facade.findAll(filter));
     }
 
     @PatchMapping("/approve/{id}")
     public ResponseEntity<?> approve(@AuthenticationPrincipal PrincipalDetails principal,
                                      @PathVariable("id") @ValidUuid(paramName = "id") String id) {
-        statusService.approve(UUID.fromString(id), principal.getAccountId(), ApproverType.ADMIN);
+        facade.approve(UUID.fromString(id), principal.getAccountId());
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
@@ -69,12 +61,12 @@ public class AdminSpecialistController {
         dto.setId(UUID.fromString(id));
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(service.update(dto));
+                .body(facade.update(dto));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") @ValidUuid(paramName = "id") String id) {
-        service.deleteById(UUID.fromString(id));
+        facade.deleteById(UUID.fromString(id));
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
