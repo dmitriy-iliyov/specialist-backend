@@ -1,7 +1,9 @@
 package com.specialist.auth.domain.account.services;
 
-import com.specialist.contracts.user.UserDeleteOrchestrator;
-import com.specialist.contracts.user.UserType;
+import com.specialist.contracts.specialistdirectory.SystemBookmarkDeleteService;
+import com.specialist.contracts.specialistdirectory.SystemSpecialistDeleteService;
+import com.specialist.contracts.user.ProfileDeleteOrchestrator;
+import com.specialist.contracts.user.ProfileType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,16 +15,22 @@ import java.util.UUID;
 public class DefaultAccountDeleteFacade implements AccountDeleteFacade {
 
     private final AccountService accountService;
-    private final UserDeleteOrchestrator userDeleteOrchestrator;
+    private final ProfileDeleteOrchestrator profileDeleteOrchestrator;
+    private final SystemBookmarkDeleteService bookmarkDeleteService;
+    private final SystemSpecialistDeleteService specialistDeleteService;
+
+    // TODO schedule delete / kafka event
 
     // WARNING: till in the same app context
     @Transactional
     @Override
     public void delete(UUID id) {
-        UserType type = UserType.fromStringRole(accountService.findRoleById(id).toString());
+        ProfileType type = ProfileType.fromStringRole(accountService.findRoleById(id).toString());
         accountService.deleteById(id);
-        // TODO if type == SPECIALIST delete from specialists?
-        // TODO schedule delete
-        userDeleteOrchestrator.delete(id, type);
+        profileDeleteOrchestrator.delete(id, type);
+        if (type.equals(ProfileType.SPECIALIST)) {
+            specialistDeleteService.deleteById(id);
+        }
+        bookmarkDeleteService.deleteAllByOwnerId(id);
     }
 }

@@ -1,18 +1,17 @@
 package com.specialist.auth.infrastructure.listeners;
 
-import com.specialist.auth.core.web.SessionCookieManager;
-import com.specialist.auth.domain.account.models.AccountUserDetails;
+import com.specialist.auth.core.web.AccountLoginOrchestrator;
+import com.specialist.auth.core.web.LoginRequest;
 import com.specialist.auth.domain.account.models.dtos.ShortAccountResponseDto;
 import com.specialist.auth.domain.account.services.AccountService;
 import com.specialist.auth.domain.authority.Authority;
 import com.specialist.auth.domain.authority.AuthorityServiceImpl;
 import com.specialist.auth.domain.role.Role;
 import com.specialist.auth.exceptions.UnknownRoleException;
-import com.specialist.contracts.user.UserCompleteEvent;
+import com.specialist.contracts.user.ProfileCreateEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.event.EventListener;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -20,35 +19,31 @@ import java.util.Set;
 
 @Service
 @Slf4j
-public final class UserCreateListener {
+public final class ProfileCreateListener {
 
     private final AccountService accountService;
-    private final UserDetailsService userDetailsService;
-    private final SessionCookieManager sessionCookieManager;
+    private final AccountLoginOrchestrator loginOrchestrator;
 
-    public UserCreateListener(AccountService accountService,
-                              @Qualifier("accountUserDetailsService") UserDetailsService userDetailsService,
-                              SessionCookieManager sessionCookieManager) {
+    public ProfileCreateListener(AccountService accountService,
+                                 @Qualifier("postProfileCreatedAccountLoginOrchestrator")
+                                 AccountLoginOrchestrator loginOrchestrator) {
         this.accountService = accountService;
-        this.userDetailsService = userDetailsService;
-        this.sessionCookieManager = sessionCookieManager;
+        this.loginOrchestrator = loginOrchestrator;
     }
 
     @EventListener
-    public void listen(UserCompleteEvent event) {
-        Role role = Role.fromJson(event.userType().getStringRole());
+    public void listen(ProfileCreateEvent event) {
+        Role role = Role.fromJson(event.profileType().getStringRole());
         Set<Authority> authorities;
         if (role.equals(Role.ROLE_USER)) {
             authorities = new HashSet<>(AuthorityServiceImpl.DEFAULT_POST_REGISTER_USER_AUTHORITIES);
         } else if (role.equals(Role.ROLE_SPECIALIST)) {
-            authorities = Set.of(Authority.REVIEW_CREATE_UPDATE);
-        }
-        else {
+            authorities = Set.of(Authority.REVIEW_CREATE_UPDATE, Authority.SPECIALIST_CREATE, Authority.SPECIALIST_UPDATE);
+        } else {
             log.error("Unknown role {}", role);
             throw new UnknownRoleException();
         }
-        ShortAccountResponseDto dto = accountService.updateRoleAndAuthoritiesById(event.userId(), role, authorities);
-        AccountUserDetails userDetails = (AccountUserDetails) userDetailsService.loadUserByUsername(dto.email());
-        sessionCookieManager.create(userDetails, event.request(), event.response());
+        ShortAccountResponseDto dto = accountService.updateRoleAndAuthoritiesById(event.accountId(), role, authorities);
+        loginOrchestrator.login(new LoginRequest(dto.email(), null), event.request(), event.response());
     }
 }

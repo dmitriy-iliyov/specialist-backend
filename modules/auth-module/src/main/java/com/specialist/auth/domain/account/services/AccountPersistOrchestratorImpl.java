@@ -7,8 +7,8 @@ import com.specialist.auth.domain.account.models.dtos.OAuth2AccountCreateDto;
 import com.specialist.auth.domain.account.models.dtos.ShortAccountResponseDto;
 import com.specialist.auth.domain.account.models.events.AccountCreateEvent;
 import com.specialist.auth.domain.role.Role;
-import com.specialist.contracts.user.SystemUserPersistService;
-import com.specialist.contracts.user.dto.ShortUserCreateDto;
+import com.specialist.contracts.user.SystemProfilePersistService;
+import com.specialist.contracts.user.dto.ShortProfileCreateDto;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -18,13 +18,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 
-// WARNING: all @Transactional should use till @Bean of SystemUserService is in the same app context
+// WARNING: all @Transactional should use till @Bean of SystemProfilePersistService is in the same app context
 @Service
 @RequiredArgsConstructor
 public class AccountPersistOrchestratorImpl implements AccountPersistOrchestrator {
 
     private final AccountService accountService;
-    private final SystemUserPersistService systemUserPersistService;
+    private final SystemProfilePersistService systemProfilePersistService;
     private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
@@ -33,7 +33,7 @@ public class AccountPersistOrchestratorImpl implements AccountPersistOrchestrato
         dto.setRole(Role.ROLE_UNCOMPLETED_USER);
         dto.setAuthorities(List.of());
         ShortAccountResponseDto responseDto = accountService.save(dto);
-        systemUserPersistService.save(new ShortUserCreateDto(responseDto.id(), responseDto.email()));
+        systemProfilePersistService.save(new ShortProfileCreateDto(responseDto.id(), responseDto.email()));
         eventPublisher.publishEvent(new AccountCreateEvent(dto.getEmail()));
         return responseDto;
     }
@@ -48,7 +48,7 @@ public class AccountPersistOrchestratorImpl implements AccountPersistOrchestrato
                 List.of()
         );
         ShortAccountResponseDto responseDto = accountService.save(dto);
-        systemUserPersistService.save(new ShortUserCreateDto(responseDto.id(), responseDto.email()));
+        systemProfilePersistService.save(new ShortProfileCreateDto(responseDto.id(), responseDto.email()));
         return responseDto;
     }
 
@@ -62,7 +62,7 @@ public class AccountPersistOrchestratorImpl implements AccountPersistOrchestrato
                 dto.authorities()
         );
         ShortAccountResponseDto responseDto = accountService.save(createDto);
-        systemUserPersistService.save(new ShortUserCreateDto(responseDto.id(), responseDto.email()));
+        systemProfilePersistService.save(new ShortProfileCreateDto(responseDto.id(), responseDto.email()));
         eventPublisher.publishEvent(new AccountCreateEvent(dto.email()));
         return responseDto;
     }

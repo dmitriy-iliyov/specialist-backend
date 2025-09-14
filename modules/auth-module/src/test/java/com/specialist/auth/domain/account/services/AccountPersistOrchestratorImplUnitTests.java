@@ -7,8 +7,8 @@ import com.specialist.auth.domain.account.models.dtos.ShortAccountResponseDto;
 import com.specialist.auth.domain.authority.Authority;
 import com.specialist.auth.domain.role.Role;
 import com.specialist.auth.infrastructure.message.services.ConfirmationService;
-import com.specialist.contracts.user.SystemUserPersistService;
-import com.specialist.contracts.user.dto.ShortUserCreateDto;
+import com.specialist.contracts.user.SystemProfilePersistService;
+import com.specialist.contracts.user.dto.ShortProfileCreateDto;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,7 +35,7 @@ class AccountPersistOrchestratorImplUnitTests {
     ConfirmationService confirmationService;
 
     @Mock
-    SystemUserPersistService persistService;
+    SystemProfilePersistService persistService;
 
     @InjectMocks
     AccountPersistOrchestratorImpl orchestrator;
@@ -47,7 +47,7 @@ class AccountPersistOrchestratorImplUnitTests {
 
         var expectedResponse = new ShortAccountResponseDto(UUID.randomUUID(), "admin@example.com", LocalDateTime.now());
         when(accountService.save(any(DefaultAccountCreateDto.class))).thenReturn(expectedResponse);
-        doNothing().when(persistService).save(any(ShortUserCreateDto.class));
+        doNothing().when(persistService).save(any(ShortProfileCreateDto.class));
 
         var responseMock = mock(HttpServletResponse.class);
 
@@ -62,7 +62,7 @@ class AccountPersistOrchestratorImplUnitTests {
 
         verify(accountService).save(dto);
         verify(confirmationService, times(1)).sendConfirmationCode("test@example.com");
-        verify(persistService, times(1)).save(any(ShortUserCreateDto.class));
+        verify(persistService, times(1)).save(any(ShortProfileCreateDto.class));
         assertSame(expectedResponse, actual);
     }
 
@@ -77,7 +77,7 @@ class AccountPersistOrchestratorImplUnitTests {
 
         var expectedResponse = new ShortAccountResponseDto(UUID.randomUUID(), "admin@example.com", LocalDateTime.now());
         when(accountService.save(any(DefaultAccountCreateDto.class))).thenReturn(expectedResponse);
-        doNothing().when(persistService).save(any(ShortUserCreateDto.class));
+        doNothing().when(persistService).save(any(ShortProfileCreateDto.class));
 
         var actual = orchestrator.save(dto);
 

@@ -8,7 +8,7 @@ import com.specialist.auth.domain.account.services.AccountDeleteFacade;
 import com.specialist.auth.domain.account.services.AccountService;
 import com.specialist.auth.domain.account.services.EmailUpdateFacade;
 import com.specialist.contracts.auth.PrincipalDetails;
-import com.specialist.contracts.user.UserType;
+import com.specialist.contracts.user.ProfileType;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -23,16 +23,16 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/accounts/me")
 @PreAuthorize("hasAnyRole('USER', 'SPECIALIST')")
-public class PrivateAccountController {
+public class AccountManagementController {
 
     private final AccountService service;
     private final EmailUpdateFacade emailUpdateFacade;
     private final AccountDeleteFacade deleteFacade;
     private final SessionCookieManager sessionCookieManager;
 
-    public PrivateAccountController(AccountService service, EmailUpdateFacade emailUpdateFacade,
-                                  @Qualifier("defaultAccountDeleteFacade") AccountDeleteFacade deleteFacade,
-                                  SessionCookieManager sessionCookieManager) {
+    public AccountManagementController(AccountService service, EmailUpdateFacade emailUpdateFacade,
+                                       @Qualifier("defaultAccountDeleteFacade") AccountDeleteFacade deleteFacade,
+                                       SessionCookieManager sessionCookieManager) {
         this.service = service;
         this.emailUpdateFacade = emailUpdateFacade;
         this.deleteFacade = deleteFacade;
@@ -53,7 +53,7 @@ public class PrivateAccountController {
                                          @RequestBody @Valid AccountEmailUpdateDto dto) {
         UUID accountId = principal.getAccountId();
         dto.setId(accountId);
-        dto.setType(UserType.fromStringRole(principal.getRole().toString()));
+        dto.setType(ProfileType.fromStringRole(principal.getRole().toString()));
         // FIXME: user still have auth-tokens in cookie when change email,
         //  this is ok while auth-tokens don't depends on user email
         return ResponseEntity
