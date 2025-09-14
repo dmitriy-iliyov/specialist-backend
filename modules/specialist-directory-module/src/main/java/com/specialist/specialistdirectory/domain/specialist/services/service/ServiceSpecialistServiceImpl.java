@@ -4,25 +4,23 @@ import com.specialist.specialistdirectory.domain.specialist.models.dtos.Speciali
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.CreatorType;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistStatus;
-import com.specialist.specialistdirectory.domain.specialist.services.SpecialistPersistService;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
-public class ServiceSpecialistServiceImpl implements ServiceSpecialistService, SpecialistPersistService {
+public class ServiceSpecialistServiceImpl implements ServiceSpecialistService {
 
     private final SpecialistService service;
 
     @Override
-    public SpecialistResponseDto save(SpecialistCreateDto dto) {
+    public SpecialistResponseDto save(UUID creatorId, SpecialistCreateDto dto) {
+        dto.setCreatorId(creatorId);
+        dto.setCreatorType(CreatorType.SERVICE);
         dto.setStatus(SpecialistStatus.APPROVED);
         return service.save(dto);
-    }
-
-    @Override
-    public CreatorType getType() {
-        return CreatorType.SERVICE;
     }
 }

@@ -1,7 +1,7 @@
 package com.specialist.user.services;
 
 import com.specialist.contracts.specialistdirectory.ManagedSpecialistResponseDto;
-import com.specialist.contracts.specialistdirectory.SystemManagedSpecialistService;
+import com.specialist.contracts.specialistdirectory.SystemSelfSpecialistService;
 import com.specialist.user.mappers.SpecialistMapper;
 import com.specialist.user.models.dtos.PrivateSpecialistResponseDto;
 import com.specialist.user.models.dtos.PublicSpecialistResponseDto;
@@ -16,7 +16,7 @@ import java.util.UUID;
 public class SpecialistReadOrchestratorImpl implements SpecialistReadOrchestrator {
 
     private final SpecialistService service;
-    private final SystemManagedSpecialistService systemManagedSpecialistService;
+    private final SystemSelfSpecialistService systemSelfSpecialistService;
     private final SpecialistMapper mapper;
 
     @Transactional(readOnly = true)
@@ -24,7 +24,7 @@ public class SpecialistReadOrchestratorImpl implements SpecialistReadOrchestrato
     public PrivateSpecialistResponseDto findPrivateById(UUID id) {
         PrivateSpecialistResponseDto dto = service.findPrivateById(id);
         if (dto.hasCard()) {
-            ManagedSpecialistResponseDto managedDto = systemManagedSpecialistService.findById(id);
+            ManagedSpecialistResponseDto managedDto = systemSelfSpecialistService.findById(id);
             return mapper.aggregate(dto, managedDto);
         }
         return dto;
@@ -35,7 +35,7 @@ public class SpecialistReadOrchestratorImpl implements SpecialistReadOrchestrato
     public PublicSpecialistResponseDto findPublicById(UUID id) {
         PublicSpecialistResponseDto dto = service.findPublicById(id);
         if (dto.hasCard()) {
-            ManagedSpecialistResponseDto managedDto = systemManagedSpecialistService.findById(id);
+            ManagedSpecialistResponseDto managedDto = systemSelfSpecialistService.findById(id);
             return mapper.aggregate(dto, managedDto);
         }
         return dto;    }

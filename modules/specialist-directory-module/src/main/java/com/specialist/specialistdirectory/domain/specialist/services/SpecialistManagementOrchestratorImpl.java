@@ -1,10 +1,11 @@
 package com.specialist.specialistdirectory.domain.specialist.services;
 
 import com.specialist.contracts.user.ProfileType;
+import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
 import com.specialist.specialistdirectory.domain.specialist.services.creator.CreatorSpecialistOrchestrator;
-import com.specialist.specialistdirectory.domain.specialist.services.specialist.ManagedSpecialistOrchestrator;
+import com.specialist.specialistdirectory.domain.specialist.services.specialist.SelfSpecialistOrchestrator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,13 +16,21 @@ import java.util.UUID;
 public class SpecialistManagementOrchestratorImpl implements SpecialistManagementOrchestrator {
 
     private final CreatorSpecialistOrchestrator creatorOrchestrator;
-    private final ManagedSpecialistOrchestrator managedOrchestrator;
+    private final SelfSpecialistOrchestrator selfOrchestrator;
+
+    @Override
+    public SpecialistResponseDto save(UUID creatorId, ProfileType type, SpecialistCreateDto dto) {
+        return switch (type) {
+            case USER -> creatorOrchestrator.save(creatorId, dto);
+            case SPECIALIST -> selfOrchestrator.save(creatorId, dto);
+        };
+    }
 
     @Override
     public SpecialistResponseDto update(SpecialistUpdateDto dto, ProfileType type) {
         return switch (type) {
             case USER -> creatorOrchestrator.update(dto);
-            case SPECIALIST -> managedOrchestrator.update(dto);
+            case SPECIALIST -> selfOrchestrator.update(dto);
         };
     }
 
@@ -29,7 +38,7 @@ public class SpecialistManagementOrchestratorImpl implements SpecialistManagemen
     public void delete(UUID accountId, UUID id, ProfileType type) {
         switch (type) {
             case USER -> creatorOrchestrator.delete(accountId, id);
-            case SPECIALIST -> managedOrchestrator.delete(accountId, id);
+            case SPECIALIST -> selfOrchestrator.delete(accountId, id);
         };
     }
 }

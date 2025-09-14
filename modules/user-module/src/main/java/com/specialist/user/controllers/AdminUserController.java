@@ -1,7 +1,6 @@
 package com.specialist.user.controllers;
 
 import com.specialist.user.models.enums.ScopeType;
-import com.specialist.user.services.SpecialistService;
 import com.specialist.user.services.UserService;
 import com.specialist.utils.pagination.PageRequest;
 import com.specialist.utils.validation.annotation.ValidUuid;
@@ -16,15 +15,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/admin/v1/profiles")
+@RequestMapping("/api/admin/v1/profiles/users")
 @PreAuthorize("hasRole('ADMIN')")
 @RequiredArgsConstructor
 public class AdminUserController {
 
     private final UserService service;
-    private final SpecialistService specialistService;
 
-    @GetMapping("/users/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable("id") @NotNull(message = "Id is required.")
                                      @ValidUuid(paramName = "id") String id) {
         return ResponseEntity
@@ -32,19 +30,10 @@ public class AdminUserController {
                 .body(service.findPrivateById(UUID.fromString(id)));
     }
 
-    @GetMapping("/users")
+    @GetMapping
     public ResponseEntity<?> getAll(@ModelAttribute @Valid PageRequest page) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(service.findAll(ScopeType.PRIVATE, page));
-    }
-
-    @PatchMapping("/specialists/approve/{id}")
-    public ResponseEntity<?> approveSpecialist(@PathVariable("id") @NotNull(message = "Id is required.")
-                                               @ValidUuid(paramName = "id") String id) {
-        specialistService.approve(UUID.fromString(id));
-        return ResponseEntity
-                .status(HttpStatus.NO_CONTENT)
-                .build();
     }
 }

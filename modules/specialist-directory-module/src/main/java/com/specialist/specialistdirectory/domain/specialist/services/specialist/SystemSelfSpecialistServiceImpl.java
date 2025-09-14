@@ -1,7 +1,7 @@
 package com.specialist.specialistdirectory.domain.specialist.services.specialist;
 
 import com.specialist.contracts.specialistdirectory.ManagedSpecialistResponseDto;
-import com.specialist.contracts.specialistdirectory.SystemManagedSpecialistService;
+import com.specialist.contracts.specialistdirectory.SystemSelfSpecialistService;
 import com.specialist.specialistdirectory.domain.specialist.mappers.ManagedSpecialistMapper;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistService;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class SystemManagedSpecialistServiceImpl implements SystemManagedSpecialistService {
+public class SystemSelfSpecialistServiceImpl implements SystemSelfSpecialistService {
 
     private final SpecialistService service;
     private final ManagedSpecialistMapper mapper;

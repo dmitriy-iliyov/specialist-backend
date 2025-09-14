@@ -7,7 +7,6 @@ import com.specialist.specialistdirectory.domain.specialist.models.dtos.Speciali
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.CreatorType;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistStatus;
-import com.specialist.specialistdirectory.domain.specialist.services.SpecialistPersistService;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistService;
 import com.specialist.specialistdirectory.exceptions.OwnershipException;
 import com.specialist.specialistdirectory.exceptions.UnexpectedNonManagedSpecialistException;
@@ -19,22 +18,20 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class ManagedSpecialistOrchestratorImpl implements ManagedSpecialistOrchestrator, SpecialistPersistService {
+public class SelfSpecialistOrchestratorImpl implements SelfSpecialistOrchestrator {
 
     private final SpecialistService service;
     private final SystemSpecialistProfileService specialistProfileService;
 
+    @Transactional
     @Override
-    public SpecialistResponseDto save(SpecialistCreateDto dto) {
+    public SpecialistResponseDto save(UUID creatorId, SpecialistCreateDto dto) {
+        dto.setCreatorId(creatorId);
+        dto.setCreatorType(CreatorType.SPECIALIST);
         dto.setStatus(SpecialistStatus.UNAPPROVED);
         SpecialistResponseDto responseDto = service.save(dto);
         specialistProfileService.setSpecialistCardId(responseDto.getId());
         return responseDto;
-    }
-
-    @Override
-    public CreatorType getType() {
-        return CreatorType.SPECIALIST;
     }
 
     @Transactional

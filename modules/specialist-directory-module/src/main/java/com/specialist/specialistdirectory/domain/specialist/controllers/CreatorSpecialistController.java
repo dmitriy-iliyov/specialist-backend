@@ -1,7 +1,6 @@
 package com.specialist.specialistdirectory.domain.specialist.controllers;
 
 import com.specialist.contracts.auth.PrincipalDetails;
-import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
 import com.specialist.specialistdirectory.domain.specialist.services.creator.CreatorSpecialistFacade;
 import com.specialist.utils.validation.annotation.ValidUuid;
@@ -23,15 +22,7 @@ public class CreatorSpecialistController {
 
     private final CreatorSpecialistFacade facade;
 
-    @PreAuthorize("hasAuthority('SPECIALIST_CREATE')")
-    @PostMapping
-    public ResponseEntity<?> create(@AuthenticationPrincipal PrincipalDetails principal,
-                                    @RequestBody @Valid SpecialistCreateDto dto) {
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(facade.save(principal.getAccountId(), dto));
-    }
-
+    // DISCUSS to del?
     @GetMapping("/{id}")
     public ResponseEntity<?> get(@AuthenticationPrincipal PrincipalDetails principal,
                                  @PathVariable("id") @ValidUuid(paramName = "id") String id) {

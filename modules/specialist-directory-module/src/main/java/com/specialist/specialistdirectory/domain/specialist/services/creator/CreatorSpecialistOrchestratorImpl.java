@@ -8,7 +8,6 @@ import com.specialist.specialistdirectory.domain.specialist.models.dtos.Speciali
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.CreatorType;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistStatus;
-import com.specialist.specialistdirectory.domain.specialist.services.SpecialistPersistService;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistService;
 import com.specialist.specialistdirectory.exceptions.ManagedSpecialistException;
 import com.specialist.specialistdirectory.exceptions.OwnershipException;
@@ -22,23 +21,20 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class CreatorSpecialistOrchestratorImpl implements CreatorSpecialistOrchestrator, SpecialistPersistService {
+public class CreatorSpecialistOrchestratorImpl implements CreatorSpecialistOrchestrator {
 
     private final SpecialistService specialistService;
     private final BookmarkPersistOrchestrator bookmarkPersistOrchestrator;
 
     @Transactional
     @Override
-    public SpecialistResponseDto save(SpecialistCreateDto dto) {
+    public SpecialistResponseDto save(UUID creatorId, SpecialistCreateDto dto) {
+        dto.setCreatorId(creatorId);
+        dto.setCreatorType(CreatorType.USER);
         dto.setStatus(SpecialistStatus.UNAPPROVED);
         SpecialistResponseDto responseDto = specialistService.save(dto);
         bookmarkPersistOrchestrator.saveAfterSpecialistCreate(new BookmarkCreateDto(responseDto.getOwnerId(), responseDto.getId()));
         return responseDto;
-    }
-
-    @Override
-    public CreatorType getType() {
-        return CreatorType.USER;
     }
 
     @Override

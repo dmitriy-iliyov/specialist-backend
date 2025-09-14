@@ -3,9 +3,8 @@ package com.specialist.specialistdirectory.domain.specialist.controllers;
 import com.specialist.contracts.auth.PrincipalDetails;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.ApproverType;
-import com.specialist.specialistdirectory.domain.specialist.models.enums.CreatorType;
-import com.specialist.specialistdirectory.domain.specialist.services.SpecialistPersistOrchestrator;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistStatusService;
+import com.specialist.specialistdirectory.domain.specialist.services.service.ServiceSpecialistService;
 import com.specialist.utils.validation.annotation.ValidUuid;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +22,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ServiceSpecialistController {
 
-    private final SpecialistPersistOrchestrator persistOrchestrator;
+    private final ServiceSpecialistService service;
     private final SpecialistStatusService statusService;
 
     @PreAuthorize("hasAuthority('SPECIALIST_CREATE')")
@@ -32,7 +31,7 @@ public class ServiceSpecialistController {
                                     @RequestBody @Valid SpecialistCreateDto dto) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(persistOrchestrator.save(principal.getAccountId(), CreatorType.SERVICE, dto));
+                .body(service.save(principal.getAccountId(), dto));
     }
 
     @PreAuthorize("hasAuthority('SPECIALIST_APPROVE')")

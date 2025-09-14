@@ -2,6 +2,7 @@ package com.specialist.specialistdirectory.domain.specialist.controllers;
 
 import com.specialist.contracts.auth.PrincipalDetails;
 import com.specialist.contracts.user.ProfileType;
+import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistManagementOrchestrator;
 import com.specialist.utils.validation.annotation.ValidUuid;
@@ -19,9 +20,18 @@ import java.util.UUID;
 @RequestMapping("/api/v1/me/specialists")
 @PreAuthorize("hasAnyRole('USER', 'SPECIALIST')")
 @RequiredArgsConstructor
-public class UnifiedSpecialistManagementController {
+public class SpecialistManagementController {
 
     private final SpecialistManagementOrchestrator orchestrator;
+
+    @PreAuthorize("hasAuthority('SPECIALIST_CREATE')")
+    @PostMapping
+    public ResponseEntity<?> create(@AuthenticationPrincipal PrincipalDetails principal,
+                                    @RequestBody @Valid SpecialistCreateDto dto) {
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(orchestrator.save(principal.getAccountId(), ProfileType.fromStringRole(principal.getStringRole()), dto));
+    }
 
     @PreAuthorize("hasAuthority('SPECIALIST_UPDATE')")
     @PutMapping("/{id}")
@@ -43,5 +53,4 @@ public class UnifiedSpecialistManagementController {
                 .status(HttpStatus.NO_CONTENT)
                 .build();
     }
-
 }

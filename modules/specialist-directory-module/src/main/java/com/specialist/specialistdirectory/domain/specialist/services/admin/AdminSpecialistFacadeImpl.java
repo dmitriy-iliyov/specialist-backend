@@ -5,8 +5,8 @@ import com.specialist.specialistdirectory.domain.specialist.models.dtos.Speciali
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.ApproverType;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.CreatorType;
+import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistStatus;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.AdminSpecialistFilter;
-import com.specialist.specialistdirectory.domain.specialist.services.SpecialistPersistOrchestrator;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistService;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistStatusService;
 import com.specialist.utils.pagination.PageResponse;
@@ -21,12 +21,14 @@ public class AdminSpecialistFacadeImpl implements AdminSpecialistFacade {
 
     private final SpecialistService service;
     private final SpecialistStatusService statusService;
-    private final SpecialistPersistOrchestrator persistOrchestrator;
     private final AdminSpecialistQueryOrchestrator queryOrchestrator;
 
     @Override
     public SpecialistResponseDto save(UUID creatorId, SpecialistCreateDto dto) {
-        return persistOrchestrator.save(creatorId, CreatorType.ADMIN, dto);
+        dto.setCreatorId(creatorId);
+        dto.setCreatorType(CreatorType.ADMIN);
+        dto.setStatus(SpecialistStatus.APPROVED);
+        return service.save(dto);
     }
 
     @Override

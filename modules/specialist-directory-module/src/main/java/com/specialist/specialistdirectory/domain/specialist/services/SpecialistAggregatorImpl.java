@@ -20,14 +20,14 @@ import java.util.stream.Collectors;
 @Service
 public class SpecialistAggregatorImpl implements SpecialistAggregator {
 
-    // WARNING: @Transactional can be till profileQueryService in the same app context
+    // WARNING: @Transactional can be till profileReadService in the same app context
     private final SpecialistService specialistService;
-    private final SystemProfileReadService profileQueryService;
+    private final SystemProfileReadService profileReadService;
 
     public SpecialistAggregatorImpl(SpecialistService specialistService,
-                                    @Qualifier("defaultSystemProfileReadService") SystemProfileReadService profileQueryService) {
+                                    @Qualifier("defaultSystemProfileReadService") SystemProfileReadService profileReadService) {
         this.specialistService = specialistService;
-        this.profileQueryService = profileQueryService;
+        this.profileReadService = profileReadService;
     }
 
     @Cacheable(value = "specialists:all", key = "#page.cacheKey()", condition = "#page.pageNumber() < 3")
@@ -46,7 +46,7 @@ public class SpecialistAggregatorImpl implements SpecialistAggregator {
 
     private PageResponse<SpecialistAggregatedResponseDto> preparePageResponse(PageResponse<SpecialistResponseDto> pageResponse) {
         Set<UUID> ownersIds = pageResponse.data().stream().map(SpecialistResponseDto::getOwnerId).collect(Collectors.toSet());
-        Map<UUID, UnifiedProfileResponseDto> ownersMap = profileQueryService.findAllByIdIn(ownersIds);
+        Map<UUID, UnifiedProfileResponseDto> ownersMap = profileReadService.findAllByIdIn(ownersIds);
         return new PageResponse<>(
                 pageResponse.data().stream()
                         .map(dto -> new SpecialistAggregatedResponseDto(ownersMap.get(dto.getOwnerId()), dto))
