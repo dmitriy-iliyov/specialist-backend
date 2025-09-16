@@ -22,7 +22,7 @@ public class CreatorSpecialistController {
 
     private final CreatorSpecialistFacade facade;
 
-    // DISCUSS to del?
+    // DISCUSS: to del?
     @GetMapping("/{id}")
     public ResponseEntity<?> get(@AuthenticationPrincipal PrincipalDetails principal,
                                  @PathVariable("id") @ValidUuid(paramName = "id") String id) {

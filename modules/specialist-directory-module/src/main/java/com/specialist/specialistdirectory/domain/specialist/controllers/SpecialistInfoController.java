@@ -1,6 +1,6 @@
 package com.specialist.specialistdirectory.domain.specialist.controllers;
 
-import com.specialist.specialistdirectory.domain.specialist.models.enums.ContactType;
+import com.specialist.contracts.specialistdirectory.dto.ContactType;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistLanguage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

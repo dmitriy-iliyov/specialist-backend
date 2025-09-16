@@ -1,7 +1,7 @@
 package com.specialist.specialistdirectory.domain.specialist.validation;
 
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.ContactDto;
-import com.specialist.specialistdirectory.domain.specialist.models.enums.ContactType;
+import com.specialist.contracts.specialistdirectory.dto.ContactType;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import lombok.extern.slf4j.Slf4j;

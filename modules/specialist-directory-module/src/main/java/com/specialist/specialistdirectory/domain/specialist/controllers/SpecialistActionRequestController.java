@@ -1,7 +1,7 @@
 package com.specialist.specialistdirectory.domain.specialist.controllers;
 
 import com.specialist.contracts.auth.PrincipalDetails;
-import com.specialist.specialistdirectory.domain.specialist.models.enums.ContactType;
+import com.specialist.contracts.specialistdirectory.dto.ContactType;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistActionOrchestrator;
 import com.specialist.utils.validation.annotation.ValidUuid;
 import lombok.RequiredArgsConstructor;

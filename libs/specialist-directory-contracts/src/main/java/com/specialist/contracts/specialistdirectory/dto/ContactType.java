@@ -1,4 +1,4 @@
-package com.specialist.specialistdirectory.domain.specialist.models.enums;
+package com.specialist.contracts.specialistdirectory.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 

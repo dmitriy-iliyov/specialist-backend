@@ -1,6 +1,6 @@
 package com.specialist.specialistdirectory.domain.specialist.services;
 
-import com.specialist.specialistdirectory.domain.specialist.models.enums.ContactType;
+import com.specialist.contracts.specialistdirectory.dto.ContactType;
 
 import java.util.UUID;
 

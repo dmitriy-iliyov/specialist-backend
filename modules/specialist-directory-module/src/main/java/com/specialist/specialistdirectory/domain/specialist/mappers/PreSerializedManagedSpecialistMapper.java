@@ -2,7 +2,7 @@ package com.specialist.specialistdirectory.domain.specialist.mappers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.specialist.contracts.specialistdirectory.ManagedSpecialistResponseDto;
+import com.specialist.contracts.specialistdirectory.dto.ManagedSpecialistResponseDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

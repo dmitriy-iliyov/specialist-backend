@@ -1,4 +1,4 @@
-package com.specialist.contracts.specialistdirectory;
+package com.specialist.contracts.specialistdirectory.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

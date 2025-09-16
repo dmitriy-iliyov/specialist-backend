@@ -1,6 +1,6 @@
 package com.specialist.user.models.dtos;
 
-import com.specialist.contracts.specialistdirectory.ManagedSpecialistResponseDto;
+import com.specialist.contracts.specialistdirectory.dto.ManagedSpecialistResponseDto;
 import com.specialist.contracts.user.ProfileType;
 import com.specialist.user.models.enums.SpecialistStatus;
 import lombok.Getter;

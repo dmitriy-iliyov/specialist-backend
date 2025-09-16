@@ -1,6 +1,6 @@
 package com.specialist.user.services;
 
-import com.specialist.contracts.specialistdirectory.ManagedSpecialistResponseDto;
+import com.specialist.contracts.specialistdirectory.dto.ManagedSpecialistResponseDto;
 import com.specialist.contracts.specialistdirectory.SystemSelfSpecialistService;
 import com.specialist.user.mappers.SpecialistMapper;
 import com.specialist.user.models.dtos.PrivateSpecialistResponseDto;

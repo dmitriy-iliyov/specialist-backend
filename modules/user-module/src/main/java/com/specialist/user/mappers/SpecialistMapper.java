@@ -1,6 +1,6 @@
 package com.specialist.user.mappers;
 
-import com.specialist.contracts.specialistdirectory.ManagedSpecialistResponseDto;
+import com.specialist.contracts.specialistdirectory.dto.ManagedSpecialistResponseDto;
 import com.specialist.user.models.SpecialistEntity;
 import com.specialist.user.models.dtos.*;
 import org.mapstruct.Mapper;

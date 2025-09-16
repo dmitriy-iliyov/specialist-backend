@@ -2,7 +2,7 @@ package com.specialist.specialistdirectory.domain.specialist.models;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.specialist.specialistdirectory.domain.specialist.models.enums.ActionType;
+import com.specialist.contracts.specialistdirectory.dto.ActionType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
