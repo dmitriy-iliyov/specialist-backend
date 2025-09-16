@@ -1,3 +1,3 @@
-package com.specialist.message.service.services;
+package com.messageservice.services;
 
 public interface SpecialistManageMessageService extends SpecialistActionMessageService { }

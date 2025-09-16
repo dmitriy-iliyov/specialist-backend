@@ -1,4 +1,4 @@
-package com.specialist.exceptions.models.dto;
+package com.specialist.core.exceptions.models.dto;
 
 public record ExceptionResponseDto(
         String code,

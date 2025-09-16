@@ -1,7 +1,7 @@
 package com.specialist.specialistdirectory.domain.specialist.services.admin;
 
-import com.specialist.contracts.user.SystemProfileReadService;
-import com.specialist.contracts.user.dto.UnifiedProfileResponseDto;
+import com.specialist.contracts.profile.SystemProfileReadService;
+import com.specialist.contracts.profile.dto.UnifiedProfileResponseDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.AdminSpecialistAggregatedResponseDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.FullSpecialistResponseDto;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.AdminSpecialistFilter;

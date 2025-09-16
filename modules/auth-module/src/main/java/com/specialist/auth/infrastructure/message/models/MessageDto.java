@@ -1,4 +1,4 @@
-package com.specialist.message.core;
+package com.specialist.auth.infrastructure.message.models;
 
 public record MessageDto(
         String recipient,

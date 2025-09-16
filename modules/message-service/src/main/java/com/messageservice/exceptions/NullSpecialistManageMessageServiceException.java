@@ -1,4 +1,4 @@
-package com.specialist.message.service.exceptions;
+package com.messageservice.exceptions;
 
 import com.specialist.core.exceptions.models.BaseInternalServerException;
 import com.specialist.core.exceptions.models.dto.ErrorDto;

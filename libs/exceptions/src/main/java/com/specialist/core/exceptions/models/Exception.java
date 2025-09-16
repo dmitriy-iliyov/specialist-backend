@@ -1,6 +1,6 @@
-package com.specialist.exceptions.models;
+package com.specialist.core.exceptions.models;
 
-import com.specialist.exceptions.models.dto.ErrorDto;
+import com.specialist.core.exceptions.models.dto.ErrorDto;
 
 public abstract class Exception extends RuntimeException {
 

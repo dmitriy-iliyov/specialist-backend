@@ -1,4 +1,4 @@
-package com.specialist.message.service.services;
+package com.messageservice.services;
 
 import com.specialist.contracts.specialistdirectory.dto.SpecialistActionEvent;
 

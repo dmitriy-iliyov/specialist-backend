@@ -1,4 +1,4 @@
-package com.specialist.message.service.configs;
+package com.messageservice.configs;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

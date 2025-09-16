@@ -40,7 +40,7 @@
 
         <dependency>
             <groupId>com.specialist</groupId>
-            <artifactId>user-contracts</artifactId>
+            <artifactId>profile-contracts</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 

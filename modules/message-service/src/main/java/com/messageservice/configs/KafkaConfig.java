@@ -1,4 +1,4 @@
-package com.specialist.message.service.configs;
+package com.messageservice.configs;
 
 import com.fasterxml.jackson.databind.JsonSerializer;
 import org.apache.kafka.clients.producer.ProducerConfig;

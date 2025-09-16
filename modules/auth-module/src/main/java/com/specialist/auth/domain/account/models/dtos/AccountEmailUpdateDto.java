@@ -2,7 +2,7 @@ package com.specialist.auth.domain.account.models.dtos;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.specialist.auth.domain.account.validation.UniqueEmail;
-import com.specialist.contracts.user.ProfileType;
+import com.specialist.contracts.profile.ProfileType;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

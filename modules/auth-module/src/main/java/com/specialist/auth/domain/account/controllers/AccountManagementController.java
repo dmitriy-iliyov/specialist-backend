@@ -8,7 +8,7 @@ import com.specialist.auth.domain.account.services.AccountDeleteFacade;
 import com.specialist.auth.domain.account.services.AccountService;
 import com.specialist.auth.domain.account.services.EmailUpdateFacade;
 import com.specialist.contracts.auth.PrincipalDetails;
-import com.specialist.contracts.user.ProfileType;
+import com.specialist.contracts.profile.ProfileType;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Qualifier;

@@ -1,4 +1,4 @@
-package com.specialist.exceptions.models;
+package com.specialist.core.exceptions.models;
 
 
 public abstract class BaseNotFoundException extends Exception {

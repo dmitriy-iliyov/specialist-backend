@@ -1,4 +1,4 @@
-package com.specialist.message.service.models;
+package com.messageservice.models;
 
 public record MessageDto(
         String recipient,

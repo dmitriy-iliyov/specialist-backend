@@ -1,6 +1,6 @@
-package com.specialist.message.service.services;
+package com.messageservice.services;
 
-import com.specialist.message.service.models.MessageDto;
+import com.messageservice.models.MessageDto;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;

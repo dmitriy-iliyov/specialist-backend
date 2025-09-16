@@ -1,7 +1,7 @@
 package com.specialist.specialistdirectory.domain.specialist.controllers;
 
 import com.specialist.contracts.auth.PrincipalDetails;
-import com.specialist.contracts.user.ProfileType;
+import com.specialist.contracts.profile.ProfileType;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistManagementOrchestrator;

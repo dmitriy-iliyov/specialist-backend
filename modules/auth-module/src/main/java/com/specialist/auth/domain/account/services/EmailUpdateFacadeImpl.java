@@ -3,7 +3,7 @@ package com.specialist.auth.domain.account.services;
 import com.specialist.auth.domain.account.models.dtos.AccountEmailUpdateDto;
 import com.specialist.auth.domain.account.models.dtos.ShortAccountResponseDto;
 import com.specialist.auth.domain.account.models.events.EmailUpdatedEvent;
-import com.specialist.contracts.user.SystemEmailUpdateOrchestrator;
+import com.specialist.contracts.profile.SystemEmailUpdateOrchestrator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;

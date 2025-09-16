@@ -1,9 +1,9 @@
 package com.specialist.auth.domain.account.services;
 
+import com.specialist.contracts.profile.ProfileDeleteOrchestrator;
+import com.specialist.contracts.profile.ProfileType;
 import com.specialist.contracts.specialistdirectory.SystemBookmarkDeleteService;
 import com.specialist.contracts.specialistdirectory.SystemSpecialistDeleteService;
-import com.specialist.contracts.user.ProfileDeleteOrchestrator;
-import com.specialist.contracts.user.ProfileType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

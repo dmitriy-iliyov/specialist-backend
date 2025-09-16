@@ -34,7 +34,7 @@
 
         <dependency>
             <groupId>com.specialist</groupId>
-            <artifactId>user-contracts</artifactId>
+            <artifactId>profile-contracts</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
@@ -52,7 +52,7 @@
 
         <dependency>
             <groupId>com.specialist</groupId>
-            <artifactId>user-module</artifactId>
+            <artifactId>profile-module</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 

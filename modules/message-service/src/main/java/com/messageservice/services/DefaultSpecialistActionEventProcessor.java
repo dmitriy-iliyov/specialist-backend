@@ -1,8 +1,8 @@
-package com.specialist.message.service.services;
+package com.messageservice.services;
 
+import com.messageservice.exceptions.NullSpecialistActionOrchestratorException;
 import com.specialist.contracts.specialistdirectory.dto.ActionType;
 import com.specialist.contracts.specialistdirectory.dto.SpecialistActionEvent;
-import com.specialist.message.service.exceptions.NullSpecialistActionOrchestratorException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

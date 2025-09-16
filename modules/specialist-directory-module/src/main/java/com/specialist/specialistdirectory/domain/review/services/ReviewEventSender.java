@@ -1,6 +1,6 @@
 package com.specialist.specialistdirectory.domain.review.services;
 
-import com.specialist.contracts.user.CreatorRatingUpdateEvent;
+import com.specialist.contracts.profile.CreatorRatingUpdateEvent;
 import com.specialist.specialistdirectory.domain.review.mappers.ReviewBufferMapper;
 import com.specialist.specialistdirectory.domain.review.models.enums.DeliveryState;
 import lombok.RequiredArgsConstructor;

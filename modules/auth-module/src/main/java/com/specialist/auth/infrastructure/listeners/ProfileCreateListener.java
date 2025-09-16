@@ -8,7 +8,7 @@ import com.specialist.auth.domain.authority.Authority;
 import com.specialist.auth.domain.authority.AuthorityServiceImpl;
 import com.specialist.auth.domain.role.Role;
 import com.specialist.auth.exceptions.UnknownRoleException;
-import com.specialist.contracts.user.ProfileCreateEvent;
+import com.specialist.contracts.profile.ProfileCreateEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.event.EventListener;

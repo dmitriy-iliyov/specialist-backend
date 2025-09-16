@@ -1,12 +1,12 @@
 package com.specialist.specialistdirectory.domain.specialist.services;
 
-import com.specialist.contracts.user.SystemSpecialistProfileService;
-import com.specialist.specialistdirectory.domain.specialist.models.SpecialistActionEntity;
-import com.specialist.contracts.specialistdirectory.dto.SpecialistActionEvent;
-import com.specialist.specialistdirectory.domain.specialist.models.dtos.ContactDto;
-import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
+import com.specialist.contracts.profile.SystemSpecialistProfileService;
 import com.specialist.contracts.specialistdirectory.dto.ActionType;
 import com.specialist.contracts.specialistdirectory.dto.ContactType;
+import com.specialist.contracts.specialistdirectory.dto.SpecialistActionEvent;
+import com.specialist.specialistdirectory.domain.specialist.models.SpecialistActionEntity;
+import com.specialist.specialistdirectory.domain.specialist.models.dtos.ContactDto;
+import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
 import com.specialist.specialistdirectory.domain.specialist.repositories.SpecialistActionRepository;
 import com.specialist.specialistdirectory.exceptions.CodeExpiredException;
 import com.specialist.specialistdirectory.exceptions.NoSuchSpecialistContactException;

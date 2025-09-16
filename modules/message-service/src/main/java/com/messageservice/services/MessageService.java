@@ -1,6 +1,6 @@
-package com.specialist.message.service.services;
+package com.messageservice.services;
 
-import com.specialist.message.service.models.MessageDto;
+import com.messageservice.models.MessageDto;
 
 public interface MessageService {
     void sendMessage(MessageDto message) throws Exception;

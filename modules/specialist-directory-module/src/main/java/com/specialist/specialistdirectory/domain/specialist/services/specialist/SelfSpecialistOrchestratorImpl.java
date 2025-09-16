@@ -1,6 +1,6 @@
 package com.specialist.specialistdirectory.domain.specialist.services.specialist;
 
-import com.specialist.contracts.user.SystemSpecialistProfileService;
+import com.specialist.contracts.profile.SystemSpecialistProfileService;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.ShortSpecialistInfo;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;

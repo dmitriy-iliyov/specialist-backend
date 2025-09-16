@@ -1,8 +1,8 @@
 package com.specialist.specialistdirectory.domain.review.services;
 
 
-import com.specialist.contracts.user.SystemProfileReadService;
-import com.specialist.contracts.user.dto.UnifiedProfileResponseDto;
+import com.specialist.contracts.profile.SystemProfileReadService;
+import com.specialist.contracts.profile.dto.UnifiedProfileResponseDto;
 import com.specialist.specialistdirectory.domain.review.models.dtos.ReviewAggregatedResponseDto;
 import com.specialist.specialistdirectory.domain.review.models.dtos.ReviewResponseDto;
 import com.specialist.specialistdirectory.domain.review.models.filters.ReviewSort;

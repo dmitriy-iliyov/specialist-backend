@@ -4,11 +4,12 @@ package com.specialist.auth.domain.account.services;
 import com.specialist.auth.domain.account.models.dtos.DefaultAccountCreateDto;
 import com.specialist.auth.domain.account.models.dtos.ManagedAccountCreateDto;
 import com.specialist.auth.domain.account.models.dtos.ShortAccountResponseDto;
+import com.specialist.auth.domain.account.models.events.AccountCreateEvent;
 import com.specialist.auth.domain.authority.Authority;
 import com.specialist.auth.domain.role.Role;
 import com.specialist.auth.infrastructure.message.services.ConfirmationService;
-import com.specialist.contracts.user.SystemProfilePersistService;
-import com.specialist.contracts.user.dto.ShortProfileCreateDto;
+import com.specialist.contracts.profile.SystemProfilePersistService;
+import com.specialist.contracts.profile.dto.ShortProfileCreateDto;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -37,6 +39,9 @@ class AccountPersistOrchestratorImplUnitTests {
     @Mock
     SystemProfilePersistService persistService;
 
+    @Mock
+    ApplicationEventPublisher eventPublisher;
+
     @InjectMocks
     AccountPersistOrchestratorImpl orchestrator;
 
@@ -48,21 +53,18 @@ class AccountPersistOrchestratorImplUnitTests {
         var expectedResponse = new ShortAccountResponseDto(UUID.randomUUID(), "admin@example.com", LocalDateTime.now());
         when(accountService.save(any(DefaultAccountCreateDto.class))).thenReturn(expectedResponse);
         doNothing().when(persistService).save(any(ShortProfileCreateDto.class));
+        doNothing().when(eventPublisher).publishEvent(any(AccountCreateEvent.class));
 
         var responseMock = mock(HttpServletResponse.class);
 
         var actual = orchestrator.save(dto, responseMock);
 
-        assertEquals(Role.ROLE_USER, dto.getRole());
-        assertEquals(List.of(
-                Authority.SPECIALIST_CREATE,
-                Authority.SPECIALIST_UPDATE,
-                Authority.REVIEW_CREATE_UPDATE,
-                Authority.TYPE_SUGGEST), dto.getAuthorities());
+        assertEquals(Role.ROLE_UNCOMPLETED_USER, dto.getRole());
+        assertEquals(List.of(), dto.getAuthorities());
 
         verify(accountService).save(dto);
-        verify(confirmationService, times(1)).sendConfirmationCode("test@example.com");
         verify(persistService, times(1)).save(any(ShortProfileCreateDto.class));
+        verify(eventPublisher, times(1)).publishEvent(any(AccountCreateEvent.class));
         assertSame(expectedResponse, actual);
     }
 
@@ -78,7 +80,7 @@ class AccountPersistOrchestratorImplUnitTests {
         var expectedResponse = new ShortAccountResponseDto(UUID.randomUUID(), "admin@example.com", LocalDateTime.now());
         when(accountService.save(any(DefaultAccountCreateDto.class))).thenReturn(expectedResponse);
         doNothing().when(persistService).save(any(ShortProfileCreateDto.class));
-
+        doNothing().when(eventPublisher).publishEvent(any(AccountCreateEvent.class));
         var actual = orchestrator.save(dto);
 
         var captor = ArgumentCaptor.forClass(DefaultAccountCreateDto.class);
@@ -91,9 +93,6 @@ class AccountPersistOrchestratorImplUnitTests {
         assertEquals(List.of(
                 Authority.SPECIALIST_CREATE,
                 Authority.REVIEW_CREATE_UPDATE), savedDto.getAuthorities());
-
-        verify(confirmationService).sendConfirmationCode("admin@example.com");
-
         assertSame(expectedResponse, actual);
     }
 

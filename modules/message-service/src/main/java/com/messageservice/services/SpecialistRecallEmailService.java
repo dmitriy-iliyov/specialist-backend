@@ -1,8 +1,8 @@
-package com.specialist.message.service.services;
+package com.messageservice.services;
 
+import com.messageservice.models.MessageDto;
 import com.specialist.contracts.specialistdirectory.dto.ContactType;
 import com.specialist.contracts.specialistdirectory.dto.SpecialistActionEvent;
-import com.specialist.message.service.models.MessageDto;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 

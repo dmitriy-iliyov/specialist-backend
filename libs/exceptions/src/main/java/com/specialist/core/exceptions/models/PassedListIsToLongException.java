@@ -1,7 +1,7 @@
-package com.specialist.exceptions.models;
+package com.specialist.core.exceptions.models;
 
 
-import com.specialist.exceptions.models.dto.ErrorDto;
+import com.specialist.core.exceptions.models.dto.ErrorDto;
 
 public class PassedListIsToLongException extends BaseBadRequestException {
 
