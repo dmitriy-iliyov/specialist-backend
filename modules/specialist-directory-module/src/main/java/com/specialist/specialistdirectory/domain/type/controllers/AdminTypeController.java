@@ -3,7 +3,7 @@ package com.specialist.specialistdirectory.domain.type.controllers;
 import com.specialist.contracts.auth.PrincipalDetails;
 import com.specialist.specialistdirectory.domain.type.models.dtos.FullTypeCreateDto;
 import com.specialist.specialistdirectory.domain.type.models.dtos.FullTypeUpdateDto;
-import com.specialist.specialistdirectory.domain.type.services.ApproveTypeOrchestrator;
+import com.specialist.specialistdirectory.domain.type.services.ApproveTypeFacade;
 import com.specialist.specialistdirectory.domain.type.services.TypeOrchestrator;
 import com.specialist.utils.pagination.PageRequest;
 import jakarta.validation.Valid;
@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 public class AdminTypeController {
 
     private final TypeOrchestrator orchestrator;
-    private final ApproveTypeOrchestrator approveOrchestrator;
+    private final ApproveTypeFacade approveTypeFacade;
 
     @PostMapping
     public ResponseEntity<?> create(@AuthenticationPrincipal PrincipalDetails principal,
@@ -45,7 +45,7 @@ public class AdminTypeController {
     @PatchMapping("/{id}/approve")
     public ResponseEntity<?> approve(@PathVariable("id") @NotNull(message = "Id is required.")
                                      @Positive(message = "Id should be positive.") Long id) {
-        approveOrchestrator.approve(id);
+        approveTypeFacade.approve(id);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();

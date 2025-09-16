@@ -2,7 +2,7 @@ package com.specialist.specialistdirectory.domain.type.controllers;
 
 import com.specialist.specialistdirectory.domain.type.models.dtos.TranslateCreateDto;
 import com.specialist.specialistdirectory.domain.type.models.dtos.TranslateUpdateDto;
-import com.specialist.specialistdirectory.domain.type.services.TranslateOrchestrator;
+import com.specialist.specialistdirectory.domain.type.services.TranslateFacade;
 import com.specialist.specialistdirectory.domain.type.services.TranslateService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -20,21 +20,21 @@ import org.springframework.web.bind.annotation.*;
 public class TranslateController {
 
     private final TranslateService service;
-    private final TranslateOrchestrator orchestrator;
+    private final TranslateFacade facade;
 
     @PostMapping
-    public ResponseEntity<?> create(@PathVariable("type_id") @NotNull(message = "Type accountId is required.")
-                                    @Positive(message = "Type accountId should be positive.") Long typeId,
+    public ResponseEntity<?> create(@PathVariable("type_id") @NotNull(message = "Type id is required.")
+                                    @Positive(message = "Type id should be positive.") Long typeId,
                                     @RequestBody @Valid TranslateCreateDto dto) {
         dto.setTypeId(typeId);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(orchestrator.save(dto));
+                .body(facade.save(dto));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable("type_id") @NotNull(message = "Type accountId is required.")
-                                    @Positive(message = "Type accountId should be positive.") Long typeId,
+    public ResponseEntity<?> update(@PathVariable("type_id") @NotNull(message = "Type id is required.")
+                                    @Positive(message = "Type id should be positive.") Long typeId,
                                     @PathVariable("id") @NotNull(message = "Id is required.")
                                     @Positive(message = "Id should be positive.") Long id,
                                     @RequestBody @Valid TranslateUpdateDto dto) {
@@ -46,8 +46,8 @@ public class TranslateController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable("type_id") @NotNull(message = "Type accountId is required.")
-                                    @Positive(message = "Type accountId should be positive.") Long typeId,
+    public ResponseEntity<?> delete(@PathVariable("type_id") @NotNull(message = "Type id is required.")
+                                    @Positive(message = "Type id should be positive.") Long typeId,
                                     @PathVariable("id") @NotNull(message = "Id is required.")
                                     @Positive(message = "Id should be positive.") Long id) {
         service.deleteById(id, typeId);

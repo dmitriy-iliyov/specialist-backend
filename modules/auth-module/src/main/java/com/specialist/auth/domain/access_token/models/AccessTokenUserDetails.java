@@ -45,7 +45,7 @@ public class AccessTokenUserDetails implements UserDetails, RefreshTokenIdHolder
                 .findFirst()
                 .map(Role::fromJson)
                 .orElseThrow(() -> {
-                    log.error("Account with accountId {} hasn't role.", accountId);
+                    log.error("Account with id {} hasn't role.", accountId);
                     return new RoleNotFoundException();
                 });
     }

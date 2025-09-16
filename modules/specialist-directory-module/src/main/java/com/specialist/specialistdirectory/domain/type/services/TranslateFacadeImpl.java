@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class TranslateOrchestratorImpl implements TranslateOrchestrator {
+public class TranslateFacadeImpl implements TranslateFacade {
 
     private final TranslateService translateService;
     private final TypeService typeService;

@@ -20,7 +20,7 @@ public interface TranslateMapper {
 
     List<TranslateEntity> toEntityList(List<CompositeTranslateCreateDto> dtoList);
 
-    @Mapping(target = "typeId", source = "type.accountId")
+    @Mapping(target = "typeId", source = "type.id")
     TranslateResponseDto toDto(TranslateEntity entity);
 
     List<TranslateResponseDto> toDtoList(List<TranslateEntity> entityList);

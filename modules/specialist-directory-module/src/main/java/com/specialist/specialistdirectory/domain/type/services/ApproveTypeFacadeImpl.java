@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class ApproveTypeOrchestratorImpl implements ApproveTypeOrchestrator {
+public class ApproveTypeFacadeImpl implements ApproveTypeFacade {
 
     private final SpecialistService specialistService;
     private final TypeService typeService;

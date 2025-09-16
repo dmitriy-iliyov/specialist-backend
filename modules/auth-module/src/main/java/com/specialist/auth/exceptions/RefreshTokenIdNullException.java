@@ -6,6 +6,6 @@ import com.specialist.core.exceptions.models.dto.ErrorDto;
 public class RefreshTokenIdNullException extends BaseInternalServerException {
     @Override
     public ErrorDto getErrorDto() {
-        return new ErrorDto("refresh_token_id", "Refresh token accountId is null.");
+        return new ErrorDto("refresh_token_id", "Refresh token id is null.");
     }
 }

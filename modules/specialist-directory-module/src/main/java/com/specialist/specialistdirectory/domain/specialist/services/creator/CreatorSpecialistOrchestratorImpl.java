@@ -39,7 +39,7 @@ public class CreatorSpecialistOrchestratorImpl implements CreatorSpecialistOrche
 
     @Override
     public SpecialistResponseDto update(SpecialistUpdateDto dto) {
-        this.validate(dto.getAccountId(), dto.getId());
+        validate(dto.getAccountId(), dto.getId());
         return specialistService.update(dto);
     }
 

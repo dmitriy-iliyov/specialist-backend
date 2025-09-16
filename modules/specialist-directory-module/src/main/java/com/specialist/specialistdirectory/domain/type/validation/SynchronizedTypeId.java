@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = SynchronizedTypeIdValidator.class)
 public @interface SynchronizedTypeId {
-    String message() default "Type accountId isn't synchronized.";
+    String message() default "Type id isn't synchronized.";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }
