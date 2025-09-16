@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class SpecialistReadOrchestratorImpl implements SpecialistReadOrchestrator {
+public class SpecialistProfileAggregatorImpl implements SpecialistProfileAggregator {
 
     private final SpecialistProfileService service;
     private final SystemSelfSpecialistService systemSelfSpecialistService;

@@ -18,14 +18,14 @@ import java.time.LocalTime;
 
 @Service
 @Slf4j
-public class DefaultCreatorRatingServiceDecorator implements CreatorRatingService {
+public class CreatorRatingRetryDecorator implements CreatorRatingService {
 
     private final CreatorRatingService creatorRatingService;
     private final EventService eventService;
 
     @Autowired
-    public DefaultCreatorRatingServiceDecorator(@Qualifier("defaultCreatorRatingService") CreatorRatingService creatorRatingService,
-                                                EventService eventService) {
+    public CreatorRatingRetryDecorator(@Qualifier("defaultCreatorRatingService") CreatorRatingService creatorRatingService,
+                                       EventService eventService) {
         this.creatorRatingService = creatorRatingService;
         this.eventService = eventService;
     }
@@ -47,7 +47,7 @@ public class DefaultCreatorRatingServiceDecorator implements CreatorRatingServic
 
     @Recover
     public void recover(OptimisticLockException ole, CreatorRatingUpdateEvent event) {
-        log.error("Error after all attempts to update creator rating: id={}, date={}, time={}",
+        log.error("Error after all attempts to update creator rating: accountId={}, date={}, time={}",
                   event.creatorId(), LocalDate.now(), LocalTime.now());
     }
 

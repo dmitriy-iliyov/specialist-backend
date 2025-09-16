@@ -7,6 +7,6 @@ import com.specialist.core.exceptions.models.dto.ErrorDto;
 public class SpecialistTypeEntityNotFoundByIdException extends BaseNotFoundException {
     @Override
     public ErrorDto getErrorDto() {
-        return new ErrorDto("type", "Type not found by id.");
+        return new ErrorDto("type", "Type not found by accountId.");
     }
 }

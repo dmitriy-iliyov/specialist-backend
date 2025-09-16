@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class DefaultAccountDeleteFacade implements AccountDeleteFacade {
+public class DefaultAccountDeleteOrchestrator implements AccountDeleteOrchestrator {
 
     private final AccountService accountService;
     private final ProfileDeleteOrchestrator profileDeleteOrchestrator;

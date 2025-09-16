@@ -1,7 +1,7 @@
 package com.specialist.auth.core;
 
 import com.specialist.auth.core.web.AccountAuthController;
-import com.specialist.auth.core.web.AccountLoginOrchestrator;
+import com.specialist.auth.core.web.AccountLoginService;
 import com.specialist.auth.core.web.LoginRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,7 +21,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 class AccountAuthControllerUnitTests {
 
     @Mock
-    private AccountLoginOrchestrator service;
+    private AccountLoginService service;
 
     @Mock
     private HttpServletRequest httpRequest;

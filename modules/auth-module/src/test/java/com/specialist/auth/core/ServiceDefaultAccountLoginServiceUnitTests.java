@@ -1,6 +1,6 @@
 package com.specialist.auth.core;
 
-import com.specialist.auth.core.api.ServiceAccountLoginOrchestratorImpl;
+import com.specialist.auth.core.api.ServiceAccountLoginServiceImpl;
 import com.specialist.auth.core.api.ServiceLoginRequest;
 import com.specialist.auth.domain.service_account.models.ServiceAccountUserDetails;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,7 +27,7 @@ import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class ServiceDefaultAccountLoginOrchestratorUnitTests {
+public class ServiceDefaultAccountLoginServiceUnitTests {
 
     @Mock
     AuthenticationManager authenticationManager;
@@ -42,12 +42,12 @@ public class ServiceDefaultAccountLoginOrchestratorUnitTests {
     Authentication authentication;
 
     @InjectMocks
-    ServiceAccountLoginOrchestratorImpl service;
+    ServiceAccountLoginServiceImpl service;
 
     @Test
     @DisplayName("UT: login() when authentication successful should return tokens map")
     public void login_whenAuthenticationSuccessful_shouldReturnTokens() {
-        ServiceLoginRequest requestDto = new ServiceLoginRequest("client-id", "client-secret");
+        ServiceLoginRequest requestDto = new ServiceLoginRequest("client-accountId", "client-secret");
         ServiceAccountUserDetails userDetails = new ServiceAccountUserDetails(
                 UUID.randomUUID(),
                 "service-account",
@@ -68,7 +68,7 @@ public class ServiceDefaultAccountLoginOrchestratorUnitTests {
 
         verify(authenticationManager, times(1))
                 .authenticate(argThat(authenticationToken ->
-                        authenticationToken.getPrincipal().equals("client-id") &&
+                        authenticationToken.getPrincipal().equals("client-accountId") &&
                                 authenticationToken.getCredentials().equals("client-secret")
                 ));
         verify(tokenManager, times(1)).generate(userDetails);
@@ -78,7 +78,7 @@ public class ServiceDefaultAccountLoginOrchestratorUnitTests {
     @Test
     @DisplayName("UT: login() when authentication fails should throw AuthenticationException and clear context")
     public void login_whenAuthenticationFails_shouldThrowAuthenticationException() {
-        ServiceLoginRequest requestDto = new ServiceLoginRequest("client-id", "wrong-secret");
+        ServiceLoginRequest requestDto = new ServiceLoginRequest("client-accountId", "wrong-secret");
 
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
                 .thenThrow(new AuthenticationException("Bad credentials") {});
@@ -89,7 +89,7 @@ public class ServiceDefaultAccountLoginOrchestratorUnitTests {
 
         verify(authenticationManager, times(1))
                 .authenticate(argThat(token ->
-                        token.getPrincipal().equals("client-id") &&
+                        token.getPrincipal().equals("client-accountId") &&
                                 token.getCredentials().equals("wrong-secret")
                 ));
         verifyNoInteractions(tokenManager);

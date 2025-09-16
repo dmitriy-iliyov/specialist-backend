@@ -22,21 +22,21 @@ import java.io.IOException;
 @RequestMapping("/api/auth")
 public class AccountAuthController {
 
-    private final AccountLoginOrchestrator loginOrchestrator;
-    private final AccountLogoutOrchestrator logoutOrchestrator;
+    private final AccountLoginService loginService;
+    private final AccountLogoutService logoutService;
     private final SessionCookieManager sessionCookieManager;
 
-    public AccountAuthController(@Qualifier("defaultAccountLoginOrchestrator") AccountLoginOrchestrator loginOrchestrator,
-                                 AccountLogoutOrchestrator logoutOrchestrator, SessionCookieManager sessionCookieManager) {
-        this.loginOrchestrator = loginOrchestrator;
-        this.logoutOrchestrator = logoutOrchestrator;
+    public AccountAuthController(@Qualifier("defaultAccountLoginService") AccountLoginService loginService,
+                                 AccountLogoutService logoutService, SessionCookieManager sessionCookieManager) {
+        this.loginService = loginService;
+        this.logoutService = logoutService;
         this.sessionCookieManager = sessionCookieManager;
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody @Valid LoginRequest requestDto, HttpServletRequest request,
                                    HttpServletResponse response) {
-        loginOrchestrator.login(requestDto, request, response);
+        loginService.login(requestDto, request, response);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
@@ -55,7 +55,7 @@ public class AccountAuthController {
     @PreAuthorize("hasAnyRole('ADMIN', 'USER', 'SPECIALIST')")
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        logoutOrchestrator.logout(request, response);
+        logoutService.logout(request, response);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();

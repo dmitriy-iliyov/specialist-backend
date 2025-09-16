@@ -16,7 +16,7 @@ public class AuthorityCacheServiceImpl implements AuthorityCacheService {
 
     @Override
     public List<Long> getAuthoritiesIds(List<Authority> authorities) {
-        Cache cache = cacheManager.getCache("accounts:authorities:id");
+        Cache cache = cacheManager.getCache("accounts:authorities:accountId");
         if (cache != null) {
             List<Long> ids = new ArrayList<>();
             for (Authority authority: authorities) {

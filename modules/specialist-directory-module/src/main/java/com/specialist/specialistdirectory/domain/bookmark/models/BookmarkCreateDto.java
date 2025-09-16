@@ -17,7 +17,7 @@ public class BookmarkCreateDto {
     private UUID ownerId;
 
     @JsonProperty("specialist_id")
-    @NotNull(message = "Specialist id is required.")
+    @NotNull(message = "Specialist accountId is required.")
     @UUIDv7(paramName = "specialist_id")
     private final UUID specialistId;
 

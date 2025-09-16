@@ -13,17 +13,17 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-public class DefaultSpecialistActionEventProcessor implements SpecialistActionEventProcessor {
+public class DefaultSpecialistActionEventHandler implements SpecialistActionEventHandler {
 
     private final Map<ActionType, SpecialistActionOrchestrator> orchestratorsMap;
 
-    public DefaultSpecialistActionEventProcessor(List<SpecialistActionOrchestrator> orchestrators) {
+    public DefaultSpecialistActionEventHandler(List<SpecialistActionOrchestrator> orchestrators) {
         this.orchestratorsMap = orchestrators.stream()
                 .collect(Collectors.toMap(SpecialistActionOrchestrator::getActionType, Function.identity()));
     }
 
     @Override
-    public void process(SpecialistActionEvent event) throws Exception {
+    public void handel(SpecialistActionEvent event) throws Exception {
         SpecialistActionOrchestrator orchestrator = orchestratorsMap.get(event.type());
         if (orchestrator == null) {
             log.error("SpecialistActionOrchestrator not found for action type {}", event.type());

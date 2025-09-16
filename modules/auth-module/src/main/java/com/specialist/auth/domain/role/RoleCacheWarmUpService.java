@@ -20,13 +20,13 @@ public final class RoleCacheWarmUpService {
 
     @EventListener(ApplicationReadyEvent.class)
     public void warmUp() {
-        Cache cache = cacheManager.getCache("accounts:roles:id");
+        Cache cache = cacheManager.getCache("accounts:roles:accountId");
         if (cache != null) {
             for (RoleEntity entity: service.findAll()) {
                 cache.put(entity.getRole().name(), entity.getId());
             }
         } else {
-            log.error("Cache with name 'accounts:roles:id' is null");
+            log.error("Cache with name 'accounts:roles:accountId' is null");
             return;
         }
         log.info("Role cache successfully wormed up");

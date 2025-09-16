@@ -1,6 +1,6 @@
 package com.specialist.specialistdirectory.domain.specialist.services.admin;
 
-import com.specialist.contracts.profile.SystemProfileReadService;
+import com.specialist.contracts.profile.SystemProfileAggregator;
 import com.specialist.contracts.profile.dto.UnifiedProfileResponseDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.AdminSpecialistAggregatedResponseDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.FullSpecialistResponseDto;
@@ -20,13 +20,12 @@ import java.util.stream.Collectors;
 public class AdminSpecialistAggregatorImpl implements AdminSpecialistAggregator {
 
     private final AdminSpecialistQueryService specialistQueryService;
-    private final SystemProfileReadService profileReadService;
+    private final SystemProfileAggregator profileAggregator;
 
     public AdminSpecialistAggregatorImpl(AdminSpecialistQueryService specialistQueryService,
-                                         @Qualifier("defaultSystemProfileReadService")
-                                         SystemProfileReadService profileReadService) {
+                                         @Qualifier("defaultSystemProfileAggregator") SystemProfileAggregator profileAggregator) {
         this.specialistQueryService = specialistQueryService;
-        this.profileReadService = profileReadService;
+        this.profileAggregator = profileAggregator;
     }
 
     // WARNING: transaction can be till profileReadService in the same app context
@@ -37,7 +36,7 @@ public class AdminSpecialistAggregatorImpl implements AdminSpecialistAggregator 
         Set<UUID> ownersIds = page.data().stream()
                 .map(FullSpecialistResponseDto::getOwnerId)
                 .collect(Collectors.toSet());
-        Map<UUID, UnifiedProfileResponseDto> ownersMap = profileReadService.findAllByIdIn(ownersIds);
+        Map<UUID, UnifiedProfileResponseDto> ownersMap = profileAggregator.findAllByIdIn(ownersIds);
         List<AdminSpecialistAggregatedResponseDto> aggregatedDtos = page.data().stream()
                 .map(dto -> new AdminSpecialistAggregatedResponseDto(ownersMap.get(dto.getOwnerId()), dto))
                 .toList();

@@ -1,6 +1,6 @@
 package com.specialist.auth.infrastructure.listeners;
 
-import com.specialist.auth.core.web.AccountLoginOrchestrator;
+import com.specialist.auth.core.web.AccountLoginService;
 import com.specialist.auth.core.web.LoginRequest;
 import com.specialist.auth.domain.account.models.dtos.ShortAccountResponseDto;
 import com.specialist.auth.domain.account.services.AccountService;
@@ -22,13 +22,13 @@ import java.util.Set;
 public final class ProfileCreateListener {
 
     private final AccountService accountService;
-    private final AccountLoginOrchestrator loginOrchestrator;
+    private final AccountLoginService loginService;
 
     public ProfileCreateListener(AccountService accountService,
-                                 @Qualifier("postProfileCreatedAccountLoginOrchestrator")
-                                 AccountLoginOrchestrator loginOrchestrator) {
+                                 @Qualifier("implicitAccountLoginService")
+                                 AccountLoginService loginService) {
         this.accountService = accountService;
-        this.loginOrchestrator = loginOrchestrator;
+        this.loginService = loginService;
     }
 
     @EventListener
@@ -44,6 +44,6 @@ public final class ProfileCreateListener {
             throw new UnknownRoleException();
         }
         ShortAccountResponseDto dto = accountService.updateRoleAndAuthoritiesById(event.accountId(), role, authorities);
-        loginOrchestrator.login(new LoginRequest(dto.email(), null), event.request(), event.response());
+        loginService.login(new LoginRequest(dto.email(), null), event.request(), event.response());
     }
 }

@@ -17,11 +17,11 @@ import java.util.UUID;
 
 @Service
 @Slf4j
-public class DefaultSpecialistRatingServiceDecorator implements SpecialistRatingService {
+public class SpecialistRatingRetryDecorator implements SpecialistRatingService {
 
     private final SpecialistRatingService service;
 
-    public DefaultSpecialistRatingServiceDecorator(@Qualifier("defaultSpecialistRatingService")
+    public SpecialistRatingRetryDecorator(@Qualifier("defaultSpecialistRatingService")
                                                    SpecialistRatingService service) {
         this.service = service;
     }
@@ -39,6 +39,6 @@ public class DefaultSpecialistRatingServiceDecorator implements SpecialistRating
 
     @Recover
     public void recover(OptimisticLockException e, UUID id, long rating, OperationType operation) {
-        log.error("Error when reviewing specialist: id={}, date={}, time={}", id, LocalDate.now(), LocalTime.now());
+        log.error("Error when reviewing specialist: accountId={}, date={}, time={}", id, LocalDate.now(), LocalTime.now());
     }
 }

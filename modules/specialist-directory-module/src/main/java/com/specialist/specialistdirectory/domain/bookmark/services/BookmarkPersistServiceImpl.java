@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
-public class BookmarkPersistOrchestratorImpl implements BookmarkPersistOrchestrator {
+public class BookmarkPersistServiceImpl implements BookmarkPersistService {
 
     private final BookmarkService service;
 

@@ -6,6 +6,8 @@ import com.specialist.specialistdirectory.domain.specialist.models.dtos.Speciali
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
 import com.specialist.specialistdirectory.domain.specialist.services.creator.CreatorSpecialistOrchestrator;
 import com.specialist.specialistdirectory.domain.specialist.services.specialist.SelfSpecialistOrchestrator;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,10 +21,11 @@ public class SpecialistManagementOrchestratorImpl implements SpecialistManagemen
     private final SelfSpecialistOrchestrator selfOrchestrator;
 
     @Override
-    public SpecialistResponseDto save(UUID creatorId, ProfileType type, SpecialistCreateDto dto) {
+    public SpecialistResponseDto save(UUID creatorId, ProfileType type, SpecialistCreateDto dto,
+                                      HttpServletRequest request, HttpServletResponse response) {
         return switch (type) {
             case USER -> creatorOrchestrator.save(creatorId, dto);
-            case SPECIALIST -> selfOrchestrator.save(creatorId, dto);
+            case SPECIALIST -> selfOrchestrator.save(creatorId, dto, request, response);
         };
     }
 

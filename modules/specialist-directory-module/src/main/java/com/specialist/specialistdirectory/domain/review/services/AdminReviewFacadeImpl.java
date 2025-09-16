@@ -10,16 +10,16 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.UUID;
 
 @Service
-public class AdminReviewOrchestratorImpl implements AdminReviewOrchestrator {
+public class AdminReviewFacadeImpl implements AdminReviewFacade {
 
     private final ReviewService reviewService;
     private final SpecialistRatingService ratingService;
     private final ReviewBufferService reviewBufferService;
 
-    public AdminReviewOrchestratorImpl(ReviewService reviewService,
-                                  @Qualifier("defaultSpecialistRatingServiceDecorator")
+    public AdminReviewFacadeImpl(ReviewService reviewService,
+                                 @Qualifier("specialistRatingRetryDecorator")
                                   SpecialistRatingService ratingService,
-                                  ReviewBufferService reviewBufferService) {
+                                 ReviewBufferService reviewBufferService) {
         this.reviewService = reviewService;
         this.ratingService = ratingService;
         this.reviewBufferService = reviewBufferService;

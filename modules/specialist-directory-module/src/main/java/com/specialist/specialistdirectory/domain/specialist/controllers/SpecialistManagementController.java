@@ -6,6 +6,8 @@ import com.specialist.specialistdirectory.domain.specialist.models.dtos.Speciali
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistManagementOrchestrator;
 import com.specialist.utils.validation.annotation.ValidUuid;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,10 +29,14 @@ public class SpecialistManagementController {
     @PreAuthorize("hasAuthority('SPECIALIST_CREATE')")
     @PostMapping
     public ResponseEntity<?> create(@AuthenticationPrincipal PrincipalDetails principal,
-                                    @RequestBody @Valid SpecialistCreateDto dto) {
+                                    @RequestBody @Valid SpecialistCreateDto dto, HttpServletRequest request,
+                                    HttpServletResponse response) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(orchestrator.save(principal.getAccountId(), ProfileType.fromStringRole(principal.getStringRole()), dto));
+                .body(orchestrator.save(
+                        principal.getAccountId(), ProfileType.fromStringRole(principal.getStringRole()),
+                        dto, request, response)
+                );
     }
 
     @PreAuthorize("hasAuthority('SPECIALIST_UPDATE')")

@@ -1,7 +1,7 @@
 package com.specialist.auth.core;
 
 import com.specialist.auth.core.oauth2.models.Provider;
-import com.specialist.auth.core.web.DefaultAccountLoginOrchestrator;
+import com.specialist.auth.core.web.DefaultAccountLoginService;
 import com.specialist.auth.core.web.LoginRequest;
 import com.specialist.auth.core.web.SessionCookieManager;
 import com.specialist.auth.domain.account.models.AccountUserDetails;
@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class DefaultAccountLoginOrchestratorUnitTests {
+class DefaultAccountLoginServiceUnitTests {
 
     @Mock
     private UserDetailsService userDetailsService;
@@ -62,11 +62,11 @@ class DefaultAccountLoginOrchestratorUnitTests {
     @Mock
     private SessionCookieManager sessionCookieManager;
 
-    private DefaultAccountLoginOrchestrator orchestrator;
+    private DefaultAccountLoginService orchestrator;
 
     @BeforeEach
     void setUp() {
-        orchestrator = new DefaultAccountLoginOrchestrator(
+        orchestrator = new DefaultAccountLoginService(
                 authenticationManager,
                 accountService,
                 sessionCookieManager

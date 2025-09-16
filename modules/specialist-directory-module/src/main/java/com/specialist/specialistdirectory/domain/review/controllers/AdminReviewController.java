@@ -1,6 +1,6 @@
 package com.specialist.specialistdirectory.domain.review.controllers;
 
-import com.specialist.specialistdirectory.domain.review.services.AdminReviewOrchestrator;
+import com.specialist.specialistdirectory.domain.review.services.AdminReviewFacade;
 import com.specialist.utils.validation.annotation.ValidUuid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,13 +19,13 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AdminReviewController {
 
-    private final AdminReviewOrchestrator orchestrator;
+    private final AdminReviewFacade facade;
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("specialist_id") @ValidUuid(paramName = "specialist_id")
                                     String specialistId,
                                     @PathVariable("id") @ValidUuid(paramName = "id") String id) {
-        orchestrator.delete(UUID.fromString(specialistId), UUID.fromString(id));
+        facade.delete(UUID.fromString(specialistId), UUID.fromString(id));
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();

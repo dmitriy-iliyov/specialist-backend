@@ -25,16 +25,16 @@ public class AdminAccountController {
     private final AccountService defaultService;
     private final AdminAccountManagementService adminService;
     private final AdminAccountManagementFacade managementFacade;
-    private final AccountDeleteFacade deleteFacade;
+    private final AccountDeleteOrchestrator deleteOrchestrator;
 
     public AdminAccountController(AccountPersistOrchestrator persistOrchestrator, AccountService defaultService,
                                   AdminAccountManagementService adminService, AdminAccountManagementFacade managementFacade,
-                                  @Qualifier("adminDefaultAccountDeleteFacadeDecorator") AccountDeleteFacade deleteFacade) {
+                                  @Qualifier("adminAccountDeleteDecorator") AccountDeleteOrchestrator deleteOrchestrator) {
         this.persistOrchestrator = persistOrchestrator;
         this.defaultService = defaultService;
         this.adminService = adminService;
         this.managementFacade = managementFacade;
-        this.deleteFacade = deleteFacade;
+        this.deleteOrchestrator = deleteOrchestrator;
     }
 
     @PreAuthorize("hasAnyAuthority('ACCOUNT_CREATE', 'ACCOUNT_MANAGER')")
@@ -109,7 +109,7 @@ public class AdminAccountController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id")
                                     @ValidUuid(paramName = "id", message = "Id should have valid format.") UUID id) {
-        deleteFacade.delete(id);
+        deleteOrchestrator.delete(id);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();

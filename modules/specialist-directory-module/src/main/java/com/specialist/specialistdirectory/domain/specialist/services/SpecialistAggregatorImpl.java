@@ -1,6 +1,6 @@
 package com.specialist.specialistdirectory.domain.specialist.services;
 
-import com.specialist.contracts.profile.SystemProfileReadService;
+import com.specialist.contracts.profile.SystemProfileAggregator;
 import com.specialist.contracts.profile.dto.UnifiedProfileResponseDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistAggregatedResponseDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
@@ -22,12 +22,12 @@ public class SpecialistAggregatorImpl implements SpecialistAggregator {
 
     // WARNING: @Transactional can be till profileReadService in the same app context
     private final SpecialistService specialistService;
-    private final SystemProfileReadService profileReadService;
+    private final SystemProfileAggregator profileAggregator;
 
     public SpecialistAggregatorImpl(SpecialistService specialistService,
-                                    @Qualifier("defaultSystemProfileReadService") SystemProfileReadService profileReadService) {
+                                    @Qualifier("defaultSystemProfileAggregator") SystemProfileAggregator profileAggregator) {
         this.specialistService = specialistService;
-        this.profileReadService = profileReadService;
+        this.profileAggregator = profileAggregator;
     }
 
     @Cacheable(value = "specialists:all", key = "#page.cacheKey()", condition = "#page.pageNumber() < 3")
@@ -46,7 +46,7 @@ public class SpecialistAggregatorImpl implements SpecialistAggregator {
 
     private PageResponse<SpecialistAggregatedResponseDto> preparePageResponse(PageResponse<SpecialistResponseDto> pageResponse) {
         Set<UUID> ownersIds = pageResponse.data().stream().map(SpecialistResponseDto::getOwnerId).collect(Collectors.toSet());
-        Map<UUID, UnifiedProfileResponseDto> ownersMap = profileReadService.findAllByIdIn(ownersIds);
+        Map<UUID, UnifiedProfileResponseDto> ownersMap = profileAggregator.findAllByIdIn(ownersIds);
         return new PageResponse<>(
                 pageResponse.data().stream()
                         .map(dto -> new SpecialistAggregatedResponseDto(ownersMap.get(dto.getOwnerId()), dto))

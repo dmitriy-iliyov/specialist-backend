@@ -14,13 +14,13 @@ import java.util.UUID;
 public class ProfileReadOrchestratorImpl implements ProfileReadOrchestrator {
 
     private final UserProfileService userProfileService;
-    private final SpecialistReadOrchestrator specialistOrchestrator;
+    private final SpecialistProfileAggregator specialistAggregator;
 
     @Override
     public BasePrivateResponseDto findPrivateById(UUID id, ProfileType type) {
         return switch (type) {
             case USER -> userProfileService.findPrivateById(id);
-            case SPECIALIST -> specialistOrchestrator.findPrivateById(id);
+            case SPECIALIST -> specialistAggregator.findPrivateById(id);
         };
     }
 
@@ -29,7 +29,7 @@ public class ProfileReadOrchestratorImpl implements ProfileReadOrchestrator {
         try {
             return userProfileService.findPublicById(id);
         } catch (UserNotFoundByIdException e) {
-            return specialistOrchestrator.findPublicById(id);
+            return specialistAggregator.findPublicById(id);
         }
     }
 }

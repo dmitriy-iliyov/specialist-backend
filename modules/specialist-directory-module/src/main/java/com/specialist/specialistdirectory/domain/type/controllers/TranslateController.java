@@ -23,8 +23,8 @@ public class TranslateController {
     private final TranslateOrchestrator orchestrator;
 
     @PostMapping
-    public ResponseEntity<?> create(@PathVariable("type_id") @NotNull(message = "Type id is required.")
-                                    @Positive(message = "Type id should be positive.") Long typeId,
+    public ResponseEntity<?> create(@PathVariable("type_id") @NotNull(message = "Type accountId is required.")
+                                    @Positive(message = "Type accountId should be positive.") Long typeId,
                                     @RequestBody @Valid TranslateCreateDto dto) {
         dto.setTypeId(typeId);
         return ResponseEntity
@@ -33,8 +33,8 @@ public class TranslateController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable("type_id") @NotNull(message = "Type id is required.")
-                                    @Positive(message = "Type id should be positive.") Long typeId,
+    public ResponseEntity<?> update(@PathVariable("type_id") @NotNull(message = "Type accountId is required.")
+                                    @Positive(message = "Type accountId should be positive.") Long typeId,
                                     @PathVariable("id") @NotNull(message = "Id is required.")
                                     @Positive(message = "Id should be positive.") Long id,
                                     @RequestBody @Valid TranslateUpdateDto dto) {
@@ -46,8 +46,8 @@ public class TranslateController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable("type_id") @NotNull(message = "Type id is required.")
-                                    @Positive(message = "Type id should be positive.") Long typeId,
+    public ResponseEntity<?> delete(@PathVariable("type_id") @NotNull(message = "Type accountId is required.")
+                                    @Positive(message = "Type accountId should be positive.") Long typeId,
                                     @PathVariable("id") @NotNull(message = "Id is required.")
                                     @Positive(message = "Id should be positive.") Long id) {
         service.deleteById(id, typeId);

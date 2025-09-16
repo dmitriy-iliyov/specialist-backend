@@ -1,6 +1,6 @@
 package com.specialist.profile.services.system;
 
-import com.specialist.contracts.profile.SystemProfileReadService;
+import com.specialist.contracts.profile.SystemProfileAggregator;
 import com.specialist.contracts.profile.dto.UnifiedProfileResponseDto;
 import com.specialist.profile.mappers.ProfileProjectionMapper;
 import com.specialist.profile.models.ShortProfileProjection;
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class DefaultSystemProfileReadService implements SystemProfileReadService {
+public class DefaultSystemProfileAggregator implements SystemProfileAggregator {
 
     private final UserProfileRepository userProfileRepository;
     private final SpecialistProfileRepository specialistProfileRepository;

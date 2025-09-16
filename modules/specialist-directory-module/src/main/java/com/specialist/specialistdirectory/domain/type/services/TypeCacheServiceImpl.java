@@ -30,7 +30,7 @@ public class TypeCacheServiceImpl implements TypeCacheService {
 
     @Override
     public void evictSuggestedTypeId(String title, boolean isApproved) {
-        Cache cache = cacheManager.getCache("specialists:types:suggested:id");
+        Cache cache = cacheManager.getCache("specialists:types:suggested:accountId");
         if (cache != null && isApproved) {
             cache.evict(title);
         }
@@ -39,7 +39,7 @@ public class TypeCacheServiceImpl implements TypeCacheService {
     @Override
     public void totalEvictSuggestedType(Long id) {
         Cache typesCache = cacheManager.getCache("specialists:types:suggested");
-        Cache typesIdsCache = cacheManager.getCache("specialists:types:suggested:id");
+        Cache typesIdsCache = cacheManager.getCache("specialists:types:suggested:accountId");
         if (typesCache != null && typesIdsCache != null) {
             TypeResponseDto dto = typesCache.get(id, TypeResponseDto.class);
             if (dto != null && dto.title() != null) {

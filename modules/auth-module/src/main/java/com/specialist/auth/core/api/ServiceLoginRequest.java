@@ -6,8 +6,8 @@ import jakarta.validation.constraints.NotBlank;
 
 public record ServiceLoginRequest(
     @JsonProperty("client_id")
-    @NotBlank(message = "Client id is required.")
-    @ValidUuid(paramName = "client_id", message = "Client id should be valid.")
+    @NotBlank(message = "Client accountId is required.")
+    @ValidUuid(paramName = "client_id", message = "Client accountId should be valid.")
     String clientId,
     @JsonProperty("client_secret")
     @NotBlank(message = "Client secret is required.")

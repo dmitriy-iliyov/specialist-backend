@@ -1,7 +1,7 @@
 package com.specialist.specialistdirectory.domain.specialist.services.creator;
 
 import com.specialist.specialistdirectory.domain.bookmark.models.BookmarkCreateDto;
-import com.specialist.specialistdirectory.domain.bookmark.services.BookmarkPersistOrchestrator;
+import com.specialist.specialistdirectory.domain.bookmark.services.BookmarkPersistService;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.ShortSpecialistInfo;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
@@ -24,7 +24,7 @@ import java.util.UUID;
 public class CreatorSpecialistOrchestratorImpl implements CreatorSpecialistOrchestrator {
 
     private final SpecialistService specialistService;
-    private final BookmarkPersistOrchestrator bookmarkPersistOrchestrator;
+    private final BookmarkPersistService bookmarkPersistService;
 
     @Transactional
     @Override
@@ -33,7 +33,7 @@ public class CreatorSpecialistOrchestratorImpl implements CreatorSpecialistOrche
         dto.setCreatorType(CreatorType.USER);
         dto.setStatus(SpecialistStatus.UNAPPROVED);
         SpecialistResponseDto responseDto = specialistService.save(dto);
-        bookmarkPersistOrchestrator.saveAfterSpecialistCreate(new BookmarkCreateDto(responseDto.getOwnerId(), responseDto.getId()));
+        bookmarkPersistService.saveAfterSpecialistCreate(new BookmarkCreateDto(responseDto.getOwnerId(), responseDto.getId()));
         return responseDto;
     }
 

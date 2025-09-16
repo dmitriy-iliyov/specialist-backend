@@ -3,7 +3,7 @@ package com.specialist.specialistdirectory.domain.bookmark;
 import com.specialist.contracts.auth.PrincipalDetails;
 import com.specialist.specialistdirectory.domain.bookmark.models.BookmarkCreateDto;
 import com.specialist.specialistdirectory.domain.bookmark.services.BookmarkCountService;
-import com.specialist.specialistdirectory.domain.bookmark.services.BookmarkPersistOrchestrator;
+import com.specialist.specialistdirectory.domain.bookmark.services.BookmarkPersistService;
 import com.specialist.specialistdirectory.domain.bookmark.services.BookmarkService;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
 import com.specialist.utils.validation.annotation.ValidUuid;
@@ -24,7 +24,7 @@ import java.util.UUID;
 public class BookmarkController {
 
     private final BookmarkService service;
-    private final BookmarkPersistOrchestrator orchestrator;
+    private final BookmarkPersistService persistService;
     private final BookmarkCountService countService;
 
     @PostMapping
@@ -33,7 +33,7 @@ public class BookmarkController {
         dto.setOwnerId(principal.getAccountId());
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(orchestrator.save(dto));
+                .body(persistService.save(dto));
     }
 
     @DeleteMapping("/{id}")

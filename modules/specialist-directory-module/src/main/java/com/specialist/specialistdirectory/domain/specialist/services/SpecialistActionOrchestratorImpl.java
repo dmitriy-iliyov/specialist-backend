@@ -1,5 +1,7 @@
 package com.specialist.specialistdirectory.domain.specialist.services;
 
+import com.specialist.contracts.auth.DemoteRequest;
+import com.specialist.contracts.auth.SystemAccountDemoteFacade;
 import com.specialist.contracts.profile.SystemSpecialistProfileService;
 import com.specialist.contracts.specialistdirectory.dto.ActionType;
 import com.specialist.contracts.specialistdirectory.dto.ContactType;
@@ -11,11 +13,15 @@ import com.specialist.specialistdirectory.domain.specialist.repositories.Special
 import com.specialist.specialistdirectory.exceptions.CodeExpiredException;
 import com.specialist.specialistdirectory.exceptions.NoSuchSpecialistContactException;
 import com.specialist.utils.CodeGenerator;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -26,6 +32,7 @@ public class SpecialistActionOrchestratorImpl implements SpecialistActionOrchest
     private final SpecialistStatusService specialistStatusService;
     private final SpecialistActionRepository actionRepository;
     private final SystemSpecialistProfileService specialistProfileService;
+    private final SystemAccountDemoteFacade accountDemoteService;
 
     // TODO create topic
     @Value("${api.kafka.topic.specialist-action}")
@@ -51,11 +58,13 @@ public class SpecialistActionOrchestratorImpl implements SpecialistActionOrchest
         requestHandle(specialistActionEntity, contactType);
     }
 
+    @Transactional
     @Override
-    public void manage(String code) {
+    public void manage(UUID accountId, String code, HttpServletRequest request, HttpServletResponse response) {
         SpecialistActionEntity specialistActionEntity = codeHandle(code);
         specialistStatusService.manage(specialistActionEntity.getSpecialistId(), specialistActionEntity.getAccountId());
         specialistProfileService.setSpecialistCardId(specialistActionEntity.getSpecialistId());
+        accountDemoteService.demote(new DemoteRequest(accountId, Set.of("SPECIALIST_CREATE"), request, response));
     }
 
     private void requestHandle(SpecialistActionEntity specialistActionEntity, ContactType contactType) {

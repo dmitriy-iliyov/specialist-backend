@@ -23,7 +23,7 @@ public class ReviewOrchestratorImpl implements ReviewOrchestrator {
     private final ReviewBufferService reviewBufferService;
 
     public ReviewOrchestratorImpl(ReviewService reviewService,
-                                  @Qualifier("defaultSpecialistRatingServiceDecorator")
+                                  @Qualifier("specialistRatingRetryDecorator")
                                   SpecialistRatingService ratingService,
                                   ReviewBufferService reviewBufferService) {
         this.reviewService = reviewService;

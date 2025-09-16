@@ -1,7 +1,7 @@
 package com.specialist.auth.core;
 
 import com.specialist.auth.core.api.ServiceAccountAuthController;
-import com.specialist.auth.core.api.ServiceAccountLoginOrchestrator;
+import com.specialist.auth.core.api.ServiceAccountLoginService;
 import com.specialist.auth.core.api.ServiceLoginRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,7 +19,7 @@ import static org.mockito.Mockito.*;
 public class ServiceAccountAuthControllerUnitTests {
 
     @Mock
-    ServiceAccountLoginOrchestrator service;
+    ServiceAccountLoginService service;
 
     @InjectMocks
     ServiceAccountAuthController controller;
@@ -27,7 +27,7 @@ public class ServiceAccountAuthControllerUnitTests {
     @Test
     @DisplayName("UT: login() should call service.login() and return 204 NO_CONTENT")
     public void login_shouldCallServiceAndReturnNoContent() {
-        ServiceLoginRequest requestDto = new ServiceLoginRequest("client-id", "client-secret");
+        ServiceLoginRequest requestDto = new ServiceLoginRequest("client-accountId", "client-secret");
 
         ResponseEntity<?> response = controller.login(requestDto);
 

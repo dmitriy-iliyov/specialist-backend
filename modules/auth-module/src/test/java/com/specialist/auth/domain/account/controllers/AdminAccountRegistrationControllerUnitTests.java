@@ -4,7 +4,7 @@ import com.specialist.auth.domain.account.models.AccountFilter;
 import com.specialist.auth.domain.account.models.dtos.*;
 import com.specialist.auth.domain.account.models.enums.DisableReason;
 import com.specialist.auth.domain.account.models.enums.LockReason;
-import com.specialist.auth.domain.account.services.AccountDeleteFacade;
+import com.specialist.auth.domain.account.services.AccountDeleteOrchestrator;
 import com.specialist.auth.domain.account.services.AccountPersistOrchestrator;
 import com.specialist.auth.domain.account.services.AccountService;
 import com.specialist.auth.domain.account.services.AdminAccountManagementFacade;
@@ -40,7 +40,7 @@ public class AdminAccountRegistrationControllerUnitTests {
     AdminAccountManagementFacade adminAccountManagementFacade;
 
     @Mock
-    AccountDeleteFacade accountDeleteFacade;
+    AccountDeleteOrchestrator accountDeleteOrchestrator;
 
     @InjectMocks
     AdminAccountController controller;
@@ -155,7 +155,7 @@ public class AdminAccountRegistrationControllerUnitTests {
 
         ResponseEntity<?> response = controller.delete(id);
 
-        verify(accountDeleteFacade, times(1)).delete(id);
+        verify(accountDeleteOrchestrator, times(1)).delete(id);
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
         assertNull(response.getBody());
     }
@@ -165,7 +165,7 @@ public class AdminAccountRegistrationControllerUnitTests {
     void delete_whenInvalid_shouldThrowException() {
         UUID id = UUID.randomUUID();
 
-        doThrow(RuntimeException.class).when(accountDeleteFacade).delete(id);
+        doThrow(RuntimeException.class).when(accountDeleteOrchestrator).delete(id);
 
         assertThrows(RuntimeException.class, () -> controller.delete(id));
     }

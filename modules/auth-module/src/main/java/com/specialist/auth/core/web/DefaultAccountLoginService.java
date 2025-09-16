@@ -15,14 +15,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class DefaultAccountLoginOrchestrator implements AccountLoginOrchestrator {
+public class DefaultAccountLoginService implements AccountLoginService {
 
     private final AuthenticationManager authenticationManager;
     private final AccountService accountService;
     private final SessionCookieManager sessionCookieManager;
 
-    public DefaultAccountLoginOrchestrator(@Qualifier("accountAuthenticationManager") AuthenticationManager authenticationManager,
-                                           AccountService accountService, SessionCookieManager sessionCookieManager) {
+    public DefaultAccountLoginService(@Qualifier("accountAuthenticationManager") AuthenticationManager authenticationManager,
+                                      AccountService accountService, SessionCookieManager sessionCookieManager) {
         this.authenticationManager = authenticationManager;
         this.accountService = accountService;
         this.sessionCookieManager = sessionCookieManager;

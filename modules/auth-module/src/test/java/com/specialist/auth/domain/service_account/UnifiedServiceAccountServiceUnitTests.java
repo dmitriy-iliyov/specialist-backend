@@ -55,7 +55,7 @@ class UnifiedServiceAccountServiceUnitTests {
     UnifiedServiceAccountService service;
 
     @Test
-    @DisplayName("UT: save() when dto has id and entity found should update and save")
+    @DisplayName("UT: save() when dto has accountId and entity found should update and save")
     void save_whenDtoHasIdAndEntityFound_shouldUpdatePasswordAndSave() {
         UUID adminId = UUID.randomUUID();
         UUID dtoId = UUID.randomUUID();
@@ -93,7 +93,7 @@ class UnifiedServiceAccountServiceUnitTests {
     }
 
     @Test
-    @DisplayName("UT: save() when dto has no id should create new entity and save")
+    @DisplayName("UT: save() when dto has no accountId should create new entity and save")
     void save_whenDtoHasNoId_shouldCreateAndSave() {
         UUID adminId = UUID.randomUUID();
         ServiceAccountDto dto = new ServiceAccountDto();

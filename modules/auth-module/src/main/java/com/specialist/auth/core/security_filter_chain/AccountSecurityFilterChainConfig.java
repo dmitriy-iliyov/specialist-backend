@@ -77,13 +77,14 @@ public class AccountSecurityFilterChainConfig {
                         .requestMatchers("/api/v1/accounts/me").hasAnyRole("USER", "SPECIALIST")
                         .requestMatchers("/api/v1/accounts/confirmation/**",
                                          "/api/v1/accounts/password-recovery/**").permitAll()
-                        .requestMatchers("/api/v1/users/me", "/api/v1/users/me/avatar").authenticated()
-                        .requestMatchers("/api/v1/users", "/api/v1/users/**").permitAll()
+                        .requestMatchers("/api/v1/profiles/me", "/api/v1/profiles/me/avatar").authenticated()
+                        .requestMatchers("/api/v1/profiles", "/api/v1/profiles/**").permitAll()
                         .requestMatchers("/api/v1/me/bookmarks", "/api/v1/me/bookmarks/**").authenticated()
                         .requestMatchers("/api/v1/languages", "/api/v1/languages/**", "/api/v1/contacts/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/specialists/{specialist_id}/reviews").permitAll()
                         .requestMatchers("/api/v1/specialists/{specialist_id}/reviews",
-                                         "/api/v1/specialists/{specialist_id}/reviews/**").authenticated()
+                                         "/api/v1/specialists/{specialist_id}/reviews/**",
+                                         "/api/v1/specialists/{id}/manage", "/api/v1/specialists/manage").authenticated()
                         .requestMatchers("/api/v1/me/specialists", "/api/v1/me/specialists/**").hasRole("USER")
                         .requestMatchers("/api/v1/specialists", "/api/v1/specialists/**").permitAll()
                         .requestMatchers("/api/v1/types/**").permitAll()

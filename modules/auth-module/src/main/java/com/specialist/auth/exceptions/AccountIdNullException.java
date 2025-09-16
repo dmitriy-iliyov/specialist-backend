@@ -6,6 +6,6 @@ import com.specialist.core.exceptions.models.dto.ErrorDto;
 public class AccountIdNullException extends BaseInternalServerException {
     @Override
     public ErrorDto getErrorDto() {
-        return new ErrorDto("account", "Account id is null.");
+        return new ErrorDto("account", "Account accountId is null.");
     }
 }

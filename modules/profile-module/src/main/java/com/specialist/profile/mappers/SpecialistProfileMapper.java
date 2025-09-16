@@ -36,7 +36,7 @@ public interface SpecialistProfileMapper {
 
     void updateEntityFromDto(SpecialistUpdateDto dto, @MappingTarget SpecialistProfileEntity entity);
 
-    @Mapping(target = "id", source = "dto.id")
+    @Mapping(target = "id", source = "dto.accountId")
     @Mapping(target = "type", source = "dto.type")
     @Mapping(target = "fullName", source = "dto.fullName")
     @Mapping(target = "email", source = "dto.email")
@@ -48,7 +48,7 @@ public interface SpecialistProfileMapper {
     @Mapping(target = "card", source = "card")
     PrivateSpecialistAggregatedResponseDto aggregate(PrivateSpecialistResponseDto dto, ManagedSpecialistResponseDto card);
 
-    @Mapping(target = "id", source = "dto.id")
+    @Mapping(target = "id", source = "dto.accountId")
     @Mapping(target = "type", source = "dto.type")
     @Mapping(target = "fullName", source = "dto.fullName")
     @Mapping(target = "card", source = "card")

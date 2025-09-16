@@ -5,7 +5,7 @@ import com.specialist.profile.models.dtos.PublicSpecialistResponseDto;
 
 import java.util.UUID;
 
-public interface SpecialistReadOrchestrator {
+public interface SpecialistProfileAggregator {
     PrivateSpecialistResponseDto findPrivateById(UUID id);
 
     PublicSpecialistResponseDto findPublicById(UUID id);

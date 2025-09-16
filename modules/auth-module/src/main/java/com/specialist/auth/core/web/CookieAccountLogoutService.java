@@ -13,13 +13,13 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 
 @Service
-public class CookieAccountLogoutOrchestrator implements AccountLogoutOrchestrator {
+public class CookieAccountLogoutService implements AccountLogoutService {
 
     private final LogoutHandler sessionCookieLogoutHandler;
     private final LogoutSuccessHandler logoutSuccessHandler;
 
-    public CookieAccountLogoutOrchestrator(@Qualifier("sessionCookieLogoutHandler") LogoutHandler sessionCookieLogoutHandler,
-                                           LogoutSuccessHandler logoutSuccessHandler) {
+    public CookieAccountLogoutService(@Qualifier("sessionCookieLogoutHandler") LogoutHandler sessionCookieLogoutHandler,
+                                      LogoutSuccessHandler logoutSuccessHandler) {
         this.sessionCookieLogoutHandler = sessionCookieLogoutHandler;
         this.logoutSuccessHandler = logoutSuccessHandler;
     }

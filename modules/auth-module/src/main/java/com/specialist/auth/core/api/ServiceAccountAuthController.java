@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ServiceAccountAuthController {
 
-    private final ServiceAccountLoginOrchestrator orchestrator;
+    private final ServiceAccountLoginService loginService;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody @Valid ServiceLoginRequest requestDto) {
-        orchestrator.login(requestDto);
+        loginService.login(requestDto);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();

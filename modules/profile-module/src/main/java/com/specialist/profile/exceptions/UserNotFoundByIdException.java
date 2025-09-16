@@ -8,6 +8,6 @@ public class UserNotFoundByIdException extends BaseNotFoundException {
 
     @Override
     public ErrorDto getErrorDto() {
-        return new ErrorDto("user", "User not found by id.");
+        return new ErrorDto("user", "User not found by accountId.");
     }
 }

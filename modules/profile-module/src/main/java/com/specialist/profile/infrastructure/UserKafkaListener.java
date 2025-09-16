@@ -13,7 +13,7 @@ public final class UserKafkaListener {
     private final CreatorRatingService creatorRatingService;
 
     @Autowired
-    public UserKafkaListener(@Qualifier("defaultCreatorRatingServiceDecorator") CreatorRatingService creatorRatingService) {
+    public UserKafkaListener(@Qualifier("creatorRatingRetryDecorator") CreatorRatingService creatorRatingService) {
         this.creatorRatingService = creatorRatingService;
     }
 

@@ -1,5 +1,7 @@
 package com.specialist.specialistdirectory.domain.specialist.services.specialist;
 
+import com.specialist.contracts.auth.DemoteRequest;
+import com.specialist.contracts.auth.SystemAccountDemoteFacade;
 import com.specialist.contracts.profile.SystemSpecialistProfileService;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.ShortSpecialistInfo;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
@@ -10,10 +12,13 @@ import com.specialist.specialistdirectory.domain.specialist.models.enums.Special
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistService;
 import com.specialist.specialistdirectory.exceptions.OwnershipException;
 import com.specialist.specialistdirectory.exceptions.UnexpectedNonManagedSpecialistException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -22,15 +27,18 @@ public class SelfSpecialistOrchestratorImpl implements SelfSpecialistOrchestrato
 
     private final SpecialistService service;
     private final SystemSpecialistProfileService specialistProfileService;
+    private final SystemAccountDemoteFacade accountDemoteService;
 
     @Transactional
     @Override
-    public SpecialistResponseDto save(UUID creatorId, SpecialistCreateDto dto) {
+    public SpecialistResponseDto save(UUID creatorId, SpecialistCreateDto dto,
+                                      HttpServletRequest request, HttpServletResponse response) {
         dto.setCreatorId(creatorId);
         dto.setCreatorType(CreatorType.SPECIALIST);
         dto.setStatus(SpecialistStatus.UNAPPROVED);
         SpecialistResponseDto responseDto = service.save(dto);
         specialistProfileService.setSpecialistCardId(responseDto.getId());
+        accountDemoteService.demote(new DemoteRequest(creatorId, Set.of("SPECIALIST_CREATE"), request, response));
         return responseDto;
     }
 

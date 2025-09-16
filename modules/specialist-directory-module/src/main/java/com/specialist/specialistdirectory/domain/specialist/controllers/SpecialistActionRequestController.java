@@ -9,10 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -23,9 +20,9 @@ public class SpecialistActionRequestController {
 
     private final SpecialistActionOrchestrator orchestrator;
 
-    @PostMapping("/recall/request/{contact_type}")
+    @PostMapping("/recall")
     public ResponseEntity<?> recallRequest(@PathVariable("id") @ValidUuid(paramName = "id") String id,
-                                           @PathVariable("contact_type") ContactType contactType) {
+                                           @RequestParam("contact_type") ContactType contactType) {
         orchestrator.recallRequest(UUID.fromString(id), contactType);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
@@ -33,10 +30,10 @@ public class SpecialistActionRequestController {
     }
 
     @PreAuthorize("hasRole('SPECIALIST')")
-    @PostMapping("/manage/request/{contact_type}")
+    @PostMapping("/manage")
     public ResponseEntity<?> manageRequest(@AuthenticationPrincipal PrincipalDetails principal,
                                            @PathVariable("id") @ValidUuid(paramName = "id") String id,
-                                           @PathVariable("contact_type") ContactType contactType) {
+                                           @RequestParam("contact_type") ContactType contactType) {
         orchestrator.manageRequest(UUID.fromString(id), principal.getAccountId(), contactType);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)

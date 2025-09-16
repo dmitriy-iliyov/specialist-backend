@@ -11,13 +11,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 @Service
-public class PostConfirmationAccountLoginOrchestrator implements AccountLoginOrchestrator {
+public class ImplicitAccountLoginService implements AccountLoginService {
 
     private final UserDetailsService userDetailsService;
     private final SessionCookieManager sessionCookieManager;
 
-    public PostConfirmationAccountLoginOrchestrator(@Qualifier("accountUserDetailsService") UserDetailsService userDetailsService,
-                                                    SessionCookieManager sessionCookieManager) {
+    public ImplicitAccountLoginService(@Qualifier("accountUserDetailsService") UserDetailsService userDetailsService,
+                                       SessionCookieManager sessionCookieManager) {
         this.userDetailsService = userDetailsService;
         this.sessionCookieManager = sessionCookieManager;
     }

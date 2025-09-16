@@ -13,7 +13,7 @@ public class RoleCacheServiceImpl implements RoleCacheService {
 
     @Override
     public Long getRoleId(Role role) {
-        Cache cache = cacheManager.getCache("accounts:roles:id");
+        Cache cache = cacheManager.getCache("accounts:roles:accountId");
         if (cache != null) {
             return cache.get(role.name(), Long.class);
         }

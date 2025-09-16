@@ -4,8 +4,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
-public interface AdminReviewOrchestrator {
-
-    @Transactional
+public interface AdminReviewFacade {
     void delete(UUID specialistId, UUID id);
 }

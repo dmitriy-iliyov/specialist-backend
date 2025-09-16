@@ -85,7 +85,7 @@ public class AccountRegistrationControllerUnitTests {
 //
 //        verify(service, times(1)).updatePassword(eq(updateDto));
 //        assertNotNull(responseBody);
-//        assertEquals(fixedId, responseBody.id());
+//        assertEquals(fixedId, responseBody.accountId());
 //        assertEquals(expectedBody.email(), responseBody.email());
 //        assertEquals(expectedBody.createdAt(), responseBody.createdAt());
 //    }
@@ -104,7 +104,7 @@ public class AccountRegistrationControllerUnitTests {
 //    }
 //
 //    @Test
-//    @DisplayName("UT: updatePassword() when id from Authenticate is invalid should return 400")
+//    @DisplayName("UT: updatePassword() when accountId from Authenticate is invalid should return 400")
 //    public void updatePassword_whenPrincipalIdInvalid_shouldReturn400() {
 //        UUID fixedId = UUID.fromString("123e4567-e89b-12d3-a456-426614174000");
 //        AccountPasswordUpdateDto updateDto = new AccountPasswordUpdateDto("oldpassword", "securepassword");

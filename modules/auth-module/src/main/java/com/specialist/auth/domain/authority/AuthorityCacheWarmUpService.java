@@ -20,13 +20,13 @@ public final class AuthorityCacheWarmUpService {
 
     @EventListener(ApplicationReadyEvent.class)
     public void warmUp() {
-        Cache cache = cacheManager.getCache("accounts:authorities:id");
+        Cache cache = cacheManager.getCache("accounts:authorities:accountId");
         if (cache != null) {
             for (AuthorityEntity entity: service.findAll()) {
                 cache.put(entity.getFieldAuthority(), entity.getId());
             }
         } else {
-            log.error("Cache with name accounts:authorities:id is null");
+            log.error("Cache with name accounts:authorities:accountId is null");
             return;
         }
         log.info("Authority cache successfully wormed up");

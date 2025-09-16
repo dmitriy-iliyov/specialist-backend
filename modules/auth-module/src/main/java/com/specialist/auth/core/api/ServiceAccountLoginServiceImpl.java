@@ -13,14 +13,14 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 
 @Service
-public class ServiceAccountLoginOrchestratorImpl implements ServiceAccountLoginOrchestrator {
+public class ServiceAccountLoginServiceImpl implements ServiceAccountLoginService {
 
     private final AuthenticationManager authenticationManager;
     private final TokenManager tokenManager;
 
-    public ServiceAccountLoginOrchestratorImpl(@Qualifier("serviceAccountAuthenticationManager")
+    public ServiceAccountLoginServiceImpl(@Qualifier("serviceAccountAuthenticationManager")
                                                AuthenticationManager authenticationManager,
-                                               TokenManager tokenManager) {
+                                          TokenManager tokenManager) {
         this.authenticationManager = authenticationManager;
         this.tokenManager = tokenManager;
     }
