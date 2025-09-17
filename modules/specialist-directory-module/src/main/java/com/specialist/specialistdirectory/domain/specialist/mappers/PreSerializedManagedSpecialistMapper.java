@@ -7,6 +7,8 @@ import com.specialist.specialistdirectory.domain.specialist.models.dtos.Speciali
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class PreSerializedManagedSpecialistMapper implements ManagedSpecialistMapper {
@@ -37,5 +39,12 @@ public class PreSerializedManagedSpecialistMapper implements ManagedSpecialistMa
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException("Failed to serialize to JSON", e);
         }
+    }
+
+    @Override
+    public List<ManagedSpecialistResponseDto> toManagedDtoList(List<SpecialistResponseDto> dtoList) {
+        return dtoList.stream()
+                .map(this::toManagedDto)
+                .toList();
     }
 }

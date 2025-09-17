@@ -9,12 +9,12 @@ import com.specialist.utils.pagination.PageResponse;
 
 import java.util.UUID;
 
-public interface ProfileReadOrchestrator {
-    BasePrivateResponseDto findPrivateById(UUID id);
+public interface ProfileReadStrategy {
+    ProfileType getType();
 
-    BasePrivateResponseDto findPrivateById(UUID id, ProfileType type);
+    BasePrivateResponseDto findPrivateById(UUID id);
 
     BaseResponseDto findPublicById(UUID id);
 
-    PageResponse<?> findAll(ScopeType scopeType, ProfileFilter filter);
+    PageResponse<?> findAll(ScopeType scope, ProfileFilter filter);
 }

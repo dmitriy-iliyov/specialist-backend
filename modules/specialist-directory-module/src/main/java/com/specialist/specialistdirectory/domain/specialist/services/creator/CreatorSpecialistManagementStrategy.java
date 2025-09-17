@@ -1,13 +1,12 @@
 package com.specialist.specialistdirectory.domain.specialist.services.creator;
 
+import com.specialist.contracts.profile.ProfileType;
 import com.specialist.specialistdirectory.domain.bookmark.models.BookmarkCreateDto;
 import com.specialist.specialistdirectory.domain.bookmark.services.BookmarkPersistService;
-import com.specialist.specialistdirectory.domain.specialist.models.dtos.ShortSpecialistInfo;
-import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
-import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
-import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
+import com.specialist.specialistdirectory.domain.specialist.models.dtos.*;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.CreatorType;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistStatus;
+import com.specialist.specialistdirectory.domain.specialist.services.SpecialistManagementStrategy;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistService;
 import com.specialist.specialistdirectory.exceptions.ManagedSpecialistException;
 import com.specialist.specialistdirectory.exceptions.OwnershipException;
@@ -21,15 +20,21 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class CreatorSpecialistOrchestratorImpl implements CreatorSpecialistOrchestrator {
+public class CreatorSpecialistManagementStrategy implements SpecialistManagementStrategy {
 
     private final SpecialistService specialistService;
     private final BookmarkPersistService bookmarkPersistService;
 
+    @Override
+    public ProfileType getType() {
+        return ProfileType.USER;
+    }
+
     @Transactional
     @Override
-    public SpecialistResponseDto save(UUID creatorId, SpecialistCreateDto dto) {
-        dto.setCreatorId(creatorId);
+    public SpecialistResponseDto save(SpecialistCreateRequest request) {
+        SpecialistCreateDto dto = request.dto();
+        dto.setCreatorId(request.creatorId());
         dto.setCreatorType(CreatorType.USER);
         dto.setStatus(SpecialistStatus.UNAPPROVED);
         SpecialistResponseDto responseDto = specialistService.save(dto);

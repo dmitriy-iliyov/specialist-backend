@@ -4,6 +4,7 @@ import com.specialist.contracts.profile.ProfileType;
 import com.specialist.contracts.profile.SystemSpecialistProfileService;
 import com.specialist.profile.exceptions.SpecialistNotFoundByIdException;
 import com.specialist.profile.mappers.SpecialistProfileMapper;
+import com.specialist.profile.models.ProfileFilter;
 import com.specialist.profile.models.SpecialistProfileEntity;
 import com.specialist.profile.models.dtos.PrivateSpecialistResponseDto;
 import com.specialist.profile.models.dtos.PublicSpecialistResponseDto;
@@ -11,7 +12,10 @@ import com.specialist.profile.models.dtos.SpecialistCreateDto;
 import com.specialist.profile.models.dtos.SpecialistUpdateDto;
 import com.specialist.profile.models.enums.SpecialistStatus;
 import com.specialist.profile.repositories.SpecialistProfileRepository;
+import com.specialist.utils.pagination.PageResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,8 +24,8 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class SpecialistProfileServiceImpl implements SpecialistProfileService,
-                                              ProfilePersistService<SpecialistCreateDto, PrivateSpecialistResponseDto>,
-                                              ProfileDeleteService, SystemSpecialistProfileService {
+                                                     ProfilePersistService<SpecialistCreateDto, PrivateSpecialistResponseDto>,
+                                                     ProfileDeleteStrategy, SystemSpecialistProfileService {
 
     private final SpecialistProfileRepository repository;
     private final SpecialistProfileMapper mapper;
@@ -39,6 +43,17 @@ public class SpecialistProfileServiceImpl implements SpecialistProfileService,
     @Override
     public void approve(UUID id) {
         repository.updateStatusById(id, SpecialistStatus.APPROVED);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public PageResponse<PrivateSpecialistResponseDto> findAll(ProfileFilter filter) {
+        PageRequest pageable = PageRequest.of(filter.pageNumber(), filter.pageSize());
+        Page<SpecialistProfileEntity> entityPage = repository.findAll(pageable);
+        return new PageResponse<>(
+                mapper.toPrivateDtoList(entityPage.getContent()),
+                entityPage.getTotalPages()
+        );
     }
 
     @Transactional

@@ -4,10 +4,12 @@ import com.specialist.specialistdirectory.domain.specialist.models.dtos.ShortSpe
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
+import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistStatus;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.SpecialistFilter;
-import com.specialist.utils.pagination.PageRequest;
+import com.specialist.utils.pagination.PageDataHolder;
 import com.specialist.utils.pagination.PageResponse;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -24,7 +26,7 @@ public interface SpecialistService {
 
     SpecialistResponseDto findByCreatorIdAndId(UUID creatorId, UUID id);
 
-    PageResponse<SpecialistResponseDto> findAll(PageRequest page);
+    PageResponse<SpecialistResponseDto> findAll(PageDataHolder page);
 
     PageResponse<SpecialistResponseDto> findAllByFilter(SpecialistFilter filter);
 

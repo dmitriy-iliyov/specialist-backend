@@ -1,7 +1,7 @@
-package com.specialist.profile.services.system;
+package com.specialist.profile.services;
 
 import com.specialist.contracts.profile.ProfileType;
-import com.specialist.profile.repositories.UserProfileRepository;
+import com.specialist.profile.repositories.SpecialistProfileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,9 +10,9 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class SystemUserEmailUpdateService implements SystemEmailUpdateService {
+public class SpecialistEmailUpdateStrategy implements EmailUpdateStrategy {
 
-    private final UserProfileRepository repository;
+    private final SpecialistProfileRepository repository;
 
     @Transactional
     @Override
@@ -22,6 +22,6 @@ public class SystemUserEmailUpdateService implements SystemEmailUpdateService {
 
     @Override
     public ProfileType getType() {
-        return ProfileType.USER;
+        return ProfileType.SPECIALIST;
     }
 }

@@ -7,6 +7,5 @@ import com.specialist.utils.pagination.PageResponse;
 
 public interface SpecialistAggregator {
     PageResponse<SpecialistAggregatedResponseDto> aggregate(PageRequest page);
-
     PageResponse<SpecialistAggregatedResponseDto> aggregate(SpecialistFilter filter);
 }

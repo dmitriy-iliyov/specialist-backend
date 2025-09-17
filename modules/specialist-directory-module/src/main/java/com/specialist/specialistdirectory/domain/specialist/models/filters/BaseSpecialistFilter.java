@@ -1,12 +1,50 @@
 package com.specialist.specialistdirectory.domain.specialist.models.filters;
 
-import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistLanguage;
+import com.specialist.utils.pagination.PageDataHolder;
+import com.specialist.utils.pagination.PageRequest;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
+import lombok.RequiredArgsConstructor;
 
-public interface BaseSpecialistFilter extends BaseFilter {
-    String getCity();
-    String getCityCode();
-    Long getTypeId();
-    SpecialistLanguage getLang();
-    Integer getMinRating();
-    Integer getMaxRating();
+public abstract class BaseSpecialistFilter implements BaseFilter {
+
+    protected final Boolean asc;
+
+    @NotNull(message = "Page number is required.")
+    @PositiveOrZero(message = "Page number should be positive or zero.")
+    protected final Integer pageNumber;
+
+    @NotNull(message = "Page size is required.")
+    @Min(value = 10, message = "Min page size is 10.")
+    @Max(value = 50, message = "Min page size is 50.")
+    protected final Integer pageSize;
+
+    public BaseSpecialistFilter(Boolean asc, Integer pageNumber, Integer pageSize) {
+        this.asc = asc;
+        this.pageNumber = pageNumber;
+        this.pageSize = pageSize;
+    }
+
+    public BaseSpecialistFilter(PageDataHolder pageDataHolder) {
+        this.asc = pageDataHolder.asc();
+        this.pageNumber = pageDataHolder.pageNumber();
+        this.pageSize = pageDataHolder.pageSize();
+    }
+
+    @Override
+    public Boolean asc() {
+        return asc;
+    }
+
+    @Override
+    public Integer pageNumber() {
+        return pageNumber;
+    }
+
+    @Override
+    public Integer pageSize() {
+        return pageSize;
+    }
 }

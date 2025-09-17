@@ -7,10 +7,12 @@ import com.specialist.specialistdirectory.domain.specialist.models.dtos.Speciali
 
 import java.util.UUID;
 
-public interface SpecialistManagementOrchestrator {
+public interface SpecialistManagementStrategy {
+    ProfileType getType();
+
     SpecialistResponseDto save(SpecialistCreateRequest request);
 
-    SpecialistResponseDto update(SpecialistUpdateDto dto, ProfileType type);
+    SpecialistResponseDto update(SpecialistUpdateDto dto);
 
-    void delete(UUID accountId, UUID id, ProfileType type);
+    void delete(UUID accountId, UUID id);
 }

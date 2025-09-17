@@ -1,7 +1,7 @@
 package com.specialist.specialistdirectory.domain.specialist.repositories;
 
 import com.specialist.specialistdirectory.domain.specialist.models.SpecialistEntity;
-import com.specialist.specialistdirectory.domain.specialist.models.filters.BaseSpecialistFilter;
+import com.specialist.specialistdirectory.domain.specialist.models.filters.SpecialistProjectionFilter;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
 import com.specialist.utils.pagination.PageDataHolder;
 import org.springframework.data.domain.Pageable;
@@ -11,7 +11,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 public class PaginationUtils {
 
-    public static Specification<SpecialistEntity> generateSpecification(BaseSpecialistFilter filter) {
+    public static Specification<SpecialistEntity> generateSpecification(SpecialistProjectionFilter filter) {
         return Specification.where(SpecialistSpecification.filterByApprovedAndManaged())
                 .and(SpecialistSpecification.filterByCity(filter.getCity()))
                 .and(SpecialistSpecification.filterByCityCode(filter.getCityCode()))

@@ -3,6 +3,7 @@ package com.specialist.specialistdirectory.domain.specialist.controllers;
 import com.specialist.contracts.auth.PrincipalDetails;
 import com.specialist.contracts.profile.ProfileType;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
+import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateRequest;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistManagementOrchestrator;
 import com.specialist.utils.validation.annotation.ValidUuid;
@@ -31,12 +32,13 @@ public class SpecialistManagementController {
     public ResponseEntity<?> create(@AuthenticationPrincipal PrincipalDetails principal,
                                     @RequestBody @Valid SpecialistCreateDto dto, HttpServletRequest request,
                                     HttpServletResponse response) {
+        SpecialistCreateRequest createRequest = new SpecialistCreateRequest(
+                principal.getAccountId(), ProfileType.fromStringRole(principal.getStringRole()),
+                dto, request, response
+        );
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(orchestrator.save(
-                        principal.getAccountId(), ProfileType.fromStringRole(principal.getStringRole()),
-                        dto, request, response)
-                );
+                .body(orchestrator.save(createRequest));
     }
 
     @PreAuthorize("hasAuthority('SPECIALIST_UPDATE')")

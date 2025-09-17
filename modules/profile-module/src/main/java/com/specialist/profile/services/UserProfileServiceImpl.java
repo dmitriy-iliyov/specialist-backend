@@ -3,6 +3,7 @@ package com.specialist.profile.services;
 import com.specialist.contracts.profile.ProfileType;
 import com.specialist.profile.exceptions.UserNotFoundByIdException;
 import com.specialist.profile.mappers.UserProfileMapper;
+import com.specialist.profile.models.ProfileFilter;
 import com.specialist.profile.models.UserProfileEntity;
 import com.specialist.profile.models.dtos.PrivateUserResponseDto;
 import com.specialist.profile.models.dtos.PublicUserResponseDto;
@@ -10,7 +11,6 @@ import com.specialist.profile.models.dtos.UserCreateDto;
 import com.specialist.profile.models.dtos.UserUpdateDto;
 import com.specialist.profile.models.enums.ScopeType;
 import com.specialist.profile.repositories.UserProfileRepository;
-import com.specialist.utils.pagination.PageRequest;
 import com.specialist.utils.pagination.PageResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,7 +24,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class UserProfileServiceImpl implements UserProfileService, ProfilePersistService<UserCreateDto, PrivateUserResponseDto>,
-                                        ProfileDeleteService {
+                                               ProfileReadStrategy, ProfileDeleteStrategy {
 
     private final UserProfileRepository repository;
     private final UserProfileMapper mapper;
@@ -68,15 +68,15 @@ public class UserProfileServiceImpl implements UserProfileService, ProfilePersis
 
     @Transactional(readOnly = true)
     @Override
-    public PageResponse<?> findAll(ScopeType scope, PageRequest page) {
+    public PageResponse<?> findAll(ScopeType scope, ProfileFilter filter) {
         Pageable pageable;
-        if (page.asc() != null && page.asc()) {
+        if (filter.asc() != null && filter.asc()) {
             pageable = org.springframework.data.domain.PageRequest.of(
-                    page.pageNumber(), page.pageSize(), Sort.by("creatorRating").ascending()
+                    filter.pageNumber(), filter.pageSize(), Sort.by("creatorRating").ascending()
             );
         } else {
             pageable = org.springframework.data.domain.PageRequest.of(
-                    page.pageNumber(), page.pageSize(), Sort.by("creatorRating").descending()
+                    filter.pageNumber(), filter.pageSize(), Sort.by("creatorRating").descending()
             );
         }
         Page<UserProfileEntity> entityPage = repository.findAll(pageable);

@@ -2,7 +2,7 @@ package com.specialist.profile.services;
 
 import com.specialist.contracts.profile.ProfileDeleteOrchestrator;
 import com.specialist.contracts.profile.ProfileType;
-import com.specialist.profile.exceptions.NullProfileDeleteServiceException;
+import com.specialist.profile.exceptions.NullStrategyException;
 import com.specialist.profile.repositories.AvatarStorage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,24 +18,24 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ProfileDeleteOrchestratorImpl implements ProfileDeleteOrchestrator {
 
-    private final Map<ProfileType, ProfileDeleteService> serviceMap;
+    private final Map<ProfileType, ProfileDeleteStrategy> strategyMap;
     private final AvatarStorage avatarStorage;
 
-    public ProfileDeleteOrchestratorImpl(List<ProfileDeleteService> profileDeleteServices, AvatarStorage avatarStorage) {
-        this.serviceMap = profileDeleteServices.stream()
-                .collect(Collectors.toMap(ProfileDeleteService::getType, Function.identity()));
+    public ProfileDeleteOrchestratorImpl(List<ProfileDeleteStrategy> profileDeleteStrategies, AvatarStorage avatarStorage) {
+        this.strategyMap = profileDeleteStrategies.stream()
+                .collect(Collectors.toMap(ProfileDeleteStrategy::getType, Function.identity()));
         this.avatarStorage = avatarStorage;
     }
 
     @Transactional
     @Override
     public void delete(UUID id, ProfileType type) {
-        ProfileDeleteService profileDeleteService = serviceMap.get(type);
-        if (profileDeleteService == null) {
+        ProfileDeleteStrategy strategy = strategyMap.get(type);
+        if (strategy == null) {
             log.error("ProfileDeleteService for user type {} not found.", type);
-            throw new NullProfileDeleteServiceException();
+            throw new NullStrategyException();
         }
-        profileDeleteService.deleteById(id);
+        strategy.deleteById(id);
         avatarStorage.deleteByUserId(id);
     }
 }

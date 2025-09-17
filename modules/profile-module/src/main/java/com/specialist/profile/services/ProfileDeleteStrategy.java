@@ -4,7 +4,7 @@ import com.specialist.contracts.profile.ProfileType;
 
 import java.util.UUID;
 
-public interface ProfileDeleteService {
+public interface ProfileDeleteStrategy {
     void deleteById(UUID id);
     ProfileType getType();
 }

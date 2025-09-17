@@ -1,47 +1,51 @@
 package com.specialist.specialistdirectory.domain.specialist.services;
 
 import com.specialist.contracts.profile.ProfileType;
-import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
+import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateRequest;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
-import com.specialist.specialistdirectory.domain.specialist.services.creator.CreatorSpecialistOrchestrator;
-import com.specialist.specialistdirectory.domain.specialist.services.specialist.SelfSpecialistOrchestrator;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
+import com.specialist.specialistdirectory.exceptions.NullSpecialistStrategyManagementException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
+@Slf4j
 public class SpecialistManagementOrchestratorImpl implements SpecialistManagementOrchestrator {
 
-    private final CreatorSpecialistOrchestrator creatorOrchestrator;
-    private final SelfSpecialistOrchestrator selfOrchestrator;
+    private final Map<ProfileType, SpecialistManagementStrategy> strategyMap;
+
+    public SpecialistManagementOrchestratorImpl(List<SpecialistManagementStrategy> strategies) {
+        this.strategyMap = strategies.stream()
+                .collect(Collectors.toMap(SpecialistManagementStrategy::getType, Function.identity()));
+    }
 
     @Override
-    public SpecialistResponseDto save(UUID creatorId, ProfileType type, SpecialistCreateDto dto,
-                                      HttpServletRequest request, HttpServletResponse response) {
-        return switch (type) {
-            case USER -> creatorOrchestrator.save(creatorId, dto);
-            case SPECIALIST -> selfOrchestrator.save(creatorId, dto, request, response);
-        };
+    public SpecialistResponseDto save(SpecialistCreateRequest request) {
+        return resolveStrategy(request.profileType()).save(request);
     }
 
     @Override
     public SpecialistResponseDto update(SpecialistUpdateDto dto, ProfileType type) {
-        return switch (type) {
-            case USER -> creatorOrchestrator.update(dto);
-            case SPECIALIST -> selfOrchestrator.update(dto);
-        };
+        return resolveStrategy(type).update(dto);
     }
 
     @Override
     public void delete(UUID accountId, UUID id, ProfileType type) {
-        switch (type) {
-            case USER -> creatorOrchestrator.delete(accountId, id);
-            case SPECIALIST -> selfOrchestrator.delete(accountId, id);
-        };
+        resolveStrategy(type).delete(accountId, id);
+    }
+
+    private SpecialistManagementStrategy resolveStrategy(ProfileType type) {
+        SpecialistManagementStrategy strategy = strategyMap.get(type);
+        if (strategy == null) {
+            log.error("SpecialistManagementStrategy not found for type {}", type);
+            throw new NullSpecialistStrategyManagementException();
+        }
+        return strategy;
     }
 }

@@ -3,10 +3,7 @@ package com.specialist.specialistdirectory.domain.specialist.repositories;
 import com.specialist.specialistdirectory.domain.specialist.models.SpecialistEntity;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.ShortSpecialistInfo;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistStatus;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -78,4 +75,8 @@ public interface SpecialistRepository extends JpaRepository<SpecialistEntity, UU
         WHERE s.id = :id
     """)
     Optional<SpecialistStatus> findStatusById(@Param("id") UUID id);
+
+    @EntityGraph(attributePaths = {"type"})
+    @Query("SELECT s FROM SpecialistEntity s WHERE s.id = :id AND s.status = :status")
+    Optional<SpecialistEntity> findWithTypeByIdAndStatus(@Param("id") UUID id, @Param("status") SpecialistStatus status);
 }

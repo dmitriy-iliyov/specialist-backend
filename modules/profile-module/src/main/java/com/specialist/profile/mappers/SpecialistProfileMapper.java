@@ -54,4 +54,6 @@ public interface SpecialistProfileMapper {
     @Mapping(target = "card", source = "card")
     PublicSpecialistAggregatedResponseDto aggregate(PublicSpecialistResponseDto dto, ManagedSpecialistResponseDto card);
 
+    List<PrivateSpecialistAggregatedResponseDto> aggregate(List<PrivateSpecialistResponseDto> dtoList,
+                                                           List<ManagedSpecialistResponseDto> managedDtoList);
 }

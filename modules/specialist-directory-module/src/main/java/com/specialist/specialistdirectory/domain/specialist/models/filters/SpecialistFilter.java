@@ -1,14 +1,14 @@
 package com.specialist.specialistdirectory.domain.specialist.models.filters;
 
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistLanguage;
-import com.specialist.utils.pagination.PageDataHolder;
 import com.specialist.utils.pagination.PageRequest;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import lombok.Getter;
 
 @com.specialist.specialistdirectory.domain.specialist.validation.SpecialistFilter
-@Data
-public class SpecialistFilter implements BaseSpecialistFilter, PageDataHolder {
+@Getter
+public class SpecialistFilter extends BaseSpecialistFilter implements SpecialistProjectionFilter {
 
         @Size(max = 30, message = "City title lengths should be less 30 characters.")
         protected final String city;
@@ -29,17 +29,6 @@ public class SpecialistFilter implements BaseSpecialistFilter, PageDataHolder {
         @Max(value = 5, message = "Max value is 5.")
         protected final Integer maxRating;
 
-        protected final Boolean asc;
-
-        @NotNull(message = "Page number is required.")
-        @PositiveOrZero(message = "Page number should be positive or zero.")
-        protected final Integer pageNumber;
-
-        @NotNull(message = "Page size is required.")
-        @Min(value = 10, message = "Min page size is 10.")
-        @Max(value = 50, message = "Min page size is 50.")
-        protected final Integer pageSize;
-
         public SpecialistFilter(String city,
                                 String cityCode,
                                 Long typeId,
@@ -49,15 +38,13 @@ public class SpecialistFilter implements BaseSpecialistFilter, PageDataHolder {
                                 Boolean asc,
                                 Integer pageNumber,
                                 Integer pageSize) {
+                super(asc, pageNumber, pageSize);
                 this.city = city;
                 this.cityCode = cityCode;
                 this.typeId = typeId;
                 this.lang = lang;
                 this.minRating = minRating;
                 this.maxRating = maxRating;
-                this.asc = asc;
-                this.pageNumber = pageNumber;
-                this.pageSize = pageSize;
         }
 
         public String cacheKey() {
@@ -77,20 +64,5 @@ public class SpecialistFilter implements BaseSpecialistFilter, PageDataHolder {
 
         public PageRequest toPageRequest() {
                 return new PageRequest(this.pageNumber, this.pageSize, this.asc);
-        }
-
-        @Override
-        public Boolean asc() {
-                return asc;
-        }
-
-        @Override
-        public Integer pageNumber() {
-                return pageNumber;
-        }
-
-        @Override
-        public Integer pageSize() {
-                return pageSize;
         }
 }

@@ -4,8 +4,10 @@ import com.specialist.specialistdirectory.domain.specialist.mappers.SpecialistMa
 import com.specialist.specialistdirectory.domain.specialist.models.SpecialistEntity;
 import com.specialist.specialistdirectory.domain.specialist.models.SpecialistInfoEntity;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.*;
+import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistStatus;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.SpecialistFilter;
+import com.specialist.specialistdirectory.domain.specialist.models.filters.SystemSpecialistFilter;
 import com.specialist.specialistdirectory.domain.specialist.repositories.PaginationUtils;
 import com.specialist.specialistdirectory.domain.specialist.repositories.SpecialistRepository;
 import com.specialist.specialistdirectory.domain.specialist.repositories.SpecialistSpecification;
@@ -15,7 +17,7 @@ import com.specialist.specialistdirectory.domain.type.models.dtos.TypeResponseDt
 import com.specialist.specialistdirectory.domain.type.services.TypeConstants;
 import com.specialist.specialistdirectory.domain.type.services.TypeService;
 import com.specialist.specialistdirectory.exceptions.SpecialistNotFoundByIdException;
-import com.specialist.utils.pagination.PageRequest;
+import com.specialist.utils.pagination.PageDataHolder;
 import com.specialist.utils.pagination.PageResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -160,6 +162,19 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
 
     @Transactional(readOnly = true)
     @Override
+    public SpecialistResponseDto findByIdAndStatus(UUID id, SpecialistStatus status) {
+        SpecialistEntity entity = repository.findWithTypeByIdAndStatus(id, status).orElseThrow(
+                SpecialistNotFoundByIdException::new
+        );
+        SpecialistResponseDto dto = mapper.toResponseDto(entity);
+        if (entity.getSuggestedTypeId() != null) {
+            dto.setAnotherType(typeService.findSuggestedById(entity.getSuggestedTypeId()).title());
+        }
+        return dto;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
     public SpecialistEntity findEntityById(UUID id) {
         return repository.findById(id).orElseThrow(SpecialistNotFoundByIdException::new);
     }
@@ -172,7 +187,7 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
 
     @Transactional(readOnly = true)
     @Override
-    public PageResponse<SpecialistResponseDto> findAll(PageRequest page) {
+    public PageResponse<SpecialistResponseDto> findAll(PageDataHolder page) {
         Specification<SpecialistEntity> specification = Specification.where(
                 SpecialistSpecification.filterByApprovedAndManaged()
         );
@@ -183,6 +198,16 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
                 mapper.toResponseDtoList(slice.getContent()),
                 (countService.countAll() + page.pageSize() - 1) / page.pageSize()
         );
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<SpecialistResponseDto> findAll(SystemSpecialistFilter filter) {
+        Specification<SpecialistEntity> specification = Specification.where(SpecialistSpecification.filterByStatus(filter.getStatus()));
+        Slice<SpecialistEntity> entityPage = repository.findAll(
+                specification, PaginationUtils.generatePageable(filter)
+        );
+        return mapper.toResponseDtoList(entityPage.getContent());
     }
 
     @Transactional(readOnly = true)

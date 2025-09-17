@@ -1,5 +1,7 @@
 package com.specialist.specialistdirectory.domain.specialist.models.filters;
 
-public interface BaseFilter {
+import com.specialist.utils.pagination.PageDataHolder;
+
+public interface BaseFilter extends PageDataHolder {
     boolean isEmpty();
 }

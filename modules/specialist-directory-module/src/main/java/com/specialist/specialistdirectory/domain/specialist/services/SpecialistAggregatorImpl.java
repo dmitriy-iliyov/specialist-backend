@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @Service
 public class SpecialistAggregatorImpl implements SpecialistAggregator {
 
-    // WARNING: @Transactional can be till profileReadService in the same app context
+    // WARNING: @Transactional can be till profileAggregator in the same app context
     private final SpecialistService specialistService;
     private final SystemProfileAggregator profileAggregator;
 

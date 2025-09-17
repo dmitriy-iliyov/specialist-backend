@@ -1,13 +1,13 @@
 package com.specialist.specialistdirectory.domain.specialist.validation;
 
-import com.specialist.specialistdirectory.domain.specialist.models.filters.BaseSpecialistFilter;
+import com.specialist.specialistdirectory.domain.specialist.models.filters.SpecialistProjectionFilter;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class SpecialistFilterValidator implements ConstraintValidator<SpecialistFilter, BaseSpecialistFilter> {
+public class SpecialistFilterValidator implements ConstraintValidator<SpecialistFilter, SpecialistProjectionFilter> {
 
     @Override
-    public boolean isValid(BaseSpecialistFilter filter, ConstraintValidatorContext context) {
+    public boolean isValid(SpecialistProjectionFilter filter, ConstraintValidatorContext context) {
         boolean hasErrors = false;
 
         context.disableDefaultConstraintViolation();
