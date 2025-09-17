@@ -1,2 +1,19 @@
-package com.specialist.profile.services;public class AdminProfileQueryService {
+package com.specialist.profile.services;
+
+import com.specialist.profile.models.ProfileFilter;
+import com.specialist.profile.models.enums.ScopeType;
+import com.specialist.utils.pagination.PageResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class AdminProfileQueryService implements ProfileQueryService {
+
+    private final ProfileReadOrchestrator readOrchestrator;
+
+    @Override
+    public PageResponse<?> findAll(ProfileFilter filter) {
+        return readOrchestrator.findAll(ScopeType.PRIVATE, filter);
+    }
 }

@@ -1,13 +1,14 @@
 package com.specialist.profile.controllers;
 
 import com.specialist.profile.models.ProfileFilter;
-import com.specialist.profile.models.enums.ScopeType;
+import com.specialist.profile.services.ProfileQueryService;
 import com.specialist.profile.services.ProfileReadOrchestrator;
 import com.specialist.profile.services.SpecialistProfileService;
 import com.specialist.utils.validation.annotation.ValidUuid;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,11 +19,18 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/admin/v1/profiles")
 @PreAuthorize("hasRole('ADMIN')")
-@RequiredArgsConstructor
 public class AdminProfileController {
 
-    private final SpecialistProfileService specialistProfileService;
+    private final SpecialistProfileService profileService;
     private final ProfileReadOrchestrator readOrchestrator;
+    private final ProfileQueryService queryService;
+
+    public AdminProfileController(SpecialistProfileService profileService, ProfileReadOrchestrator readOrchestrator,
+                                  @Qualifier("userProfileQueryService") ProfileQueryService queryService) {
+        this.profileService = profileService;
+        this.readOrchestrator = readOrchestrator;
+        this.queryService = queryService;
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable("id") @NotNull(message = "Id is required.")
@@ -35,7 +43,7 @@ public class AdminProfileController {
     @PatchMapping("/approve/{id}")
     public ResponseEntity<?> approveSpecialist(@PathVariable("id") @NotNull(message = "Id is required.")
                                                @ValidUuid(paramName = "id") String id) {
-        specialistProfileService.approve(UUID.fromString(id));
+        profileService.approve(UUID.fromString(id));
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
@@ -45,6 +53,6 @@ public class AdminProfileController {
     public ResponseEntity<?> getAll(@ModelAttribute @Valid ProfileFilter filter) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(readOrchestrator.findAll(ScopeType.PRIVATE, filter));
+                .body(queryService.findAll(filter));
     }
 }
