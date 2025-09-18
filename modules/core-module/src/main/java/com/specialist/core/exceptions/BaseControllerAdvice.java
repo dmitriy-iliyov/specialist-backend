@@ -13,6 +13,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +39,6 @@ public abstract class BaseControllerAdvice {
 
     private final ExceptionMapper exceptionMapper;
     private final MessageSource messageSource;
-
 
     public ResponseEntity<?> handleNoHandlerOrNoResourceFoundException(java.lang.Exception e) {
         String url = null;
@@ -98,7 +98,7 @@ public abstract class BaseControllerAdvice {
                 .body(exceptionDto);
     }
 
-    public ResponseEntity<?> handleDataIntegrityViolationException(Exception e){
+    public ResponseEntity<?> handleDataIntegrityViolationException(DataIntegrityViolationException e){
         ExceptionResponseDto exceptionDto = new ExceptionResponseDto(
                 "400",
                 e.getMessage(),

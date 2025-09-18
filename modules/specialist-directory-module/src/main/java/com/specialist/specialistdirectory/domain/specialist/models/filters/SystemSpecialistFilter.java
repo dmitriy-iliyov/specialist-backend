@@ -2,10 +2,6 @@ package com.specialist.specialistdirectory.domain.specialist.models.filters;
 
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistStatus;
 import com.specialist.utils.pagination.PageDataHolder;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Getter;
 
 @Getter

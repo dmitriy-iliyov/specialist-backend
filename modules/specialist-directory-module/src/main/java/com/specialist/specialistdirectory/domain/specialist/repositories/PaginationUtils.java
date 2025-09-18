@@ -1,8 +1,8 @@
 package com.specialist.specialistdirectory.domain.specialist.repositories;
 
 import com.specialist.specialistdirectory.domain.specialist.models.SpecialistEntity;
-import com.specialist.specialistdirectory.domain.specialist.models.filters.SpecialistProjectionFilter;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
+import com.specialist.specialistdirectory.domain.specialist.models.filters.SpecialistProjectionFilter;
 import com.specialist.utils.pagination.PageDataHolder;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;

@@ -2,7 +2,6 @@ package com.specialist.contracts.specialistdirectory;
 
 import com.specialist.contracts.specialistdirectory.dto.ManagedSpecialistResponseDto;
 import com.specialist.utils.pagination.PageDataHolder;
-import com.specialist.utils.pagination.PageResponse;
 
 import java.util.List;
 import java.util.UUID;

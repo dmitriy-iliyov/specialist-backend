@@ -1,12 +1,10 @@
 package com.specialist.specialistdirectory.domain.specialist.models.filters;
 
 import com.specialist.utils.pagination.PageDataHolder;
-import com.specialist.utils.pagination.PageRequest;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
-import lombok.RequiredArgsConstructor;
 
 public abstract class BaseSpecialistFilter implements BaseFilter {
 

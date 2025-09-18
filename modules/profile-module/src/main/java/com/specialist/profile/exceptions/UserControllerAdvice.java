@@ -7,7 +7,6 @@ import com.github.f4b6a3.uuid.exception.InvalidUuidException;
 import com.specialist.core.exceptions.BaseControllerAdvice;
 import com.specialist.core.exceptions.ErrorUtils;
 import com.specialist.core.exceptions.mapper.ExceptionMapper;
-import com.specialist.core.exceptions.models.Exception;
 import com.specialist.core.exceptions.models.*;
 import com.specialist.core.exceptions.models.dto.ErrorDto;
 import io.lettuce.core.RedisConnectionException;
@@ -70,7 +69,7 @@ public class UserControllerAdvice extends BaseControllerAdvice {
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<?> handleDataIntegrityViolationException(Exception e){
+    public ResponseEntity<?> handleDataIntegrityViolationException(DataIntegrityViolationException e){
         return super.handleDataIntegrityViolationException(e);
     }
 

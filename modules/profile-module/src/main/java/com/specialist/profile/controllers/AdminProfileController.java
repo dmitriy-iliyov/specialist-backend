@@ -7,7 +7,6 @@ import com.specialist.profile.services.SpecialistProfileService;
 import com.specialist.utils.validation.annotation.ValidUuid;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

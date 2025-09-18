@@ -3,7 +3,6 @@ package com.specialist.specialistdirectory.domain.specialist.models.filters;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistLanguage;
 import com.specialist.utils.pagination.PageRequest;
 import jakarta.validation.constraints.*;
-import lombok.Data;
 import lombok.Getter;
 
 @com.specialist.specialistdirectory.domain.specialist.validation.SpecialistFilter

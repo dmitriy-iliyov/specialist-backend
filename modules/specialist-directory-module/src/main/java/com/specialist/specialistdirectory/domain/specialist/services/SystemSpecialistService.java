@@ -6,7 +6,6 @@ import com.specialist.specialistdirectory.domain.specialist.models.dtos.Speciali
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistStatus;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.SystemSpecialistFilter;
-import com.specialist.utils.pagination.PageResponse;
 import org.springframework.data.domain.Page;
 
 import java.util.List;

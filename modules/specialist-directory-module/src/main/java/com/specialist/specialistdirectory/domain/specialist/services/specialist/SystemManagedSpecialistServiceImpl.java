@@ -6,10 +6,8 @@ import com.specialist.specialistdirectory.domain.specialist.mappers.ManagedSpeci
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistStatus;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.SystemSpecialistFilter;
-import com.specialist.specialistdirectory.domain.specialist.services.SpecialistService;
 import com.specialist.specialistdirectory.domain.specialist.services.SystemSpecialistService;
 import com.specialist.utils.pagination.PageDataHolder;
-import com.specialist.utils.pagination.PageResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

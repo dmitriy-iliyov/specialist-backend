@@ -1,12 +1,10 @@
 package com.specialist.profile.controllers;
 
 import com.specialist.profile.models.ProfileFilter;
-import com.specialist.profile.models.enums.ScopeType;
 import com.specialist.profile.services.ProfileQueryService;
 import com.specialist.profile.services.ProfileReadOrchestrator;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
