@@ -1,4 +1,4 @@
-package com.specialist.schedule.work_day;
+package com.specialist.schedule.availability;
 
 import com.specialist.schedule.appointment.models.dto.AppointmentResponseDto;
 import com.specialist.schedule.appointment.models.enums.AppointmentStatus;
@@ -7,51 +7,34 @@ import com.specialist.schedule.appointment_duration.AppointmentDurationService;
 import com.specialist.schedule.interval.models.dto.IntervalResponseDto;
 import com.specialist.schedule.interval.services.IntervalService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Duration;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.time.temporal.TemporalAdjusters;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
-public class WorkDayServiceImpl implements WorkDayService {
+public class SpecialistAvailabilityAggregatorImpl implements SpecialistAvailabilityAggregator {
 
     private final IntervalService intervalService;
     private final AppointmentService appointmentService;
     private final AppointmentDurationService appointmentDurationService;
 
-    @Transactional(readOnly = true)
-    @Override
-    public List<String> findAvailableDayTimes(UUID specialistId, LocalDate date) {
-        Long duration = appointmentDurationService.findBySpecialistId(specialistId);
-        List<IntervalResponseDto> dtoList = intervalService.findAllBySpecialistIdAndDate(specialistId, date);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-        List<LocalTime> times = new ArrayList<>();
-        for (IntervalResponseDto dto: dtoList) {
-            LocalTime time = dto.start();
-            long intervalDuration = Duration.between(time, dto.end()).toMinutes();
-            for (int i = 0; i < intervalDuration/duration; i++) {
-                times.add(time);
-                time = time.plusMinutes(duration);
-            }
-        }
-        return times.stream()
-                .map(time -> time.format(formatter))
-                .toList();
-    }
-
     @Transactional(readOnly = true, isolation = Isolation.REPEATABLE_READ)
     @Override
-    public Map<String, TimeDto> findAllDayTimes(UUID specialistId, LocalDate date) {
+    public Map<String, TimeDto> findDay(UUID specialistId, LocalDate date) {
         List<IntervalResponseDto> intervals = intervalService.findAllBySpecialistIdAndDate(specialistId, date);
         List<AppointmentResponseDto> appointments = appointmentService.findAllBySpecialistIdAndDateAndStatus(
                 specialistId, date, AppointmentStatus.SCHEDULED
@@ -108,10 +91,30 @@ public class WorkDayServiceImpl implements WorkDayService {
                 ));
     }
 
-    @Transactional
+    @Transactional(readOnly = true, isolation = Isolation.REPEATABLE_READ)
     @Override
-    public void deleteAllBySpecialistIdAndDate(UUID specialistId, LocalDate date) {
-        intervalService.deleteAllBySpecialistIdAndDate(specialistId, date);
-        appointmentService.cancelAllByDate(specialistId, date);
+    public Map<LocalDate, Integer> findMonth(UUID specialistId) {
+        LocalDate start = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        LocalDate end = start.plusDays(27);
+        Map<LocalDate, Integer> monthDates = new LinkedHashMap<>();
+        List<LocalDate> intervals = intervalService.findMonthDatesBySpecialistId(specialistId, start, end);
+        List<LocalDate> appointmentDates = appointmentService.findMonthDatesBySpecialistId(specialistId, start, end);
+        for (int i = 0; i < 28; i++) {
+            LocalDate iDate = start.plusDays(i);
+            if (appointmentDates.contains(iDate)) {
+                monthDates.put(iDate, 2);
+            } else if (intervals.contains(iDate)) {
+                monthDates.put(iDate, 1);
+            } else {
+                monthDates.put(iDate, 0);
+            }
+        }
+        return monthDates.keySet().stream().sorted()
+                .collect(Collectors.toMap(
+                        Function.identity(),
+                        monthDates::get,
+                        (k1, k2) -> k2,
+                        LinkedHashMap::new)
+                );
     }
 }

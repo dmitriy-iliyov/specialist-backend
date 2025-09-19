@@ -7,14 +7,12 @@ import com.specialist.schedule.appointment.models.dto.AppointmentUpdateDto;
 
 import java.util.UUID;
 
-public interface AppointmentOrchestrator {
+public interface AppointmentManagementOrchestrator {
     AppointmentResponseDto save(UUID userId, AppointmentCreateDto dto);
 
     AppointmentResponseDto update(UUID userId, AppointmentUpdateDto updateDto);
 
-    AppointmentResponseDto complete(UUID participantId, Long id, String review);
+    AppointmentResponseDto complete(Long id, String review);
 
-    AppointmentResponseDto cancel(UUID participantId, Long id);
-
-    AppointmentResponseDto findBySpecialistIdAndId(UUID specialistId, Long id);
+    AppointmentResponseDto cancel(Long id);
 }

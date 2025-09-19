@@ -39,7 +39,6 @@ public class UnifiedAppointmentService implements AppointmentService, SystemAppo
     private final AppointmentMapper mapper;
     private final RedisTemplate<String, AppointmentResponseDto> redisTemplate;
 
-
     @Caching(evict = {
             @CacheEvict(value = ScheduleCacheConfig.APPOINTMENTS_BY_DATE_AND_STATUS_CACHE,
                     key = "#dto.specialistId() + ':' + #dto.getDate() + ':SCHEDULED'"),
@@ -197,18 +196,14 @@ public class UnifiedAppointmentService implements AppointmentService, SystemAppo
         }
     }
 
-    // invalidate all caches ??
+    // DISCUSS invalidate all caches ??
     @Transactional
     @Override
     public List<Long> markBatchAsSkipped(int batchSize) {
         LocalDate dateLimit = LocalDate.now().minusDays(1);
-
         log.info("START marking appointments as skipped with batchSize={}, dateLimit={}", batchSize, dateLimit);
-
         List<Long> markedIds = repository.markBatchAsSkipped(batchSize, dateLimit);
-
         log.info("END marking appointments, marked id list={}", markedIds);
-
         return markedIds;
     }
 
@@ -216,17 +211,13 @@ public class UnifiedAppointmentService implements AppointmentService, SystemAppo
     @Override
     public BatchResponse<AppointmentResponseDto> findBatchToRemind(int batchSize, int page) {
         LocalDate scheduledData = LocalDate.now().plusDays(1);
-
         log.info("START selecting appointments to remind with batchSize={}, page={}, scheduledData={}", batchSize, page, scheduledData);
-
         Slice<AppointmentEntity> slice = repository.findBatchToRemind(
                 scheduledData,
                 AppointmentStatus.SCHEDULED,
                 Pageable.ofSize(batchSize).withPage(page)
         );
-
         log.info("END selecting, hasNext={}", slice.hasNext());
-
         return new BatchResponse<>(
                 mapper.toDtoList(slice.getContent()),
                 slice.hasNext()

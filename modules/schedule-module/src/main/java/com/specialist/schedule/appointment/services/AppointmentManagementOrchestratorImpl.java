@@ -7,7 +7,6 @@ import com.specialist.schedule.appointment.models.dto.AppointmentValidationInfo;
 import com.specialist.schedule.appointment.models.enums.AppointmentAgeType;
 import com.specialist.schedule.appointment.models.enums.AppointmentStatus;
 import com.specialist.schedule.appointment.models.enums.ValidationStatus;
-import com.specialist.schedule.appointment.validation.AppointmentOwnershipValidator;
 import com.specialist.schedule.appointment.validation.AppointmentTimeValidator;
 import com.specialist.schedule.appointment_duration.AppointmentDurationService;
 import com.specialist.schedule.exceptions.appointment.InvalidAttemptToCompleteException;
@@ -25,14 +24,12 @@ import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
-public class AppointmentOrchestratorImpl implements AppointmentOrchestrator {
+public class AppointmentManagementOrchestratorImpl implements AppointmentManagementOrchestrator {
 
     private final AppointmentService service;
     private final AppointmentDurationService durationService;
     private final IntervalOrchestrator intervalOrchestratorImpl;
     private final AppointmentTimeValidator timeValidator;
-    private final AppointmentOwnershipValidator ownershipValidator;
-
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     @Override
@@ -55,7 +52,7 @@ public class AppointmentOrchestratorImpl implements AppointmentOrchestrator {
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     @Override
     public AppointmentResponseDto update(UUID userId, AppointmentUpdateDto updateDto) {
-        AppointmentResponseDto currentDto = ownershipValidator.validateUserOwnership(userId, updateDto.getId());
+        AppointmentResponseDto currentDto = service.findById(updateDto.getId());
         UUID specialistId = currentDto.specialistId();
         updateDto.setSpecialistId(specialistId);
         Long duration = durationService.findBySpecialistId(specialistId);
@@ -93,8 +90,8 @@ public class AppointmentOrchestratorImpl implements AppointmentOrchestrator {
 
     @Transactional
     @Override
-    public AppointmentResponseDto complete(UUID participantId, Long id, String review) {
-        AppointmentResponseDto dto = ownershipValidator.validateParticipantOwnership(participantId, id);
+    public AppointmentResponseDto complete(Long id, String review) {
+        AppointmentResponseDto dto = service.findById(id);
         timeValidator.isCompletePermit(id);
         if (dto.status().equals(AppointmentStatus.CANCELED)) {
             throw new InvalidAttemptToCompleteException();
@@ -104,8 +101,8 @@ public class AppointmentOrchestratorImpl implements AppointmentOrchestrator {
 
     @Transactional
     @Override
-    public AppointmentResponseDto cancel(UUID participantId, Long id) {
-        AppointmentResponseDto dto = ownershipValidator.validateParticipantOwnership(participantId, id);
+    public AppointmentResponseDto cancel(Long id) {
+        AppointmentResponseDto dto = service.findById(id);
         timeValidator.isCancelPermit(id);
         if (dto.status().equals(AppointmentStatus.CANCELED)) {
             throw new InvalidAttemptToDeleteException();
@@ -113,12 +110,5 @@ public class AppointmentOrchestratorImpl implements AppointmentOrchestrator {
         dto = service.cancelById(id);
         intervalOrchestratorImpl.systemSave(dto.specialistId(), new SystemIntervalCreatedDto(dto.start(), dto.end(), dto.date()));
         return dto;
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public AppointmentResponseDto findBySpecialistIdAndId(UUID specialistId, Long id) {
-        ownershipValidator.validateParticipantOwnership(specialistId, id);
-        return service.findById(id);
     }
 }

@@ -38,7 +38,7 @@ public class ReviewBufferRestClient implements ReviewBufferService {
         try {
             restClient
                     .method(HttpMethod.DELETE)
-                    .uri("/specialists/reviews/buffer/batch")
+                    .uri("/reviews-buffer/batch")
                     .body(body)
                     .retrieve()
                     .toBodilessEntity();
@@ -53,7 +53,7 @@ public class ReviewBufferRestClient implements ReviewBufferService {
         try {
             restClient
                     .post()
-                    .uri("/specialists/reviews/buffer/batch")
+                    .uri("/reviews-buffer/batch")
                     .body(body)
                     .retrieve()
                     .toBodilessEntity();

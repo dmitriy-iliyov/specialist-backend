@@ -10,7 +10,12 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.MappingTarget;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Mapper(
         componentModel = MappingConstants.ComponentModel.SPRING,
@@ -54,6 +59,15 @@ public interface SpecialistProfileMapper {
     @Mapping(target = "card", source = "card")
     PublicSpecialistAggregatedResponseDto aggregate(PublicSpecialistResponseDto dto, ManagedSpecialistResponseDto card);
 
-    List<PrivateSpecialistAggregatedResponseDto> aggregate(List<PrivateSpecialistResponseDto> dtoList,
-                                                           List<ManagedSpecialistResponseDto> managedDtoList);
+    default List<PrivateSpecialistAggregatedResponseDto> aggregate(List<PrivateSpecialistResponseDto> dtoList,
+                                                           List<ManagedSpecialistResponseDto> managedDtoList) {
+        List<PrivateSpecialistAggregatedResponseDto> aggregatedDtoList = new ArrayList<>();
+        Map<UUID, ManagedSpecialistResponseDto> managedDtoMap = managedDtoList.stream()
+                .collect(Collectors.toMap(ManagedSpecialistResponseDto::getOwnerId, Function.identity()));
+        for (PrivateSpecialistResponseDto dto : dtoList) {
+            PrivateSpecialistAggregatedResponseDto aggregatedDto = aggregate(dto, managedDtoMap.get(dto.getId()));
+            aggregatedDtoList.add(aggregatedDto);
+        }
+        return aggregatedDtoList;
+    }
 }

@@ -5,7 +5,7 @@ import com.specialist.schedule.appointment.models.dto.AppointmentResponseDto;
 import java.util.UUID;
 
 public interface AppointmentOwnershipValidator {
-    AppointmentResponseDto validateUserOwnership(UUID userId, Long appointmentId);
+    AppointmentResponseDto validateForUser(UUID userId, Long appointmentId);
 
-    AppointmentResponseDto validateParticipantOwnership(UUID participantId, Long appointmentId);
+    AppointmentResponseDto validateForParticipant(UUID participantId, Long appointmentId);
 }

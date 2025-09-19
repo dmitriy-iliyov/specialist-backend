@@ -10,4 +10,5 @@ public final class ScheduleCacheConfig {
     public final static String APPOINTMENTS_BY_DATE_INTERVAL_CACHE = "appointments:date_interval";
     public final static String INTERVALS_BY_DATE_CACHE = "intervals:date";
     public final static String INTERVALS_BY_DATE_INTERVAL_CACHE = "intervals:date_interval";
+
 }

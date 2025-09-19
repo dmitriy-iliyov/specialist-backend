@@ -15,7 +15,7 @@ public class AppointmentOwnershipValidatorImpl implements AppointmentOwnershipVa
     private final AppointmentService service;
 
     @Override
-    public AppointmentResponseDto validateUserOwnership(UUID userId, Long appointmentId) {
+    public AppointmentResponseDto validateForUser(UUID userId, Long appointmentId) {
         AppointmentResponseDto dto = service.findById(appointmentId);
         if (!dto.userId().equals(userId)) {
             throw new AppointmentOwnershipException();
@@ -24,7 +24,7 @@ public class AppointmentOwnershipValidatorImpl implements AppointmentOwnershipVa
     }
 
     @Override
-    public AppointmentResponseDto validateParticipantOwnership(UUID participantId, Long appointmentId) {
+    public AppointmentResponseDto validateForParticipant(UUID participantId, Long appointmentId) {
         AppointmentResponseDto dto = service.findById(appointmentId);
         if (!dto.userId().equals(participantId) && !dto.specialistId().equals(participantId)) {
             throw new AppointmentOwnershipException();

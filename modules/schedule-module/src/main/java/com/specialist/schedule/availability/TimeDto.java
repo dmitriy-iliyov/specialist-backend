@@ -1,4 +1,4 @@
-package com.specialist.schedule.work_day;
+package com.specialist.schedule.availability;
 
 public record TimeDto(
         Long id,

@@ -35,7 +35,6 @@ public class UnifiedIntervalService implements IntervalService, SystemIntervalSe
     private final IntervalMapper mapper;
     private final RedisTemplate<String, String> redisTemplate;
 
-
     @Caching(evict = {
             @CacheEvict(value = ScheduleCacheConfig.INTERVALS_BY_DATE_CACHE, key = "#specialistId + ':' + #result.date()"),
             @CacheEvict(value = ScheduleCacheConfig.INTERVALS_BY_DATE_INTERVAL_CACHE, key = "#specialistId"),

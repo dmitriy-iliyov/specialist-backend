@@ -5,7 +5,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.specialist.schedule.appointment.models.enums.AppointmentType;
 import com.specialist.schedule.appointment.models.marker.AppointmentMarker;
 import com.specialist.utils.validation.annotation.ValidEnum;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
@@ -17,9 +20,8 @@ import java.util.UUID;
 @Data
 public class AppointmentUpdateDto implements AppointmentMarker {
 
-        @NotNull(message = "Id shouldn't be null!")
-        @Positive(message = "Invalid value!")
-        private final Long id;
+        @JsonIgnore
+        private Long id;
 
         @JsonIgnore
         private UUID specialistId;
