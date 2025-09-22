@@ -1,56 +1,34 @@
 package com.specialist.specialistdirectory.domain.review.services;
 
 import com.specialist.contracts.profile.CreatorRatingUpdateEvent;
-import com.specialist.specialistdirectory.domain.review.mappers.ReviewBufferMapper;
 import com.specialist.specialistdirectory.domain.review.models.enums.DeliveryState;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public final class ReviewBufferEventSender {
-
-    @Value("${api.review-buffer.clean.batch-size}")
-    public int CLEAN_BATCH_SIZE;
+public class CreatorRatingEventSenderImpl implements CreatorRatingEventSender {
 
     @Value("${api.kafka.topic.creator-rating}")
     public String TOPIC;
 
     private final CreatorRatingBufferService service;
-    private final ReviewBufferMapper mapper;
     private final KafkaTemplate<String, Object> kafkaTemplate;
     private static final int MAX_ATTEMPT_COUNT = 2;
 
-    @Scheduled(
-            initialDelayString = "${api.review-buffer.clean.initial_delay}",
-            fixedDelayString = "${api.review-buffer.clean.fixed_delay}"
-    )
-    public void sendBatch() {
-        List<CreatorRatingUpdateEvent> events = mapper.toEventList(
-                service.findAllByDeliveryState(DeliveryState.READY_TO_SEND, CLEAN_BATCH_SIZE)
-        );
-        if (events.isEmpty()) {
-            return;
-        }
-        for (CreatorRatingUpdateEvent event: events) {
-            this.sendEvent(event, 1);
-        }
-    }
-
-    private void sendEvent(CreatorRatingUpdateEvent event, int attemptNumber) {
+    @Override
+    public void sendEvent(CreatorRatingUpdateEvent event, int attemptNumber) {
         kafkaTemplate.send(TOPIC, event)
-                .thenAccept(success -> service.updateStateById(event.id(), DeliveryState.SENT))
+                .thenAccept(success -> service.updateDeliveryStateById(event.id(), DeliveryState.SENT))
                 .exceptionally(fail -> {
                     log.error("Error publishing CreatorRatingUpdateEvent with creatorId={}, date={}, time={}",
                             event.creatorId(), LocalDate.now(), LocalTime.now());

@@ -14,11 +14,11 @@ import java.util.UUID;
 
 @Service
 @Slf4j
-public class AdminReviewManagementDecorator implements AdminReviewManagementFacade {
+public class AdminReviewManagementRetryDecorator implements AdminReviewManagementFacade {
 
     private final AdminReviewManagementFacade delegate;
 
-    public AdminReviewManagementDecorator(@Qualifier("defaultAdminReviewManagementFacade") AdminReviewManagementFacade delegate) {
+    public AdminReviewManagementRetryDecorator(@Qualifier("defaultAdminReviewManagementFacade") AdminReviewManagementFacade delegate) {
         this.delegate = delegate;
     }
 

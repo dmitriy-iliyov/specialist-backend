@@ -6,7 +6,7 @@ import com.specialist.specialistdirectory.domain.review.models.dtos.ReviewUpdate
 
 import java.util.UUID;
 
-public interface ReviewOrchestrator {
+public interface ReviewManagementOrchestrator {
     ReviewResponseDto save(ReviewCreateDto dto);
 
     ReviewResponseDto update(ReviewUpdateDto dto);

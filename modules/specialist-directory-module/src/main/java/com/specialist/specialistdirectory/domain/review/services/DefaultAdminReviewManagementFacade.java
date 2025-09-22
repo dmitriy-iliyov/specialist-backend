@@ -3,24 +3,19 @@ package com.specialist.specialistdirectory.domain.review.services;
 import com.specialist.specialistdirectory.domain.review.models.dtos.ReviewResponseDto;
 import com.specialist.specialistdirectory.domain.review.models.enums.OperationType;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistRatingService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
 @Service
-public class DefaultAdminReviewFacade implements AdminReviewFacade {
+@RequiredArgsConstructor
+public class DefaultAdminReviewManagementFacade implements AdminReviewManagementFacade {
 
     private final ReviewService reviewService;
     private final SpecialistRatingService ratingService;
     private final CreatorRatingUpdateService creatorRatingUpdateService;
-
-    public DefaultAdminReviewFacade(ReviewService reviewService, SpecialistRatingService ratingService,
-                                    CreatorRatingUpdateService creatorRatingUpdateService) {
-        this.reviewService = reviewService;
-        this.ratingService = ratingService;
-        this.creatorRatingUpdateService = creatorRatingUpdateService;
-    }
 
     @Transactional
     @Override

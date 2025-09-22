@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class DefaultSpecialistRatingService implements SpecialistRatingService {
+public class SpecialistRatingServiceImpl implements SpecialistRatingService {
 
     private final SpecialistRepository repository;
 

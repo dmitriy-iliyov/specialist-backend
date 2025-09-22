@@ -20,7 +20,6 @@ public class SpecialistSpecificationRepository implements SpecificationRepositor
     @PersistenceContext
     private EntityManager entityManager;
 
-
     @Override
     public Slice<SpecialistEntity> findAll(Specification<SpecialistEntity> specification, Pageable pageable) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();

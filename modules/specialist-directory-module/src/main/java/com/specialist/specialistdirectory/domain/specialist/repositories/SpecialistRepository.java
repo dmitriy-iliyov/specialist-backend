@@ -36,8 +36,7 @@ public interface SpecialistRepository extends JpaRepository<SpecialistEntity, UU
         WHERE type_id = :old_id
           AND suggested_type_id = :new_id
     """, nativeQuery = true)
-    void updateAllByTypeTitle(@Param("old_id") Long oldTypeId,
-                              @Param("new_id") Long newTypeId);
+    void updateAllByTypeTitle(@Param("old_id") Long oldTypeId, @Param("new_id") Long newTypeId);
 
     @Query(value = """
         SELECT creator_id FROM specialists

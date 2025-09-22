@@ -5,10 +5,12 @@ import com.specialist.specialistdirectory.domain.review.models.dtos.ReviewCreate
 import com.specialist.specialistdirectory.domain.review.models.dtos.ReviewUpdateDto;
 import com.specialist.specialistdirectory.domain.review.models.filters.ReviewSort;
 import com.specialist.specialistdirectory.domain.review.services.ReviewAggregator;
-import com.specialist.specialistdirectory.domain.review.services.ReviewOrchestrator;
+import com.specialist.specialistdirectory.domain.review.services.ReviewManagementOrchestrator;
+import com.specialist.specialistdirectory.domain.review.services.ReviewManagementRetryDecorator;
 import com.specialist.utils.validation.annotation.ValidUuid;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,12 +21,16 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/specialists/{specialist_id}/reviews")
-@RequiredArgsConstructor
 public class ReviewController {
 
-    private final ReviewOrchestrator orchestrator;
+    private final ReviewManagementOrchestrator orchestrator;
     private final ReviewAggregator aggregator;
 
+    public ReviewController(@Qualifier("reviewManagementRetryDecorator") ReviewManagementOrchestrator orchestrator,
+                            ReviewAggregator aggregator) {
+        this.orchestrator = orchestrator;
+        this.aggregator = aggregator;
+    }
 
     @PreAuthorize("hasAnyRole('USER', 'SPECIALIST') && hasAuthority('REVIEW_CREATE_UPDATE')")
     @PostMapping

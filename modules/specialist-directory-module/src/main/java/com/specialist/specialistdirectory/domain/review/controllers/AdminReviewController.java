@@ -1,8 +1,11 @@
 package com.specialist.specialistdirectory.domain.review.controllers;
 
-import com.specialist.specialistdirectory.domain.review.services.AdminReviewFacade;
+import com.specialist.specialistdirectory.domain.review.services.AdminReviewManagementFacade;
+import com.specialist.specialistdirectory.domain.review.services.ReviewAggregator;
+import com.specialist.specialistdirectory.domain.review.services.ReviewManagementOrchestrator;
 import com.specialist.utils.validation.annotation.ValidUuid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,10 +19,13 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/admin/v1/specialists/{specialist_id}/reviews")
 @PreAuthorize("hasRole('ADMIN') && hasAuthority('REVIEW_MANAGEMENT')")
-@RequiredArgsConstructor
 public class AdminReviewController {
 
-    private final AdminReviewFacade facade;
+    private final AdminReviewManagementFacade facade;
+
+    public AdminReviewController(@Qualifier("adminReviewManagementRetryDecorator") AdminReviewManagementFacade facade) {
+        this.facade = facade;
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("specialist_id") @ValidUuid(paramName = "specialist_id")

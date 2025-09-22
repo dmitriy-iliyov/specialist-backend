@@ -4,6 +4,6 @@ import com.specialist.specialistdirectory.domain.review.models.enums.OperationTy
 
 import java.util.UUID;
 
-public interface ReviewBufferUpdateService {
+public interface CreatorRatingUpdateService {
     void updateByCreatorId(UUID creatorId, long rating, OperationType type);
 }

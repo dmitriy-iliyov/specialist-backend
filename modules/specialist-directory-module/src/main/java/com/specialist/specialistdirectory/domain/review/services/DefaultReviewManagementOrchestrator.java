@@ -7,8 +7,8 @@ import com.specialist.specialistdirectory.domain.review.models.enums.NextOperati
 import com.specialist.specialistdirectory.domain.review.models.enums.OperationType;
 import com.specialist.specialistdirectory.domain.review.models.enums.ReviewAgeType;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistRatingService;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.tuple.Pair;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,19 +16,12 @@ import java.util.Map;
 import java.util.UUID;
 
 @Service
-public class DefaultReviewOrchestrator implements ReviewOrchestrator {
+@RequiredArgsConstructor
+public class DefaultReviewManagementOrchestrator implements ReviewManagementOrchestrator {
 
     private final ReviewService reviewService;
     private final SpecialistRatingService ratingService;
     private final CreatorRatingUpdateService creatorRatingUpdateService;
-
-    public DefaultReviewOrchestrator(
-            ReviewService reviewService, @Qualifier("defaultSpecialistRatingService") SpecialistRatingService ratingService,
-            @Qualifier("creatorRatingBufferServiceImpl") CreatorRatingUpdateService creatorRatingUpdateService) {
-        this.reviewService = reviewService;
-        this.ratingService = ratingService;
-        this.creatorRatingUpdateService = creatorRatingUpdateService;
-    }
 
     @Transactional
     @Override

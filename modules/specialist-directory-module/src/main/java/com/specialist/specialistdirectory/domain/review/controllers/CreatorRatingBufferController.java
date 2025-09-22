@@ -13,10 +13,10 @@ import java.util.Set;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/system/v1/reviews-buffer/batch")
+@RequestMapping("/api/system/v1/creator-rating-buffer/batch")
 @PreAuthorize("hasRole('SERVICE') && hasAuthority('REVIEWS_BUFFER_MANAGEMENT')")
 @RequiredArgsConstructor
-public class ReviewBufferController {
+public class CreatorRatingBufferController {
 
     private final CreatorRatingBufferService service;
 
