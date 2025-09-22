@@ -159,7 +159,6 @@ public class UnifiedIntervalService implements IntervalService, SystemIntervalSe
     @Override
     public void deleteAllBySpecialistId(UUID specialistId) {
         repository.deleteAllBySpecialistId(specialistId);
-
         // scan
         Set<String> toInvalidate = redisTemplate.keys(ScheduleCacheConfig.INTERVALS_BY_DATE_CACHE + "::" + specialistId + ":*");
         if (toInvalidate != null && !toInvalidate.isEmpty()) {
@@ -173,15 +172,11 @@ public class UnifiedIntervalService implements IntervalService, SystemIntervalSe
 
     @Transactional
     @Override
-    public List<Long> deleteBatchBeforeWeakStart(int batchSize) {
+    public List<Long> deleteBatchBeforeWeekStart(int batchSize) {
         LocalDate weakStart = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
-
         log.info("START deleting intervals batch with weakStart={}, batchSize={}", weakStart, batchSize);
-
         List<Long> deletedIds = repository.deleteBatchBeforeDate(batchSize, weakStart);
-
         log.info("END deleting intervals, deleted id list={}", deletedIds);
-
         return deletedIds;
     }
 }

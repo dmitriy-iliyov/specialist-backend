@@ -11,10 +11,10 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Entity
-@Table(name = "review_buffers")
+@Table(name = "creator_rating_buffers")
 @Data
 @AllArgsConstructor
-public class ReviewBufferEntity {
+public class CreatorRatingBufferEntity {
 
     @Id
     private UUID id;
@@ -38,12 +38,15 @@ public class ReviewBufferEntity {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
+    @Version
+    private Long version;
 
-    public ReviewBufferEntity() {
+
+    public CreatorRatingBufferEntity() {
         this.id = UuidUtils.generateV7();
     }
 
-    public ReviewBufferEntity(UUID creatorId, long summaryRating) {
+    public CreatorRatingBufferEntity(UUID creatorId, long summaryRating) {
         this.id = UuidUtils.generateV7();
         this.creatorId = creatorId;
         this.summaryRating = summaryRating;

@@ -1,7 +1,8 @@
 package com.specialist.profile.infrastructure.events;
 
-import com.specialist.profile.infrastructure.rest.ReviewBufferService;
+import com.specialist.profile.infrastructure.rest.CreatorRatingBufferService;
 import com.specialist.profile.models.enums.ProcessingStatus;
+import com.specialist.profile.services.rating.CreatorRatingEventService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -12,7 +13,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class EventCleanUpService {
+public final class CreatorRatingEventCleanUpService {
 
     @Value("${api.review-buffer.clean.batch-size}")
     public int CLEAN_BATCH_SIZE;
@@ -20,8 +21,8 @@ public class EventCleanUpService {
     @Value("${api.review-buffer.clean.batch-size}")
     public int NOTIFY_BATCH_SIZE;
 
-    private final EventService service;
-    private final ReviewBufferService restClient;
+    private final CreatorRatingEventService service;
+    private final CreatorRatingBufferService restClient;
 
     @Scheduled(cron = "0 */2 1 * * *")
     public void notifyToResend() {

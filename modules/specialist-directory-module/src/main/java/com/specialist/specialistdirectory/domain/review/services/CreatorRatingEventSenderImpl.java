@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public final class ReviewEventSender {
+public final class ReviewBufferEventSender {
 
     @Value("${api.review-buffer.clean.batch-size}")
     public int CLEAN_BATCH_SIZE;
@@ -27,7 +27,7 @@ public final class ReviewEventSender {
     @Value("${api.kafka.topic.creator-rating}")
     public String TOPIC;
 
-    private final ReviewBufferService service;
+    private final CreatorRatingBufferService service;
     private final ReviewBufferMapper mapper;
     private final KafkaTemplate<String, Object> kafkaTemplate;
     private static final int MAX_ATTEMPT_COUNT = 2;
@@ -36,9 +36,9 @@ public final class ReviewEventSender {
             initialDelayString = "${api.review-buffer.clean.initial_delay}",
             fixedDelayString = "${api.review-buffer.clean.fixed_delay}"
     )
-    public void sendEventsBatch() {
+    public void sendBatch() {
         List<CreatorRatingUpdateEvent> events = mapper.toEventList(
-                service.findBatchByDeliveryState(DeliveryState.READY_TO_SEND, CLEAN_BATCH_SIZE)
+                service.findAllByDeliveryState(DeliveryState.READY_TO_SEND, CLEAN_BATCH_SIZE)
         );
         if (events.isEmpty()) {
             return;
@@ -50,7 +50,7 @@ public final class ReviewEventSender {
 
     private void sendEvent(CreatorRatingUpdateEvent event, int attemptNumber) {
         kafkaTemplate.send(TOPIC, event)
-                .thenAccept(success -> service.markAsSent(event.id()))
+                .thenAccept(success -> service.updateStateById(event.id(), DeliveryState.SENT))
                 .exceptionally(fail -> {
                     log.error("Error publishing CreatorRatingUpdateEvent with creatorId={}, date={}, time={}",
                             event.creatorId(), LocalDate.now(), LocalTime.now());

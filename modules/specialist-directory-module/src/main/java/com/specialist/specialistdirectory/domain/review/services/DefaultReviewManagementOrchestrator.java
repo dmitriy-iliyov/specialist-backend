@@ -16,19 +16,18 @@ import java.util.Map;
 import java.util.UUID;
 
 @Service
-public class ReviewOrchestratorImpl implements ReviewOrchestrator {
+public class DefaultReviewOrchestrator implements ReviewOrchestrator {
 
     private final ReviewService reviewService;
     private final SpecialistRatingService ratingService;
-    private final ReviewBufferService reviewBufferService;
+    private final CreatorRatingUpdateService creatorRatingUpdateService;
 
-    public ReviewOrchestratorImpl(ReviewService reviewService,
-                                  @Qualifier("specialistRatingRetryDecorator")
-                                  SpecialistRatingService ratingService,
-                                  ReviewBufferService reviewBufferService) {
+    public DefaultReviewOrchestrator(
+            ReviewService reviewService, @Qualifier("defaultSpecialistRatingService") SpecialistRatingService ratingService,
+            @Qualifier("creatorRatingBufferServiceImpl") CreatorRatingUpdateService creatorRatingUpdateService) {
         this.reviewService = reviewService;
         this.ratingService = ratingService;
-        this.reviewBufferService = reviewBufferService;
+        this.creatorRatingUpdateService = creatorRatingUpdateService;
     }
 
     @Transactional
@@ -36,7 +35,7 @@ public class ReviewOrchestratorImpl implements ReviewOrchestrator {
     public ReviewResponseDto save(ReviewCreateDto dto) {
         ReviewResponseDto resultDto = reviewService.save(dto);
         UUID specialistCreatorId = ratingService.updateRatingById(dto.getSpecialistId(), dto.getRating(), OperationType.PERSIST);
-        reviewBufferService.put(specialistCreatorId, dto.getRating());
+        creatorRatingUpdateService.updateByCreatorId(specialistCreatorId, dto.getRating(), OperationType.PERSIST);
         return resultDto;
     }
 
@@ -49,7 +48,7 @@ public class ReviewOrchestratorImpl implements ReviewOrchestrator {
             ReviewResponseDto oldDto = resultPair.getRight().get(ReviewAgeType.OLD);
             long resultRating = newDto.rating() - oldDto.rating();
             UUID specialistCreatorId = ratingService.updateRatingById(dto.getSpecialistId(), resultRating, OperationType.UPDATE);
-            reviewBufferService.put(specialistCreatorId, resultRating);
+            creatorRatingUpdateService.updateByCreatorId(specialistCreatorId, resultRating, OperationType.UPDATE);
         }
         return newDto;
     }
@@ -59,6 +58,6 @@ public class ReviewOrchestratorImpl implements ReviewOrchestrator {
     public void delete(UUID creatorId, UUID specialistId, UUID id) {
         ReviewResponseDto dto = reviewService.deleteById(creatorId, specialistId, id);
         UUID specialistCreatorId = ratingService.updateRatingById(specialistId, -dto.rating(), OperationType.DELETE);
-        reviewBufferService.put(specialistCreatorId, -dto.rating());
+        creatorRatingUpdateService.updateByCreatorId(specialistCreatorId, -dto.rating(), OperationType.DELETE);
     }
 }

@@ -1,6 +1,7 @@
 package com.specialist.specialistdirectory.domain.review.controllers;
 
-import com.specialist.specialistdirectory.domain.review.services.ReviewBufferService;
+import com.specialist.specialistdirectory.domain.review.models.enums.DeliveryState;
+import com.specialist.specialistdirectory.domain.review.services.CreatorRatingBufferService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,11 +18,11 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ReviewBufferController {
 
-    private final ReviewBufferService service;
+    private final CreatorRatingBufferService service;
 
     @PostMapping
     public ResponseEntity<?> markBatchAsReadyToSend(@RequestBody Map<String, Set<UUID>> dto) {
-        service.markBatchAsReadyToSend(dto.get("ids"));
+        service.updateAllDeliveryStateByIdIn(dto.get("ids"), DeliveryState.READY_TO_SEND);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .build();
@@ -29,7 +30,7 @@ public class ReviewBufferController {
 
     @DeleteMapping
     public ResponseEntity<?> deleteBatchByIdIn(@RequestBody Map<String, Set<UUID>> dto) {
-        service.popAllByIdIn(dto.get("ids"));
+        service.deleteAllByIdIn(dto.get("ids"));
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();

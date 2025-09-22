@@ -20,12 +20,11 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class NearestIntervalServiceImpl implements NearestIntervalService {
+public class NearestIntervalServiceImpl implements NearestIntervalService, SystemNearestIntervalService {
 
     private final NearestIntervalRepository repository;
     private final NearestIntervalMapper mapper;
     private final IntervalService service;
-
 
     @Override
     public Map<UUID, NearestIntervalDto> findAll(Set<UUID> specialistIds) {

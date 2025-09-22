@@ -3,7 +3,6 @@ package com.specialist.schedule.appointment.services;
 import com.specialist.schedule.appointment.models.dto.AppointmentCreateDto;
 import com.specialist.schedule.appointment.models.dto.AppointmentResponseDto;
 import com.specialist.schedule.appointment.models.dto.AppointmentUpdateDto;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
