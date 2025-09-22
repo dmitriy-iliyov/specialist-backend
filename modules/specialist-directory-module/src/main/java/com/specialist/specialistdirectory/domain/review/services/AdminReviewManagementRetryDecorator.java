@@ -34,15 +34,13 @@ public class AdminReviewManagementRetryDecorator implements AdminReviewManagemen
 
     @Recover
     public ReviewResponseDto recover(OptimisticLockException ex, UUID specialistId, UUID id) {
-        log.error("Failed to delete review after all retries: specialistId={}, id={}",
-                specialistId, id, ex);
+        log.error("Failed to delete review after all retries: specialistId={}, id={}", specialistId, id, ex);
         throw new ReviewManageException();
     }
 
     @Recover
     public ReviewResponseDto recover(Exception ex, UUID specialistId, UUID id) {
-        log.error("Unexpected error during review delete: specialistId={}, id={}",
-                specialistId, id, ex);
+        log.error("Unexpected error during review delete: specialistId={}, id={}", specialistId, id, ex);
         throw new ReviewManageException();
     }
 }

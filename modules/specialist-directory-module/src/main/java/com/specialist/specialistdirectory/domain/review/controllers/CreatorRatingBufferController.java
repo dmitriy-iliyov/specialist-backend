@@ -14,7 +14,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/system/v1/creator-rating-buffer/batch")
-@PreAuthorize("hasRole('SERVICE') && hasAuthority('REVIEWS_BUFFER_MANAGEMENT')")
+@PreAuthorize("hasRole('SERVICE') && hasAuthority('CREATOR_RATING_BUFFER_MANAGEMENT')")
 @RequiredArgsConstructor
 public class CreatorRatingBufferController {
 
