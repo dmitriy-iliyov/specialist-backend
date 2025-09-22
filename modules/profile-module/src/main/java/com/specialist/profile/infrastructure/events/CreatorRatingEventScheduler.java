@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public final class CreatorRatingEventCleanUpService {
+public final class CreatorRatingEventScheduler {
 
     @Value("${api.review-buffer.clean.batch-size}")
     public int CLEAN_BATCH_SIZE;

@@ -1,4 +1,4 @@
-package com.specialist.profile.infrastructure.events;
+package com.specialist.profile.services.rating;
 
 import com.specialist.contracts.profile.CreatorRatingUpdateEvent;
 import com.specialist.profile.models.enums.ProcessingStatus;
@@ -6,7 +6,7 @@ import com.specialist.profile.models.enums.ProcessingStatus;
 import java.util.Set;
 import java.util.UUID;
 
-public interface EventService {
+public interface CreatorRatingEventService {
     void saveOrUpdate(ProcessingStatus status, CreatorRatingUpdateEvent event);
 
     boolean isProcessed(UUID id);

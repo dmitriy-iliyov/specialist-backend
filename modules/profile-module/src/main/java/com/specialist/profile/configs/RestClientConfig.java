@@ -34,9 +34,9 @@ public class RestClientConfig {
     }
 
     @Bean
-    public ReviewBufferService reviewBufferRestService(ClientHttpRequestInterceptor interceptor,
-                                                       LoginRestClient loginRestClient) {
-        return new ReviewBufferRestClient(
+    public CreatorRatingBufferService reviewBufferRestService(ClientHttpRequestInterceptor interceptor,
+                                                              LoginRestClient loginRestClient) {
+        return new CreatorRatingBufferRestClient(
                 RestClient.builder()
                         .baseUrl(BASE_SYSTEM_API_URL)
                         .requestInterceptor(interceptor)

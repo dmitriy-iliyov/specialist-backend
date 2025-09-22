@@ -1,4 +1,4 @@
-package com.specialist.profile.infrastructure.events;
+package com.specialist.profile.services.rating;
 
 import com.specialist.contracts.profile.CreatorRatingUpdateEvent;
 import com.specialist.profile.exceptions.RatingUpdateEventEntityNotFoundByIdException;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class EventServiceImpl implements EventService {
+public class CreatorRatingEventServiceImpl implements CreatorRatingEventService {
 
     private final RatingUpdateEventMapper mapper;
     private final RatingUpdateEventRepository repository;

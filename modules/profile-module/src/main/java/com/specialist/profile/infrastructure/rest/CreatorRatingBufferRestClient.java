@@ -16,12 +16,12 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 @Slf4j
-public class ReviewBufferRestClient implements ReviewBufferService {
+public class CreatorRatingBufferRestClient implements CreatorRatingBufferService {
 
-    @Value("${api.review-buffer.client-id}")
+    @Value("${api.creator-rating-buffer.client-id}")
     public String CLIENT_ID;
 
-    @Value("${api.review-buffer.client-secret}")
+    @Value("${api.creator-rating-buffer.client-secret}")
     public String CLIENT_SECRET;
 
     private final RestClient restClient;
@@ -38,7 +38,7 @@ public class ReviewBufferRestClient implements ReviewBufferService {
         try {
             restClient
                     .method(HttpMethod.DELETE)
-                    .uri("/reviews-buffer/batch")
+                    .uri("/creator-rating-buffer/batch")
                     .body(body)
                     .retrieve()
                     .toBodilessEntity();
@@ -53,7 +53,7 @@ public class ReviewBufferRestClient implements ReviewBufferService {
         try {
             restClient
                     .post()
-                    .uri("/reviews-buffer/batch")
+                    .uri("/creator-rating-buffer/batch")
                     .body(body)
                     .retrieve()
                     .toBodilessEntity();
