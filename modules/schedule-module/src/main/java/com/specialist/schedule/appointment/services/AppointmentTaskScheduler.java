@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public final class AppointmentTaskScheduler {
 
-    @Value("${appointment.tasks.batch-size}")
+    @Value("${api.appointment.tasks.batch-size}")
     private int batchSize;
     private final SystemAppointmentService service;
 

@@ -1,7 +1,9 @@
 package com.specialist.schedule.appointment;
 
 import com.specialist.contracts.auth.PrincipalDetails;
+import com.specialist.contracts.profile.ProfileType;
 import com.specialist.schedule.appointment.models.dto.AppointmentCreateDto;
+import com.specialist.schedule.appointment.models.dto.AppointmentFilter;
 import com.specialist.schedule.appointment.models.dto.AppointmentResponseDto;
 import com.specialist.schedule.appointment.models.dto.AppointmentUpdateDto;
 import com.specialist.schedule.appointment.services.AppointmentFacade;
@@ -95,5 +97,16 @@ public class AppointmentController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(facade.cancel(principle.getAccountId(), id));
+    }
+
+    @PreAuthorize("hasAnyRole('USER', 'SPECIALIST')")
+    @GetMapping
+    public ResponseEntity<?> getAll(@AuthenticationPrincipal PrincipalDetails principal,
+                                    @ModelAttribute @Valid AppointmentFilter filter) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(facade.findAllByFilter(
+                        principal.getAccountId(), ProfileType.fromStringRole(principal.getStringRole()), filter)
+                );
     }
 }

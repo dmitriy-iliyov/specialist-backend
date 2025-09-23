@@ -5,23 +5,20 @@ import com.specialist.schedule.appointment.models.AppointmentEntity;
 import com.specialist.schedule.appointment.models.dto.AppointmentCreateDto;
 import com.specialist.schedule.appointment.models.dto.AppointmentResponseDto;
 import com.specialist.schedule.appointment.models.dto.AppointmentUpdateDto;
-import com.specialist.schedule.appointment.models.dto.StatusFilter;
 import com.specialist.schedule.appointment.models.enums.AppointmentAgeType;
 import com.specialist.schedule.appointment.models.enums.AppointmentStatus;
 import com.specialist.schedule.appointment.repositories.AppointmentRepository;
-import com.specialist.schedule.appointment.repositories.AppointmentSpecifications;
 import com.specialist.schedule.config.ScheduleCacheConfig;
 import com.specialist.schedule.exceptions.appointment.AppointmentNotFoundByIdException;
 import com.specialist.utils.pagination.BatchResponse;
-import com.specialist.utils.pagination.PageResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
-import org.springframework.data.domain.*;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,25 +75,6 @@ public class UnifiedAppointmentService implements AppointmentService, SystemAppo
     @Override
     public AppointmentResponseDto findById(Long id) {
         return mapper.toDto(repository.findById(id).orElseThrow(AppointmentNotFoundByIdException::new));
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public PageResponse<AppointmentResponseDto> findAllByStatusFilter(UUID participantId, StatusFilter filter,
-                                                                      int page, int size, boolean forVolunteer) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("date").and(Sort.by("start")).ascending());
-        Specification<AppointmentEntity> specification = Specification
-                .where(AppointmentSpecifications.hasStatuses(filter));
-        if (forVolunteer) {
-            specification = specification.and(AppointmentSpecifications.hasSpecialistId(participantId));
-        } else {
-            specification = specification.and(AppointmentSpecifications.hasUserId(participantId));
-        }
-        Page<AppointmentEntity> entityPage = repository.findAll(specification, pageable);
-        return new PageResponse<>(
-                mapper.toDtoList(entityPage.getContent()),
-                entityPage.getTotalPages()
-        );
     }
 
     @Cacheable(value = ScheduleCacheConfig.APPOINTMENTS_BY_DATE_AND_STATUS_CACHE,

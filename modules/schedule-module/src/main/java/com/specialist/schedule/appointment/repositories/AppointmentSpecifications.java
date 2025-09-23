@@ -1,7 +1,7 @@
 package com.specialist.schedule.appointment.repositories;
 
 import com.specialist.schedule.appointment.models.AppointmentEntity;
-import com.specialist.schedule.appointment.models.dto.StatusFilter;
+import com.specialist.schedule.appointment.models.dto.AppointmentFilter;
 import com.specialist.schedule.appointment.models.enums.AppointmentStatus;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -11,11 +11,11 @@ import java.util.UUID;
 
 public final class AppointmentSpecifications {
 
-    public static Specification<AppointmentEntity> hasStatuses(StatusFilter filter) {
+    public static Specification<AppointmentEntity> hasStatuses(AppointmentFilter filter) {
         List<AppointmentStatus> statuses = new ArrayList<>();
-        if (filter.scheduled()) statuses.add(AppointmentStatus.SCHEDULED);
-        if (filter.completed()) statuses.add(AppointmentStatus.COMPLETED);
-        if (filter.canceled())  statuses.add(AppointmentStatus.CANCELED);
+        if (filter.getScheduled()) statuses.add(AppointmentStatus.SCHEDULED);
+        if (filter.getCompleted()) statuses.add(AppointmentStatus.COMPLETED);
+        if (filter.getCanceled())  statuses.add(AppointmentStatus.CANCELED);
 
         if (statuses.isEmpty()) {
             return Specification.where(null);

@@ -36,6 +36,18 @@
             <artifactId>core-module</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.specialist</groupId>
+            <artifactId>schedule-contracts</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.specialist</groupId>
+            <artifactId>profile-contracts</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
 </project>

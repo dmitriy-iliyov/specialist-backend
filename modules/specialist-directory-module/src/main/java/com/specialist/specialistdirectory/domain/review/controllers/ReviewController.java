@@ -6,10 +6,8 @@ import com.specialist.specialistdirectory.domain.review.models.dtos.ReviewUpdate
 import com.specialist.specialistdirectory.domain.review.models.filters.ReviewSort;
 import com.specialist.specialistdirectory.domain.review.services.ReviewAggregator;
 import com.specialist.specialistdirectory.domain.review.services.ReviewManagementOrchestrator;
-import com.specialist.specialistdirectory.domain.review.services.ReviewManagementRetryDecorator;
 import com.specialist.utils.validation.annotation.ValidUuid;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

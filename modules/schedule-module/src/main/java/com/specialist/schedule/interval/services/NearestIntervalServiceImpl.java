@@ -1,12 +1,13 @@
 package com.specialist.schedule.interval.services;
 
+import com.specialist.contracts.schedule.NearestIntervalDto;
+import com.specialist.contracts.schedule.SystemNearestIntervalService;
 import com.specialist.core.exceptions.models.BaseNotFoundException;
 import com.specialist.core.exceptions.models.PassedListIsToLongException;
 import com.specialist.schedule.exceptions.interval.NearestIntervalNotFoundBySpecialistIdException;
 import com.specialist.schedule.interval.mapper.NearestIntervalMapper;
 import com.specialist.schedule.interval.models.NearestIntervalEntity;
 import com.specialist.schedule.interval.models.dto.IntervalResponseDto;
-import com.specialist.schedule.interval.models.dto.NearestIntervalDto;
 import com.specialist.schedule.interval.repository.NearestIntervalRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

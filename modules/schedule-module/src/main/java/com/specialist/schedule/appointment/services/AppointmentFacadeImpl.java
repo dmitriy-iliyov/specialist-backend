@@ -1,9 +1,9 @@
 package com.specialist.schedule.appointment.services;
 
-import com.specialist.schedule.appointment.models.dto.AppointmentCreateDto;
-import com.specialist.schedule.appointment.models.dto.AppointmentResponseDto;
-import com.specialist.schedule.appointment.models.dto.AppointmentUpdateDto;
+import com.specialist.contracts.profile.ProfileType;
+import com.specialist.schedule.appointment.models.dto.*;
 import com.specialist.schedule.appointment.validation.AppointmentOwnershipValidator;
+import com.specialist.utils.pagination.PageResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +16,7 @@ public class AppointmentFacadeImpl implements AppointmentFacade {
     private final AppointmentManagementOrchestrator managementOrchestrator;
     private final AppointmentOwnershipValidator ownershipValidator;
     private final AppointmentService service;
+    private final AppointmentAggregator aggregator;
 
     @Override
     public AppointmentResponseDto save(UUID userId, AppointmentCreateDto dto) {
@@ -44,5 +45,11 @@ public class AppointmentFacadeImpl implements AppointmentFacade {
     public AppointmentResponseDto findById(UUID participantId, Long id) {
         ownershipValidator.validateForParticipant(participantId, id);
         return service.findById(id);
+    }
+
+    @Override
+    public PageResponse<AppointmentAggregatedResponseDto> findAllByFilter(UUID participantId, ProfileType profileType,
+                                                                          AppointmentFilter filter) {
+        return aggregator.aggregate(participantId, profileType, filter);
     }
 }

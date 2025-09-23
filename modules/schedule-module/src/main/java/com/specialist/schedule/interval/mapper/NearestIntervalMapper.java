@@ -1,8 +1,8 @@
 package com.specialist.schedule.interval.mapper;
 
+import com.specialist.contracts.schedule.NearestIntervalDto;
 import com.specialist.schedule.interval.models.NearestIntervalEntity;
 import com.specialist.schedule.interval.models.dto.IntervalResponseDto;
-import com.specialist.schedule.interval.models.dto.NearestIntervalDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.NullValuePropertyMappingStrategy;

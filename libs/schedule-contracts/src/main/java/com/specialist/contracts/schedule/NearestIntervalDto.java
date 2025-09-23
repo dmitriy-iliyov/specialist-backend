@@ -1,4 +1,4 @@
-package com.specialist.schedule.interval.models.dto;
+package com.specialist.contracts.schedule;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;

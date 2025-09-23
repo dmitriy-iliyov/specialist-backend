@@ -1,7 +1,7 @@
 package com.specialist.schedule.interval.services;
 
+import com.specialist.contracts.schedule.NearestIntervalDto;
 import com.specialist.schedule.interval.models.dto.IntervalResponseDto;
-import com.specialist.schedule.interval.models.dto.NearestIntervalDto;
 
 import java.util.UUID;
 

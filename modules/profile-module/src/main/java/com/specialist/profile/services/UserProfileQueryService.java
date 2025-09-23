@@ -6,6 +6,10 @@ import com.specialist.utils.pagination.PageResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+/**
+ * Prefix User means that this service supply Public dtos
+ */
+
 @Service
 @RequiredArgsConstructor
 public class UserProfileQueryService implements ProfileQueryService {
