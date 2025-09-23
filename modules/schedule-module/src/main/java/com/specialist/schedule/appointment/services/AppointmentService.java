@@ -29,7 +29,5 @@ public interface AppointmentService {
 
     void cancelAllByDate(UUID participantId, LocalDate date);
 
-    void deleteAll(UUID participantId);
-
     List<AppointmentResponseDto> findAllByUserIdAndDateAndStatus(UUID userId, LocalDate date, AppointmentStatus appointmentStatus);
 }

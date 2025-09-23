@@ -1,12 +1,11 @@
 package com.specialist.auth.domain.account.services;
 
-import com.specialist.contracts.profile.ProfileDeleteOrchestrator;
-import com.specialist.contracts.profile.ProfileType;
-import com.specialist.contracts.specialistdirectory.SystemBookmarkDeleteService;
-import com.specialist.contracts.specialistdirectory.SystemSpecialistDeleteService;
+import com.specialist.contracts.auth.AccountDeleteEvent;
+import com.specialist.utils.UuidUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -14,23 +13,16 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class DefaultAccountDeleteOrchestrator implements AccountDeleteOrchestrator {
 
+    @Value("${api.kafka.topic.account-delete}")
+    public String TOPIC;
     private final AccountService accountService;
-    private final ProfileDeleteOrchestrator profileDeleteOrchestrator;
-    private final SystemBookmarkDeleteService bookmarkDeleteService;
-    private final SystemSpecialistDeleteService specialistDeleteService;
+    private final KafkaTemplate<String, AccountDeleteEvent> kafkaTemplate;
 
-    // TODO schedule delete / kafka event
-
-    // WARNING: till in the same app context
-    @Transactional
     @Override
     public void delete(UUID id) {
-        ProfileType type = ProfileType.fromStringRole(accountService.findRoleById(id).toString());
+        String stringRole = accountService.findRoleById(id).toString();
+        AccountDeleteEvent event = new AccountDeleteEvent(UuidUtils.generateV7(), id, stringRole);
         accountService.deleteById(id);
-        profileDeleteOrchestrator.delete(id, type);
-        if (type.equals(ProfileType.SPECIALIST)) {
-            specialistDeleteService.deleteById(id);
-        }
-        bookmarkDeleteService.deleteAllByOwnerId(id);
+        kafkaTemplate.send(TOPIC, event);
     }
 }

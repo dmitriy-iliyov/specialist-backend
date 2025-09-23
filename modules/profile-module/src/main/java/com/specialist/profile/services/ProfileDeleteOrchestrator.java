@@ -1,4 +1,6 @@
-package com.specialist.contracts.profile;
+package com.specialist.profile.services;
+
+import com.specialist.contracts.profile.ProfileType;
 
 import java.util.UUID;
 

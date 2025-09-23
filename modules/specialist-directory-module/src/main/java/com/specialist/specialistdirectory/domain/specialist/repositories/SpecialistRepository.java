@@ -63,7 +63,7 @@ public interface SpecialistRepository extends JpaRepository<SpecialistEntity, UU
     void updateStatusAndOwnerIdById(UUID id, UUID ownerId, SpecialistStatus status);
 
     @Query("""
-        SELECT new com.specialist.specialistdirectory.domain.specialist.models.dtos.ShortSpecialistInfo(s.creatorId, s.ownerId, s.status)
+        SELECT new com.specialist.specialistdirectory.domain.specialist.models.dtos.ShortSpecialistInfo(s.id, s.creatorId, s.ownerId, s.status)
         FROM SpecialistEntity s
         WHERE s.id = :id
     """)
@@ -78,4 +78,13 @@ public interface SpecialistRepository extends JpaRepository<SpecialistEntity, UU
     @EntityGraph(attributePaths = {"type"})
     @Query("SELECT s FROM SpecialistEntity s WHERE s.id = :id AND s.status = :status")
     Optional<SpecialistEntity> findWithTypeByIdAndStatus(@Param("id") UUID id, @Param("status") SpecialistStatus status);
+
+    void deleteByOwnerId(UUID ownerId);
+
+    @Query("""
+        SELECT new com.specialist.specialistdirectory.domain.specialist.models.dtos.ShortSpecialistInfo(s.id, s.creatorId, s.ownerId, s.status)
+        FROM SpecialistEntity s
+        WHERE s.ownerId = :ownerId
+    """)
+    Optional<ShortSpecialistInfo> findShortInfoByOwnerId(@Param("ownerId") UUID ownerId);
 }

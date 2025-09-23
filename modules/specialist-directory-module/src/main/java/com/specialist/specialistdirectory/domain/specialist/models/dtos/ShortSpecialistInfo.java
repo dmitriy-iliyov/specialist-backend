@@ -5,6 +5,7 @@ import com.specialist.specialistdirectory.domain.specialist.models.enums.Special
 import java.util.UUID;
 
 public record ShortSpecialistInfo(
+        UUID id,
         UUID creatorId,
         UUID ownerId,
         SpecialistStatus status

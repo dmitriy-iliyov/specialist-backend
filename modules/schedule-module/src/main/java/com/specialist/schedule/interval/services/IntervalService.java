@@ -27,8 +27,6 @@ public interface IntervalService {
 
     IntervalResponseDto findNearestBySpecialistId(UUID specialistId);
 
-    void deleteAllBySpecialistId(UUID specialistId);
-
     IntervalResponseDto deleteBySpecialistIdAndId(UUID specialistId, Long id);
 
     void deleteAllBySpecialistIdAndDate(UUID specialistId, LocalDate date);

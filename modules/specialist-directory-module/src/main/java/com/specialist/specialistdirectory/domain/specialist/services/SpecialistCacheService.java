@@ -10,6 +10,8 @@ public interface SpecialistCacheService {
 
     ShortSpecialistInfo getShortInfo(UUID id);
 
+    void evictShortInfo(UUID id);
+
     void evictSpecialist(UUID id, UUID creatorId);
 
     void evictTotalCreatedCount(UUID creatorId);

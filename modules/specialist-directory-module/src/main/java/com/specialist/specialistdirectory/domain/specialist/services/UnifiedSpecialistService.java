@@ -21,7 +21,6 @@ import com.specialist.utils.pagination.PageDataHolder;
 import com.specialist.utils.pagination.PageResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -75,7 +74,7 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
         entity = repository.save(entity);
         cacheService.putShortInfo(
                 entity.getId(),
-                new ShortSpecialistInfo(entity.getCreatorId(), entity.getOwnerId(), dto.getStatus())
+                new ShortSpecialistInfo(entity.getId(), entity.getCreatorId(), entity.getOwnerId(), dto.getStatus())
         );
         cacheService.evictCreatedCountByFilter(entity.getCreatorId());
         return mapper.toResponseDto(entity);
@@ -244,7 +243,6 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
         return repository.findAll(specification, PaginationUtils.generatePageable(filter));
     }
 
-    @CacheEvict(value = "specialists:short-info", key = "#id")
     @Transactional
     @Override
     public void deleteById(UUID id) {
@@ -253,13 +251,28 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
             creatorId = repository.findCreatorIdById(id).orElseThrow(SpecialistNotFoundByIdException::new);
         }
         repository.deleteById(id);
-        cacheService.evictSpecialist(id, creatorId);
-        cacheService.evictTotalCreatedCount(creatorId);
-        cacheService.evictCreatedCountByFilter(creatorId);
+        evictCacheAfterDelete(id, creatorId);
+    }
+
+    @Transactional
+    @Override
+    public void deleteByOwnerId(UUID ownerId) {
+        ShortSpecialistInfo info = repository.findShortInfoByOwnerId(ownerId).orElseThrow(
+                SpecialistNotFoundByIdException::new
+        );
+        repository.deleteByOwnerId(ownerId);
+        evictCacheAfterDelete(info.id(), info.creatorId());
     }
 
     @Override
     public BookmarkSpecialistResponseDto toResponseDto(SpecialistEntity entity) {
         return mapper.toBookmarkResponseDto(entity);
+    }
+
+    private void evictCacheAfterDelete(UUID id, UUID creatorId) {
+        cacheService.evictShortInfo(id);
+        cacheService.evictSpecialist(id, creatorId);
+        cacheService.evictTotalCreatedCount(creatorId);
+        cacheService.evictCreatedCountByFilter(creatorId);
     }
 }

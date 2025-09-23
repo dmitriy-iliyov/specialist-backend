@@ -32,6 +32,14 @@ public class SpecialistCacheServiceImpl implements SpecialistCacheService {
     }
 
     @Override
+    public void evictShortInfo(UUID id) {
+        Cache cache = cacheManager.getCache("specialists:short-info");
+        if (cache != null) {
+            cache.evict(id.toString());
+        }
+    }
+
+    @Override
     public void evictSpecialist(UUID id, UUID creatorId) {
         Cache cache = cacheManager.getCache("specialists");
         if (cache != null) {

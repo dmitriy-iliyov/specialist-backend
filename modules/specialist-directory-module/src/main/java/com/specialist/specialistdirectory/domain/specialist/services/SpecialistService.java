@@ -31,4 +31,6 @@ public interface SpecialistService {
     PageResponse<SpecialistResponseDto> findAllByCreatorIdAndFilter(UUID creatorId, ExtendedSpecialistFilter filter);
 
     void deleteById(UUID id);
+
+    void deleteByOwnerId(UUID ownerId);
 }

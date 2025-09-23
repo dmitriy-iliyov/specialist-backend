@@ -1,6 +1,5 @@
 package com.specialist.profile.services;
 
-import com.specialist.contracts.profile.ProfileDeleteOrchestrator;
 import com.specialist.contracts.profile.ProfileType;
 import com.specialist.profile.exceptions.NullStrategyException;
 import com.specialist.profile.repositories.AvatarStorage;

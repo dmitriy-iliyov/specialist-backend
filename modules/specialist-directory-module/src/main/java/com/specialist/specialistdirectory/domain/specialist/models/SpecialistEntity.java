@@ -101,7 +101,7 @@ public class SpecialistEntity {
     @OneToMany(mappedBy = "specialist", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<ReviewEntity> reviews = new ArrayList<>();
 
-    @OneToMany(mappedBy = "specialist", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "specialist", fetch = FetchType.LAZY)
     private List<BookmarkEntity> bookmarks = new ArrayList<>();
 
     @Version
