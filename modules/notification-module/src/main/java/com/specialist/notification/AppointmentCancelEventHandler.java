@@ -1,2 +1,8 @@
-package com.specialist.notification;public interface AppointmentCancelEventHandler {
+package com.specialist.notification;
+
+
+import com.specialist.contracts.notification.InternalAppointmentCancelEvent;
+
+public interface AppointmentCancelEventHandler {
+    void handle(InternalAppointmentCancelEvent event);
 }

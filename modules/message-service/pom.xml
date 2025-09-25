@@ -63,6 +63,12 @@
             <version>1.18.28</version>
             <optional>true</optional>
         </dependency>
+
+        <dependency>
+            <groupId>com.specialist</groupId>
+            <artifactId>notification-contracts</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>

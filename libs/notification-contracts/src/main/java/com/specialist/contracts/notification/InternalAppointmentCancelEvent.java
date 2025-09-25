@@ -1,7 +1,7 @@
 package com.specialist.contracts.notification;
 
-public class AppointmentCancelEvent {
-    private SystemAppointmentResponseDto appointment;
+import java.util.List;
 
-    private
-}
+public record InternalAppointmentCancelEvent(
+        List<SystemAppointmentResponseDto> appointments
+) { }
