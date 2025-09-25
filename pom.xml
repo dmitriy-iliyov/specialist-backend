@@ -26,6 +26,7 @@
         <module>libs/profile-contracts</module>
         <module>libs/schedule-contracts</module>
         <module>libs/specialist-directory-contracts</module>
+        <module>libs/notification-contracts</module>
         <module>modules/core-module</module>
         <module>modules/auth-module</module>
         <module>modules/profile-module</module>
@@ -33,6 +34,7 @@
         <module>app</module>
         <module>modules/tests</module>
         <module>modules/schedule-module</module>
+        <module>modules/notification-module</module>
     </modules>
 
     <packaging>pom</packaging>

@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 public record BatchResponse<T> (
-        List<T> batch,
+        List<T> data,
         @JsonProperty("has_next")
-        Boolean hasNext
+        Boolean hasNext,
+        @JsonProperty("next_page")
+        Integer nextPage
 ) { }
