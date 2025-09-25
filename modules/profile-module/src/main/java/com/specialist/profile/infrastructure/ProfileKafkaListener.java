@@ -3,7 +3,7 @@ package com.specialist.profile.infrastructure;
 import com.specialist.contracts.auth.AccountDeleteEvent;
 import com.specialist.contracts.profile.CreatorRatingUpdateEvent;
 import com.specialist.contracts.profile.ProfileType;
-import com.specialist.profile.services.ProfileDeleteOrchestrator;
+import com.specialist.profile.services.ProfileDeleteService;
 import com.specialist.profile.services.rating.CreatorRatingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -14,13 +14,13 @@ import org.springframework.stereotype.Component;
 public final class ProfileKafkaListener {
 
     private final CreatorRatingService creatorRatingService;
-    private final ProfileDeleteOrchestrator profileDeleteOrchestrator;
+    private final ProfileDeleteService profileDeleteService;
 
     @Autowired
     public ProfileKafkaListener(@Qualifier("creatorRatingRetryDecorator") CreatorRatingService creatorRatingService,
-                                ProfileDeleteOrchestrator profileDeleteOrchestrator) {
+                                ProfileDeleteService profileDeleteService) {
         this.creatorRatingService = creatorRatingService;
-        this.profileDeleteOrchestrator = profileDeleteOrchestrator;
+        this.profileDeleteService = profileDeleteService;
     }
 
     @KafkaListener(topics = "${api.kafka.topic.creator-rating}", groupId = "profile-service")
@@ -30,6 +30,6 @@ public final class ProfileKafkaListener {
 
     @KafkaListener(topics = {"${api.kafka.topic.account-delete}"}, groupId = "profile-service")
     public void listen(AccountDeleteEvent event) {
-        profileDeleteOrchestrator.delete(event.accountId(), ProfileType.fromStringRole(event.stringRole()));
+        profileDeleteService.delete(event.accountId(), ProfileType.fromStringRole(event.stringRole()));
     }
 }

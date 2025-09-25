@@ -1,8 +1,7 @@
-package com.specialist.profile.infrastructure;
+package com.specialist.profile.services.rating;
 
 import com.specialist.profile.infrastructure.rest.CreatorRatingBufferService;
 import com.specialist.profile.models.enums.ProcessingStatus;
-import com.specialist.profile.services.rating.CreatorRatingEventService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;

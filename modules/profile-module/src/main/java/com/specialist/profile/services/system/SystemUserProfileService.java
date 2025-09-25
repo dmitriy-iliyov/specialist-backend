@@ -1,6 +1,6 @@
 package com.specialist.profile.services.system;
 
-import com.specialist.contracts.profile.SystemProfileReadService;
+import com.specialist.contracts.profile.SystemProfileService;
 import com.specialist.contracts.profile.dto.UnifiedProfileResponseDto;
 import com.specialist.profile.mappers.ProfileProjectionMapper;
 import com.specialist.profile.repositories.UserProfileRepository;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class SystemUserProfileReadService implements SystemProfileReadService {
+public class SystemUserProfileService implements SystemProfileService {
 
     private final UserProfileRepository repository;
     private final ProfileProjectionMapper mapper;

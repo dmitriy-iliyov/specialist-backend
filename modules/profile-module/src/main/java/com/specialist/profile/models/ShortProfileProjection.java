@@ -7,6 +7,7 @@ import java.util.UUID;
 public interface ShortProfileProjection {
     UUID getId();
     ProfileType getType();
+    String getEmail();
     String getFirstName();
     String getSecondName();
     String getLastName();

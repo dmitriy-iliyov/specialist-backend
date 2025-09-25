@@ -5,7 +5,7 @@ import com.specialist.contracts.auth.PrincipalDetails;
 import com.specialist.contracts.profile.ProfileType;
 import com.specialist.profile.models.dtos.UpdateRequest;
 import com.specialist.profile.services.ProfileManagementOrchestrator;
-import com.specialist.profile.services.ProfileReadOrchestrator;
+import com.specialist.profile.services.ProfileReadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,7 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class ProfileManagementController {
 
     private final ProfileManagementOrchestrator managementOrchestrator;
-    private final ProfileReadOrchestrator readOrchestrator;
+    private final ProfileReadService readOrchestrator;
 
     @GetMapping
     public ResponseEntity<?> get(@AuthenticationPrincipal PrincipalDetails principal) {

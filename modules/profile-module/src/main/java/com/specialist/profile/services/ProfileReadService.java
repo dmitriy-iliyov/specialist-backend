@@ -9,7 +9,9 @@ import com.specialist.utils.pagination.PageResponse;
 
 import java.util.UUID;
 
-public interface ProfileReadOrchestrator {
+public interface ProfileReadService {
+    String findEmailById(UUID id);
+
     BasePrivateResponseDto findPrivateById(UUID id);
 
     BasePrivateResponseDto findPrivateById(UUID id, ProfileType type);

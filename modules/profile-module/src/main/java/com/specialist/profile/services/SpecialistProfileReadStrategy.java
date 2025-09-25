@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class SpecialistProfileAggregateStrategy implements ProfileReadStrategy {
+public class SpecialistProfileReadStrategy implements ProfileReadStrategy {
 
     private final SpecialistProfileService service;
     private final SystemManagedSpecialistService systemManagedSpecialistService;

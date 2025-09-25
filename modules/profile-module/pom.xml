@@ -49,11 +49,18 @@
             <artifactId>azure-storage-blob</artifactId>
             <version>12.25.0</version>
         </dependency>
+
         <dependency>
             <groupId>com.specialist</groupId>
             <artifactId>specialist-directory-contracts</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.specialist</groupId>
+            <artifactId>notification-contracts</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

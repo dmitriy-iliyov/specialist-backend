@@ -6,7 +6,6 @@ import com.specialist.contracts.profile.ProfileCreateEvent;
 import com.specialist.profile.exceptions.NullUserEmailException;
 import com.specialist.profile.models.dtos.*;
 import com.specialist.profile.repositories.AvatarStorage;
-import com.specialist.profile.services.system.ProfileEmailService;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
@@ -26,7 +25,7 @@ public class ProfilePersistOrchestratorImpl implements ProfilePersistOrchestrato
     private final AvatarStorage avatarStorage;
     private final Validator validator;
     private final ApplicationEventPublisher eventPublisher;
-    private final ProfileEmailService emailService;
+    private final ProfileReadService profileReadService;
 
     @Override
     public BasePrivateResponseDto save(CreateRequest request) throws JsonProcessingException {
@@ -57,7 +56,7 @@ public class ProfilePersistOrchestratorImpl implements ProfilePersistOrchestrato
         }
         String avatarUrl = avatarStorage.save(dto.getAvatar(), dto.getId());
         dto.setAvatarUrl(avatarUrl);
-        String email = emailService.findById(dto.getId());
+        String email = profileReadService.findEmailById(dto.getId());
         if (email == null) {
             throw new NullUserEmailException();
         }

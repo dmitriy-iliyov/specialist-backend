@@ -1,7 +1,7 @@
 package com.specialist.profile.services.system;
 
+import com.specialist.contracts.profile.ProfileEmailUpdateService;
 import com.specialist.contracts.profile.ProfileType;
-import com.specialist.contracts.profile.EmailUpdateOrchestrator;
 import com.specialist.profile.exceptions.NullStrategyException;
 import com.specialist.profile.services.EmailUpdateStrategy;
 import lombok.extern.slf4j.Slf4j;
@@ -15,11 +15,11 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-public class EmailUpdateOrchestratorImpl implements EmailUpdateOrchestrator {
+public class ProfileEmailUpdateServiceImpl implements ProfileEmailUpdateService {
 
     private final Map<ProfileType, EmailUpdateStrategy> strategyMap;
 
-    public EmailUpdateOrchestratorImpl(List<EmailUpdateStrategy> services) {
+    public ProfileEmailUpdateServiceImpl(List<EmailUpdateStrategy> services) {
         this.strategyMap = services.stream()
                 .collect(Collectors.toMap(EmailUpdateStrategy::getType, Function.identity()));
     }

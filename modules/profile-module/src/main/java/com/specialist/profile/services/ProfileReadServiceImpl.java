@@ -10,6 +10,7 @@ import com.specialist.profile.models.dtos.BasePrivateResponseDto;
 import com.specialist.profile.models.enums.ScopeType;
 import com.specialist.utils.pagination.PageResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,13 +21,20 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-public class ProfileReadOrchestratorImpl implements ProfileReadOrchestrator {
+public class ProfileReadServiceImpl implements ProfileReadService {
 
     private final Map<ProfileType, ProfileReadStrategy> strategyMap;
+    private final RedisTemplate<String, String> redisTemplate;
 
-    public ProfileReadOrchestratorImpl(List<ProfileReadStrategy> strategies) {
+    public ProfileReadServiceImpl(List<ProfileReadStrategy> strategies, RedisTemplate<String, String> redisTemplate) {
         this.strategyMap = strategies.stream().
                 collect(Collectors.toMap(ProfileReadStrategy::getType, Function.identity()));
+        this.redisTemplate = redisTemplate;
+    }
+
+    @Override
+    public String findEmailById(UUID id) {
+        return redisTemplate.opsForValue().getAndDelete("profiles:emails:%s".formatted(id));
     }
 
     @Override
