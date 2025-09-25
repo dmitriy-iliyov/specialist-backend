@@ -97,7 +97,7 @@ public class UnifiedIntervalService implements IntervalService, SystemIntervalSe
     @Cacheable(value = ScheduleCacheConfig.INTERVALS_BY_DATE_INTERVAL_CACHE, key = "#specialistId")
     @Transactional(readOnly = true)
     @Override
-    public List<LocalDate> findMonthDatesBySpecialistId(UUID specialistId, LocalDate start, LocalDate end) {
+    public List<LocalDate> findBySpecialistIdAndDateInterval(UUID specialistId, LocalDate start, LocalDate end) {
         return repository.findAllBySpecialistIdAndDateInterval(specialistId, start, end).stream()
                 .map(IntervalEntity::getDate)
                 .distinct()
@@ -174,7 +174,7 @@ public class UnifiedIntervalService implements IntervalService, SystemIntervalSe
     @Override
     public List<Long> deleteBatchBeforeWeekStart(int batchSize) {
         LocalDate weakStart = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
-        log.info("START deleting intervals batch with weakStart={}, batchSize={}", weakStart, batchSize);
+        log.info("START deleting intervals data with weakStart={}, batchSize={}", weakStart, batchSize);
         List<Long> deletedIds = repository.deleteBatchBeforeDate(batchSize, weakStart);
         log.info("END deleting intervals, deleted id list={}", deletedIds);
         return deletedIds;

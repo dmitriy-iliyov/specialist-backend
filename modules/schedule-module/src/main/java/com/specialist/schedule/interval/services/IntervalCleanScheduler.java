@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public final class IntervalScheduler {
+public class IntervalCleanScheduler {
 
     @Value("${api.appointment.tasks.batch-size}")
     private int batchSize;

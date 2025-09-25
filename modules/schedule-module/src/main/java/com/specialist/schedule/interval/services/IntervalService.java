@@ -17,7 +17,7 @@ public interface IntervalService {
 
     List<IntervalResponseDto> findAllBySpecialistIdAndDate(UUID specialistId, LocalDate date);
 
-    List<LocalDate> findMonthDatesBySpecialistId(UUID specialistId, LocalDate start, LocalDate end);
+    List<LocalDate> findBySpecialistIdAndDateInterval(UUID specialistId, LocalDate start, LocalDate end);
 
     List<IntervalResponseDto> findAllNearestBySpecialistIdIn(Set<UUID> specialistIds);
 

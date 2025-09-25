@@ -5,7 +5,7 @@ import com.specialist.core.exceptions.models.dto.ErrorDto;
 
 public class NotWorkingAtThisTimeException extends BaseBadRequestException {
 
-    private final ErrorDto errorDto = new ErrorDto("appointment", "Can't add appointment because specialist not working at this time!");
+    private final ErrorDto errorDto = new ErrorDto("appointments", "Can't add appointments because specialist not working at this time!");
 
 
     @Override

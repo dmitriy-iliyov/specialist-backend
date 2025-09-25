@@ -7,14 +7,14 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public final class AppointmentScheduler {
+public class AppointmentSkipScheduler {
 
     @Value("${api.appointment.tasks.batch-size}")
     private int BATCH_SIZE;
     private final SystemAppointmentService service;
 
     @Scheduled(cron = "0 */2 2 * * *")
-    public void skipBatch() {
+    public void skip() {
         service.skipBatch(BATCH_SIZE);
     }
 }

@@ -61,13 +61,13 @@ public class AppointmentEntity {
 
 
     @PrePersist
-    public void beforePersist(){
+    public void prePersist(){
         createdAt = Instant.now();
         updatedAt = createdAt;
     }
 
     @PreUpdate
-    public void beforeUpdate(){
+    public void preUpdate(){
         updatedAt = Instant.now();
     }
 }

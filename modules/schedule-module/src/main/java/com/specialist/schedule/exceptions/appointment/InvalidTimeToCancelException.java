@@ -5,7 +5,7 @@ import com.specialist.core.exceptions.models.dto.ErrorDto;
 
 public class InvalidTimeToCancelException extends BaseBadRequestException {
 
-    private final ErrorDto errorDto = new ErrorDto("appointment", "Past appointment can't be cancel!");
+    private final ErrorDto errorDto = new ErrorDto("appointments", "Past appointments can't be cancel!");
 
     @Override
     public ErrorDto getErrorDto() {

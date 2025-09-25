@@ -1,2 +1,13 @@
-package com.specialist.schedule.appointment.models.dto;public class AppointmentCancelTaskResponseDto {
-}
+package com.specialist.schedule.appointment.models.dto;
+
+import com.specialist.schedule.appointment.models.enums.AppointmentCancelTaskType;
+
+import java.time.LocalDate;
+import java.util.UUID;
+
+public record AppointmentCancelTaskResponseDto(
+        UUID id,
+        UUID participantId,
+        AppointmentCancelTaskType type,
+        LocalDate date
+) { }

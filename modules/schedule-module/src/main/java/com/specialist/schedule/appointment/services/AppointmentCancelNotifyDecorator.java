@@ -1,42 +1,49 @@
 package com.specialist.schedule.appointment.services;
 
-import com.specialist.contracts.schedule.AppointmentCancelEvent;
+import com.specialist.contracts.notification.InternalAppointmentCancelEvent;
+import com.specialist.schedule.appointment.mapper.AppointmentMapper;
 import com.specialist.schedule.appointment.models.dto.AppointmentResponseDto;
+import com.specialist.utils.pagination.BatchResponse;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Service
-public class AppointmentCancelNotificationDecorator implements AppointmentCancelService {
+public class AppointmentCancelNotifyDecorator implements AppointmentCancelService {
 
-    @Value("${}")
-    private String TOPIC;
     private final AppointmentCancelService delegate;
-    private final KafkaTemplate<String, AppointmentCancelEvent> kafkaTemplate;
+    private final AppointmentMapper mapper;
+    private final ApplicationEventPublisher eventPublisher;
 
-    public AppointmentCancelNotificationDecorator(@Qualifier("unifiedAppointmentService") AppointmentCancelService delegate) {
+    public AppointmentCancelNotifyDecorator(@Qualifier("appointmentCancelDeferDecorator") AppointmentCancelService delegate,
+                                            AppointmentMapper mapper, ApplicationEventPublisher eventPublisher) {
         this.delegate = delegate;
-        this.kafkaTemplate = kafkaTemplate;
+        this.mapper = mapper;
+        this.eventPublisher = eventPublisher;
     }
 
     @Override
     public AppointmentResponseDto cancelById(Long id) {
-        AppointmentResponseDto responseDto = delegate.cancelById(id);
-        kafkaTemplate.send();
-        return responseDto;
+        AppointmentResponseDto dto = delegate.cancelById(id);
+        eventPublisher.publishEvent(new InternalAppointmentCancelEvent(List.of(mapper.toSystemDto(dto))));
+        return dto;
     }
 
     @Override
-    public void cancelAllByDate(UUID participantId, LocalDate date) {
-        delegate.cancelAllByDate(participantId, date);
+    public BatchResponse<AppointmentResponseDto> cancelBatchByDate(UUID participantId, LocalDate date) {
+        BatchResponse<AppointmentResponseDto> batch = delegate.cancelBatchByDate(participantId, date);
+        eventPublisher.publishEvent(new InternalAppointmentCancelEvent(mapper.toSystemDtoList(batch.data())));
+        return batch;
     }
 
     @Override
-    public void cancelAll(UUID participantId) {
-        delegate.cancelAll(participantId);
+    public BatchResponse<AppointmentResponseDto> cancelBatch(UUID participantId) {
+        BatchResponse<AppointmentResponseDto> batch = delegate.cancelBatch(participantId);
+        eventPublisher.publishEvent(new InternalAppointmentCancelEvent(mapper.toSystemDtoList(batch.data())));
+        return batch;
     }
 }

@@ -13,6 +13,7 @@ import com.specialist.schedule.exceptions.appointment.AppointmentNotFoundByIdExc
 import com.specialist.utils.pagination.BatchResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -32,6 +33,8 @@ import java.util.*;
 @Slf4j
 public class UnifiedAppointmentService implements AppointmentService, SystemAppointmentService {
 
+    @Value("${api.appointments.cancel-batch.size}")
+    private int BATCH_SIZE;
     private final AppointmentRepository repository;
     private final AppointmentMapper mapper;
     private final RedisTemplate<String, AppointmentResponseDto> redisTemplate;
@@ -96,7 +99,7 @@ public class UnifiedAppointmentService implements AppointmentService, SystemAppo
     @Cacheable(value = ScheduleCacheConfig.APPOINTMENTS_BY_DATE_INTERVAL_CACHE, key = "#specialistId")
     @Transactional(readOnly = true)
     @Override
-    public List<LocalDate> findMonthDatesBySpecialistId(UUID specialistId, LocalDate start, LocalDate end) {
+    public List<LocalDate> findBySpecialistIdAndDateInterval(UUID specialistId, LocalDate start, LocalDate end) {
         return repository.findAllBySpecialistIdAndDateInterval(specialistId, start, end).stream()
                 .map(AppointmentEntity::getDate)
                 .toList();
@@ -146,23 +149,34 @@ public class UnifiedAppointmentService implements AppointmentService, SystemAppo
     )
     @Transactional
     @Override
-    public void cancelAllByDate(UUID participantId, LocalDate date) {
-        List<Long> ids = repository.updateAllStatus(participantId, date, AppointmentStatus.CANCELED);
-        if (!ids.isEmpty()) {
-            List<String> toInvalidate = ids.stream()
+    public BatchResponse<AppointmentResponseDto> cancelBatchByDate(UUID participantId, LocalDate date) {
+        List<AppointmentEntity> entityList = repository.updateBatchStatusByStatusAndParticipantIdAndDate(
+                BATCH_SIZE, AppointmentStatus.SCHEDULED.getCode(), participantId, date, AppointmentStatus.CANCELED.getCode()
+        );
+        if (!entityList.isEmpty()) {
+            List<String> toInvalidate = entityList.stream()
+                    .map(AppointmentEntity::getId)
                     .map(id -> ScheduleCacheConfig.APPOINTMENTS_KEY_TEMPLATE.formatted(String.valueOf(id)))
                     .toList();
             redisTemplate.delete(toInvalidate);
         }
+        return new BatchResponse<>(
+                mapper.toDtoList(entityList),
+                entityList.size() == BATCH_SIZE,
+                entityList.size() == BATCH_SIZE ? 1 : null
+        );
     }
 
     @CacheEvict(value = ScheduleCacheConfig.APPOINTMENTS_BY_DATE_INTERVAL_CACHE, key = "#participantId")
     @Transactional
     @Override
-    public void deleteAll(UUID participantId) {
-        List<Long> ids = repository.deleteAllByParticipantId(participantId);
-        if (!ids.isEmpty()) {
-            List<String> toInvalidate = ids.stream()
+    public BatchResponse<AppointmentResponseDto> cancelBatch(UUID participantId) {
+        List<AppointmentEntity> entityList = repository.updateBatchStatusByParticipantIdAndStatus(
+                BATCH_SIZE, participantId, AppointmentStatus.SCHEDULED.getCode(), AppointmentStatus.CANCELED.getCode()
+        );
+        if (!entityList.isEmpty()) {
+            List<String> toInvalidate = entityList.stream()
+                    .map(AppointmentEntity::getId)
                     .map(id -> ScheduleCacheConfig.APPOINTMENTS_KEY_TEMPLATE.formatted(String.valueOf(id)))
                     .toList();
             redisTemplate.delete(toInvalidate);
@@ -172,33 +186,44 @@ public class UnifiedAppointmentService implements AppointmentService, SystemAppo
         if (toInvalidate != null && !toInvalidate.isEmpty()) {
             redisTemplate.delete(toInvalidate);
         }
+        return new BatchResponse<>(
+                mapper.toDtoList(entityList),
+                entityList.size() == BATCH_SIZE,
+                entityList.size() == BATCH_SIZE ? 1 : null
+        );
     }
 
     // DISCUSS invalidate all caches ??
     @Transactional
     @Override
-    public List<Long> markBatchAsSkipped(int batchSize) {
+    public List<Long> skipBatch(int batchSize) {
         LocalDate dateLimit = LocalDate.now().minusDays(1);
         log.info("START marking appointments as skipped with batchSize={}, dateLimit={}", batchSize, dateLimit);
-        List<Long> markedIds = repository.markBatchAsSkipped(batchSize, dateLimit);
+        List<Long> markedIds = repository.updateBatchStatusByStatusAndBeforeDate(
+                batchSize,
+                AppointmentStatus.SCHEDULED.getCode(),
+                dateLimit,
+                AppointmentStatus.SKIPPED.getCode()
+        );
         log.info("END marking appointments, marked id list={}", markedIds);
         return markedIds;
     }
 
     @Transactional(readOnly = true)
     @Override
-    public BatchResponse<AppointmentResponseDto> findBatchToRemind(int batchSize, int page) {
+    public BatchResponse<AppointmentResponseDto> findBatchToRemind(int size, int page) {
         LocalDate scheduledData = LocalDate.now().plusDays(1);
-        log.info("START selecting appointments to remind with batchSize={}, page={}, scheduledData={}", batchSize, page, scheduledData);
-        Slice<AppointmentEntity> slice = repository.findBatchToRemind(
+        log.info("START selecting appointments to remind with batchSize={}, page={}, scheduledData={}", size, page, scheduledData);
+        Slice<AppointmentEntity> slice = repository.findAllByDateAndStatus(
                 scheduledData,
                 AppointmentStatus.SCHEDULED,
-                Pageable.ofSize(batchSize).withPage(page)
+                Pageable.ofSize(size).withPage(page)
         );
         log.info("END selecting, hasNext={}", slice.hasNext());
         return new BatchResponse<>(
                 mapper.toDtoList(slice.getContent()),
-                slice.hasNext()
+                slice.hasNext(),
+                slice.hasNext() ? ++page : null
         );
     }
 }

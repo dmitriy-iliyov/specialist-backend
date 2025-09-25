@@ -37,7 +37,7 @@ public class AppointmentCreateDto implements AppointmentMarker {
         @JsonIgnore
         private LocalTime end;
 
-        @ValidEnum(enumClass = AppointmentType.class, message = "Unsupported appointment type!")
+        @ValidEnum(enumClass = AppointmentType.class, message = "Unsupported appointments type!")
         private final String type;
 
         @NotBlank(message = "Description shouldn't be empty or blank!")

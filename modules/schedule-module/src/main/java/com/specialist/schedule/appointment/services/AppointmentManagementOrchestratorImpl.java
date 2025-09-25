@@ -14,7 +14,7 @@ import com.specialist.schedule.exceptions.appointment.InvalidAttemptToDeleteExce
 import com.specialist.schedule.exceptions.appointment.NotWorkingAtThisTimeException;
 import com.specialist.schedule.interval.models.dto.SystemIntervalCreatedDto;
 import com.specialist.schedule.interval.services.IntervalOrchestrator;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,13 +23,26 @@ import java.util.Map;
 import java.util.UUID;
 
 @Component
-@RequiredArgsConstructor
 public class AppointmentManagementOrchestratorImpl implements AppointmentManagementOrchestrator {
 
     private final AppointmentService service;
+    private final AppointmentCancelService appointmentCancelService;
     private final AppointmentDurationService durationService;
-    private final IntervalOrchestrator intervalOrchestratorImpl;
+    private final IntervalOrchestrator intervalOrchestrator;
     private final AppointmentTimeValidator timeValidator;
+
+    public AppointmentManagementOrchestratorImpl(AppointmentService service,
+                                                 @Qualifier("appointmentCancelNotifyDecorator")
+                                                 AppointmentCancelService appointmentCancelService,
+                                                 AppointmentDurationService durationService,
+                                                 IntervalOrchestrator intervalOrchestrator,
+                                                 AppointmentTimeValidator timeValidator) {
+        this.service = service;
+        this.appointmentCancelService = appointmentCancelService;
+        this.durationService = durationService;
+        this.intervalOrchestrator = intervalOrchestrator;
+        this.timeValidator = timeValidator;
+    }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     @Override
@@ -39,10 +52,10 @@ public class AppointmentManagementOrchestratorImpl implements AppointmentManagem
         timeValidator.validateUserTime(userId, dto);
         AppointmentValidationInfo info = timeValidator.validateSpecialistTime(userId, dto);
         if (info.status() == ValidationStatus.MATCHES_WITH_INTERVAL) {
-            intervalOrchestratorImpl.delete(dto.getSpecialistId(), info.intervalId());
+            intervalOrchestrator.delete(dto.getSpecialistId(), info.intervalId());
             return service.save(userId, dto);
         } else if (info.status() == ValidationStatus.APPOINTMENT_INTERVAL_IS_INSIDE_WORK_INTERVAL) {
-            intervalOrchestratorImpl.cut(info.dto(), info.intervalId());
+            intervalOrchestrator.cut(info.dto(), info.intervalId());
             return service.save(userId, dto);
         } else {
             throw new NotWorkingAtThisTimeException();
@@ -66,19 +79,19 @@ public class AppointmentManagementOrchestratorImpl implements AppointmentManagem
         if (info == null) {
             return service.update(updateDto).get(AppointmentAgeType.NEW);
         } else if (info.status() == ValidationStatus.MATCHES_WITH_INTERVAL) {
-            intervalOrchestratorImpl.delete(updateDto.getSpecialistId(), info.intervalId());
+            intervalOrchestrator.delete(updateDto.getSpecialistId(), info.intervalId());
             responseMap = service.update(updateDto);
             AppointmentResponseDto old = responseMap.get(AppointmentAgeType.OLD);
-            intervalOrchestratorImpl.systemSave(
+            intervalOrchestrator.systemSave(
                     old.specialistId(),
                     new SystemIntervalCreatedDto(old.start(), old.end(), old.date())
             );
             return responseMap.get(AppointmentAgeType.NEW);
         } else if (info.status() == ValidationStatus.APPOINTMENT_INTERVAL_IS_INSIDE_WORK_INTERVAL) {
-            intervalOrchestratorImpl.cut(info.dto(), info.intervalId());
+            intervalOrchestrator.cut(info.dto(), info.intervalId());
             responseMap = service.update(updateDto);
             AppointmentResponseDto old = responseMap.get(AppointmentAgeType.OLD);
-            intervalOrchestratorImpl.systemSave(
+            intervalOrchestrator.systemSave(
                     old.specialistId(),
                     new SystemIntervalCreatedDto(old.start(), old.end(), old.date())
             );
@@ -107,8 +120,8 @@ public class AppointmentManagementOrchestratorImpl implements AppointmentManagem
         if (dto.status().equals(AppointmentStatus.CANCELED)) {
             throw new InvalidAttemptToDeleteException();
         }
-        dto = service.cancelById(id);
-        intervalOrchestratorImpl.systemSave(dto.specialistId(), new SystemIntervalCreatedDto(dto.start(), dto.end(), dto.date()));
+        dto = appointmentCancelService.cancelById(id);
+        intervalOrchestrator.systemSave(dto.specialistId(), new SystemIntervalCreatedDto(dto.start(), dto.end(), dto.date()));
         return dto;
     }
 }

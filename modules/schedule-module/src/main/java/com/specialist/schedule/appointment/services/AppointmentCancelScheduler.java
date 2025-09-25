@@ -1,32 +1,55 @@
 package com.specialist.schedule.appointment.services;
 
-import com.specialist.schedule.appointment.models.dto.AppointmentCancelTaskDto;
-import com.specialist.schedule.appointment.models.enums.AppointmentTaskType;
-import com.specialist.schedule.appointment.repositories.AppointmentCancelTaskRepository;
-import com.specialist.schedule.interval.services.IntervalService;
-import lombok.RequiredArgsConstructor;
+import com.specialist.schedule.appointment.models.dto.AppointmentCancelTaskResponseDto;
+import com.specialist.schedule.appointment.models.dto.AppointmentResponseDto;
+import com.specialist.schedule.appointment.models.enums.AppointmentCancelTaskType;
+import com.specialist.utils.pagination.BatchResponse;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.util.UUID;
-
 @Service
-public class AppointmentDeferCanselServiceImpl implements AppointmentDeferCanselService {
+public class AppointmentCancelScheduler {
 
     private final AppointmentCancelService appointmentService;
     private final AppointmentCancelTaskService taskService;
 
-    public AppointmentDeferCanselServiceImpl(@Qualifier("appointmentCancelNotifyDecorator") AppointmentCancelService appointmentService,
-                                             AppointmentCancelTaskService taskService) {
+    public AppointmentCancelScheduler(@Qualifier("appointmentCancelNotifyDecorator") AppointmentCancelService appointmentService,
+                                      AppointmentCancelTaskService taskService) {
         this.appointmentService = appointmentService;
         this.taskService = taskService;
     }
 
+    @Scheduled(
+            initialDelayString = "${api.appointments.clean-batch-by-date.initial_delay}",
+            fixedDelayString = "${api.appointments.clean-batch-by-date.fixed_delay}"
+    )
     @Transactional
-    @Override
-    public void cancel() {
-        AppointmentCancelTaskDto dto = taskService.findByDate
+    public void cancelBatchByDate() {
+        AppointmentCancelTaskResponseDto dto = taskService.findFirstByType(AppointmentCancelTaskType.CANCEL_BATCH_BY_DATA);
+        process(dto);
+    }
+
+    @Scheduled(
+            initialDelayString = "${api.appointments.clean-batch.initial_delay}",
+            fixedDelayString = "${api.appointments.clean-batch.fixed_delay}"
+    )
+    @Transactional
+    public void cancelBatch() {
+        AppointmentCancelTaskResponseDto dto = taskService.findFirstByType(AppointmentCancelTaskType.CANCEL_BATCH);
+        process(dto);
+    }
+
+    private void process(AppointmentCancelTaskResponseDto dto) {
+        if (dto != null) {
+            BatchResponse<AppointmentResponseDto> batch = switch (dto.type()) {
+                case CANCEL_BATCH -> appointmentService.cancelBatch(dto.participantId());
+                case CANCEL_BATCH_BY_DATA -> appointmentService.cancelBatchByDate(dto.participantId(), dto.date());
+            };
+            if (!batch.hasNext()) {
+                taskService.deleteById(dto.id());
+            }
+        }
     }
 }

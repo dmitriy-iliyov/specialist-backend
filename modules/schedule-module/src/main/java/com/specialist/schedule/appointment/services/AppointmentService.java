@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public interface AppointmentService {
+public interface AppointmentService extends AppointmentCancelService {
     AppointmentResponseDto save(UUID userId, AppointmentCreateDto dto);
 
     Map<AppointmentAgeType, AppointmentResponseDto> update(AppointmentUpdateDto dto);
@@ -21,13 +21,10 @@ public interface AppointmentService {
     List<AppointmentResponseDto> findAllBySpecialistIdAndDateAndStatus(UUID specialistId, LocalDate date,
                                                                        AppointmentStatus status);
 
-    List<LocalDate> findMonthDatesBySpecialistId(UUID specialistId, LocalDate start, LocalDate end);
+    List<LocalDate> findBySpecialistIdAndDateInterval(UUID specialistId, LocalDate start, LocalDate end);
 
     AppointmentResponseDto completeById(Long id, String review);
 
-    AppointmentResponseDto cancelById(Long id);
-
-    void cancelAllByDate(UUID participantId, LocalDate date);
-
-    List<AppointmentResponseDto> findAllByUserIdAndDateAndStatus(UUID userId, LocalDate date, AppointmentStatus appointmentStatus);
+    List<AppointmentResponseDto> findAllByUserIdAndDateAndStatus(UUID userId, LocalDate date,
+                                                                 AppointmentStatus appointmentStatus);
 }

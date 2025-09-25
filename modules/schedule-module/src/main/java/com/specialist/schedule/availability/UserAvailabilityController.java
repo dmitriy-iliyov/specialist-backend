@@ -24,13 +24,13 @@ public class UserAvailabilityController {
                                     LocalDate date) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(aggregator.findDay(specialistId, date));
+                .body(aggregator.aggregateDay(specialistId, date));
     }
 
     @GetMapping("/month")
     public ResponseEntity<?> getMonth(@PathVariable("specialist_id") UUID specialistId) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(aggregator.findMonth(specialistId));
+                .body(aggregator.aggregateMonth(specialistId));
     }
 }

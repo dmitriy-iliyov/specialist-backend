@@ -1,7 +1,7 @@
 package com.specialist.schedule.appointment.services;
 
 import com.specialist.contracts.profile.ProfileType;
-import com.specialist.contracts.profile.SystemProfileReadService;
+import com.specialist.contracts.profile.SystemProfileService;
 import com.specialist.contracts.profile.dto.UnifiedProfileResponseDto;
 import com.specialist.schedule.appointment.models.dto.AppointmentAggregatedResponseDto;
 import com.specialist.schedule.appointment.models.dto.AppointmentFilter;
@@ -20,13 +20,13 @@ import java.util.stream.Collectors;
 public class UserAppointmentAggregateStrategy implements AppointmentAggregateStrategy {
 
     private final AppointmentQueryService queryService;
-    private final SystemProfileReadService profileReadService;
+    private final SystemProfileService profileService;
 
     public UserAppointmentAggregateStrategy(
             @Qualifier("userAppointmentQueryService") AppointmentQueryService queryService,
-            @Qualifier("systemSpecialistProfileReadService") SystemProfileReadService profileReadService) {
+            @Qualifier("systemSpecialistProfileService") SystemProfileService profileService) {
         this.queryService = queryService;
-        this.profileReadService = profileReadService;
+        this.profileService = profileService;
     }
 
     @Override
@@ -41,7 +41,7 @@ public class UserAppointmentAggregateStrategy implements AppointmentAggregateStr
         Set<UUID> specialistIds = pageResponse.data().stream()
                 .map(AppointmentResponseDto::specialistId)
                 .collect(Collectors.toSet());
-        Map<UUID, UnifiedProfileResponseDto> specialistProfileMap = profileReadService.findAllByIdIn(specialistIds);
+        Map<UUID, UnifiedProfileResponseDto> specialistProfileMap = profileService.findAllByIdIn(specialistIds);
         return new PageResponse<>(
                 pageResponse.data().stream()
                         .map(dto -> new AppointmentAggregatedResponseDto(

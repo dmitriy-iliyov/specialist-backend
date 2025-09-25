@@ -6,7 +6,7 @@ import com.specialist.core.exceptions.models.dto.ErrorDto;
 
 public class AppointmentAlreadyExistException extends BaseBadRequestException {
 
-    private final ErrorDto errorDto = new ErrorDto("appointment", "You already have appointment at this time!");
+    private final ErrorDto errorDto = new ErrorDto("appointments", "You already have appointments at this time!");
 
     @Override
     public ErrorDto getErrorDto() {

@@ -5,6 +5,6 @@ import java.util.List;
 import java.util.UUID;
 
 public interface UserAvailabilityAggregator {
-    List<String> findDay(UUID specialistId, LocalDate date);
-    List<LocalDate> findMonth(UUID specialistId);
+    List<String> aggregateDay(UUID specialistId, LocalDate date);
+    List<LocalDate> aggregateMonth(UUID specialistId);
 }

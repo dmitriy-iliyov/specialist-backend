@@ -5,7 +5,7 @@ import com.specialist.core.exceptions.models.dto.ErrorDto;
 
 public class InvalidAttemptToDeleteException extends BaseBadRequestException {
 
-    private final ErrorDto errorDto = new ErrorDto("appointment", "Completed appointment can't be delete!");
+    private final ErrorDto errorDto = new ErrorDto("appointments", "Completed appointments can't be delete!");
 
     @Override
     public ErrorDto getErrorDto() {

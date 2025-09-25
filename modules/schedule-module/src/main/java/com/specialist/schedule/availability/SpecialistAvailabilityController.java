@@ -30,13 +30,13 @@ public class SpecialistAvailabilityController {
                                     LocalDate date) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(aggregator.findDay(principal.getAccountId(), date));
+                .body(aggregator.aggregateDay(principal.getAccountId(), date));
     }
 
     @GetMapping("/month")
     public ResponseEntity<?> getMonth(@AuthenticationPrincipal PrincipalDetails principal) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(aggregator.findMonth(principal.getAccountId()));
+                .body(aggregator.aggregateMonth(principal.getAccountId()));
     }
 }

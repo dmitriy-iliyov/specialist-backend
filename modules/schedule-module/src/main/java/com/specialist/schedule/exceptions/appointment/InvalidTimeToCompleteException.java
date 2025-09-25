@@ -5,7 +5,7 @@ import com.specialist.core.exceptions.models.dto.ErrorDto;
 
 public class InvalidTimeToCompleteException extends BaseBadRequestException {
 
-    private final ErrorDto errorDto = new ErrorDto("appointment", "Future or past appointment can't be complete!");
+    private final ErrorDto errorDto = new ErrorDto("appointments", "Future or past appointments can't be complete!");
 
     @Override
     public ErrorDto getErrorDto() {

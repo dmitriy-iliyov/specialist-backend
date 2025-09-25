@@ -1,6 +1,7 @@
 package com.specialist.schedule.appointment.mapper;
 
 
+import com.specialist.contracts.notification.SystemAppointmentResponseDto;
 import com.specialist.schedule.appointment.models.AppointmentEntity;
 import com.specialist.schedule.appointment.models.dto.AppointmentCreateDto;
 import com.specialist.schedule.appointment.models.dto.AppointmentResponseDto;
@@ -22,6 +23,10 @@ public interface AppointmentMapper {
     AppointmentResponseDto toDto(AppointmentEntity dto);
 
     List<AppointmentResponseDto> toDtoList(List<AppointmentEntity> entityList);
+
+    SystemAppointmentResponseDto toSystemDto(AppointmentResponseDto dto);
+
+    List<SystemAppointmentResponseDto> toSystemDtoList(List<AppointmentResponseDto> dtoList);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "userId", ignore = true)

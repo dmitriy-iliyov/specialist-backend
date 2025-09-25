@@ -35,45 +35,64 @@ public interface AppointmentRepository extends JpaRepository<AppointmentEntity, 
 
     @Modifying
     @Query(value = """
-        DELETE FROM appointments
-        WHERE specialist_id = :participant_id
-           OR user_id = :participant_id
-        RETURNING id
+        WITH to_update AS(
+            SELECT id FROM appointments
+            WHERE (specialist_id = :participant_id OR user_id = :participant_id) 
+              AND status = :old_status
+            LIMIT :batch_size
+        )
+        UPDATE appointments
+            SET status = :new_status
+        WHERE id IN (SELECT id FROM to_update)
+        RETURNING *;
     """, nativeQuery = true)
-    List<Long> deleteAllByParticipantId(@Param("participant_id") UUID participantId);
+    List<AppointmentEntity> updateBatchStatusByParticipantIdAndStatus(@Param("batch_size") int batchSize,
+                                                                      @Param("participant_id") UUID participantId,
+                                                                      @Param("old_status") Integer oldStatus,
+                                                                      @Param("new_status") Integer newStatus);
 
     @Modifying
     @Query(value = """
+        WITH to_update AS(
+            SELECT id FROM appointments
+            WHERE (specialist_id = :participant_id OR user_id = :participant_id) 
+              AND date = :date AND status = :old_status
+            LIMIT :batch_size
+        )
         UPDATE appointments
-        SET status = :status
-        WHERE (specialist_id = :participant_id OR user_id = :participant_id)
-          AND date = :date
-        RETURNING id
+            SET status = :new_status
+        WHERE id IN (SELECT id FROM to_update)
+        RETURNING *;
     """, nativeQuery = true)
-    List<Long> updateAllStatus(@Param("participant_id") UUID participantId,
-                               @Param("date") LocalDate date,
-                               @Param("status") AppointmentStatus status);
+    List<AppointmentEntity> updateBatchStatusByStatusAndParticipantIdAndDate(@Param("batch_size") int batchSize,
+                                                                             @Param("old_status") Integer oldStatus,
+                                                                             @Param("participant_id") UUID participantId,
+                                                                             @Param("date") LocalDate date,
+                                                                             @Param("new_status") Integer status);
 
     @Modifying(clearAutomatically = true)
     @Query(value = """
         WITH to_update AS (
             SELECT id FROM appointments
             WHERE date < :date_limit 
-            AND status = 0
+            AND status = :old_status
             LIMIT :batch_size
         )
         UPDATE appointments
-        SET status = 3
+        SET status = :new_status
         WHERE id IN (SELECT id FROM to_update)
         RETURNING id
     """, nativeQuery = true)
-    List<Long> markBatchAsSkipped(@Param("batch_size") int batchSize, @Param("date_limit") LocalDate dateLimit);
+    List<Long> updateBatchStatusByStatusAndBeforeDate(@Param("batch_size") int batchSize,
+                                                      @Param("old_status") Integer oldStatus,
+                                                      @Param("date_limit") LocalDate dateLimit,
+                                                      @Param("new_status") Integer newStatus);
 
     @Query(value = """
         SELECT a FROM AppointmentEntity a
         WHERE a.date = :scheduled_date
         AND a.status = :status
     """)
-    Slice<AppointmentEntity> findBatchToRemind(@Param("scheduled_date") LocalDate scheduledDate,
-                                               @Param("status") AppointmentStatus status, Pageable pageable);
+    Slice<AppointmentEntity> findAllByDateAndStatus(@Param("scheduled_date") LocalDate scheduledDate,
+                                                    @Param("status") AppointmentStatus status, Pageable pageable);
 }

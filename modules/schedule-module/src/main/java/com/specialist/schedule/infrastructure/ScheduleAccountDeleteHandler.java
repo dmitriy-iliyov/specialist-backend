@@ -3,22 +3,29 @@ package com.specialist.schedule.infrastructure;
 import com.specialist.contracts.auth.AccountDeleteEvent;
 import com.specialist.contracts.auth.AccountDeleteHandler;
 import com.specialist.contracts.profile.ProfileType;
-import com.specialist.schedule.appointment.services.SystemAppointmentService;
+import com.specialist.schedule.appointment.services.AppointmentCancelService;
 import com.specialist.schedule.appointment_duration.AppointmentDurationService;
 import com.specialist.schedule.interval.services.SystemIntervalService;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
 public class ScheduleAccountDeleteHandler implements AccountDeleteHandler {
 
     private final SystemIntervalService intervalService;
-    private final SystemAppointmentService appointmentService;
+    private final AppointmentCancelService appointmentService;
     private final AppointmentDurationService appointmentDurationService;
+
+    public ScheduleAccountDeleteHandler(SystemIntervalService intervalService,
+                                        @Qualifier("appointmentCancelNotifyDecorator") AppointmentCancelService appointmentService,
+                                        AppointmentDurationService appointmentDurationService) {
+        this.intervalService = intervalService;
+        this.appointmentService = appointmentService;
+        this.appointmentDurationService = appointmentDurationService;
+    }
 
     @Transactional
     @Override
@@ -28,7 +35,6 @@ public class ScheduleAccountDeleteHandler implements AccountDeleteHandler {
             intervalService.deleteAllBySpecialistId(event.accountId());
             appointmentDurationService.deleteBySpecialistId(event.accountId());
         }
-        // оповещение об отмене
-        appointmentService.deleteAll(event.accountId());
+        appointmentService.cancelBatch(event.accountId());
     }
 }

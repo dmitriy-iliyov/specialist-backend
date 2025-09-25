@@ -5,6 +5,6 @@ import java.util.Map;
 import java.util.UUID;
 
 public interface SpecialistAvailabilityAggregator {
-    Map<String, TimeDto> findDay(UUID specialistId, LocalDate date);
-    Map<LocalDate, Integer> findMonth(UUID specialistId);
+    Map<String, TimeDto> aggregateDay(UUID specialistId, LocalDate date);
+    Map<LocalDate, Integer> aggregateMonth(UUID specialistId);
 }

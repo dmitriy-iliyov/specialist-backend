@@ -34,7 +34,7 @@ public class SpecialistAvailabilityAggregatorImpl implements SpecialistAvailabil
 
     @Transactional(readOnly = true, isolation = Isolation.REPEATABLE_READ)
     @Override
-    public Map<String, TimeDto> findDay(UUID specialistId, LocalDate date) {
+    public Map<String, TimeDto> aggregateDay(UUID specialistId, LocalDate date) {
         List<IntervalResponseDto> intervals = intervalService.findAllBySpecialistIdAndDate(specialistId, date);
         List<AppointmentResponseDto> appointments = appointmentService.findAllBySpecialistIdAndDateAndStatus(
                 specialistId, date, AppointmentStatus.SCHEDULED
@@ -93,12 +93,12 @@ public class SpecialistAvailabilityAggregatorImpl implements SpecialistAvailabil
 
     @Transactional(readOnly = true, isolation = Isolation.REPEATABLE_READ)
     @Override
-    public Map<LocalDate, Integer> findMonth(UUID specialistId) {
+    public Map<LocalDate, Integer> aggregateMonth(UUID specialistId) {
         LocalDate start = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
         LocalDate end = start.plusDays(27);
         Map<LocalDate, Integer> monthDates = new LinkedHashMap<>();
-        List<LocalDate> intervals = intervalService.findMonthDatesBySpecialistId(specialistId, start, end);
-        List<LocalDate> appointmentDates = appointmentService.findMonthDatesBySpecialistId(specialistId, start, end);
+        List<LocalDate> intervals = intervalService.findBySpecialistIdAndDateInterval(specialistId, start, end);
+        List<LocalDate> appointmentDates = appointmentService.findBySpecialistIdAndDateInterval(specialistId, start, end);
         for (int i = 0; i < 28; i++) {
             LocalDate iDate = start.plusDays(i);
             if (appointmentDates.contains(iDate)) {

@@ -5,7 +5,7 @@ import com.specialist.schedule.appointment.models.enums.AppointmentCancelTaskTyp
 import java.time.LocalDate;
 import java.util.UUID;
 
-public record AppointmentCancelTaskDto(
+public record AppointmentCancelTaskCreateDto(
         UUID participantId,
         AppointmentCancelTaskType type,
         LocalDate date

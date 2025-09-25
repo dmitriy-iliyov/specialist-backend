@@ -5,7 +5,7 @@ import com.specialist.core.exceptions.models.dto.ErrorDto;
 
 public class AppointmentOwnershipException extends BaseBadRequestException {
 
-    private final ErrorDto errorDto = new ErrorDto("appointment", "This is not your appointment!");
+    private final ErrorDto errorDto = new ErrorDto("appointments", "This is not your appointments!");
 
     @Override
     public ErrorDto getErrorDto() {

@@ -26,7 +26,7 @@ public class UserAvailabilityAggregatorImpl implements UserAvailabilityAggregato
 
     @Transactional(readOnly = true)
     @Override
-    public List<String> findDay(UUID specialistId, LocalDate date) {
+    public List<String> aggregateDay(UUID specialistId, LocalDate date) {
         Long duration = appointmentDurationService.findBySpecialistId(specialistId);
         List<IntervalResponseDto> dtoList = intervalService.findAllBySpecialistIdAndDate(specialistId, date);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
@@ -41,10 +41,11 @@ public class UserAvailabilityAggregatorImpl implements UserAvailabilityAggregato
         }
         return times.stream()
                 .map(time -> time.format(formatter))
-                .toList();    }
+                .toList();
+    }
 
     @Override
-    public List<LocalDate> findMonth(UUID specialistId) {
+    public List<LocalDate> aggregateMonth(UUID specialistId) {
         LocalDate currentDate = LocalDate.now();
         LocalDate end = currentDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)).plusDays(27);
         LocalTime currentTime = LocalTime.now();
@@ -53,6 +54,6 @@ public class UserAvailabilityAggregatorImpl implements UserAvailabilityAggregato
         } else {
             currentDate = currentDate.plusDays(1);
         }
-        return intervalService.findMonthDatesBySpecialistId(specialistId, currentDate, end);
+        return intervalService.findBySpecialistIdAndDateInterval(specialistId, currentDate, end);
     }
 }
