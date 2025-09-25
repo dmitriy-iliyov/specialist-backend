@@ -1,6 +1,6 @@
 package com.specialist.specialistdirectory.domain.type.controllers;
 
-import com.specialist.specialistdirectory.domain.type.services.TranslatedTypeService;
+import com.specialist.specialistdirectory.domain.type.services.TypeReadService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class TypeController {
 
-    private final TranslatedTypeService orchestrator;
+    private final TypeReadService orchestrator;
 
     @GetMapping("/json")
     public ResponseEntity<?> getAllAsJson(HttpServletRequest request) {

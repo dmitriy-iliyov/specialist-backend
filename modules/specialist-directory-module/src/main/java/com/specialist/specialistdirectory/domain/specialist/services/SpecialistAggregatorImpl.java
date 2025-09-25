@@ -1,7 +1,7 @@
 package com.specialist.specialistdirectory.domain.specialist.services;
 
 import com.specialist.contracts.profile.ProfileType;
-import com.specialist.contracts.profile.SystemProfileAggregator;
+import com.specialist.contracts.profile.SystemProfileService;
 import com.specialist.contracts.profile.dto.UnifiedProfileResponseDto;
 import com.specialist.contracts.schedule.NearestIntervalDto;
 import com.specialist.contracts.schedule.SystemNearestIntervalService;
@@ -23,16 +23,15 @@ import java.util.stream.Collectors;
 @Service
 public class SpecialistAggregatorImpl implements SpecialistAggregator {
 
-    // WARNING: @Transactional can be till profileAggregator in the same app context
     private final SpecialistService specialistService;
-    private final SystemProfileAggregator profileAggregator;
+    private final SystemProfileService profileService;
     private final SystemNearestIntervalService nearestIntervalService;
 
     public SpecialistAggregatorImpl(SpecialistService specialistService,
-                                    @Qualifier("defaultSystemProfileAggregator") SystemProfileAggregator profileAggregator,
+                                    @Qualifier("defaultSystemProfileService") SystemProfileService profileService,
                                     SystemNearestIntervalService nearestIntervalService) {
         this.specialistService = specialistService;
-        this.profileAggregator = profileAggregator;
+        this.profileService = profileService;
         this.nearestIntervalService = nearestIntervalService;
     }
 
@@ -52,7 +51,7 @@ public class SpecialistAggregatorImpl implements SpecialistAggregator {
 
     private PageResponse<SpecialistAggregatedResponseDto> preparePageResponse(PageResponse<SpecialistResponseDto> pageResponse) {
         Set<UUID> ownersIds = pageResponse.data().stream().map(SpecialistResponseDto::getOwnerId).collect(Collectors.toSet());
-        Map<UUID, UnifiedProfileResponseDto> ownersMap = profileAggregator.findAllByIdIn(ownersIds);
+        Map<UUID, UnifiedProfileResponseDto> ownersMap = profileService.findAllByIdIn(ownersIds);
         Set<UUID> specialistProfileIds = ownersMap.values().stream()
                 .filter(dto -> dto.getType().equals(ProfileType.SPECIALIST))
                 .map(UnifiedProfileResponseDto::getId)

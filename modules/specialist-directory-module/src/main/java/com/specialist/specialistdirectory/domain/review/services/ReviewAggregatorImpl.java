@@ -1,7 +1,7 @@
 package com.specialist.specialistdirectory.domain.review.services;
 
 
-import com.specialist.contracts.profile.SystemProfileAggregator;
+import com.specialist.contracts.profile.SystemProfileService;
 import com.specialist.contracts.profile.dto.UnifiedProfileResponseDto;
 import com.specialist.specialistdirectory.domain.review.models.dtos.ReviewAggregatedResponseDto;
 import com.specialist.specialistdirectory.domain.review.models.dtos.ReviewResponseDto;
@@ -21,22 +21,21 @@ import java.util.stream.Collectors;
 public class ReviewAggregatorImpl implements ReviewAggregator {
 
     private final ReviewService reviewService;
-    private final SystemProfileAggregator profileAggregator;
+    private final SystemProfileService profileService;
 
     public ReviewAggregatorImpl(ReviewService reviewService,
-                                @Qualifier("defaultSystemProfileAggregator") SystemProfileAggregator profileAggregator) {
+                                @Qualifier("defaultSystemProfileService") SystemProfileService profileService) {
         this.reviewService = reviewService;
-        this.profileAggregator = profileAggregator;
+        this.profileService = profileService;
     }
 
-    // WARNING: @Transactional till SystemProfileReadService in the same app context
     @Cacheable(value = "reviews", key = "#specialistId + ':' + #sort.cacheKey()")
     @Transactional(readOnly = true)
     @Override
     public PageResponse<ReviewAggregatedResponseDto> findAllWithSortBySpecialistId(UUID specialistId, ReviewSort sort) {
         PageResponse<ReviewResponseDto> reviewsPage = reviewService.findAllWithSortBySpecialistId(specialistId, sort);
         Set<UUID> creatorIds = reviewsPage.data().stream().map(ReviewResponseDto::creatorId).collect(Collectors.toSet());
-        Map<UUID, UnifiedProfileResponseDto> creatorsMap = profileAggregator.findAllByIdIn(creatorIds);
+        Map<UUID, UnifiedProfileResponseDto> creatorsMap = profileService.findAllByIdIn(creatorIds);
         return new PageResponse<>(
                 reviewsPage.data().stream()
                         .map(review -> new ReviewAggregatedResponseDto(creatorsMap.get(review.creatorId()), review))

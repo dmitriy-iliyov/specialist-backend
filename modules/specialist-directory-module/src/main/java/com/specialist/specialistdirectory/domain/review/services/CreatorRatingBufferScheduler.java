@@ -15,7 +15,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public final class CreatorRatingBufferScheduler {
+public class CreatorRatingBufferScheduler {
 
     @Value("${api.creator-rating-buffer.clean.batch-size}")
     public int CLEAN_BATCH_SIZE;

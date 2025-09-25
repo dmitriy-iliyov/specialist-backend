@@ -3,7 +3,8 @@ package com.specialist.specialistdirectory.domain.type.controllers;
 import com.specialist.contracts.auth.PrincipalDetails;
 import com.specialist.specialistdirectory.domain.type.models.dtos.FullTypeCreateDto;
 import com.specialist.specialistdirectory.domain.type.models.dtos.FullTypeUpdateDto;
-import com.specialist.specialistdirectory.domain.type.services.ApproveTypeFacade;
+import com.specialist.specialistdirectory.domain.type.services.TypeAggregator;
+import com.specialist.specialistdirectory.domain.type.services.TypeApproveService;
 import com.specialist.specialistdirectory.domain.type.services.TypeOrchestrator;
 import com.specialist.utils.pagination.PageRequest;
 import jakarta.validation.Valid;
@@ -23,7 +24,8 @@ import org.springframework.web.bind.annotation.*;
 public class AdminTypeController {
 
     private final TypeOrchestrator orchestrator;
-    private final ApproveTypeFacade approveTypeFacade;
+    private final TypeApproveService approveService;
+    private final TypeAggregator aggregator;
 
     @PostMapping
     public ResponseEntity<?> create(@AuthenticationPrincipal PrincipalDetails principal,
@@ -45,7 +47,7 @@ public class AdminTypeController {
     @PatchMapping("/{id}/approve")
     public ResponseEntity<?> approve(@PathVariable("id") @NotNull(message = "Id is required.")
                                      @Positive(message = "Id should be positive.") Long id) {
-        approveTypeFacade.approve(id);
+        approveService.approve(id);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
@@ -64,13 +66,13 @@ public class AdminTypeController {
     public ResponseEntity<?> getAll(@ModelAttribute @Valid PageRequest page) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(orchestrator.findAll(page));
+                .body(aggregator.findAll(page));
     }
 
     @GetMapping("/unapproved")
     public ResponseEntity<?> getAllUnapproved(@ModelAttribute @Valid PageRequest page) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(orchestrator.findAllUnapproved(page));
+                .body(aggregator.findAllUnapproved(page));
     }
 }

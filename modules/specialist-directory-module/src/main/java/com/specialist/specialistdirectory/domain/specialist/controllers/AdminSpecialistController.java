@@ -4,7 +4,7 @@ import com.specialist.contracts.auth.PrincipalDetails;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.AdminSpecialistFilter;
-import com.specialist.specialistdirectory.domain.specialist.services.admin.AdminSpecialistFacade;
+import com.specialist.specialistdirectory.domain.specialist.services.admin.AdminSpecialistService;
 import com.specialist.utils.validation.annotation.ValidUuid;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AdminSpecialistController {
 
-    private final AdminSpecialistFacade facade;
+    private final AdminSpecialistService facade;
 
     @PostMapping
     public ResponseEntity<?> create(@AuthenticationPrincipal PrincipalDetails principal,

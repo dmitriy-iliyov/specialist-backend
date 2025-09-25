@@ -2,7 +2,7 @@ package com.specialist.specialistdirectory.domain.type.controllers;
 
 import com.specialist.specialistdirectory.domain.type.models.dtos.TranslateCreateDto;
 import com.specialist.specialistdirectory.domain.type.models.dtos.TranslateUpdateDto;
-import com.specialist.specialistdirectory.domain.type.services.TranslateFacade;
+import com.specialist.specialistdirectory.domain.type.services.TranslatePersistService;
 import com.specialist.specialistdirectory.domain.type.services.TranslateService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 public class TranslateController {
 
     private final TranslateService service;
-    private final TranslateFacade facade;
+    private final TranslatePersistService persistService;
 
     @PostMapping
     public ResponseEntity<?> create(@PathVariable("type_id") @NotNull(message = "Type id is required.")
@@ -29,7 +29,7 @@ public class TranslateController {
         dto.setTypeId(typeId);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(facade.save(dto));
+                .body(persistService.save(dto));
     }
 
     @PutMapping("/{id}")

@@ -2,7 +2,7 @@ package com.specialist.specialistdirectory.domain.specialist.controllers;
 
 import com.specialist.contracts.auth.PrincipalDetails;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
-import com.specialist.specialistdirectory.domain.specialist.services.creator.CreatorSpecialistFacade;
+import com.specialist.specialistdirectory.domain.specialist.services.creator.CreatorSpecialistService;
 import com.specialist.utils.validation.annotation.ValidUuid;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CreatorSpecialistController {
 
-    private final CreatorSpecialistFacade facade;
+    private final CreatorSpecialistService facade;
 
     // DISCUSS: to del?
     @GetMapping("/{id}")
