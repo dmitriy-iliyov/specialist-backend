@@ -1,6 +1,7 @@
 package com.specialist.schedule.appointment.models;
 
 import com.specialist.schedule.appointment.models.enums.AppointmentCancelTaskType;
+import com.specialist.schedule.appointment.repositories.AppointmentCancelTaskTypeConverter;
 import com.specialist.utils.UuidUtils;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -30,6 +31,7 @@ public class AppointmentCancelTaskEntity {
     @Column(name = "participant_id", nullable = false)
     private UUID participantId;
 
+    @Convert(converter = AppointmentCancelTaskTypeConverter.class)
     @Column(nullable = false)
     private AppointmentCancelTaskType type;
 

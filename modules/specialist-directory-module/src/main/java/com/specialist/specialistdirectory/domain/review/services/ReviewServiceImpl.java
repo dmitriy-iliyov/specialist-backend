@@ -73,10 +73,8 @@ public class ReviewServiceImpl implements ReviewService {
     public ReviewResponseDto deleteById(UUID creatorId, UUID specialistId, UUID id) {
         ReviewEntity entity = repository.findById(id).orElseThrow(ReviewNotFoundByIdException::new );
         ReviewResponseDto dto = mapper.toDto(entity);
-
         this.assertOwnership(dto.creatorId(), creatorId);
         this.assertSpecialistAffiliation(entity.getSpecialist().getId(), specialistId);
-
         repository.deleteById(id);
         return dto;
     }
@@ -86,9 +84,7 @@ public class ReviewServiceImpl implements ReviewService {
     public ReviewResponseDto deleteById(UUID specialistId, UUID id) {
         ReviewEntity entity = repository.findById(id).orElseThrow(ReviewNotFoundByIdException::new );
         ReviewResponseDto dto = mapper.toDto(entity);
-
         this.assertSpecialistAffiliation(entity.getSpecialist().getId(), specialistId);
-
         repository.deleteById(id);
         return dto;
     }

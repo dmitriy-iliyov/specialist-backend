@@ -3,7 +3,7 @@ package com.specialist.schedule.infrastructure;
 import com.specialist.contracts.auth.AccountDeleteEvent;
 import com.specialist.contracts.auth.AccountDeleteHandler;
 import com.specialist.contracts.profile.ProfileType;
-import com.specialist.schedule.appointment.services.AppointmentCancelService;
+import com.specialist.schedule.appointment.services.AppointmentBatchCancelService;
 import com.specialist.schedule.appointment_duration.AppointmentDurationService;
 import com.specialist.schedule.interval.services.SystemIntervalService;
 import lombok.extern.slf4j.Slf4j;
@@ -16,11 +16,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class ScheduleAccountDeleteHandler implements AccountDeleteHandler {
 
     private final SystemIntervalService intervalService;
-    private final AppointmentCancelService appointmentService;
+    private final AppointmentBatchCancelService appointmentService;
     private final AppointmentDurationService appointmentDurationService;
 
     public ScheduleAccountDeleteHandler(SystemIntervalService intervalService,
-                                        @Qualifier("appointmentCancelNotifyDecorator") AppointmentCancelService appointmentService,
+                                        @Qualifier("appointmentBatchCancelNotifyDecorator") AppointmentBatchCancelService appointmentService,
                                         AppointmentDurationService appointmentDurationService) {
         this.intervalService = intervalService;
         this.appointmentService = appointmentService;

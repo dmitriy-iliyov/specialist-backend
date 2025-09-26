@@ -32,6 +32,7 @@ public class SpecialistStatusServiceImpl implements SpecialistStatusService {
         specialistEntity.setStatus(SpecialistStatus.APPROVED);
         repository.save(specialistEntity);
         cacheService.evictTotalCreatedCount(specialistEntity.getCreatorId());
+        cacheService.evictCreatedCountByFilter(specialistEntity.getCreatorId());
     }
 
     @Transactional

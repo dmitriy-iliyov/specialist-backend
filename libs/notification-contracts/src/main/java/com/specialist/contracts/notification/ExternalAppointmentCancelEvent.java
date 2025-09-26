@@ -1,7 +1,7 @@
 package com.specialist.contracts.notification;
 
 public record ExternalAppointmentCancelEvent(
+        InitiatorType type,
         SystemAppointmentResponseDto appointment,
-        SystemShortProfileResponseDto user,
-        SystemShortProfileResponseDto specialist
+        SystemShortProfileResponseDto recipient
 ) { }

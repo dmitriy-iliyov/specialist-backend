@@ -1,6 +1,6 @@
 package com.specialist.schedule.interval.services;
 
-import com.specialist.schedule.appointment.services.AppointmentCancelService;
+import com.specialist.schedule.appointment.services.AppointmentBatchCancelService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,10 +12,10 @@ import java.util.UUID;
 public class DayDeleteServiceImpl implements DayDeleteService {
 
     private final IntervalService intervalService;
-    private final AppointmentCancelService appointmentService;
+    private final AppointmentBatchCancelService appointmentService;
 
     public DayDeleteServiceImpl(IntervalService intervalService,
-                                @Qualifier("appointmentCancelNotifyDecorator") AppointmentCancelService appointmentService) {
+                                @Qualifier("appointmentBatchCancelNotifyDecorator") AppointmentBatchCancelService appointmentService) {
         this.intervalService = intervalService;
         this.appointmentService = appointmentService;
     }

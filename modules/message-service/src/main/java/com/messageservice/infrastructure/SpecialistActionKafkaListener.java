@@ -12,7 +12,7 @@ public final class SpecialistActionKafkaListener {
 
     private final SpecialistActionEventHandler processor;
 
-    @KafkaListener(topics = "${api.kafka.topic.specialist-action}", groupId = "${api.kafka.group_id.specialist-action}")
+    @KafkaListener(topics = "${api.kafka.topic.specialist-action}", groupId = "${api.kafka.group_id}")
     public void listen(SpecialistActionEvent event) throws Exception {
         processor.handel(event);
     }

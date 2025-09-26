@@ -6,8 +6,7 @@ import com.specialist.utils.pagination.BatchResponse;
 import java.time.LocalDate;
 import java.util.UUID;
 
-public interface AppointmentCancelService {
-    AppointmentResponseDto cancelById(Long id);
+public interface AppointmentBatchCancelService {
     BatchResponse<AppointmentResponseDto> cancelBatchByDate(UUID participantId, LocalDate date);
     BatchResponse<AppointmentResponseDto> cancelBatch(UUID participantId);
 }

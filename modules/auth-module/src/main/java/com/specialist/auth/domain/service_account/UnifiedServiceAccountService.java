@@ -69,7 +69,7 @@ public class UnifiedServiceAccountService implements ServiceAccountService {
                 Pageable.ofSize(pageRequest.pageSize()).withPage(pageRequest.pageNumber())
         );
         List<ServiceAccountEntity> entityList = entityPage.getContent();
-        Map<UUID, List<Authority>> authoritiesMap = authorityService.findAllByServiceAccountIdIn(entityList.stream()
+        Map<UUID, List<Authority>> authoritiesMap = authorityService.findAllByAccountIdIn(entityList.stream()
                 .map(ServiceAccountEntity::getId)
                 .collect(Collectors.toSet())
         );

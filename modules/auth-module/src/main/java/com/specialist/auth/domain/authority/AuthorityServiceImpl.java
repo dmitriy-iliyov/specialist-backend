@@ -34,23 +34,6 @@ public class AuthorityServiceImpl implements AuthorityService {
     @Override
     public Map<UUID, List<Authority>> findAllByAccountIdIn(Set<UUID> accountIds) {
         List<Object[]> pairs = repository.findAllByAccountIdIn(accountIds);
-        return toMap(pairs);
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public Map<UUID, List<Authority>> findAllByServiceAccountIdIn(Set<UUID> serviceAccountIds) {
-        List<Object[]> pairs = repository.findAllByServiceAccountIdIn(serviceAccountIds);
-        return toMap(pairs);
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public List<AuthorityEntity> findAll() {
-        return repository.findAll();
-    }
-
-    private Map<UUID, List<Authority>> toMap(List<Object[]> pairs) {
         Map<UUID, List<Authority>> authoritiesMap = new HashMap<>();
         for (Object [] pair : pairs) {
             UUID id = (UUID) pair[0];
@@ -58,6 +41,12 @@ public class AuthorityServiceImpl implements AuthorityService {
             authoritiesMap.computeIfAbsent(id, k -> new ArrayList<>())
                     .add(authority.getAuthorityAsEnum());
         }
-        return authoritiesMap;
+        return authoritiesMap;    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<AuthorityEntity> findAll() {
+        return repository.findAll();
     }
+
 }

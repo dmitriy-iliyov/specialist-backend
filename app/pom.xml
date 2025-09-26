@@ -69,6 +69,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.specialist</groupId>
+            <artifactId>notification-module</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
             <groupId>io.github.cdimascio</groupId>
             <artifactId>dotenv-java</artifactId>
             <version>3.0.0</version>

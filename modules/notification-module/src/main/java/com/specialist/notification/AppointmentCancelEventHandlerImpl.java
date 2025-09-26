@@ -19,14 +19,31 @@ public class AppointmentCancelEventHandlerImpl implements AppointmentCancelEvent
     @Override
     public void handle(InternalAppointmentCancelEvent event) {
         Set<SystemAppointmentResponseDto> appointments = new HashSet<>(event.appointments());
+        InitiatorType initiatorType = null;
         Set<UUID> ids = new HashSet<>();
-        appointments.forEach(appointment -> ids.addAll(Set.of(appointment.specialistId(), appointment.userId())));
+        for (SystemAppointmentResponseDto appointment : appointments) {
+            int initiatorFlag;
+            if (!appointment.userId().equals(event.initiatorId())) {
+                ids.add(appointment.userId());
+                initiatorFlag = 2;
+            } else {
+                ids.add(appointment.specialistId());
+                initiatorFlag = 1;
+            }
+            if (initiatorType == null) {
+                initiatorType = initiatorFlag % 2 == 0 ? InitiatorType.SPECIALIST : InitiatorType.USER;
+            }
+        }
+        final InitiatorType finalInitiatorType = initiatorType;
         Map<UUID, SystemShortProfileResponseDto> profiles = profileService.findAllShortByIdIn(ids);
         eventSender.sendEvents(
                 appointments.stream()
-                        .map(appointment -> new ExternalAppointmentCancelEvent(
-                                appointment, profiles.get(appointment.userId()), profiles.get(appointment.specialistId()))
-                        )
+                        .map(appointment -> {
+                            if (finalInitiatorType.equals(InitiatorType.USER)) {
+                                return new ExternalAppointmentCancelEvent(finalInitiatorType, appointment, profiles.get(appointment.specialistId()));
+                            }
+                            return new ExternalAppointmentCancelEvent(finalInitiatorType, appointment, profiles.get(appointment.userId()));
+                        })
                         .toList()
         );
     }

@@ -12,31 +12,28 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 @Service
-public class AppointmentCancelDeferDecorator implements AppointmentCancelService {
+public class AppointmentBatchCancelDeferDecorator implements AppointmentBatchCancelService {
 
-    private final AppointmentCancelService delegate;
+    private final AppointmentBatchCancelService delegate;
     private final AppointmentCancelTaskService taskService;
 
-    public AppointmentCancelDeferDecorator(@Qualifier("unifiedAppointmentService") AppointmentCancelService delegate,
-                                           AppointmentCancelTaskService taskService) {
+    public AppointmentBatchCancelDeferDecorator(@Qualifier("unifiedAppointmentService") AppointmentBatchCancelService delegate,
+                                                AppointmentCancelTaskService taskService) {
         this.delegate = delegate;
         this.taskService = taskService;
-    }
-
-    @Override
-    public AppointmentResponseDto cancelById(Long id) {
-        return delegate.cancelById(id);
     }
 
     @Transactional
     @Override
     public BatchResponse<AppointmentResponseDto> cancelBatchByDate(UUID participantId, LocalDate date) {
         BatchResponse<AppointmentResponseDto> batch = delegate.cancelBatchByDate(participantId, date);
-        Boolean exists = taskService.existsByParticipantIdAndTypeAndDate(
-                participantId, AppointmentCancelTaskType.CANCEL_BATCH_BY_DATA, date
-        );
-        if (batch.hasNext() && !exists) {
-            taskService.save(new AppointmentCancelTaskCreateDto(participantId, AppointmentCancelTaskType.CANCEL_BATCH_BY_DATA, date));
+        if (batch.hasNext()) {
+            Boolean exists = taskService.existsByParticipantIdAndTypeAndDate(
+                    participantId, AppointmentCancelTaskType.CANCEL_BATCH_BY_DATA, date
+            );
+            if (!exists) {
+                taskService.save(new AppointmentCancelTaskCreateDto(participantId, AppointmentCancelTaskType.CANCEL_BATCH_BY_DATA, date));
+            }
         }
         return batch;
     }
@@ -45,11 +42,13 @@ public class AppointmentCancelDeferDecorator implements AppointmentCancelService
     @Override
     public BatchResponse<AppointmentResponseDto> cancelBatch(UUID participantId) {
         BatchResponse<AppointmentResponseDto> batch = delegate.cancelBatch(participantId);
-        Boolean exists = taskService.existsByParticipantIdAndTypeAndDate(
-                participantId, AppointmentCancelTaskType.CANCEL_BATCH, null
-        );
-        if (batch.hasNext() && !exists) {
-            taskService.save(new AppointmentCancelTaskCreateDto(participantId, AppointmentCancelTaskType.CANCEL_BATCH, null));
+        if (batch.hasNext()) {
+            Boolean exists = taskService.existsByParticipantIdAndTypeAndDate(
+                    participantId, AppointmentCancelTaskType.CANCEL_BATCH, null
+            );
+            if (!exists) {
+                taskService.save(new AppointmentCancelTaskCreateDto(participantId, AppointmentCancelTaskType.CANCEL_BATCH, null));
+            }
         }
         return batch;
     }

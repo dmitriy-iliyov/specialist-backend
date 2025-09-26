@@ -12,10 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class AppointmentCancelScheduler {
 
-    private final AppointmentCancelService appointmentService;
+    private final AppointmentBatchCancelService appointmentService;
     private final AppointmentCancelTaskService taskService;
 
-    public AppointmentCancelScheduler(@Qualifier("appointmentCancelNotifyDecorator") AppointmentCancelService appointmentService,
+    public AppointmentCancelScheduler(@Qualifier("appointmentBatchCancelNotifyDecorator") AppointmentBatchCancelService appointmentService,
                                       AppointmentCancelTaskService taskService) {
         this.appointmentService = appointmentService;
         this.taskService = taskService;

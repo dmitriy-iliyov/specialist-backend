@@ -10,7 +10,7 @@ import com.specialist.schedule.appointment.models.enums.ValidationStatus;
 import com.specialist.schedule.appointment.validation.AppointmentTimeValidator;
 import com.specialist.schedule.appointment_duration.AppointmentDurationService;
 import com.specialist.schedule.exceptions.appointment.InvalidAttemptToCompleteException;
-import com.specialist.schedule.exceptions.appointment.InvalidAttemptToDeleteException;
+import com.specialist.schedule.exceptions.appointment.InvalidAttemptToCancelException;
 import com.specialist.schedule.exceptions.appointment.NotWorkingAtThisTimeException;
 import com.specialist.schedule.interval.models.dto.SystemIntervalCreatedDto;
 import com.specialist.schedule.interval.services.IntervalOrchestrator;
@@ -26,19 +26,15 @@ import java.util.UUID;
 public class AppointmentManagementOrchestratorImpl implements AppointmentManagementOrchestrator {
 
     private final AppointmentService service;
-    private final AppointmentCancelService appointmentCancelService;
     private final AppointmentDurationService durationService;
     private final IntervalOrchestrator intervalOrchestrator;
     private final AppointmentTimeValidator timeValidator;
 
     public AppointmentManagementOrchestratorImpl(AppointmentService service,
-                                                 @Qualifier("appointmentCancelNotifyDecorator")
-                                                 AppointmentCancelService appointmentCancelService,
                                                  AppointmentDurationService durationService,
                                                  IntervalOrchestrator intervalOrchestrator,
                                                  AppointmentTimeValidator timeValidator) {
         this.service = service;
-        this.appointmentCancelService = appointmentCancelService;
         this.durationService = durationService;
         this.intervalOrchestrator = intervalOrchestrator;
         this.timeValidator = timeValidator;
@@ -106,7 +102,7 @@ public class AppointmentManagementOrchestratorImpl implements AppointmentManagem
     public AppointmentResponseDto complete(Long id, String review) {
         AppointmentResponseDto dto = service.findById(id);
         timeValidator.isCompletePermit(id);
-        if (dto.status().equals(AppointmentStatus.CANCELED)) {
+        if (!dto.status().equals(AppointmentStatus.SCHEDULED)) {
             throw new InvalidAttemptToCompleteException();
         }
         return service.completeById(id, review);
@@ -117,10 +113,10 @@ public class AppointmentManagementOrchestratorImpl implements AppointmentManagem
     public AppointmentResponseDto cancel(Long id) {
         AppointmentResponseDto dto = service.findById(id);
         timeValidator.isCancelPermit(id);
-        if (dto.status().equals(AppointmentStatus.CANCELED)) {
-            throw new InvalidAttemptToDeleteException();
+        if (!dto.status().equals(AppointmentStatus.SCHEDULED)) {
+            throw new InvalidAttemptToCancelException();
         }
-        dto = appointmentCancelService.cancelById(id);
+        dto = service.cancelById(id);
         intervalOrchestrator.systemSave(dto.specialistId(), new SystemIntervalCreatedDto(dto.start(), dto.end(), dto.date()));
         return dto;
     }
