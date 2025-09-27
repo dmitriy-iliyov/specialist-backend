@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-public interface CreatorRatingBufferService {
+public interface CreatorRatingBufferService extends CreatorRatingUpdateService {
     void updateDeliveryStateById(UUID id, DeliveryState state);
 
     List<CreatorRatingBufferEntity> findAllByDeliveryState(DeliveryState state, int batchSize);

@@ -1,6 +1,7 @@
 package com.specialist.specialistdirectory.domain.review.controllers;
 
 import com.specialist.specialistdirectory.domain.review.models.enums.DeliveryState;
+import com.specialist.contracts.specialistdirectory.SystemCreatorRatingBufferService;
 import com.specialist.specialistdirectory.domain.review.services.CreatorRatingBufferService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,7 @@ public class CreatorRatingBufferController {
     private final CreatorRatingBufferService service;
 
     @PostMapping
-    public ResponseEntity<?> markBatchAsReadyToSend(@RequestBody Map<String, Set<UUID>> dto) {
+    public ResponseEntity<?> resendAllByIdIn(@RequestBody Map<String, Set<UUID>> dto) {
         service.updateAllDeliveryStateByIdIn(dto.get("ids"), DeliveryState.READY_TO_SEND);
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -29,7 +30,7 @@ public class CreatorRatingBufferController {
     }
 
     @DeleteMapping
-    public ResponseEntity<?> deleteBatchByIdIn(@RequestBody Map<String, Set<UUID>> dto) {
+    public ResponseEntity<?> deleteAllByIdIn(@RequestBody Map<String, Set<UUID>> dto) {
         service.deleteAllByIdIn(dto.get("ids"));
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)

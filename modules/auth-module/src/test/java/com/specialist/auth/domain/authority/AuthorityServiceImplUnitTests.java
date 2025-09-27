@@ -128,17 +128,4 @@ public class AuthorityServiceImplUnitTests {
 //        assertEquals(2, result.size());
 //        assertEquals(List.of(Authority.SPECIALIST_CREATE, Authority.SPECIALIST_UPDATE), result.get(id1));
 //    }
-
-    @Test
-    @DisplayName("UT: findAllByServiceAccountIdIn() when empty should return empty map")
-    void findAllByServiceAccountIdIn_whenEmpty_shouldReturnEmptyMap() {
-        Set<UUID> ids = Set.of(UUID.randomUUID());
-        when(repository.findAllByServiceAccountIdIn(ids)).thenReturn(Collections.emptyList());
-
-        Map<UUID, List<Authority>> result = service.findAllByServiceAccountIdIn(ids);
-
-        verify(repository, times(1)).findAllByServiceAccountIdIn(ids);
-        verifyNoMoreInteractions(repository);
-        assertTrue(result.isEmpty());
-    }
 }

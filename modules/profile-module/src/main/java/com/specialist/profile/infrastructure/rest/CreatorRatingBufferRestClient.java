@@ -1,5 +1,6 @@
 package com.specialist.profile.infrastructure.rest;
 
+import com.specialist.contracts.specialistdirectory.SystemCreatorRatingBufferService;
 import com.specialist.profile.exceptions.ResponseBodyNullException;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,7 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 @Slf4j
-public class CreatorRatingBufferRestClient implements CreatorRatingBufferService {
+public class CreatorRatingBufferRestClient implements SystemCreatorRatingBufferService {
 
     @Value("${api.creator-rating-buffer.client-id}")
     public String CLIENT_ID;
@@ -33,7 +34,7 @@ public class CreatorRatingBufferRestClient implements CreatorRatingBufferService
     }
 
     @Override
-    public void deleteBatchByIds(Set<UUID> idsToDelete) {
+    public void deleteAllByIdIn(Set<UUID> idsToDelete) {
         Map<String, Set<UUID>> body = Map.of("ids", idsToDelete);
         try {
             restClient
@@ -48,7 +49,7 @@ public class CreatorRatingBufferRestClient implements CreatorRatingBufferService
     }
 
     @Override
-    public void notifyToResend(Set<UUID> idsToResend) {
+    public void resendAllByIdIn(Set<UUID> idsToResend) {
         Map<String, Set<UUID>> body = Map.of("ids", idsToResend);
         try {
             restClient

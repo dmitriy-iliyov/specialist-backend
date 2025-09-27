@@ -1,6 +1,6 @@
 package com.specialist.profile.services.rating;
 
-import com.specialist.profile.infrastructure.rest.CreatorRatingBufferService;
+import com.specialist.contracts.specialistdirectory.SystemCreatorRatingBufferService;
 import com.specialist.profile.models.enums.ProcessingStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,7 +21,7 @@ public final class CreatorRatingEventScheduler {
     public int NOTIFY_BATCH_SIZE;
 
     private final CreatorRatingEventService service;
-    private final CreatorRatingBufferService restClient;
+    private final SystemCreatorRatingBufferService bufferService;
 
     @Scheduled(cron = "0 */2 1 * * *")
     public void notifyToResend() {
@@ -29,7 +29,7 @@ public final class CreatorRatingEventScheduler {
         if (idsToResend.isEmpty()) {
             return;
         }
-        restClient.notifyToResend(idsToResend);
+        bufferService.resendAllByIdIn(idsToResend);
     }
 
     @Scheduled(cron = "0 */2 2 * * *")
@@ -38,7 +38,7 @@ public final class CreatorRatingEventScheduler {
         if (idsToDelete.isEmpty()) {
             return;
         }
-        restClient.deleteBatchByIds(idsToDelete);
+        bufferService.deleteAllByIdIn(idsToDelete);
         service.deleteBatchByIds(idsToDelete);
     }
 }

@@ -1,5 +1,6 @@
 package com.specialist.profile.configs;
 
+import com.specialist.contracts.specialistdirectory.SystemCreatorRatingBufferService;
 import com.specialist.profile.infrastructure.rest.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -34,8 +35,8 @@ public class RestClientConfig {
     }
 
     @Bean
-    public CreatorRatingBufferService reviewBufferRestService(ClientHttpRequestInterceptor interceptor,
-                                                              LoginRestClient loginRestClient) {
+    public SystemCreatorRatingBufferService reviewBufferRestService(ClientHttpRequestInterceptor interceptor,
+                                                                    LoginRestClient loginRestClient) {
         return new CreatorRatingBufferRestClient(
                 RestClient.builder()
                         .baseUrl(BASE_SYSTEM_API_URL)

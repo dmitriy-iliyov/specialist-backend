@@ -4,7 +4,6 @@ import com.specialist.contracts.auth.AccountDeleteEvent;
 import com.specialist.contracts.auth.AccountDeleteHandler;
 import com.specialist.contracts.profile.ProfileType;
 import com.specialist.specialistdirectory.domain.bookmark.services.BookmarkService;
-import com.specialist.specialistdirectory.domain.review.services.ReviewManagementOrchestrator;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

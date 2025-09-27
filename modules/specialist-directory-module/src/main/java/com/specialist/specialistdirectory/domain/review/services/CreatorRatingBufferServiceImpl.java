@@ -1,5 +1,6 @@
 package com.specialist.specialistdirectory.domain.review.services;
 
+import com.specialist.contracts.specialistdirectory.SystemCreatorRatingBufferService;
 import com.specialist.specialistdirectory.domain.review.models.CreatorRatingBufferEntity;
 import com.specialist.specialistdirectory.domain.review.models.enums.DeliveryState;
 import com.specialist.specialistdirectory.domain.review.models.enums.OperationType;
@@ -19,7 +20,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class CreatorRatingBufferServiceImpl implements CreatorRatingBufferService, CreatorRatingUpdateService {
+public class CreatorRatingBufferServiceImpl implements CreatorRatingBufferService {
 
     @Value("${api.creator-rating-buffer.size}")
     public int RATING_BUFFER_SIZE;

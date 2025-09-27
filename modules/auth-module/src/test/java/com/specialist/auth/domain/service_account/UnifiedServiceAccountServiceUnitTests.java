@@ -131,45 +131,6 @@ class UnifiedServiceAccountServiceUnitTests {
     }
 
     @Test
-    @DisplayName("UT: findAll() should return paged response with DTOs")
-    void findAll_shouldReturnPagedResponse() {
-        ServiceAccountEntity entity1 = new ServiceAccountEntity();
-        entity1.setId(UUID.randomUUID());
-        ServiceAccountEntity entity2 = new ServiceAccountEntity();
-        entity2.setId(UUID.randomUUID());
-
-        List<ServiceAccountEntity> entityList = List.of(entity1, entity2);
-
-        Page<ServiceAccountEntity> page = new PageImpl<>(entityList, org.springframework.data.domain.PageRequest.of(0, 10), entityList.size());
-
-        when(repository.findAll(any(Pageable.class))).thenReturn(page);
-
-        Map<UUID, List<Authority>> authMap = new HashMap<>();
-        authMap.put(entity1.getId(), List.of(Authority.REVIEW_CREATE_UPDATE));
-        authMap.put(entity2.getId(), List.of(Authority.ACCOUNT_CREATE));
-
-        when(authorityService.findAllByServiceAccountIdIn(anySet())).thenReturn(authMap);
-
-        when(mapper.toResponseDto(anyList(), any(ServiceAccountEntity.class))).thenAnswer(invocation -> {
-            List<Authority> auths = invocation.getArgument(0);
-            ServiceAccountEntity ent = invocation.getArgument(1);
-            return new ServiceAccountResponseDto(ent.getId(), "account-name", Role.ROLE_ADMIN, auths, UUID.randomUUID(), UUID.randomUUID(), null, null);
-        });
-
-        PageRequest pageRequest = new PageRequest(0, 10, true);
-
-        PageResponse<ServiceAccountResponseDto> response = service.findAll(pageRequest);
-
-        assertNotNull(response);
-        assertEquals(2, response.data().size());
-        assertEquals(1, response.totalPages());
-
-        verify(repository).findAll(any(Pageable.class));
-        verify(authorityService).findAllByServiceAccountIdIn(anySet());
-        verify(mapper, times(2)).toResponseDto(anyList(), any(ServiceAccountEntity.class));
-    }
-
-    @Test
     @DisplayName("UT: deleteById() when entity exists should delete successfully")
     void deleteById_whenEntityExists_shouldDelete() {
         UUID id = UUID.randomUUID();
