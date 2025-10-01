@@ -1,23 +1,26 @@
 package com.specialist.auth.core.rate_limit;
 
+import io.lettuce.core.RedisException;
+import io.lettuce.core.ScriptOutputType;
+import io.lettuce.core.api.StatefulRedisConnection;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisTemplate;
-
-import java.time.Duration;
 
 @Slf4j
 public class RedisRateLimitRepository implements RateLimitRepository {
 
-    private final RedisTemplate<String, String> redisTemplate;
+    private final StatefulRedisConnection<String, String> statefulConnection;
+    private final ScriptLoader scriptLoader;
     private final String TARGET_URL;
     private final String KEY_TEMPLATE;
     private final Long MAX_ATTEMPT_COUNT;
     private final Long OBSERVE_TIME;
     private final Long LOCK_TIME;
 
-    public RedisRateLimitRepository(RedisTemplate<String, String> redisTemplate, String targetUrl,
-                                    String keyTemplate, Long maxAttemptCount, Long observeTime, Long lockTime) {
-        this.redisTemplate = redisTemplate;
+    public RedisRateLimitRepository(StatefulRedisConnection<String, String> statefulConnection,
+                                    ScriptLoader scriptLoader, String targetUrl, String keyTemplate,
+                                    Long maxAttemptCount, Long observeTime, Long lockTime) {
+        this.statefulConnection = statefulConnection;
+        this.scriptLoader = scriptLoader;
         this.TARGET_URL = targetUrl;
         this.KEY_TEMPLATE = keyTemplate + ":ip:%s";
         this.MAX_ATTEMPT_COUNT = maxAttemptCount;
@@ -33,25 +36,22 @@ public class RedisRateLimitRepository implements RateLimitRepository {
 
     @Override
     public RateLimitStatus increment(String ip) {
-        String key = KEY_TEMPLATE.formatted(ip);
-        String lockedKey = "blocked:" + KEY_TEMPLATE.formatted(ip);
-        if (Boolean.TRUE.equals(redisTemplate.hasKey(lockedKey))) {
-            return RateLimitStatus.BLOCKED;
-        }
-        String rawValue = redisTemplate.opsForValue().get(key);
-        if (rawValue == null) {
-            redisTemplate.opsForValue().set(key, String.valueOf(1), Duration.ofSeconds(OBSERVE_TIME));
-            return RateLimitStatus.ALLOWED;
-        } else {
-            long attemptCount = Long.parseLong(rawValue);
-            if (attemptCount < MAX_ATTEMPT_COUNT) {
-                redisTemplate.opsForValue().increment(key, 1);
-                return RateLimitStatus.ALLOWED;
-            } else {
-                redisTemplate.delete(key);
-                redisTemplate.opsForValue().set(lockedKey, "blocked", Duration.ofSeconds(LOCK_TIME));
-                return RateLimitStatus.BLOCKED;
+        String [] keys = {KEY_TEMPLATE.formatted(ip), "blocked:" + KEY_TEMPLATE.formatted(ip)};
+        try {
+            Boolean result = statefulConnection.sync().evalsha(
+                    scriptLoader.getScriptSha(), ScriptOutputType.BOOLEAN, keys,
+                    String.valueOf(OBSERVE_TIME), String.valueOf(LOCK_TIME), String.valueOf(MAX_ATTEMPT_COUNT)
+            );
+            return RateLimitStatus.fromBoolean(result);
+        } catch (RedisException e) {
+            log.error("Redis exception when incrementing limit, ", e);
+            if (e.getMessage() != null && e.getMessage().contains("NOSCRIPT")) {
+                scriptLoader.loadScript();
             }
+            throw e;
+        } catch (Exception e) {
+            log.error("Error when incrementing limit, ", e);
+            throw e;
         }
     }
 }

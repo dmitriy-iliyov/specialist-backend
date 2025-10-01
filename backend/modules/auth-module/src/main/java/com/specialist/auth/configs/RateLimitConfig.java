@@ -1,16 +1,19 @@
 package com.specialist.auth.configs;
 
 import com.specialist.auth.core.rate_limit.RedisRateLimitRepository;
+import com.specialist.auth.core.rate_limit.ScriptLoader;
+import io.lettuce.core.api.StatefulRedisConnection;
 import org.springframework.context.annotation.Bean;
-import org.springframework.data.redis.core.RedisTemplate;
 
 //@Configuration
 public class RateLimitConfig {
 
     @Bean("passwordRecoveryRequestRedisRateLimitRepository")
-    public RedisRateLimitRepository passwordRecoveryRequestRedisRateLimitRepository(RedisTemplate<String, String> redisTemplate) {
+    public RedisRateLimitRepository passwordRecoveryRequestRedisRateLimitRepository(StatefulRedisConnection<String, String> statefulConnection,
+                                                                                    ScriptLoader scriptLoader) {
         return new RedisRateLimitRepository(
-                redisTemplate,
+                statefulConnection,
+                scriptLoader,
                 "/api/v1/accounts/password-recovery/request",
                 "rate-limit:pass-recovery:request",
                 2L,
@@ -20,9 +23,11 @@ public class RateLimitConfig {
     }
 
     @Bean("passwordRecoveryRecoverRedisRateLimitRepository")
-    public RedisRateLimitRepository passwordRecoveryRecoverRedisRateLimitRepository(RedisTemplate<String, String> redisTemplate) {
+    public RedisRateLimitRepository passwordRecoveryRecoverRedisRateLimitRepository(StatefulRedisConnection<String, String> statefulConnection,
+                                                                                    ScriptLoader scriptLoader) {
         return new RedisRateLimitRepository(
-                redisTemplate,
+                statefulConnection,
+                scriptLoader,
                 "/api/v1/accounts/password-recovery/recover",
                 "rate-limit:pass-recovery:recover",
                 2L,
@@ -32,9 +37,11 @@ public class RateLimitConfig {
     }
 
     @Bean("confirmationRequestRedisRateLimitRepository")
-    public RedisRateLimitRepository confirmationRequestRedisRateLimitRepository(RedisTemplate<String, String> redisTemplate) {
+    public RedisRateLimitRepository confirmationRequestRedisRateLimitRepository(StatefulRedisConnection<String, String> statefulConnection,
+                                                                                ScriptLoader scriptLoader) {
         return new RedisRateLimitRepository(
-                redisTemplate,
+                statefulConnection,
+                scriptLoader,
                 "/api/v1/accounts/confirmation/request",
                 "rate-limit:confirmation:request",
                 3L,
@@ -44,9 +51,11 @@ public class RateLimitConfig {
     }
 
     @Bean("confirmRedisRateLimitRepository")
-    public RedisRateLimitRepository confirmRedisRateLimitRepository(RedisTemplate<String, String> redisTemplate) {
+    public RedisRateLimitRepository confirmRedisRateLimitRepository(StatefulRedisConnection<String, String> statefulConnection,
+                                                                    ScriptLoader scriptLoader) {
         return new RedisRateLimitRepository(
-                redisTemplate,
+                statefulConnection,
+                scriptLoader,
                 "/api/v1/accounts/confirmation/confirm",
                 "rate-limit:confirmation:confirm",
                 3L,
@@ -56,9 +65,11 @@ public class RateLimitConfig {
     }
 
     @Bean("loginRedisRateLimitRepository")
-    public RedisRateLimitRepository loginRedisRateLimitRepository(RedisTemplate<String, String> redisTemplate) {
+    public RedisRateLimitRepository loginRedisRateLimitRepository(StatefulRedisConnection<String, String> statefulConnection,
+                                                                  ScriptLoader scriptLoader) {
         return new RedisRateLimitRepository(
-                redisTemplate,
+                statefulConnection,
+                scriptLoader,
                 "/api/auth/login",
                 "rate-limit:login",
                 5L,
@@ -68,9 +79,11 @@ public class RateLimitConfig {
     }
 
     @Bean("oAuth2AuthorizeRedisRateLimitRepository")
-    public RedisRateLimitRepository oAuth2AuthorizeRedisRateLimitRepository(RedisTemplate<String, String> redisTemplate) {
+    public RedisRateLimitRepository oAuth2AuthorizeRedisRateLimitRepository(StatefulRedisConnection<String, String> statefulConnection,
+                                                                            ScriptLoader scriptLoader) {
         return new RedisRateLimitRepository(
-                redisTemplate,
+                statefulConnection,
+                scriptLoader,
                 "/api/auth/oauth2/authorize",
                 "rate-limit:oauth2-authorize",
                 5L,
@@ -80,9 +93,11 @@ public class RateLimitConfig {
     }
 
     @Bean("accountRegistrationRedisRateLimitRepository")
-    public RedisRateLimitRepository accountRegistrationRedisRateLimitRepository(RedisTemplate<String, String> redisTemplate) {
+    public RedisRateLimitRepository accountRegistrationRedisRateLimitRepository(StatefulRedisConnection<String, String> statefulConnection,
+                                                                                ScriptLoader scriptLoader) {
         return new RedisRateLimitRepository(
-                redisTemplate,
+                statefulConnection,
+                scriptLoader,
                 "/api/v1/accounts",
                 "rate-limit:accounts:registration",
                 5L,
