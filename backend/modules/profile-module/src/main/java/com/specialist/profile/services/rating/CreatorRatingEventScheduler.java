@@ -12,12 +12,12 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public final class CreatorRatingEventScheduler {
+public class CreatorRatingEventScheduler {
 
-    @Value("${api.review-buffer.clean.data-size}")
+    @Value("${api.creator-rating-buffer.processed.clean.batch-size}")
     public int CLEAN_BATCH_SIZE;
 
-    @Value("${api.review-buffer.clean.data-size}")
+    @Value("${api.creator-rating-buffer.not-processed.resend.batch-size}")
     public int NOTIFY_BATCH_SIZE;
 
     private final CreatorRatingEventService service;

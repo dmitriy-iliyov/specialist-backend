@@ -15,7 +15,7 @@ public final class ScheduleKafkaListener {
         this.accountDeleteHandler = accountDeleteHandler;
     }
 
-    @KafkaListener(topics = {"$api.kafka.topic.account-delete"}, groupId = "schedule-service")
+    @KafkaListener(topics = {"${api.kafka.topic.account-delete}"}, groupId = "schedule-service")
     public void listen(AccountDeleteEvent event) {
         accountDeleteHandler.handle(event);
     }

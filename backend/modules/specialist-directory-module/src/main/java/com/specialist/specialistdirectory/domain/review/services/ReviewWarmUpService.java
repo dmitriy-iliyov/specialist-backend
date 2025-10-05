@@ -21,10 +21,10 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public final class ReviewWarmUpService {
 
-    @Value("${}")
+    @Value("${api.rating.warm-up.page-count}")
     private Integer page;
 
-    @Value("${}")
+    @Value("${api.rating.warm-up.page-size}")
     private Integer pageSize;
 
     private final CacheManager cacheManager;

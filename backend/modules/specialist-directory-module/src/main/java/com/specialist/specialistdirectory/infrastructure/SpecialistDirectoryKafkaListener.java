@@ -16,7 +16,7 @@ public final class SpecialistDirectoryKafkaListener {
         this.accountDeleteHandler = accountDeleteHandler;
     }
 
-    @KafkaListener(topics = {"$api.kafka.topic.account-delete"}, groupId = "specialist-directory-service")
+    @KafkaListener(topics = {"${api.kafka.topic.account-delete}"}, groupId = "specialist-directory-service")
     public void listen(AccountDeleteEvent event) {
         accountDeleteHandler.handle(event);
     }

@@ -22,7 +22,7 @@ public class CreatorRatingEventSenderImpl implements CreatorRatingEventSender {
     public String TOPIC;
 
     private final CreatorRatingBufferService service;
-    private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final KafkaTemplate<String, CreatorRatingUpdateEvent> kafkaTemplate;
     private static final int MAX_ATTEMPT_COUNT = 2;
 
     @Override

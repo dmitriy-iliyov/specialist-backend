@@ -18,9 +18,6 @@ public class KafkaAppointmentCancelEventSender implements AppointmentCancelEvent
 
     @Override
     public void sendEvents(List<ExternalAppointmentCancelEvent> events) {
-        kafkaTemplate.executeInTransaction(callback -> {
-            events.forEach(event -> kafkaTemplate.send(TOPIC, event));
-            return null;
-        });
+        events.forEach(event -> kafkaTemplate.send(TOPIC, event));
     }
 }

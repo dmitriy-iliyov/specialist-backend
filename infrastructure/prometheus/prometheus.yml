@@ -1,5 +1,5 @@
 scrape_configs:
-  - job_name: 'sepecialist-backend'
+  - job_name: 'specialist-backend'
     scheme: https
     tls_config:
       insecure_skip_verify: true
