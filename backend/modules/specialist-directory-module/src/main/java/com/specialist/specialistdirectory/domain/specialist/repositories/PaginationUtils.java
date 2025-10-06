@@ -1,6 +1,8 @@
 package com.specialist.specialistdirectory.domain.specialist.repositories;
 
 import com.specialist.specialistdirectory.domain.specialist.models.SpecialistEntity;
+import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistStatus;
+import com.specialist.specialistdirectory.domain.specialist.models.filters.AdminSpecialistFilter;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.SpecialistProjectionFilter;
 import com.specialist.utils.pagination.PageDataHolder;
@@ -12,7 +14,7 @@ import org.springframework.data.jpa.domain.Specification;
 public class PaginationUtils {
 
     public static Specification<SpecialistEntity> generateSpecification(SpecialistProjectionFilter filter) {
-        return Specification.where(SpecialistSpecification.filterByApprovedAndManaged())
+        return Specification.where(SpecialistSpecification.filterByStatus(SpecialistStatus.APPROVED))
                 .and(SpecialistSpecification.filterByCity(filter.getCity()))
                 .and(SpecialistSpecification.filterByCityCode(filter.getCityCode()))
                 .and(SpecialistSpecification.filterByType(filter.getTypeId()))
@@ -31,6 +33,12 @@ public class PaginationUtils {
                 .and(SpecialistSpecification.filterBySecondName(filter.getSecondName()))
                 .and(SpecialistSpecification.filterByLastName(filter.getLastName()))
                 .and(SpecialistSpecification.filterByLanguage(filter.getLang()));
+    }
+
+    public static Specification<SpecialistEntity> generateSpecification(AdminSpecialistFilter filter) {
+        return generateSpecification((ExtendedSpecialistFilter) filter)
+                .and(SpecialistSpecification.filterByStatus(filter.getStatus()))
+                .and(SpecialistSpecification.filterByState(filter.getState()));
     }
 
     public static Pageable generatePageable(PageDataHolder holder) {

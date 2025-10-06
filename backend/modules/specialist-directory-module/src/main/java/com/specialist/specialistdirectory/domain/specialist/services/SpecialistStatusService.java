@@ -6,8 +6,5 @@ import java.util.UUID;
 
 public interface SpecialistStatusService {
     void approve(UUID id, UUID approverId, ApproverType approverType);
-
-    void manage(UUID id, UUID ownerId);
-
-    void recall(UUID id);
+    void suspend(UUID id);
 }

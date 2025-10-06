@@ -3,7 +3,7 @@ package com.specialist.specialistdirectory.domain.specialist.services;
 import com.specialist.specialistdirectory.domain.specialist.models.SpecialistEntity;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.BookmarkSpecialistResponseDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
-import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistStatus;
+import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistState;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.SystemSpecialistFilter;
 import org.springframework.data.domain.Page;
@@ -13,7 +13,7 @@ import java.util.UUID;
 
 public interface SystemSpecialistService {
 
-    SpecialistResponseDto findByIdAndStatus(UUID id, SpecialistStatus status);
+    SpecialistResponseDto findByIdAndState(UUID id, SpecialistState state);
 
     SpecialistEntity findEntityById(UUID id);
 

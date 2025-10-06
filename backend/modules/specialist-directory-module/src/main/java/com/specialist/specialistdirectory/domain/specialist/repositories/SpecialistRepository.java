@@ -2,6 +2,7 @@ package com.specialist.specialistdirectory.domain.specialist.repositories;
 
 import com.specialist.specialistdirectory.domain.specialist.models.SpecialistEntity;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.ShortSpecialistInfo;
+import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistState;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistStatus;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
@@ -46,21 +47,9 @@ public interface SpecialistRepository extends JpaRepository<SpecialistEntity, UU
 
     long countByCreatorId(UUID creatorId);
 
-    @Modifying
-    @Query("""
-        UPDATE SpecialistEntity s 
-        SET s.status = :status
-        WHERE s.id = :id
-    """)
-    void updateStatusById(@Param("id") UUID id, @Param("status") SpecialistStatus status);
+    void updateStateById(UUID id, SpecialistState state);
 
-    @Modifying
-    @Query("""
-        UPDATE SpecialistEntity s
-        SET s.status = :status, s.ownerId = :ownerId
-        WHERE s.id = :id
-    """)
-    void updateStatusAndOwnerIdById(UUID id, UUID ownerId, SpecialistStatus status);
+    void updateStateAndOwnerIdById(UUID id, UUID ownerId, SpecialistState state);
 
     @Query("""
         SELECT new com.specialist.specialistdirectory.domain.specialist.models.dtos.ShortSpecialistInfo(s.id, s.creatorId, s.ownerId, s.status)
@@ -75,9 +64,15 @@ public interface SpecialistRepository extends JpaRepository<SpecialistEntity, UU
     """)
     Optional<SpecialistStatus> findStatusById(@Param("id") UUID id);
 
+    @Query("""
+        SELECT s.state FROM SpecialistEntity s
+        WHERE s.id = :id
+    """)
+    Optional<SpecialistState> findStateById(@Param("id") UUID id);
+
     @EntityGraph(attributePaths = {"type"})
-    @Query("SELECT s FROM SpecialistEntity s WHERE s.id = :id AND s.status = :status")
-    Optional<SpecialistEntity> findWithTypeByIdAndStatus(@Param("id") UUID id, @Param("status") SpecialistStatus status);
+    @Query("SELECT s FROM SpecialistEntity s WHERE s.id = :id AND s.state = :state")
+    Optional<SpecialistEntity> findWithTypeByIdAndState(@Param("id") UUID id, @Param("state") SpecialistState state);
 
     void deleteByOwnerId(UUID ownerId);
 
@@ -87,4 +82,6 @@ public interface SpecialistRepository extends JpaRepository<SpecialistEntity, UU
         WHERE s.ownerId = :ownerId
     """)
     Optional<ShortSpecialistInfo> findShortInfoByOwnerId(@Param("ownerId") UUID ownerId);
+
+    void updateStatusById(UUID id, SpecialistStatus status);
 }

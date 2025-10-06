@@ -5,13 +5,11 @@ import com.specialist.specialistdirectory.domain.specialist.models.SpecialistEnt
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.FullSpecialistResponseDto;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.AdminSpecialistFilter;
 import com.specialist.specialistdirectory.domain.specialist.repositories.PaginationUtils;
-import com.specialist.specialistdirectory.domain.specialist.repositories.SpecialistSpecification;
 import com.specialist.specialistdirectory.domain.specialist.repositories.SpecificationRepository;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistCountService;
 import com.specialist.utils.pagination.PageResponse;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Slice;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,10 +31,8 @@ public class AdminSpecialistQueryServiceImpl implements AdminSpecialistQueryServ
     @Transactional(readOnly = true)
     @Override
     public PageResponse<FullSpecialistResponseDto> findAll(AdminSpecialistFilter filter) {
-        Specification<SpecialistEntity> specification = PaginationUtils.generateSpecification(filter)
-                .and(SpecialistSpecification.filterByStatus(filter.getStatus()));
         Slice<SpecialistEntity> entityPage = repository.findAll(
-                specification, PaginationUtils.generatePageable(filter)
+                PaginationUtils.generateSpecification(filter), PaginationUtils.generatePageable(filter)
         );
         return new PageResponse<>(
                 mapper.toResponseDtoList(entityPage.getContent()),

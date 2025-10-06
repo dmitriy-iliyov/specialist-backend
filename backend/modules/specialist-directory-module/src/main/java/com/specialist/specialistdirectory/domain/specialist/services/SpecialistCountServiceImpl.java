@@ -1,6 +1,7 @@
 package com.specialist.specialistdirectory.domain.specialist.services;
 
 import com.specialist.specialistdirectory.domain.specialist.models.SpecialistEntity;
+import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistStatus;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.AdminSpecialistFilter;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.SpecialistFilter;
@@ -26,7 +27,7 @@ public class SpecialistCountServiceImpl implements SpecialistCountService {
     @Override
     public long countAll() {
         Specification<SpecialistEntity> specification = Specification.where(
-                SpecialistSpecification.filterByApprovedAndManaged()
+                SpecialistSpecification.filterByStatus(SpecialistStatus.APPROVED)
         );
         return repository.count(specification);
     }
@@ -58,9 +59,6 @@ public class SpecialistCountServiceImpl implements SpecialistCountService {
     @Transactional(readOnly = true)
     @Override
     public long countByAdminFilter(AdminSpecialistFilter filter) {
-        Specification<SpecialistEntity> specification = PaginationUtils
-                .generateSpecification(filter)
-                .and(SpecialistSpecification.filterByStatus(filter.getStatus()));
-        return repository.count(specification);
+        return repository.count(PaginationUtils.generateSpecification(filter));
     }
 }

@@ -4,7 +4,7 @@ import com.specialist.contracts.specialistdirectory.SystemManagedSpecialistServi
 import com.specialist.contracts.specialistdirectory.dto.ManagedSpecialistResponseDto;
 import com.specialist.specialistdirectory.domain.specialist.mappers.ManagedSpecialistMapper;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
-import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistStatus;
+import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistState;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.SystemSpecialistFilter;
 import com.specialist.specialistdirectory.domain.specialist.services.SystemSpecialistService;
 import com.specialist.utils.pagination.PageDataHolder;
@@ -23,13 +23,13 @@ public class SystemManagedSpecialistServiceImpl implements SystemManagedSpeciali
 
     @Override
     public ManagedSpecialistResponseDto findById(UUID id) {
-        SpecialistResponseDto dto = service.findByIdAndStatus(id, SpecialistStatus.MANAGED);
+        SpecialistResponseDto dto = service.findByIdAndState(id, SpecialistState.MANAGED);
         return mapper.toManagedDto(dto);
     }
 
     @Override
     public List<ManagedSpecialistResponseDto> findAll(PageDataHolder page) {
-        List<SpecialistResponseDto> dtoList = service.findAll(new SystemSpecialistFilter(page, SpecialistStatus.MANAGED));
+        List<SpecialistResponseDto> dtoList = service.findAll(new SystemSpecialistFilter(page, null, SpecialistState.MANAGED));
         return mapper.toManagedDtoList(dtoList);
     }
 }

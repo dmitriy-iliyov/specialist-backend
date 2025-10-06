@@ -47,7 +47,7 @@ public class TypeServiceImpl implements TypeService {
     @Cacheable(value = "specialists:types:suggested:id", key = "#dto.getTitle()")
     @Transactional
     @Override
-    public Long saveSuggested(TypeCreateDto dto) {
+    public Long suggest(TypeCreateDto dto) {
         if (dto.getTitle() == null || dto.getTitle().isBlank()) {
             throw new NullOrBlankAnotherTypeException();
         }

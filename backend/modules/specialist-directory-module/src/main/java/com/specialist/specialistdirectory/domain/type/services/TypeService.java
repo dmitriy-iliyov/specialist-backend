@@ -15,7 +15,7 @@ public interface TypeService {
 
     TypeResponseDto save(TypeCreateDto dto);
 
-    Long saveSuggested(TypeCreateDto dto);
+    Long suggest(TypeCreateDto dto);
 
     String approve(Long id);
 

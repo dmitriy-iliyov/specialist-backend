@@ -5,6 +5,7 @@ import com.specialist.specialistdirectory.domain.specialist.models.dtos.Speciali
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.ApproverType;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.CreatorType;
+import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistState;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistStatus;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.AdminSpecialistFilter;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistService;
@@ -29,6 +30,7 @@ public class AdminSpecialistServiceImpl implements AdminSpecialistService {
         dto.setCreatorId(creatorId);
         dto.setCreatorType(CreatorType.ADMIN);
         dto.setStatus(SpecialistStatus.APPROVED);
+        dto.setState(SpecialistState.DEFAULT);
         return service.save(dto);
     }
 

@@ -4,6 +4,7 @@ import com.specialist.specialistdirectory.domain.specialist.mappers.SpecialistMa
 import com.specialist.specialistdirectory.domain.specialist.models.SpecialistEntity;
 import com.specialist.specialistdirectory.domain.specialist.models.SpecialistInfoEntity;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.*;
+import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistState;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistStatus;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.SpecialistFilter;
@@ -76,7 +77,6 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
                 entity.getId(),
                 new ShortSpecialistInfo(entity.getId(), entity.getCreatorId(), entity.getOwnerId(), dto.getStatus())
         );
-        cacheService.evictCreatedCountByFilter(entity.getCreatorId());
         return mapper.toResponseDto(entity);
     }
 
@@ -91,23 +91,30 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
             if (!existedTypeId.equals(TypeConstants.OTHER_TYPE_ID) && inputTypeId.equals(TypeConstants.OTHER_TYPE_ID)) {
                 saveSuggestedType(entity, dto.getAccountId(), dto.getAnotherType());
             } else if (existedTypeId.equals(TypeConstants.OTHER_TYPE_ID)) {
+                /*
+                 * For the case was OTHER_TYPE, but the user changed it to another that is approved,
+                 * and to prevent the update of identifiers after type approval, the field must be null
+                 */
                 entity.setSuggestedTypeId(null);
             }
             entity.setType(typeService.getReferenceById(inputTypeId));
         } else if (existedTypeId.equals(TypeConstants.OTHER_TYPE_ID)) {
+            /*
+             * For the case when OTHER_TYPE title changed
+             */
             TypeResponseDto typeDto = typeService.findSuggestedById(entity.getSuggestedTypeId());
             if (!typeDto.title().equalsIgnoreCase(dto.getAnotherType())) {
                 saveSuggestedType(entity, dto.getAccountId(), dto.getAnotherType());
             }
         }
         mapper.updateEntityFromDto(dto, entity);
+        entity.setStatus(SpecialistStatus.UNAPPROVED);
         entity = repository.save(entity);
-        cacheService.evictCreatedCountByFilter(entity.getCreatorId());
         return mapper.toResponseDto(entity);
     }
 
     private void saveSuggestedType(SpecialistEntity entity, UUID creatorId, String suggestedType) {
-        Long id = typeService.saveSuggested(new TypeCreateDto(creatorId, suggestedType.strip()));
+        Long id = typeService.suggest(new TypeCreateDto(creatorId, suggestedType.strip()));
         entity.setSuggestedTypeId(id);
     }
 
@@ -161,8 +168,8 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
 
     @Transactional(readOnly = true)
     @Override
-    public SpecialistResponseDto findByIdAndStatus(UUID id, SpecialistStatus status) {
-        SpecialistEntity entity = repository.findWithTypeByIdAndStatus(id, status).orElseThrow(
+    public SpecialistResponseDto findByIdAndState(UUID id, SpecialistState state) {
+        SpecialistEntity entity = repository.findWithTypeByIdAndState(id, state).orElseThrow(
                 SpecialistNotFoundByIdException::new
         );
         SpecialistResponseDto dto = mapper.toResponseDto(entity);
@@ -188,7 +195,7 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
     @Override
     public PageResponse<SpecialistResponseDto> findAll(PageDataHolder page) {
         Specification<SpecialistEntity> specification = Specification.where(
-                SpecialistSpecification.filterByApprovedAndManaged()
+                SpecialistSpecification.filterByStatus(SpecialistStatus.APPROVED)
         );
         Slice<SpecialistEntity> slice = specificationRepository.findAll(
                 specification, PaginationUtils.generatePageable(page)
@@ -269,6 +276,7 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
         return mapper.toBookmarkResponseDto(entity);
     }
 
+    //TODO lua script || one request
     private void evictCacheAfterDelete(UUID id, UUID creatorId) {
         cacheService.evictShortInfo(id);
         cacheService.evictSpecialist(id, creatorId);

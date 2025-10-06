@@ -29,7 +29,7 @@ import java.util.UUID;
 public class SpecialistActionOrchestratorImpl implements SpecialistActionOrchestrator {
 
     private final SpecialistService specialistService;
-    private final SpecialistStatusService specialistStatusService;
+    private final SpecialistStateService specialistStateService;
     private final SpecialistActionRepository actionRepository;
     private final SystemSpecialistProfileService specialistProfileService;
     private final SystemAccountDemoteFacade accountDemoteService;
@@ -48,8 +48,8 @@ public class SpecialistActionOrchestratorImpl implements SpecialistActionOrchest
     @Override
     public void recall(String code) {
         SpecialistActionEntity specialistActionEntity = codeHandle(code);
-        // DISCUSS schedule delete
-        specialistStatusService.recall(specialistActionEntity.getSpecialistId());
+        // DISCUSS schedule delete but cache should immediately invalidate
+        specialistStateService.recall(specialistActionEntity.getSpecialistId());
     }
 
     @Override
@@ -62,7 +62,7 @@ public class SpecialistActionOrchestratorImpl implements SpecialistActionOrchest
     @Override
     public void manage(UUID accountId, String code, HttpServletRequest request, HttpServletResponse response) {
         SpecialistActionEntity specialistActionEntity = codeHandle(code);
-        specialistStatusService.manage(specialistActionEntity.getSpecialistId(), specialistActionEntity.getAccountId());
+        specialistStateService.manage(specialistActionEntity.getSpecialistId(), specialistActionEntity.getAccountId());
         specialistProfileService.setSpecialistCardId(specialistActionEntity.getSpecialistId());
         accountDemoteService.demote(new DemoteRequest(accountId, Set.of("SPECIALIST_CREATE"), request, response));
     }

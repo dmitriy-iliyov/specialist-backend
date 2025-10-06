@@ -5,7 +5,8 @@ import com.specialist.specialistdirectory.domain.specialist.models.SpecialistInf
 import com.specialist.specialistdirectory.domain.specialist.models.enums.ApproverType;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistStatus;
 import com.specialist.specialistdirectory.domain.specialist.repositories.SpecialistRepository;
-import com.specialist.specialistdirectory.exceptions.*;
+import com.specialist.specialistdirectory.exceptions.SpecialistNotFoundByIdException;
+import com.specialist.specialistdirectory.exceptions.UnableSpecialistApproveException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +18,6 @@ import java.util.UUID;
 public class SpecialistStatusServiceImpl implements SpecialistStatusService {
 
     private final SpecialistRepository repository;
-    private final SpecialistCacheService cacheService;
 
     @Transactional
     @Override
@@ -31,31 +31,11 @@ public class SpecialistStatusServiceImpl implements SpecialistStatusService {
         infoEntity.setApproverType(approverType);
         specialistEntity.setStatus(SpecialistStatus.APPROVED);
         repository.save(specialistEntity);
-        cacheService.evictTotalCreatedCount(specialistEntity.getCreatorId());
-        cacheService.evictCreatedCountByFilter(specialistEntity.getCreatorId());
     }
 
     @Transactional
     @Override
-    public void manage(UUID id, UUID ownerId) {
-        SpecialistStatus status = repository.findStatusById(id).orElseThrow(
-                SpecialistStatusNotFoundByIdException::new
-        );
-        if (!status.equals(SpecialistStatus.APPROVED)) {
-            throw new UnableSpecialistManageException();
-        }
-        repository.updateStatusAndOwnerIdById(id, ownerId, SpecialistStatus.MANAGED);
-    }
-
-    @Transactional
-    @Override
-    public void recall(UUID id) {
-        SpecialistStatus status = repository.findStatusById(id).orElseThrow(
-                SpecialistStatusNotFoundByIdException::new
-        );
-        if (!status.equals(SpecialistStatus.APPROVED)) {
-            throw new UnableSpecialistRecallException();
-        }
-        repository.updateStatusById(id, SpecialistStatus.RECALLED);
+    public void suspend(UUID id) {
+        repository.updateStatusById(id, SpecialistStatus.SUSPENDED);
     }
 }

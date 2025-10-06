@@ -6,11 +6,11 @@ import com.specialist.contracts.profile.ProfileType;
 import com.specialist.contracts.profile.SystemSpecialistProfileService;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.*;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.CreatorType;
+import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistState;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistStatus;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistManagementStrategy;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistService;
 import com.specialist.specialistdirectory.exceptions.OwnershipException;
-import com.specialist.specialistdirectory.exceptions.UnexpectedNonManagedSpecialistException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +38,7 @@ public class ManagedSpecialistManagementStrategy implements SpecialistManagement
         dto.setCreatorId(request.creatorId());
         dto.setCreatorType(CreatorType.SPECIALIST);
         dto.setStatus(SpecialistStatus.UNAPPROVED);
+        dto.setState(SpecialistState.MANAGED);
         SpecialistResponseDto responseDto = service.save(dto);
         specialistProfileService.setSpecialistCardId(responseDto.getId());
         accountDemoteService.demote(
@@ -62,9 +63,6 @@ public class ManagedSpecialistManagementStrategy implements SpecialistManagement
 
     private void validate(UUID accountId, UUID id) {
         ShortSpecialistInfo info = service.getShortInfoById(id);
-        if (!info.status().equals(SpecialistStatus.MANAGED)) {
-            throw new UnexpectedNonManagedSpecialistException();
-        }
         if (!info.ownerId().equals(accountId)) {
             throw new OwnershipException();
         }

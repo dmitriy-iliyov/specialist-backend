@@ -2,9 +2,11 @@ package com.specialist.specialistdirectory.domain.specialist.models;
 
 import com.specialist.specialistdirectory.domain.bookmark.models.BookmarkEntity;
 import com.specialist.specialistdirectory.domain.review.models.ReviewEntity;
+import com.specialist.specialistdirectory.domain.specialist.mappers.SpecialistStateConverter;
 import com.specialist.specialistdirectory.domain.specialist.mappers.SpecialistStatusConverter;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.ContactDto;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistLanguage;
+import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistState;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistStatus;
 import com.specialist.specialistdirectory.domain.type.models.TypeEntity;
 import com.specialist.utils.UuidUtils;
@@ -81,9 +83,13 @@ public class SpecialistEntity {
 
     private String site;
 
-    @Column(name = "status", nullable = false)
+    @Column(nullable = false)
     @Convert(converter = SpecialistStatusConverter.class)
     private SpecialistStatus status;
+
+    @Column(nullable = false)
+    @Convert(converter = SpecialistStateConverter.class)
+    private SpecialistState state;
 
     @Column(nullable = false)
     private double rating;
