@@ -41,9 +41,7 @@ public class CreatorSpecialistManagementStrategy implements SpecialistManagement
         dto.setStatus(SpecialistStatus.UNAPPROVED);
         dto.setState(SpecialistState.DEFAULT);
         SpecialistResponseDto responseDto = specialistService.save(dto);
-        // in one operation
-        cacheService.evictTotalCreatedCount(request.creatorId());
-        cacheService.evictCreatedCountByFilter(request.creatorId());
+        cacheService.evictCacheAfterSave(request.creatorId());
         bookmarkPersistService.saveAfterSpecialistCreate(new BookmarkCreateDto(responseDto.getOwnerId(), responseDto.getId()));
         return responseDto;
     }
@@ -59,7 +57,7 @@ public class CreatorSpecialistManagementStrategy implements SpecialistManagement
     public void delete(UUID accountId, UUID id) {
         validate(accountId, id);
         specialistService.deleteById(id);
-        // cache evict in lua script
+        // cache evict in service
     }
 
     private void validate(UUID accountId, UUID id) {

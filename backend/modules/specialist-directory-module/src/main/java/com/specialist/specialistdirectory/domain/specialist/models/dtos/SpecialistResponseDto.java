@@ -3,6 +3,7 @@ package com.specialist.specialistdirectory.domain.specialist.models.dtos;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistLanguage;
+import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistState;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistStatus;
 import lombok.Data;
 
@@ -44,6 +45,8 @@ public class SpecialistResponseDto {
 
         private final SpecialistStatus status;
 
+        private final SpecialistState state;
+
         @JsonProperty("total_rating")
         private final double totalRating;
 
@@ -64,6 +67,7 @@ public class SpecialistResponseDto {
                                      @JsonProperty("contacts") List<ContactDto> contacts,
                                      @JsonProperty("site") String site,
                                      @JsonProperty("status") SpecialistStatus status,
+                                     @JsonProperty("state") SpecialistState state,
                                      @JsonProperty("total_rating") double totalRating,
                                      @JsonProperty("reviews_count") long reviewsCount) {
                 this.id = id;
@@ -78,6 +82,7 @@ public class SpecialistResponseDto {
                 this.contacts = contacts;
                 this.site = site;
                 this.status = status;
+                this.state = state;
                 this.totalRating = totalRating;
                 this.reviewsCount = reviewsCount;
         }

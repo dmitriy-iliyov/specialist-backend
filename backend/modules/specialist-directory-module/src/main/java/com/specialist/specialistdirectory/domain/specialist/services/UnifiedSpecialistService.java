@@ -124,15 +124,11 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
         repository.updateAllByTypeTitle(oldTypeId, newTypeId);
     }
 
+    @Cacheable(value = "specialists:short-info", key = "#id")
     @Transactional(readOnly = true)
     @Override
     public ShortSpecialistInfo getShortInfoById(UUID id) {
-        ShortSpecialistInfo info = cacheService.getShortInfo(id);;
-        if (info == null) {
-            info = repository.findShortInfoById(id).orElseThrow(SpecialistNotFoundByIdException::new);
-            cacheService.putShortInfo(id, info);
-        }
-        return info;
+        return repository.findShortInfoById(id).orElseThrow(SpecialistNotFoundByIdException::new);
     }
 
     @Cacheable(value = "specialists", key = "#id + ':' + #creatorId")
@@ -258,7 +254,7 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
             creatorId = repository.findCreatorIdById(id).orElseThrow(SpecialistNotFoundByIdException::new);
         }
         repository.deleteById(id);
-        evictCacheAfterDelete(id, creatorId);
+        cacheService.evictCacheAfterDelete(id, creatorId);
     }
 
     @Transactional
@@ -268,19 +264,11 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
                 SpecialistNotFoundByIdException::new
         );
         repository.deleteByOwnerId(ownerId);
-        evictCacheAfterDelete(info.id(), info.creatorId());
+        cacheService.evictCacheAfterDelete(info.id(), info.creatorId());
     }
 
     @Override
     public BookmarkSpecialistResponseDto toResponseDto(SpecialistEntity entity) {
         return mapper.toBookmarkResponseDto(entity);
-    }
-
-    //TODO lua script || one request
-    private void evictCacheAfterDelete(UUID id, UUID creatorId) {
-        cacheService.evictShortInfo(id);
-        cacheService.evictSpecialist(id, creatorId);
-        cacheService.evictTotalCreatedCount(creatorId);
-        cacheService.evictCreatedCountByFilter(creatorId);
     }
 }

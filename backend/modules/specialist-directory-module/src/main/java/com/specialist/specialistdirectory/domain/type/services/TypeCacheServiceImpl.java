@@ -2,12 +2,14 @@ package com.specialist.specialistdirectory.domain.type.services;
 
 import com.specialist.specialistdirectory.domain.type.models.dtos.TypeResponseDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class TypeCacheServiceImpl implements TypeCacheService {
 
     private final CacheManager cacheManager;
