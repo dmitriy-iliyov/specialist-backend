@@ -1,7 +1,7 @@
 package com.specialist.auth.domain.account.controllers;
 
 import com.specialist.auth.domain.account.models.dtos.DefaultAccountCreateDto;
-import com.specialist.auth.domain.account.services.AccountPersistOrchestrator;
+import com.specialist.auth.domain.account.services.AccountPersistFacade;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,12 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AccountRegistrationController {
 
-    private final AccountPersistOrchestrator persistOrchestrator;
+    private final AccountPersistFacade persistFacade;
 
     @PostMapping
     public ResponseEntity<?> register(@RequestBody @Valid DefaultAccountCreateDto dto, HttpServletResponse response) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(persistOrchestrator.save(dto, response));
+                .body(persistFacade.save(dto, response));
     }
 }

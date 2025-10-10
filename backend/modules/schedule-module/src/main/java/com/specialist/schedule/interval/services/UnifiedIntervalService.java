@@ -1,7 +1,7 @@
 package com.specialist.schedule.interval.services;
 
+import com.specialist.core.config.ScheduleCacheConfig;
 import com.specialist.schedule.appointment.models.marker.AppointmentMarker;
-import com.specialist.schedule.config.ScheduleCacheConfig;
 import com.specialist.schedule.exceptions.interval.IntervalNotFoundByIdException;
 import com.specialist.schedule.interval.mapper.IntervalMapper;
 import com.specialist.schedule.interval.models.IntervalEntity;

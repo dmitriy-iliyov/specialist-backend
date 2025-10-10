@@ -28,7 +28,7 @@ public class NearestIntervalServiceImpl implements NearestIntervalService, Syste
     private final IntervalService service;
 
     @Override
-    public Map<UUID, NearestIntervalDto> findAll(Set<UUID> specialistIds) {
+    public Map<UUID, NearestIntervalDto> findAllByIdIn(Set<UUID> specialistIds) {
         if (specialistIds.size() > 10) {
             throw new PassedListIsToLongException();
         }

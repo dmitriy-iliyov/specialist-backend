@@ -2,7 +2,7 @@ package com.specialist.specialistdirectory.domain.specialist.controllers;
 
 import com.specialist.contracts.auth.PrincipalDetails;
 import com.specialist.contracts.specialistdirectory.dto.ContactType;
-import com.specialist.specialistdirectory.domain.specialist.services.SpecialistActionOrchestrator;
+import com.specialist.specialistdirectory.domain.specialist.services.SpecialistActionFacade;
 import com.specialist.utils.validation.annotation.ValidUuid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,12 +18,12 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class SpecialistActionRequestController {
 
-    private final SpecialistActionOrchestrator orchestrator;
+    private final SpecialistActionFacade facade;
 
     @PostMapping("/recall")
     public ResponseEntity<?> recallRequest(@PathVariable("id") @ValidUuid(paramName = "id") String id,
                                            @RequestParam("contact_type") ContactType contactType) {
-        orchestrator.recallRequest(UUID.fromString(id), contactType);
+        facade.recallRequest(UUID.fromString(id), contactType);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
@@ -34,7 +34,7 @@ public class SpecialistActionRequestController {
     public ResponseEntity<?> manageRequest(@AuthenticationPrincipal PrincipalDetails principal,
                                            @PathVariable("id") @ValidUuid(paramName = "id") String id,
                                            @RequestParam("contact_type") ContactType contactType) {
-        orchestrator.manageRequest(UUID.fromString(id), principal.getAccountId(), contactType);
+        facade.manageRequest(UUID.fromString(id), principal.getAccountId(), contactType);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();

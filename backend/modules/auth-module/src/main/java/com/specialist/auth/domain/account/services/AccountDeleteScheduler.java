@@ -38,6 +38,10 @@ public class AccountDeleteScheduler {
         if (events.isEmpty()) {
             return;
         }
+        // изменить состояние на в процессе
+        // отправить в кафку фсинхронно все
+        // выставить тайм аут
+        // обновить статус
         Set<UUID> ids = new HashSet<>();
         events.forEach(event -> {
             try {

@@ -5,7 +5,7 @@ import com.specialist.specialistdirectory.domain.review.models.dtos.ReviewCreate
 import com.specialist.specialistdirectory.domain.review.models.dtos.ReviewUpdateDto;
 import com.specialist.specialistdirectory.domain.review.models.filters.ReviewSort;
 import com.specialist.specialistdirectory.domain.review.services.ReviewAggregator;
-import com.specialist.specialistdirectory.domain.review.services.ReviewManagementOrchestrator;
+import com.specialist.specialistdirectory.domain.review.services.ReviewManagementFacade;
 import com.specialist.utils.validation.annotation.ValidUuid;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,12 +21,12 @@ import java.util.UUID;
 @RequestMapping("/api/v1/specialists/{specialist_id}/reviews")
 public class ReviewController {
 
-    private final ReviewManagementOrchestrator orchestrator;
+    private final ReviewManagementFacade facade;
     private final ReviewAggregator aggregator;
 
-    public ReviewController(@Qualifier("reviewManagementRetryDecorator") ReviewManagementOrchestrator orchestrator,
+    public ReviewController(@Qualifier("reviewManagementRetryDecorator") ReviewManagementFacade facade,
                             ReviewAggregator aggregator) {
-        this.orchestrator = orchestrator;
+        this.facade = facade;
         this.aggregator = aggregator;
     }
 
@@ -40,7 +40,7 @@ public class ReviewController {
         dto.setSpecialistId(UUID.fromString(specialistId));
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(orchestrator.save(dto));
+                .body(facade.save(dto));
     }
 
     @PreAuthorize("hasAnyRole('USER', 'SPECIALIST') && hasAuthority('REVIEW_CREATE_UPDATE')")
@@ -56,7 +56,7 @@ public class ReviewController {
         dto.setSpecialistId(UUID.fromString(specialistId));
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(orchestrator.update(dto));
+                .body(facade.update(dto));
     }
 
     @PreAuthorize("hasAnyRole('USER', 'SPECIALIST')")
@@ -65,7 +65,7 @@ public class ReviewController {
                                     @PathVariable("specialist_id") @ValidUuid(paramName = "specialist_id")
                                     String specialistId,
                                     @PathVariable("id") @ValidUuid(paramName = "id") String id) {
-        orchestrator.delete(principal.getAccountId(), UUID.fromString(specialistId), UUID.fromString(id));
+        facade.delete(principal.getAccountId(), UUID.fromString(specialistId), UUID.fromString(id));
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();

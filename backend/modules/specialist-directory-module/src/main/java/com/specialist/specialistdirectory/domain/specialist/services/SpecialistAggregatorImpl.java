@@ -56,7 +56,7 @@ public class SpecialistAggregatorImpl implements SpecialistAggregator {
                 .filter(dto -> dto.getType().equals(ProfileType.SPECIALIST))
                 .map(UnifiedProfileResponseDto::getId)
                 .collect(Collectors.toSet());
-        Map<UUID, NearestIntervalDto> nearestIntervalDtoMap = nearestIntervalService.findAll(specialistProfileIds);
+        Map<UUID, NearestIntervalDto> nearestIntervalDtoMap = nearestIntervalService.findAllByIdIn(specialistProfileIds);
         return new PageResponse<>(
                 pageResponse.data().stream()
                         .map(dto -> new SpecialistAggregatedResponseDto(

@@ -19,7 +19,7 @@ public class ServiceAccountLoginServiceImpl implements ServiceAccountLoginServic
     private final TokenManager tokenManager;
 
     public ServiceAccountLoginServiceImpl(@Qualifier("serviceAccountAuthenticationManager")
-                                               AuthenticationManager authenticationManager,
+                                          AuthenticationManager authenticationManager,
                                           TokenManager tokenManager) {
         this.authenticationManager = authenticationManager;
         this.tokenManager = tokenManager;

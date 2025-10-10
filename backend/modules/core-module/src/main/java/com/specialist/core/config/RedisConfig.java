@@ -101,6 +101,16 @@ public class RedisConfig {
 
                 .withCacheConfiguration("users:events:creator-rating-update:processed", defaultConfig.entryTtl(Duration.ofSeconds(3600)))
                 .withCacheConfiguration("profiles:emails", defaultConfig)
+
+                .withCacheConfiguration(ScheduleCacheConfig.APPOINTMENT_DURATION_CACHE, defaultConfig)
+                .withCacheConfiguration(ScheduleCacheConfig.APPOINTMENT_DURATION_MAP_CACHE, defaultConfig)
+                .withCacheConfiguration(ScheduleCacheConfig.APPOINTMENTS_CACHE, defaultConfig)
+                .withCacheConfiguration(ScheduleCacheConfig.APPOINTMENTS_KEY_TEMPLATE, defaultConfig)
+                .withCacheConfiguration(ScheduleCacheConfig.APPOINTMENTS_BY_DATE_AND_STATUS_CACHE, defaultConfig)
+                .withCacheConfiguration(ScheduleCacheConfig.APPOINTMENTS_BY_DATE_INTERVAL_CACHE, defaultConfig)
+                .withCacheConfiguration(ScheduleCacheConfig.INTERVALS_BY_DATE_CACHE, defaultConfig)
+                .withCacheConfiguration(ScheduleCacheConfig.INTERVALS_BY_DATE_INTERVAL_CACHE, defaultConfig)
+                .withCacheConfiguration(ScheduleCacheConfig.APPOINTMENT_CANCEL_TASK_EXISTS, defaultConfig)
                 .build();
     }
 }

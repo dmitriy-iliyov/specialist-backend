@@ -13,13 +13,13 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class DefaultOAuth2UserServiceDecorator extends DefaultOAuth2UserService {
 
-    private final OAuth2AccountPersistOrchestrator persistOrchestrator;
+    private final OAuth2AccountPersistService persistService;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         DefaultOAuth2User oAuth2User = (DefaultOAuth2User) super.loadUser(userRequest);
         Provider provider = Provider.fromJson(userRequest.getClientRegistration().getRegistrationId());
-        persistOrchestrator.saveIfNonExists(provider, oAuth2User);
+        persistService.saveIfNonExists(provider, oAuth2User);
         return oAuth2User;
     }
 }

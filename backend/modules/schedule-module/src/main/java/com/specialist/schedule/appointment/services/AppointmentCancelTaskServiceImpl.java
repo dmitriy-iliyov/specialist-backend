@@ -1,11 +1,11 @@
 package com.specialist.schedule.appointment.services;
 
+import com.specialist.core.config.ScheduleCacheConfig;
 import com.specialist.schedule.appointment.models.AppointmentCancelTaskEntity;
 import com.specialist.schedule.appointment.models.dto.AppointmentCancelTaskCreateDto;
 import com.specialist.schedule.appointment.models.dto.AppointmentCancelTaskResponseDto;
 import com.specialist.schedule.appointment.models.enums.AppointmentCancelTaskType;
 import com.specialist.schedule.appointment.repositories.AppointmentCancelTaskRepository;
-import com.specialist.schedule.config.ScheduleCacheConfig;
 import com.specialist.schedule.exceptions.AppointmentCancelTaskNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,12 +42,10 @@ public class AppointmentCancelTaskServiceImpl implements AppointmentCancelTaskSe
         }
     }
 
-    @Cacheable(value = ScheduleCacheConfig.APPOINTMENT_CANCEL_TASK_EXISTS ,
-               key = "#participantId + ':' + #type + ':' + #date")
+    @Cacheable(value = ScheduleCacheConfig.APPOINTMENT_CANCEL_TASK_EXISTS , key = "#participantId + ':' + #type + ':' + #date")
     @Transactional(readOnly = true)
     @Override
-    public Boolean existsByParticipantIdAndTypeAndDate(UUID participantId, AppointmentCancelTaskType type,
-                                                                                LocalDate date) {
+    public Boolean existsByParticipantIdAndTypeAndDate(UUID participantId, AppointmentCancelTaskType type, LocalDate date) {
         return repository.existsByParticipantIdAndTypeAndDate(participantId, type, date);
     }
 

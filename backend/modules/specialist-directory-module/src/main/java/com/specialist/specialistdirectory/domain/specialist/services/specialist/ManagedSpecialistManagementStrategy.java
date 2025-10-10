@@ -44,6 +44,7 @@ public class ManagedSpecialistManagementStrategy implements SpecialistManagement
         accountDemoteService.demote(
                 new DemoteRequest(request.creatorId(), Set.of("SPECIALIST_CREATE"), request.request(), request.response())
         );
+        // outbox
         return responseDto;
     }
 
@@ -51,6 +52,7 @@ public class ManagedSpecialistManagementStrategy implements SpecialistManagement
     @Override
     public SpecialistResponseDto update(SpecialistUpdateDto dto) {
         validate(dto.getAccountId(), dto.getId());
+        // outbox
         return service.update(dto);
     }
 

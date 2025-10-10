@@ -22,14 +22,14 @@ import java.util.UUID;
 public class AdminProfileController {
 
     private final SpecialistProfileService specialistProfileService;
-    private final ProfileReadService orchestrator;
+    private final ProfileReadService profileReadService;
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable("id") @NotNull(message = "Id is required.")
                                      @ValidUuid(paramName = "id") String id) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(orchestrator.findPrivateById(UUID.fromString(id)));
+                .body(profileReadService.findPrivateById(UUID.fromString(id)));
     }
 
     @PatchMapping("/approve/{id}")
@@ -45,6 +45,6 @@ public class AdminProfileController {
     public ResponseEntity<?> getAll(@ModelAttribute @Valid ProfileFilter filter) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(orchestrator.findAll(ScopeType.PRIVATE, filter));
+                .body(profileReadService.findAll(ScopeType.PRIVATE, filter));
     }
 }

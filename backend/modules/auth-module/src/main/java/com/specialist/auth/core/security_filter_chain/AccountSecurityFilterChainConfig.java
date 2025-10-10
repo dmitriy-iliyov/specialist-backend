@@ -2,7 +2,7 @@ package com.specialist.auth.core.security_filter_chain;
 
 import com.specialist.auth.core.DefaultAccessDeniedHandler;
 import com.specialist.auth.core.rate_limit.RateLimitFilter;
-import com.specialist.auth.core.xss.XssFilter;
+import com.specialist.auth.core.web.xss.XssFilter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

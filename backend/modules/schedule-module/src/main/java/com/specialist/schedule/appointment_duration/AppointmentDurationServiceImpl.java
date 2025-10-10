@@ -1,8 +1,8 @@
 package com.specialist.schedule.appointment_duration;
 
+import com.specialist.core.config.ScheduleCacheConfig;
 import com.specialist.core.exceptions.models.PassedListIsToLongException;
 import com.specialist.schedule.appointment_duration.models.AppointmentDurationEntity;
-import com.specialist.schedule.config.ScheduleCacheConfig;
 import com.specialist.schedule.exceptions.appointment_duration.DurationNotFoundBySpecialistIdException;
 import com.specialist.utils.UuidUtils;
 import lombok.RequiredArgsConstructor;

@@ -28,6 +28,7 @@ public class AppointmentBatchCancelNotifyDecorator implements AppointmentBatchCa
     @Override
     public BatchResponse<AppointmentResponseDto> cancelBatchByDate(UUID participantId, LocalDate date) {
         BatchResponse<AppointmentResponseDto> batch = delegate.cancelBatchByDate(participantId, date);
+        // outbox
         eventPublisher.publishEvent(new InternalAppointmentCancelEvent(participantId, mapper.toSystemDtoList(batch.data())));
         return batch;
     }
@@ -35,6 +36,7 @@ public class AppointmentBatchCancelNotifyDecorator implements AppointmentBatchCa
     @Override
     public BatchResponse<AppointmentResponseDto> cancelBatch(UUID participantId) {
         BatchResponse<AppointmentResponseDto> batch = delegate.cancelBatch(participantId);
+        // outbox
         eventPublisher.publishEvent(new InternalAppointmentCancelEvent(participantId, mapper.toSystemDtoList(batch.data())));
         return batch;
     }

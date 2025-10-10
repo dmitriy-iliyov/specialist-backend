@@ -8,12 +8,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.UUID;
 
 @Service
-public class AdminAccountDeleteDecorator implements AccountDeleteOrchestrator {
+public class AdminAccountDeleteDecorator implements AccountDeleteFacade {
 
-    private final AccountDeleteOrchestrator delegate;
+    private final AccountDeleteFacade delegate;
     private final TokenManager tokenManager;
 
-    public AdminAccountDeleteDecorator(@Qualifier("defaultAccountDeleteOrchestrator") AccountDeleteOrchestrator delegate,
+    public AdminAccountDeleteDecorator(@Qualifier("defaultAccountDeleteFacade") AccountDeleteFacade delegate,
                                        TokenManager tokenManager) {
         this.delegate = delegate;
         this.tokenManager = tokenManager;

@@ -1,4 +1,4 @@
-package com.specialist.auth.core.xss;
+package com.specialist.auth.core.web.xss;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;

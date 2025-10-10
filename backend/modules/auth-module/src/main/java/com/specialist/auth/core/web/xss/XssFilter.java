@@ -1,4 +1,4 @@
-package com.specialist.auth.core.xss;
+package com.specialist.auth.core.web.xss;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -7,13 +7,19 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
 
 
 public class XssFilter extends OncePerRequestFilter {
 
+    private final List<String> METHOD_TO_SANITIZE = List.of("POST", "PUT", "PATCH");
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        filterChain.doFilter(new XssHttRequestWrapper(request), response);
+        HttpServletRequest requestToProcess = request;
+        if (METHOD_TO_SANITIZE.contains(request.getMethod().toUpperCase())) {
+            requestToProcess = new XssHttRequestWrapper(request);
+        }
+        filterChain.doFilter(requestToProcess, response);
     }
-
 }

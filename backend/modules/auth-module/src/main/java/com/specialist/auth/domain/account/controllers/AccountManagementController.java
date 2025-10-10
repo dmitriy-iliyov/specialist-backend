@@ -4,7 +4,7 @@ import com.specialist.auth.core.web.SessionCookieManager;
 import com.specialist.auth.domain.access_token.models.AccessTokenUserDetails;
 import com.specialist.auth.domain.account.models.dtos.AccountEmailUpdateDto;
 import com.specialist.auth.domain.account.models.dtos.AccountPasswordUpdateDto;
-import com.specialist.auth.domain.account.services.AccountDeleteOrchestrator;
+import com.specialist.auth.domain.account.services.AccountDeleteFacade;
 import com.specialist.auth.domain.account.services.AccountService;
 import com.specialist.auth.domain.account.services.EmailUpdateFacade;
 import com.specialist.contracts.auth.PrincipalDetails;
@@ -27,11 +27,11 @@ public class AccountManagementController {
 
     private final AccountService service;
     private final EmailUpdateFacade emailUpdateFacade;
-    private final AccountDeleteOrchestrator deleteFacade;
+    private final AccountDeleteFacade deleteFacade;
     private final SessionCookieManager sessionCookieManager;
 
     public AccountManagementController(AccountService service, EmailUpdateFacade emailUpdateFacade,
-                                       @Qualifier("defaultAccountDeleteOrchestrator") AccountDeleteOrchestrator deleteFacade,
+                                       @Qualifier("defaultAccountDeleteFacade") AccountDeleteFacade deleteFacade,
                                        SessionCookieManager sessionCookieManager) {
         this.service = service;
         this.emailUpdateFacade = emailUpdateFacade;

@@ -1,7 +1,7 @@
 package com.specialist.specialistdirectory.domain.specialist.controllers;
 
 import com.specialist.contracts.auth.PrincipalDetails;
-import com.specialist.specialistdirectory.domain.specialist.services.SpecialistActionOrchestrator;
+import com.specialist.specialistdirectory.domain.specialist.services.SpecialistActionFacade;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotBlank;
@@ -21,12 +21,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class SpecialistActionVerifyController {
 
-    private final SpecialistActionOrchestrator orchestrator;
+    private final SpecialistActionFacade facade;
 
     @PostMapping("/recall")
     public ResponseEntity<?> recall(@RequestParam("code") @NotBlank(message = "Code is required.")
                                     @Pattern(regexp = "^\\d{6}$", message = "Invalid code.") String code) {
-        orchestrator.recall(code);
+        facade.recall(code);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
@@ -38,7 +38,7 @@ public class SpecialistActionVerifyController {
                                     @RequestParam("code") @NotBlank(message = "Code is required.")
                                     @Pattern(regexp = "^\\d{6}$", message = "Invalid code.") String code,
                                     HttpServletRequest request, HttpServletResponse response) {
-        orchestrator.manage(principal.getAccountId(), code, request, response);
+        facade.manage(principal.getAccountId(), code, request, response);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();

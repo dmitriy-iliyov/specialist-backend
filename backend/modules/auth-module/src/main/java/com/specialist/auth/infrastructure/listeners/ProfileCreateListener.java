@@ -25,8 +25,7 @@ public final class ProfileCreateListener {
     private final AccountLoginService loginService;
 
     public ProfileCreateListener(AccountService accountService,
-                                 @Qualifier("implicitAccountLoginService")
-                                 AccountLoginService loginService) {
+                                 @Qualifier("implicitAccountLoginService") AccountLoginService loginService) {
         this.accountService = accountService;
         this.loginService = loginService;
     }

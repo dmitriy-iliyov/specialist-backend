@@ -43,12 +43,14 @@ public class CreatorSpecialistManagementStrategy implements SpecialistManagement
         SpecialistResponseDto responseDto = specialistService.save(dto);
         cacheService.evictCacheAfterSave(request.creatorId());
         bookmarkPersistService.saveAfterSpecialistCreate(new BookmarkCreateDto(responseDto.getOwnerId(), responseDto.getId()));
+        // outbox
         return responseDto;
     }
 
     @Override
     public SpecialistResponseDto update(SpecialistUpdateDto dto) {
         validate(dto.getAccountId(), dto.getId());
+        // outbox ??
         return specialistService.update(dto);
     }
 

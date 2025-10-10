@@ -6,5 +6,5 @@ import java.util.Set;
 import java.util.UUID;
 
 public interface SystemNearestIntervalService {
-    Map<UUID, NearestIntervalDto> findAll(Set<UUID> specialistIds);
+    Map<UUID, NearestIntervalDto> findAllByIdIn(Set<UUID> specialistIds);
 }

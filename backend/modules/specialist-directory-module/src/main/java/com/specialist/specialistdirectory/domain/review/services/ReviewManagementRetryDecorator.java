@@ -16,11 +16,11 @@ import java.util.UUID;
 
 @Service
 @Slf4j
-public class ReviewManagementRetryDecorator implements ReviewManagementOrchestrator {
+public class ReviewManagementRetryDecorator implements ReviewManagementFacade {
 
-    private final ReviewManagementOrchestrator delegate;
+    private final ReviewManagementFacade delegate;
 
-    public ReviewManagementRetryDecorator(@Qualifier("defaultReviewManagementOrchestrator") ReviewManagementOrchestrator delegate) {
+    public ReviewManagementRetryDecorator(@Qualifier("defaultReviewManagementFacade") ReviewManagementFacade delegate) {
         this.delegate = delegate;
     }
 

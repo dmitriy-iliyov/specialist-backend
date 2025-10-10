@@ -1,5 +1,6 @@
 package com.specialist.schedule.appointment.services;
 
+import com.specialist.core.config.ScheduleCacheConfig;
 import com.specialist.schedule.appointment.mapper.AppointmentMapper;
 import com.specialist.schedule.appointment.models.AppointmentEntity;
 import com.specialist.schedule.appointment.models.dto.AppointmentCreateDto;
@@ -8,7 +9,6 @@ import com.specialist.schedule.appointment.models.dto.AppointmentUpdateDto;
 import com.specialist.schedule.appointment.models.enums.AppointmentAgeType;
 import com.specialist.schedule.appointment.models.enums.AppointmentStatus;
 import com.specialist.schedule.appointment.repositories.AppointmentRepository;
-import com.specialist.schedule.config.ScheduleCacheConfig;
 import com.specialist.schedule.exceptions.appointment.AppointmentNotFoundByIdException;
 import com.specialist.utils.pagination.BatchResponse;
 import lombok.RequiredArgsConstructor;
