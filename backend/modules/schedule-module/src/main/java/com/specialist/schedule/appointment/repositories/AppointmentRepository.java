@@ -88,11 +88,6 @@ public interface AppointmentRepository extends JpaRepository<AppointmentEntity, 
                                                       @Param("date_limit") LocalDate dateLimit,
                                                       @Param("new_status") Integer newStatus);
 
-    @Query(value = """
-        SELECT a FROM AppointmentEntity a
-        WHERE a.date = :scheduled_date
-        AND a.status = :status
-    """)
-    Slice<AppointmentEntity> findAllByDateAndStatus(@Param("scheduled_date") LocalDate scheduledDate,
-                                                    @Param("status") AppointmentStatus status, Pageable pageable);
+    Slice<AppointmentEntity> findAllByDateAndStatus(LocalDate date, AppointmentStatus status, Pageable pageable);
+
 }

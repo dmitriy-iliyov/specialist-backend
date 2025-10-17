@@ -1,4 +1,4 @@
-package com.specialist.schedule.appointment.services;
+package com.specialist.schedule.appointment.infrastructure;
 
 import com.specialist.schedule.appointment.models.dto.AppointmentCancelTaskCreateDto;
 import com.specialist.schedule.appointment.models.dto.AppointmentCancelTaskResponseDto;

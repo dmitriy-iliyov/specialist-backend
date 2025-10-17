@@ -1,6 +1,7 @@
 package com.specialist.profile.services.rating;
 
 import com.specialist.contracts.profile.CreatorRatingUpdateEvent;
+import com.specialist.profile.infrastructure.events.CreatorRatingEventService;
 import com.specialist.profile.models.enums.ProcessingStatus;
 import jakarta.persistence.OptimisticLockException;
 import lombok.extern.slf4j.Slf4j;

@@ -1,4 +1,4 @@
-package com.specialist.schedule.interval.validation.ownership;
+package com.specialist.schedule.interval.validation;
 
 import java.util.UUID;
 

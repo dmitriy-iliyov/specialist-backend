@@ -6,7 +6,7 @@ import com.specialist.schedule.appointment.models.dto.AppointmentValidationInfo;
 import com.specialist.schedule.appointment.models.enums.AppointmentStatus;
 import com.specialist.schedule.appointment.models.enums.ValidationStatus;
 import com.specialist.schedule.appointment.models.marker.AppointmentMarker;
-import com.specialist.schedule.appointment.services.AppointmentService;
+import com.specialist.schedule.appointment.infrastructure.AppointmentService;
 import com.specialist.schedule.appointment_duration.AppointmentDurationService;
 import com.specialist.schedule.exceptions.appointment.AppointmentAlreadyExistException;
 import com.specialist.schedule.exceptions.appointment.InvalidTimeToCancelException;

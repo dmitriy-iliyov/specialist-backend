@@ -1,4 +1,4 @@
-package com.specialist.specialistdirectory.domain.review.services;
+package com.specialist.specialistdirectory.domain.review.infrastructure;
 
 import com.specialist.contracts.profile.CreatorRatingUpdateEvent;
 

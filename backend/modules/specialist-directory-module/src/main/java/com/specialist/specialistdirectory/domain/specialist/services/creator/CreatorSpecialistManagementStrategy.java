@@ -50,7 +50,7 @@ public class CreatorSpecialistManagementStrategy implements SpecialistManagement
     @Override
     public SpecialistResponseDto update(SpecialistUpdateDto dto) {
         validate(dto.getAccountId(), dto.getId());
-        // outbox ??
+        // outbox
         return specialistService.update(dto);
     }
 

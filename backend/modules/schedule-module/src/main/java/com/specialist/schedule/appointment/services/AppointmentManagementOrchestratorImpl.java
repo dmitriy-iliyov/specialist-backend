@@ -1,5 +1,6 @@
 package com.specialist.schedule.appointment.services;
 
+import com.specialist.schedule.appointment.infrastructure.AppointmentService;
 import com.specialist.schedule.appointment.models.dto.AppointmentCreateDto;
 import com.specialist.schedule.appointment.models.dto.AppointmentResponseDto;
 import com.specialist.schedule.appointment.models.dto.AppointmentUpdateDto;

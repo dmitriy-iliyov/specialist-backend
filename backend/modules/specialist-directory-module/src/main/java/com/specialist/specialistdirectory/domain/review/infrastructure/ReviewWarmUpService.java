@@ -1,7 +1,8 @@
-package com.specialist.specialistdirectory.domain.review.services;
+package com.specialist.specialistdirectory.domain.review.infrastructure;
 
 import com.specialist.specialistdirectory.domain.review.models.enums.SortType;
 import com.specialist.specialistdirectory.domain.review.models.filters.ReviewSort;
+import com.specialist.specialistdirectory.domain.review.services.ReviewAggregator;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistService;
 import com.specialist.utils.pagination.PageRequest;

@@ -2,6 +2,7 @@ package com.specialist.schedule.appointment.services;
 
 import com.specialist.contracts.notification.InternalAppointmentCancelEvent;
 import com.specialist.contracts.profile.ProfileType;
+import com.specialist.schedule.appointment.infrastructure.AppointmentService;
 import com.specialist.schedule.appointment.mapper.AppointmentMapper;
 import com.specialist.schedule.appointment.models.dto.*;
 import com.specialist.schedule.appointment.validation.AppointmentOwnershipValidator;

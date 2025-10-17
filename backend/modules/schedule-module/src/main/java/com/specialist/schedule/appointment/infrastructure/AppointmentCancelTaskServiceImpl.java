@@ -1,4 +1,4 @@
-package com.specialist.schedule.appointment.services;
+package com.specialist.schedule.appointment.infrastructure;
 
 import com.specialist.core.config.ScheduleCacheConfig;
 import com.specialist.schedule.appointment.models.AppointmentCancelTaskEntity;

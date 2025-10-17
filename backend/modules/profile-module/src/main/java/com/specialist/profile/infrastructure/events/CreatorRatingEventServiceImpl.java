@@ -1,4 +1,4 @@
-package com.specialist.profile.services.rating;
+package com.specialist.profile.infrastructure.events;
 
 import com.specialist.contracts.profile.CreatorRatingUpdateEvent;
 import com.specialist.profile.exceptions.RatingUpdateEventEntityNotFoundByIdException;
@@ -24,7 +24,6 @@ public class CreatorRatingEventServiceImpl implements CreatorRatingEventService 
 
     private final RatingUpdateEventMapper mapper;
     private final RatingUpdateEventRepository repository;
-
 
     @CachePut(value = "users:events:creator-rating-update:processed", key = "#event.id()",
               condition = "#status.name() == 'PROCESSED'")

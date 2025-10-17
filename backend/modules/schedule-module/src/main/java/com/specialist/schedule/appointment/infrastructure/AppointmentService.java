@@ -1,10 +1,11 @@
-package com.specialist.schedule.appointment.services;
+package com.specialist.schedule.appointment.infrastructure;
 
 import com.specialist.schedule.appointment.models.dto.AppointmentCreateDto;
 import com.specialist.schedule.appointment.models.dto.AppointmentResponseDto;
 import com.specialist.schedule.appointment.models.dto.AppointmentUpdateDto;
 import com.specialist.schedule.appointment.models.enums.AppointmentAgeType;
 import com.specialist.schedule.appointment.models.enums.AppointmentStatus;
+import com.specialist.schedule.appointment.services.AppointmentBatchCancelService;
 
 import java.time.LocalDate;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.specialist.profile.services.rating;
+package com.specialist.profile.infrastructure.events;
 
 import com.specialist.contracts.profile.CreatorRatingUpdateEvent;
 import com.specialist.profile.models.enums.ProcessingStatus;

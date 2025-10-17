@@ -1,7 +1,7 @@
 package com.specialist.schedule.appointment.validation;
 
 import com.specialist.schedule.appointment.models.dto.AppointmentResponseDto;
-import com.specialist.schedule.appointment.services.AppointmentService;
+import com.specialist.schedule.appointment.infrastructure.AppointmentService;
 import com.specialist.schedule.exceptions.appointment.AppointmentOwnershipException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

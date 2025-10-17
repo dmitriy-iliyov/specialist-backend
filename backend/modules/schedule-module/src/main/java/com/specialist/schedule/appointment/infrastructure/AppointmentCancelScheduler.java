@@ -1,8 +1,9 @@
-package com.specialist.schedule.appointment.services;
+package com.specialist.schedule.appointment.infrastructure;
 
 import com.specialist.schedule.appointment.models.dto.AppointmentCancelTaskResponseDto;
 import com.specialist.schedule.appointment.models.dto.AppointmentResponseDto;
 import com.specialist.schedule.appointment.models.enums.AppointmentCancelTaskType;
+import com.specialist.schedule.appointment.services.AppointmentBatchCancelService;
 import com.specialist.utils.pagination.BatchResponse;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;

@@ -1,6 +1,7 @@
 package com.specialist.schedule.appointment.services;
 
 import com.specialist.core.config.ScheduleCacheConfig;
+import com.specialist.schedule.appointment.infrastructure.AppointmentService;
 import com.specialist.schedule.appointment.mapper.AppointmentMapper;
 import com.specialist.schedule.appointment.models.AppointmentEntity;
 import com.specialist.schedule.appointment.models.dto.AppointmentCreateDto;

@@ -7,8 +7,8 @@ import com.specialist.schedule.exceptions.interval.IntervalTimeIsInvalidExceptio
 import com.specialist.schedule.interval.models.dto.IntervalCreateDto;
 import com.specialist.schedule.interval.models.dto.IntervalResponseDto;
 import com.specialist.schedule.interval.models.dto.SystemIntervalCreatedDto;
-import com.specialist.schedule.interval.validation.ownership.IntervalOwnershipValidator;
-import com.specialist.schedule.interval.validation.time.TimeValidator;
+import com.specialist.schedule.interval.validation.IntervalOwnershipValidator;
+import com.specialist.schedule.interval.validation.TimeValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

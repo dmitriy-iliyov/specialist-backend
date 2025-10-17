@@ -1,4 +1,4 @@
-package com.specialist.schedule.interval.validation.ownership;
+package com.specialist.schedule.interval.validation;
 
 import com.specialist.schedule.exceptions.interval.IntervalOwnershipException;
 import com.specialist.schedule.interval.models.dto.IntervalResponseDto;
