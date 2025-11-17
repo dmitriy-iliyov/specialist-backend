@@ -20,6 +20,6 @@ public class XssFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-        filterChain.doFilter(new XssHttRequestWrapper(request), response);
+        filterChain.doFilter(new XssHttpRequestWrapper(request), response);
     }
 }

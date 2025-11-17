@@ -14,9 +14,9 @@ import java.io.InputStreamReader;
 
 
 @Log4j2
-public class XssHttRequestWrapper extends HttpServletRequestWrapper {
+public class XssHttpRequestWrapper extends HttpServletRequestWrapper {
 
-    public XssHttRequestWrapper(HttpServletRequest request) {
+    public XssHttpRequestWrapper(HttpServletRequest request) {
         super(request);
     }
 
