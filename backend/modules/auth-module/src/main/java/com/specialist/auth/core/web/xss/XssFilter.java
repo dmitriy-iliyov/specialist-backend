@@ -16,10 +16,10 @@ public class XssFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        HttpServletRequest requestToProcess = request;
-        if (METHOD_TO_SANITIZE.contains(request.getMethod().toUpperCase())) {
-            requestToProcess = new XssHttRequestWrapper(request);
+        if (!METHOD_TO_SANITIZE.contains(request.getMethod().toUpperCase())) {
+            filterChain.doFilter(request, response);
+            return;
         }
-        filterChain.doFilter(requestToProcess, response);
+        filterChain.doFilter(new XssHttRequestWrapper(request), response);
     }
 }

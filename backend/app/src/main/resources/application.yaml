@@ -1,0 +1,44 @@
+outbox:
+  producer:
+    sender:
+      type: kafka
+      bean-name: outboxKafkaTemplate
+
+    defaults:
+      batch-size: 100
+      initial-delay: 5s
+      fixed-delay: 30s
+      max-retries: 3
+      backoff:
+        - delay: 3s
+        - multiplier: 10
+
+    events:
+      account-delete:
+        topic: account-delete
+        batch-size: 10
+        fixed-delay: 10s
+        backoff:
+          - enabled: false
+
+      rating-update:
+        topic: rating-update
+        batch-size: 50
+        fixed-delay: 20s
+
+    clean-up:
+      enable: true
+      batch-size: 20
+      threshold: 1h
+      initial-delay: 10s
+      fixed-delay: 1h
+
+    dlq:
+      enabled: true
+
+    migrations:
+      enabled: true
+
+  consumer:
+
+
