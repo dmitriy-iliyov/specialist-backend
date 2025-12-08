@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.util.Map;
 
 @Service
 @Slf4j
@@ -53,14 +54,14 @@ public class OAuth2AccountAuthorizeOrchestratorImpl implements OAuth2AccountAuth
     }
 
     @Override
-    public String authorize(Provider provider, HttpServletRequest request) {
+    public Map<String, String> authorize(Provider provider, HttpServletRequest request) {
         OAuth2AuthorizationRequest authRequest = authorizationRequestResolver.resolve(
                 request, provider.getRegistrationId()
         );
         initialRequestRepository.save(
                 new OAuth2InitialRequestEntity(authRequest.getState(), authRequest.getRedirectUri(), STATE_TTL.getSeconds())
         );
-        return authRequest.getAuthorizationRequestUri();
+        return Map.of("redirectUrl", authRequest.getAuthorizationRequestUri());
     }
 
     @Override
