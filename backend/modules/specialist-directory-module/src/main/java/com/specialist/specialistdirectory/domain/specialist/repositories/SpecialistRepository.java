@@ -47,9 +47,22 @@ public interface SpecialistRepository extends JpaRepository<SpecialistEntity, UU
 
     long countByCreatorId(UUID creatorId);
 
-    void updateStateById(UUID id, SpecialistState state);
+    @Modifying
+    @Query("""
+        UPDATE SpecialistEntity e
+        SET e.state = :state
+        WHERE e.id = :id
+    """)
+    void updateStateById(@Param("id") UUID id, @Param("state") SpecialistState state);
 
-    void updateStateAndOwnerIdById(UUID id, UUID ownerId, SpecialistState state);
+    @Modifying
+    @Query("""
+        UPDATE SpecialistEntity e
+        SET e.state = :state,
+            e.ownerId = :owner_id
+        WHERE e.id = :id
+    """)
+    void updateStateAndOwnerIdById(@Param("id") UUID id, @Param("owner_id") UUID ownerId, @Param("state") SpecialistState state);
 
     @Query("""
         SELECT new com.specialist.specialistdirectory.domain.specialist.models.dtos.ShortSpecialistInfo(s.id, s.creatorId, s.ownerId, s.status)
@@ -83,5 +96,11 @@ public interface SpecialistRepository extends JpaRepository<SpecialistEntity, UU
     """)
     Optional<ShortSpecialistInfo> findShortInfoByOwnerId(@Param("ownerId") UUID ownerId);
 
-    void updateStatusById(UUID id, SpecialistStatus status);
+    @Modifying
+    @Query("""
+        UPDATE SpecialistEntity s
+        SET s.status = :status
+        WHERE s.id = :id
+    """)
+    void updateStatusById(@Param("id") UUID id, @Param("status") SpecialistStatus status);
 }
