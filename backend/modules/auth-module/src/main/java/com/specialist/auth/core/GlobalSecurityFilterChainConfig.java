@@ -1,4 +1,4 @@
-package com.specialist.auth.core.security_filter_chain;
+package com.specialist.auth.core;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;

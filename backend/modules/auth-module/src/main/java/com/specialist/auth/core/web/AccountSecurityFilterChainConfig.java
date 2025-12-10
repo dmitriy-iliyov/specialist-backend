@@ -1,4 +1,4 @@
-package com.specialist.auth.core.security_filter_chain;
+package com.specialist.auth.core.web;
 
 import com.specialist.auth.core.DefaultAccessDeniedHandler;
 import com.specialist.auth.core.rate_limit.RateLimitFilter;
