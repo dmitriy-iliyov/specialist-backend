@@ -2,6 +2,7 @@ package com.specialist.schedule.appointment.models;
 
 import com.specialist.schedule.appointment.models.enums.AppointmentStatus;
 import com.specialist.schedule.appointment.models.enums.AppointmentType;
+import com.specialist.schedule.appointment.models.enums.ProcessStatus;
 import com.specialist.schedule.appointment.repositories.AppointmentStatusConverter;
 import com.specialist.schedule.appointment.repositories.AppointmentTypeConverter;
 import jakarta.persistence.*;
@@ -53,6 +54,10 @@ public class AppointmentEntity {
     @Convert(converter = AppointmentStatusConverter.class)
     private AppointmentStatus status;
 
+    @Column(name = "process_status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ProcessStatus processStatus;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
@@ -64,6 +69,7 @@ public class AppointmentEntity {
     public void prePersist(){
         createdAt = Instant.now();
         updatedAt = createdAt;
+        processStatus = ProcessStatus.NONE;
     }
 
     @PreUpdate

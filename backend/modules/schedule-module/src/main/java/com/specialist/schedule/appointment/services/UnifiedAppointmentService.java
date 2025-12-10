@@ -9,6 +9,7 @@ import com.specialist.schedule.appointment.models.dto.AppointmentResponseDto;
 import com.specialist.schedule.appointment.models.dto.AppointmentUpdateDto;
 import com.specialist.schedule.appointment.models.enums.AppointmentAgeType;
 import com.specialist.schedule.appointment.models.enums.AppointmentStatus;
+import com.specialist.schedule.appointment.models.enums.ProcessStatus;
 import com.specialist.schedule.appointment.repositories.AppointmentRepository;
 import com.specialist.schedule.exceptions.appointment.AppointmentNotFoundByIdException;
 import com.specialist.utils.pagination.BatchResponse;
@@ -19,7 +20,6 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -210,21 +210,22 @@ public class UnifiedAppointmentService implements AppointmentService, SystemAppo
         return markedIds;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     @Override
-    public BatchResponse<AppointmentResponseDto> findBatchToRemind(int size, int page) {
+    public BatchResponse<AppointmentResponseDto> findBatchToRemind(int batchSize) {
         LocalDate scheduledData = LocalDate.now().plusDays(1);
-        log.info("START selecting appointments to remind with batchSize={}, page={}, scheduledData={}", size, page, scheduledData);
-        Slice<AppointmentEntity> slice = repository.findAllByDateAndStatus(
+        log.info("START selecting appointments to remind with batchSize={}, scheduledData={}", batchSize, scheduledData);
+        List<AppointmentEntity> batch = repository.findBatchByDateAndStatusAndProcessStatus(
                 scheduledData,
                 AppointmentStatus.SCHEDULED,
-                Pageable.ofSize(size).withPage(page)
+                ProcessStatus.NONE,
+                batchSize,
+                ProcessStatus.TRYING_REMIND
         );
-        log.info("END selecting, hasNext={}", slice.hasNext());
         return new BatchResponse<>(
-                mapper.toDtoList(slice.getContent()),
-                slice.hasNext(),
-                slice.hasNext() ? ++page : null
+                mapper.toDtoList(batch),
+                batch.size() == batchSize,
+                1
         );
     }
 }

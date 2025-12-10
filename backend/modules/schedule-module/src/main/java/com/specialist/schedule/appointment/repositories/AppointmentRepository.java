@@ -3,7 +3,7 @@ package com.specialist.schedule.appointment.repositories;
 
 import com.specialist.schedule.appointment.models.AppointmentEntity;
 import com.specialist.schedule.appointment.models.enums.AppointmentStatus;
-import org.springframework.data.domain.Pageable;
+import com.specialist.schedule.appointment.models.enums.ProcessStatus;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -37,7 +37,7 @@ public interface AppointmentRepository extends JpaRepository<AppointmentEntity, 
     @Query(value = """
         WITH to_update AS(
             SELECT id FROM appointments
-            WHERE (specialist_id = :participant_id OR user_id = :participant_id) 
+            WHERE (specialist_id = :participant_id OR user_id = :participant_id)
               AND status = :old_status
             LIMIT :batch_size
         )
@@ -74,9 +74,10 @@ public interface AppointmentRepository extends JpaRepository<AppointmentEntity, 
     @Query(value = """
         WITH to_update AS (
             SELECT id FROM appointments
-            WHERE date < :date_limit 
+            WHERE date < :date_limit
             AND status = :old_status
             LIMIT :batch_size
+            FOR UPDATE SKIP LOCKED
         )
         UPDATE appointments
         SET status = :new_status
@@ -88,6 +89,21 @@ public interface AppointmentRepository extends JpaRepository<AppointmentEntity, 
                                                       @Param("date_limit") LocalDate dateLimit,
                                                       @Param("new_status") Integer newStatus);
 
-    Slice<AppointmentEntity> findAllByDateAndStatus(LocalDate date, AppointmentStatus status, Pageable pageable);
-
+    @Query(value = """
+        WITH to_select AS (
+            SELECT * FROM appointments
+            WHERE date = :date AND status = :status AND process_status = :old_process_status
+            LIMIT :batch_size
+            FOR UPDATE SKIP LOCKED
+        )
+        UPDATE appointments
+        SET process_status = :new_process_status
+        WHERE id IN (SELECT id FROM to_select)
+        RETURNING *
+    """, nativeQuery = true)
+    List<AppointmentEntity> findBatchByDateAndStatusAndProcessStatus(@Param("date") LocalDate date,
+                                                                      @Param("status") AppointmentStatus status,
+                                                                      @Param("old_process_status") ProcessStatus oldProcessStatus,
+                                                                      @Param("batch_size") int batchSize,
+                                                                      @Param("new_process_status") ProcessStatus newProcessStatus);
 }
