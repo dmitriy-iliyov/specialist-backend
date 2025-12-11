@@ -2,6 +2,7 @@ package com.specialist.specialistdirectory.domain.specialist.models.dtos;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.specialist.specialistdirectory.domain.specialist.models.enums.Gender;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistLanguage;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistState;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistStatus;
@@ -23,13 +24,19 @@ public class SpecialistResponseDto {
         @JsonProperty("full_name")
         private final String fullName;
 
+        private final Gender gender;
+
         @JsonProperty("type_title")
         private final String typeTitle;
 
         @JsonProperty("another_type")
-        private String anotherType;
+        private final String anotherType;
+
+        private final Integer experience;
 
         private final List<SpecialistLanguage> languages;
+
+        private final String details;
 
         @JsonProperty("city_title")
         private final String cityTitle;
@@ -58,9 +65,12 @@ public class SpecialistResponseDto {
         public SpecialistResponseDto(@JsonProperty("id") UUID id,
                                      @JsonProperty("owner_id") UUID ownerId,
                                      @JsonProperty("full_name") String fullName,
+                                     @JsonProperty("gender") Gender gender,
                                      @JsonProperty("type_title") String typeTitle,
                                      @JsonProperty("another_type") String anotherType,
+                                     @JsonProperty("experience") Integer experience,
                                      @JsonProperty("languages") List<SpecialistLanguage> languages,
+                                     @JsonProperty("details") String details,
                                      @JsonProperty("city_title") String cityTitle,
                                      @JsonProperty("city_code") String cityCode,
                                      @JsonProperty("address") String address,
@@ -73,9 +83,12 @@ public class SpecialistResponseDto {
                 this.id = id;
                 this.ownerId = ownerId;
                 this.fullName = fullName;
+                this.gender = gender;
                 this.typeTitle = typeTitle;
                 this.anotherType = anotherType;
+                this.experience = experience;
                 this.languages = languages;
+                this.details = details;
                 this.cityTitle = cityTitle;
                 this.cityCode = cityCode;
                 this.address = address;

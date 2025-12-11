@@ -1,6 +1,7 @@
 package com.specialist.specialistdirectory.domain.specialist.models.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.specialist.specialistdirectory.domain.specialist.models.enums.Gender;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistLanguage;
 
 import java.util.List;
@@ -13,11 +14,17 @@ public record BookmarkSpecialistResponseDto(
 
         @JsonProperty("full_name") String fullName,
 
+        Gender gender,
+
         @JsonProperty("type_title") String typeTitle,
 
         @JsonProperty("another_type") String anotherType,
 
+        Integer experience,
+
         List<SpecialistLanguage> languages,
+
+        String details,
 
         @JsonProperty("city_title") String cityTitle,
 

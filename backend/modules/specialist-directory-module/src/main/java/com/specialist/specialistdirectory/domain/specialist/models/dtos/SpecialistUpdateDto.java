@@ -2,6 +2,7 @@ package com.specialist.specialistdirectory.domain.specialist.models.dtos;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.specialist.specialistdirectory.domain.specialist.models.enums.Gender;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistLanguage;
 import com.specialist.specialistdirectory.domain.specialist.models.markers.SpecialistMarker;
 import com.specialist.specialistdirectory.domain.specialist.validation.Contact;
@@ -40,6 +41,8 @@ public class SpecialistUpdateDto implements SpecialistMarker {
     @Size(min = 2, max = 20, message = "Last name must be between 2 and 20 characters.")
     private final String lastName;
 
+    private Gender gender;
+
     @JsonProperty("type_id")
     @NotNull(message = "Specialist type id is required.")
     @Positive(message = "Specialist type id should be positive.")
@@ -49,9 +52,15 @@ public class SpecialistUpdateDto implements SpecialistMarker {
     @Size(min = 5, max = 20, message = "Another type must be between 5 and 20 characters.")
     private final String anotherType;
 
+    @PositiveOrZero(message = "Experience should be positive or zero")
+    private final Integer experience;
+
     @Valid
     @NotEmpty(message = "At least one language required.")
     private final List<@SpecialistLang SpecialistLanguage> languages;
+
+    @Size(max = 300, message = "details must be less then 300 characters.")
+    private final String details;
 
     @JsonProperty("city_title")
     @NotBlank(message = "City title is required.")

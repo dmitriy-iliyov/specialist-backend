@@ -5,6 +5,7 @@ import com.specialist.specialistdirectory.domain.review.models.ReviewEntity;
 import com.specialist.specialistdirectory.domain.specialist.mappers.SpecialistStateConverter;
 import com.specialist.specialistdirectory.domain.specialist.mappers.SpecialistStatusConverter;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.ContactDto;
+import com.specialist.specialistdirectory.domain.specialist.models.enums.Gender;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistLanguage;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistState;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistStatus;
@@ -12,10 +13,13 @@ import com.specialist.specialistdirectory.domain.type.models.TypeEntity;
 import com.specialist.utils.UuidUtils;
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.Check;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.Type;
 import org.hibernate.type.SqlTypes;
@@ -52,6 +56,10 @@ public class SpecialistEntity {
     @Column(name = "last_name", nullable = false, length = 20)
     private String lastName;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "type_id", nullable = false)
     private TypeEntity type;
@@ -59,10 +67,16 @@ public class SpecialistEntity {
     @Column(name = "suggested_type_id")
     private Long suggestedTypeId;
 
+    @Check(constraints = "experience >= 0")
+    private Integer experience;
+
     @Type(JsonBinaryType.class)
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb", nullable = false)
     private List<SpecialistLanguage> languages = new ArrayList<>();
+
+    @Column(length = 300)
+    private String details;
 
     @Column(name = "city_code")
     private String cityCode;
