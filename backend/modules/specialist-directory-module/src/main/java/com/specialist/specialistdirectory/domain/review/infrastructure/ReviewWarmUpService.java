@@ -56,7 +56,7 @@ public final class ReviewWarmUpService {
                 PageRequest pageRequest = new PageRequest(i, pageSize, pageRequestAsc);
                 PageResponse<SpecialistResponseDto> specialistPage = specialistService.findAll(pageRequest);
                 for (SpecialistResponseDto dto: specialistPage.data()) {
-                    ReviewSort sort = new ReviewSort(sortType, sortAsc, i, pageSize);
+                    ReviewSort sort = new ReviewSort(i, pageSize, sortAsc, sortType);
                     String key = dto.getId().toString() + ":" + sort.cacheKey();
                     cache.put(key, reviewAggregator.findAllWithSortBySpecialistId(dto.getId(), sort));
                 }

@@ -5,7 +5,11 @@ import com.specialist.specialistdirectory.domain.review.models.dtos.ReviewRespon
 import com.specialist.specialistdirectory.domain.review.models.dtos.ReviewUpdateDto;
 import com.specialist.specialistdirectory.domain.review.models.enums.NextOperationType;
 import com.specialist.specialistdirectory.domain.review.models.enums.ReviewAgeType;
+import com.specialist.specialistdirectory.domain.review.models.enums.ReviewStatus;
+import com.specialist.specialistdirectory.domain.review.models.filters.AdminReviewSort;
 import com.specialist.specialistdirectory.domain.review.models.filters.ReviewSort;
+import com.specialist.specialistdirectory.domain.specialist.models.SpecialistEntity;
+import com.specialist.specialistdirectory.domain.specialist.models.enums.ApproverType;
 import com.specialist.utils.pagination.PageResponse;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -13,7 +17,9 @@ import java.util.Map;
 import java.util.UUID;
 
 public interface ReviewService {
-    ReviewResponseDto save(ReviewCreateDto dto);
+    ReviewResponseDto save(SpecialistEntity specialist, ReviewCreateDto dto);
+
+    void approve(UUID specialistId, UUID id, ApproverType approver);
 
     Pair<NextOperationType, Map<ReviewAgeType, ReviewResponseDto>> update(ReviewUpdateDto dto);
 
@@ -21,5 +27,5 @@ public interface ReviewService {
 
     ReviewResponseDto deleteById(UUID specialistId, UUID id);
 
-    PageResponse<ReviewResponseDto> findAllWithSortBySpecialistId(UUID specialistId, ReviewSort sort);
+    PageResponse<ReviewResponseDto> findAllWithSortBySpecialistIdAndStatus(UUID specialistId, ReviewStatus status, ReviewSort sort);
 }

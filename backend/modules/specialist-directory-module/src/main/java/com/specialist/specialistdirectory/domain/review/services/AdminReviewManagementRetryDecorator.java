@@ -1,7 +1,10 @@
 package com.specialist.specialistdirectory.domain.review.services;
 
+import com.specialist.specialistdirectory.domain.review.models.dtos.ReviewAggregatedResponseDto;
 import com.specialist.specialistdirectory.domain.review.models.dtos.ReviewResponseDto;
+import com.specialist.specialistdirectory.domain.review.models.filters.AdminReviewSort;
 import com.specialist.specialistdirectory.exceptions.ReviewManageException;
+import com.specialist.utils.pagination.PageResponse;
 import jakarta.persistence.OptimisticLockException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -20,6 +23,16 @@ public class AdminReviewManagementRetryDecorator implements AdminReviewManagemen
 
     public AdminReviewManagementRetryDecorator(@Qualifier("defaultAdminReviewManagementFacade") AdminReviewManagementFacade delegate) {
         this.delegate = delegate;
+    }
+
+    @Override
+    public PageResponse<ReviewAggregatedResponseDto> getAll(UUID specialistId, AdminReviewSort sort) {
+        return delegate.getAll(specialistId, sort);
+    }
+
+    @Override
+    public void approve(UUID specialistId, UUID id) {
+        delegate.approve(specialistId, id);
     }
 
     @Retryable(

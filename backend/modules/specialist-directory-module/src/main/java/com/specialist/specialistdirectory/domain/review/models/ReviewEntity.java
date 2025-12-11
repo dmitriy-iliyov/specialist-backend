@@ -1,6 +1,9 @@
 package com.specialist.specialistdirectory.domain.review.models;
 
+import com.specialist.specialistdirectory.domain.review.models.enums.ReviewStatus;
+import com.specialist.specialistdirectory.domain.specialist.mappers.ApproverTypeConverter;
 import com.specialist.specialistdirectory.domain.specialist.models.SpecialistEntity;
+import com.specialist.specialistdirectory.domain.specialist.models.enums.ApproverType;
 import com.specialist.utils.UuidUtils;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -32,6 +35,13 @@ public class ReviewEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "specialist_id", nullable = false, updatable = false)
     private SpecialistEntity specialist;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ReviewStatus status;
+
+    @Convert(converter = ApproverTypeConverter.class)
+    private ApproverType approver;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;

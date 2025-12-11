@@ -7,6 +7,9 @@ import com.specialist.specialistdirectory.domain.review.models.enums.NextOperati
 import com.specialist.specialistdirectory.domain.review.models.enums.OperationType;
 import com.specialist.specialistdirectory.domain.review.models.enums.ReviewAgeType;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistRatingService;
+import com.specialist.specialistdirectory.domain.specialist.services.SystemSpecialistService;
+import io.github.dmitriyiliyov.springoutbox.publisher.OutboxPublisher;
+import io.github.dmitriyiliyov.springoutbox.publisher.aop.OutboxPublish;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Service;
@@ -20,16 +23,18 @@ import java.util.UUID;
 public class DefaultReviewManagementFacade implements ReviewManagementFacade {
 
     private final ReviewService reviewService;
+    private final SystemSpecialistService specialistService;
     private final SpecialistRatingService ratingService;
     private final CreatorRatingUpdateService creatorRatingUpdateService;
+    private final OutboxPublisher outboxPublisher;
 
     @Transactional
+    @OutboxPublish(eventType = "validate-review")
     @Override
     public ReviewResponseDto save(ReviewCreateDto dto) {
-        ReviewResponseDto resultDto = reviewService.save(dto);
+        ReviewResponseDto resultDto = reviewService.save(specialistService.getReferenceById(dto.getSpecialistId()), dto);
         UUID specialistCreatorId = ratingService.updateRatingById(dto.getSpecialistId(), dto.getRating(), OperationType.PERSIST);
         creatorRatingUpdateService.updateByCreatorId(specialistCreatorId, dto.getRating(), OperationType.PERSIST);
-        // outbox
         return resultDto;
     }
 
@@ -43,7 +48,7 @@ public class DefaultReviewManagementFacade implements ReviewManagementFacade {
             long resultRating = newDto.rating() - oldDto.rating();
             UUID specialistCreatorId = ratingService.updateRatingById(dto.getSpecialistId(), resultRating, OperationType.UPDATE);
             creatorRatingUpdateService.updateByCreatorId(specialistCreatorId, resultRating, OperationType.UPDATE);
-            // outbox
+            outboxPublisher.publish("validate-review", newDto);
         }
         return newDto;
     }

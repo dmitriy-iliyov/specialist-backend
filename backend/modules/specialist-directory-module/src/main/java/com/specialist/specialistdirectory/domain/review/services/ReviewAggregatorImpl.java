@@ -5,6 +5,7 @@ import com.specialist.contracts.profile.SystemProfileService;
 import com.specialist.contracts.profile.dto.UnifiedProfileResponseDto;
 import com.specialist.specialistdirectory.domain.review.models.dtos.ReviewAggregatedResponseDto;
 import com.specialist.specialistdirectory.domain.review.models.dtos.ReviewResponseDto;
+import com.specialist.specialistdirectory.domain.review.models.enums.ReviewStatus;
 import com.specialist.specialistdirectory.domain.review.models.filters.ReviewSort;
 import com.specialist.utils.pagination.PageResponse;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -33,7 +34,9 @@ public class ReviewAggregatorImpl implements ReviewAggregator {
     @Transactional(readOnly = true)
     @Override
     public PageResponse<ReviewAggregatedResponseDto> findAllWithSortBySpecialistId(UUID specialistId, ReviewSort sort) {
-        PageResponse<ReviewResponseDto> reviewsPage = reviewService.findAllWithSortBySpecialistId(specialistId, sort);
+        PageResponse<ReviewResponseDto> reviewsPage = reviewService.findAllWithSortBySpecialistIdAndStatus(
+                specialistId, ReviewStatus.APPROVED, sort
+        );
         Set<UUID> creatorIds = reviewsPage.data().stream().map(ReviewResponseDto::creatorId).collect(Collectors.toSet());
         Map<UUID, UnifiedProfileResponseDto> creatorsMap = profileService.findAllByIdIn(creatorIds);
         return new PageResponse<>(

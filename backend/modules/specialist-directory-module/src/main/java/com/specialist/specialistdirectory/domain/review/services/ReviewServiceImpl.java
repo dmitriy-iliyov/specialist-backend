@@ -7,9 +7,12 @@ import com.specialist.specialistdirectory.domain.review.models.dtos.ReviewRespon
 import com.specialist.specialistdirectory.domain.review.models.dtos.ReviewUpdateDto;
 import com.specialist.specialistdirectory.domain.review.models.enums.NextOperationType;
 import com.specialist.specialistdirectory.domain.review.models.enums.ReviewAgeType;
+import com.specialist.specialistdirectory.domain.review.models.enums.ReviewStatus;
+import com.specialist.specialistdirectory.domain.review.models.filters.AdminReviewSort;
 import com.specialist.specialistdirectory.domain.review.models.filters.ReviewSort;
 import com.specialist.specialistdirectory.domain.review.repositories.ReviewRepository;
-import com.specialist.specialistdirectory.domain.specialist.services.SystemSpecialistService;
+import com.specialist.specialistdirectory.domain.specialist.models.SpecialistEntity;
+import com.specialist.specialistdirectory.domain.specialist.models.enums.ApproverType;
 import com.specialist.specialistdirectory.exceptions.NotAffiliatedToSpecialistException;
 import com.specialist.specialistdirectory.exceptions.OwnershipException;
 import com.specialist.specialistdirectory.exceptions.ReviewNotFoundByIdException;
@@ -33,15 +36,25 @@ public class ReviewServiceImpl implements ReviewService {
 
     private final ReviewRepository repository;
     private final ReviewMapper mapper;
-    private final SystemSpecialistService specialistService;
 
 
     @Transactional
     @Override
-    public ReviewResponseDto save(ReviewCreateDto dto) {
+    public ReviewResponseDto save(SpecialistEntity specialist, ReviewCreateDto dto) {
         ReviewEntity entity = mapper.toEntity(dto);
-        entity.setSpecialist(specialistService.getReferenceById(dto.getSpecialistId()));
+        entity.setSpecialist(specialist);
+        entity.setStatus(ReviewStatus.UNAPPROVED);
         return mapper.toDto(repository.save(entity));
+    }
+
+    @Transactional
+    @Override
+    public void approve(UUID specialistId, UUID id, ApproverType approver) {
+        ReviewEntity entity = repository.findById(id).orElseThrow(ReviewNotFoundByIdException::new );
+        this.assertSpecialistAffiliation(entity.getSpecialist().getId(), specialistId);
+        entity.setStatus(ReviewStatus.APPROVED);
+        entity.setApprover(approver);
+        repository.save(entity);
     }
 
     @Transactional
@@ -51,7 +64,6 @@ public class ReviewServiceImpl implements ReviewService {
         Map<ReviewAgeType, ReviewResponseDto> resultMap = new HashMap<>();
 
         ReviewEntity existedReview = repository.findById(newReview.getId()).orElseThrow(ReviewNotFoundByIdException::new);
-
         this.assertOwnership(existedReview.getCreatorId(), newReview.getCreatorId());
         this.assertSpecialistAffiliation(existedReview.getSpecialist().getId(), newReview.getSpecialistId());
 
@@ -83,16 +95,22 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public ReviewResponseDto deleteById(UUID specialistId, UUID id) {
         ReviewEntity entity = repository.findById(id).orElseThrow(ReviewNotFoundByIdException::new );
-        ReviewResponseDto dto = mapper.toDto(entity);
         this.assertSpecialistAffiliation(entity.getSpecialist().getId(), specialistId);
+        ReviewResponseDto dto = mapper.toDto(entity);
         repository.deleteById(id);
         return dto;
     }
 
     @Transactional(readOnly = true)
     @Override
-    public PageResponse<ReviewResponseDto> findAllWithSortBySpecialistId(UUID specialistId, ReviewSort sort) {
-        Page<ReviewEntity> entityPage = repository.findAllBySpecialistId(specialistId, this.generatePageable(sort));
+    public PageResponse<ReviewResponseDto> findAllWithSortBySpecialistIdAndStatus(UUID specialistId,
+                                                                                  ReviewStatus status,
+                                                                                  ReviewSort sort) {
+        Page<ReviewEntity> entityPage = repository.findAllBySpecialistIdAndStatus(
+                specialistId,
+                status,
+                this.generatePageable(sort)
+        );
         return new PageResponse<>(
                 mapper.toDtoList(entityPage.getContent()),
                 entityPage.getTotalPages()
@@ -112,22 +130,22 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     private Pageable generatePageable(ReviewSort sort) {
-        if (sort.sortBy() != null) {
-            if (sort.asc() != null && sort.asc()) {
+        if (sort.getSortBy() != null) {
+            if (sort.isAsc() != null && sort.isAsc()) {
                 return PageRequest.of(
-                        sort.pageNumber(),
-                        sort.pageSize(),
-                        Sort.by(sort.sortBy().getColumnName()).ascending()
+                        sort.getPageNumber(),
+                        sort.getPageSize(),
+                        Sort.by(sort.getSortBy().getColumnName()).ascending()
                 );
             } else {
                 return PageRequest.of(
-                        sort.pageNumber(),
-                        sort.pageSize(),
-                        Sort.by(sort.sortBy().getColumnName()).descending()
+                        sort.getPageNumber(),
+                        sort.getPageSize(),
+                        Sort.by(sort.getSortBy().getColumnName()).descending()
                 );
             }
         } else {
-            return PageRequest.of(sort.pageNumber(), sort.pageSize(), Sort.by("rating").descending());
+            return PageRequest.of(sort.getPageNumber(), sort.getPageSize(), Sort.by("rating").descending());
         }
     }
 }

@@ -1,27 +1,22 @@
 package com.specialist.specialistdirectory.domain.review.models.filters;
 
 import com.specialist.specialistdirectory.domain.review.models.enums.SortType;
+import com.specialist.utils.pagination.PageDataHolder;
+import com.specialist.utils.pagination.PageRequest;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
+import lombok.Data;
+import lombok.Getter;
 
-public record ReviewSort(
+@Getter
+public class ReviewSort extends PageRequest {
 
-        SortType sortBy,
+        protected final SortType sortBy;
 
-        Boolean asc,
-
-        @NotNull(message = "Page number is required.")
-        @PositiveOrZero(message = "Page number should be positive or zero.")
-        Integer pageNumber,
-
-        @NotNull(message = "Page size is required.")
-        @Min(value = 10, message = "Min page size is 10.")
-        @Max(value = 50, message = "Min page size is 50.")
-        Integer pageSize
-) {
-        public String cacheKey() {
-                return "sb:" + sortBy + "asc:" + asc + "pN:" + pageNumber + "pS:" + pageSize;
+        public ReviewSort(Integer pageNumber, Integer pageSize, Boolean asc, SortType sortBy) {
+                super(pageNumber, pageSize, asc);
+                this.sortBy = sortBy;
         }
 }

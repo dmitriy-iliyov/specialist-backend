@@ -1,15 +1,14 @@
 package com.specialist.specialistdirectory.domain.review.controllers;
 
+import com.specialist.specialistdirectory.domain.review.models.filters.AdminReviewSort;
 import com.specialist.specialistdirectory.domain.review.services.AdminReviewManagementFacade;
 import com.specialist.utils.validation.annotation.ValidUuid;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -24,9 +23,25 @@ public class AdminReviewController {
         this.facade = facade;
     }
 
+    @GetMapping
+    public ResponseEntity<?> getAll(@PathVariable("specialist_id") String specialistId,
+                                    @ModelAttribute @Valid AdminReviewSort sort) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(facade.getAll(UUID.fromString(specialistId), sort));
+    }
+
+    @PatchMapping("/{id}/approve")
+    public ResponseEntity<?> approve(@PathVariable("specialist_id") String specialistId,
+                                     @PathVariable("id") @ValidUuid(paramName = "id") String id) {
+        facade.approve(UUID.fromString(specialistId), UUID.fromString(id));
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .build();
+    }
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable("specialist_id") @ValidUuid(paramName = "specialist_id")
-                                    String specialistId,
+    public ResponseEntity<?> delete(@PathVariable("specialist_id") String specialistId,
                                     @PathVariable("id") @ValidUuid(paramName = "id") String id) {
         facade.delete(UUID.fromString(specialistId), UUID.fromString(id));
         return ResponseEntity
