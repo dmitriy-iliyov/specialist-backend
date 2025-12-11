@@ -1,6 +1,7 @@
 package com.specialist.specialistdirectory.domain.specialist.controllers;
 
 import com.specialist.contracts.specialistdirectory.dto.ContactType;
+import com.specialist.specialistdirectory.domain.specialist.models.enums.Gender;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistLanguage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/info")
 public class SpecialistInfoController {
+
+    @GetMapping("/genders")
+    public ResponseEntity<?> getGenders() {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(Gender.values());
+    }
 
     @GetMapping("/contacts")
     public ResponseEntity<?> getContacts() {
