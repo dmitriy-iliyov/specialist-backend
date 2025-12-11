@@ -30,7 +30,7 @@ public class SpecialistResponseDto {
         private final String typeTitle;
 
         @JsonProperty("another_type")
-        private final String anotherType;
+        private String anotherType;
 
         private final Integer experience;
 

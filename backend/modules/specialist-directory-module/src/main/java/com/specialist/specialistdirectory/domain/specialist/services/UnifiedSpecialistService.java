@@ -17,6 +17,7 @@ import com.specialist.specialistdirectory.domain.type.models.dtos.TypeCreateDto;
 import com.specialist.specialistdirectory.domain.type.models.dtos.TypeResponseDto;
 import com.specialist.specialistdirectory.domain.type.services.TypeConstants;
 import com.specialist.specialistdirectory.domain.type.services.TypeService;
+import com.specialist.specialistdirectory.exceptions.NullSpecialistStatusException;
 import com.specialist.specialistdirectory.exceptions.SpecialistNotFoundByIdException;
 import com.specialist.utils.pagination.PageDataHolder;
 import com.specialist.utils.pagination.PageResponse;
@@ -190,22 +191,23 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
     @Transactional(readOnly = true)
     @Override
     public PageResponse<SpecialistResponseDto> findAll(PageDataHolder page) {
-        Specification<SpecialistEntity> specification = Specification.where(
-                SpecialistSpecification.filterByStatus(SpecialistStatus.APPROVED)
-        );
+        Specification<SpecialistEntity> specification = SpecialistSpecification.filterByStatus(SpecialistStatus.APPROVED);
         Slice<SpecialistEntity> slice = specificationRepository.findAll(
                 specification, PaginationUtils.generatePageable(page)
         );
         return new PageResponse<>(
                 mapper.toResponseDtoList(slice.getContent()),
-                (countService.countAll() + page.pageSize() - 1) / page.pageSize()
+                (countService.countAll() + page.getPageSize() - 1) / page.getPageSize()
         );
     }
 
     @Transactional(readOnly = true)
     @Override
     public List<SpecialistResponseDto> findAll(SystemSpecialistFilter filter) {
-        Specification<SpecialistEntity> specification = Specification.where(SpecialistSpecification.filterByStatus(filter.getStatus()));
+        if (filter.getStatus() == null) {
+            throw new NullSpecialistStatusException();
+        }
+        Specification<SpecialistEntity> specification = SpecialistSpecification.filterByStatus(filter.getStatus());
         Slice<SpecialistEntity> entityPage = repository.findAll(
                 specification, PaginationUtils.generatePageable(filter)
         );
@@ -220,7 +222,7 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
         );
         return new PageResponse<>(
                 mapper.toResponseDtoList(slice.getContent()),
-                (countService.countByFilter(filter) + filter.pageSize() - 1) / filter.pageSize()
+                (countService.countByFilter(filter) + filter.getPageSize() - 1) / filter.getPageSize()
         );
     }
 
@@ -234,7 +236,7 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
         );
         return new PageResponse<>(
                 mapper.toResponseDtoList(slice.getContent()),
-                (countService.countByCreatorIdAndFilter(creatorId, filter) + filter.pageSize() - 1) / filter.pageSize()
+                (countService.countByCreatorIdAndFilter(creatorId, filter) + filter.getPageSize() - 1) / filter.getPageSize()
         );
     }
 
