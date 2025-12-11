@@ -5,6 +5,7 @@ import com.specialist.specialistdirectory.domain.specialist.models.enums.Special
 import com.specialist.specialistdirectory.domain.specialist.models.filters.AdminSpecialistFilter;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.SpecialistProjectionFilter;
+import com.specialist.specialistdirectory.exceptions.UnexpectedSpecialistFilterStateException;
 import com.specialist.utils.pagination.PageDataHolder;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -14,7 +15,7 @@ import org.springframework.data.jpa.domain.Specification;
 public class PaginationUtils {
 
     public static Specification<SpecialistEntity> generateSpecification(SpecialistProjectionFilter filter) {
-        return Specification.where(SpecialistSpecification.filterByStatus(SpecialistStatus.APPROVED))
+        return SpecialistSpecification.filterByStatus(SpecialistStatus.APPROVED)
                 .and(SpecialistSpecification.filterByCity(filter.getCity()))
                 .and(SpecialistSpecification.filterByCityCode(filter.getCityCode()))
                 .and(SpecialistSpecification.filterByType(filter.getTypeId()))
@@ -24,9 +25,15 @@ public class PaginationUtils {
     }
 
     public static Specification<SpecialistEntity> generateSpecification(ExtendedSpecialistFilter filter) {
-        return Specification.where(SpecialistSpecification.filterByCity(filter.getCity()))
-                .and(SpecialistSpecification.filterByCityCode(filter.getCityCode()))
-                .and(SpecialistSpecification.filterByType(filter.getTypeId()))
+        Specification<SpecialistEntity> specification;
+        if (filter.getCityCode() != null) {
+            specification = SpecialistSpecification.filterByCityCode(filter.getCityCode());
+        } else if (filter.getCity() != null) {
+            specification = SpecialistSpecification.filterByCity(filter.getCity());
+        } else {
+            throw new UnexpectedSpecialistFilterStateException();
+        }
+        return specification.and(SpecialistSpecification.filterByType(filter.getTypeId()))
                 .and(SpecialistSpecification.filerByMinRating(filter.getMinRating()))
                 .and(SpecialistSpecification.filterByMaxRating(filter.getMaxRating()))
                 .and(SpecialistSpecification.filterByFirstName(filter.getFirstName()))
@@ -42,11 +49,11 @@ public class PaginationUtils {
     }
 
     public static Pageable generatePageable(PageDataHolder holder) {
-        if (holder.asc() != null && holder.asc()) {
+        if (holder.isAsc() != null && holder.isAsc()) {
             return org.springframework.data.domain.PageRequest
-                    .of(holder.pageNumber(), holder.pageSize(), Sort.by("rating").ascending());
+                    .of(holder.getPageNumber(), holder.getPageSize(), Sort.by("rating").ascending());
         }
         return org.springframework.data.domain.PageRequest
-                .of(holder.pageNumber(), holder.pageSize(), Sort.by("rating").descending());
+                .of(holder.getPageNumber(), holder.getPageSize(), Sort.by("rating").descending());
     }
 }
