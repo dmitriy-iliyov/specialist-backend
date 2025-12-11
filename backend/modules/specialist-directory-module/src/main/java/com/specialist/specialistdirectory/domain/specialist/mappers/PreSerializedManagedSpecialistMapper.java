@@ -2,7 +2,8 @@ package com.specialist.specialistdirectory.domain.specialist.mappers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.specialist.contracts.specialistdirectory.dto.ManagedSpecialistResponseDto;
+import com.specialist.contracts.specialistdirectory.dto.ExternalManagedSpecialistResponseDto;
+import com.specialist.specialistdirectory.domain.specialist.models.dtos.ManagedSpecialistResponseDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,17 +17,45 @@ public class PreSerializedManagedSpecialistMapper implements ManagedSpecialistMa
     private final ObjectMapper mapper;
 
     @Override
-    public ManagedSpecialistResponseDto toManagedDto(SpecialistResponseDto dto) {
+    public ManagedSpecialistResponseDto toManagedDto(SpecialistResponseDto dto, String avatarUrl) {
+        return new ManagedSpecialistResponseDto(
+                dto.getId(),
+                dto.getOwnerId(),
+                dto.getFullName(),
+                dto.getGender(),
+                dto.getTypeTitle(),
+                dto.getAnotherType(),
+                dto.getExperience(),
+                dto.getLanguages(),
+                dto.getDetails(),
+                dto.getCityTitle(),
+                dto.getCityCode(),
+                dto.getAddress(),
+                dto.getContacts(),
+                dto.getSite(),
+                dto.getStatus(),
+                dto.getState(),
+                dto.getTotalRating(),
+                dto.getReviewsCount(),
+                avatarUrl
+        );
+    }
+
+    @Override
+    public ExternalManagedSpecialistResponseDto toExternalManagedDto(SpecialistResponseDto dto) {
         try {
             String jsonLanguages = mapper.writeValueAsString(dto.getLanguages());
             String jsonContacts = mapper.writeValueAsString(dto.getContacts());
-            return new ManagedSpecialistResponseDto(
+            return new ExternalManagedSpecialistResponseDto(
                     dto.getId(),
                     dto.getOwnerId(),
                     dto.getFullName(),
+                    dto.getGender().toJson(),
                     dto.getTypeTitle(),
                     dto.getAnotherType(),
+                    dto.getExperience(),
                     jsonLanguages,
+                    dto.getDetails(),
                     dto.getCityTitle(),
                     dto.getCityCode(),
                     dto.getAddress(),
@@ -42,9 +71,9 @@ public class PreSerializedManagedSpecialistMapper implements ManagedSpecialistMa
     }
 
     @Override
-    public List<ManagedSpecialistResponseDto> toManagedDtoList(List<SpecialistResponseDto> dtoList) {
+    public List<ExternalManagedSpecialistResponseDto> toExternalManagedDtoList(List<SpecialistResponseDto> dtoList) {
         return dtoList.stream()
-                .map(this::toManagedDto)
+                .map(this::toExternalManagedDto)
                 .toList();
     }
 }

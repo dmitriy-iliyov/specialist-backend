@@ -5,6 +5,7 @@ import com.specialist.contracts.profile.SystemProfileService;
 import com.specialist.contracts.profile.dto.UnifiedProfileResponseDto;
 import com.specialist.contracts.schedule.NearestIntervalDto;
 import com.specialist.contracts.schedule.SystemNearestIntervalService;
+import com.specialist.specialistdirectory.domain.specialist.mappers.ManagedSpecialistMapper;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistAggregatedResponseDto;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.SpecialistFilter;
@@ -26,13 +27,15 @@ public class SpecialistAggregatorImpl implements SpecialistAggregator {
     private final SpecialistService specialistService;
     private final SystemProfileService profileService;
     private final SystemNearestIntervalService nearestIntervalService;
+    private final ManagedSpecialistMapper managedSpecialistMapper;
 
     public SpecialistAggregatorImpl(SpecialistService specialistService,
                                     @Qualifier("defaultSystemProfileService") SystemProfileService profileService,
-                                    SystemNearestIntervalService nearestIntervalService) {
+                                    SystemNearestIntervalService nearestIntervalService, ManagedSpecialistMapper managedSpecialistMapper) {
         this.specialistService = specialistService;
         this.profileService = profileService;
         this.nearestIntervalService = nearestIntervalService;
+        this.managedSpecialistMapper = managedSpecialistMapper;
     }
 
     @Cacheable(value = "specialists:all", key = "#page.cacheKey()", condition = "#page.pageNumber() < 3")
@@ -59,9 +62,21 @@ public class SpecialistAggregatorImpl implements SpecialistAggregator {
         Map<UUID, NearestIntervalDto> nearestIntervalDtoMap = nearestIntervalService.findAllByIdIn(specialistProfileIds);
         return new PageResponse<>(
                 pageResponse.data().stream()
-                        .map(dto -> new SpecialistAggregatedResponseDto(
-                                ownersMap.get(dto.getOwnerId()), dto, nearestIntervalDtoMap.get(dto.getOwnerId()))
-                        )
+                        .map(dto -> {
+                            UnifiedProfileResponseDto owner = ownersMap.get(dto.getOwnerId());
+                            if (owner.getType().equals(ProfileType.SPECIALIST)) {
+                                return new SpecialistAggregatedResponseDto(
+                                        null,
+                                        managedSpecialistMapper.toManagedDto(dto, owner.getAvatarUrl()),
+                                        nearestIntervalDtoMap.get(dto.getOwnerId())
+                                );
+                            }
+                            return new SpecialistAggregatedResponseDto(
+                                    owner,
+                                    dto,
+                                    null
+                            );
+                        })
                         .toList(),
                 pageResponse.totalPages()
         );

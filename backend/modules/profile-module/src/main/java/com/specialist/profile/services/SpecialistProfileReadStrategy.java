@@ -2,7 +2,7 @@ package com.specialist.profile.services;
 
 import com.specialist.contracts.profile.ProfileType;
 import com.specialist.contracts.specialistdirectory.SystemManagedSpecialistService;
-import com.specialist.contracts.specialistdirectory.dto.ManagedSpecialistResponseDto;
+import com.specialist.contracts.specialistdirectory.dto.ExternalManagedSpecialistResponseDto;
 import com.specialist.profile.mappers.SpecialistProfileMapper;
 import com.specialist.profile.models.ProfileFilter;
 import com.specialist.profile.models.dtos.PrivateSpecialistResponseDto;
@@ -37,7 +37,7 @@ public class SpecialistProfileReadStrategy implements ProfileReadStrategy {
     public PrivateSpecialistResponseDto findPrivateById(UUID id) {
         PrivateSpecialistResponseDto dto = service.findPrivateById(id);
         if (dto.hasCard()) {
-            ManagedSpecialistResponseDto managedDto = systemManagedSpecialistService.findById(id);
+            ExternalManagedSpecialistResponseDto managedDto = systemManagedSpecialistService.findById(id);
             return mapper.aggregate(dto, managedDto);
         }
         return dto;
@@ -48,7 +48,7 @@ public class SpecialistProfileReadStrategy implements ProfileReadStrategy {
     public PublicSpecialistResponseDto findPublicById(UUID id) {
         PublicSpecialistResponseDto dto = service.findPublicById(id);
         if (dto.hasCard()) {
-            ManagedSpecialistResponseDto managedDto = systemManagedSpecialistService.findById(id);
+            ExternalManagedSpecialistResponseDto managedDto = systemManagedSpecialistService.findById(id);
             return mapper.aggregate(dto, managedDto);
         }
         return dto;    }
@@ -64,7 +64,7 @@ public class SpecialistProfileReadStrategy implements ProfileReadStrategy {
                     .map(PrivateSpecialistResponseDto::getId)
                     .collect(Collectors.toSet());
             if (!ids.isEmpty()) {
-                List<ManagedSpecialistResponseDto> managedDtoPage = systemManagedSpecialistService.findAll(filter);
+                List<ExternalManagedSpecialistResponseDto> managedDtoPage = systemManagedSpecialistService.findAll(filter);
                 return new PageResponse<>(
                         mapper.aggregate(dtoPage.data(), managedDtoPage),
                         dtoPage.totalPages()

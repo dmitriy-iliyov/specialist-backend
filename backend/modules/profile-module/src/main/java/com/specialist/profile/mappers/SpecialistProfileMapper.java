@@ -1,6 +1,6 @@
 package com.specialist.profile.mappers;
 
-import com.specialist.contracts.specialistdirectory.dto.ManagedSpecialistResponseDto;
+import com.specialist.contracts.specialistdirectory.dto.ExternalManagedSpecialistResponseDto;
 import com.specialist.profile.models.SpecialistProfileEntity;
 import com.specialist.profile.models.dtos.*;
 import com.specialist.profile.repositories.AvatarStorage;
@@ -51,19 +51,19 @@ public interface SpecialistProfileMapper {
     @Mapping(target = "createdAt", source = "dto.createdAt")
     @Mapping(target = "updatedAt", source = "dto.updatedAt")
     @Mapping(target = "card", source = "card")
-    PrivateSpecialistAggregatedResponseDto aggregate(PrivateSpecialistResponseDto dto, ManagedSpecialistResponseDto card);
+    PrivateSpecialistAggregatedResponseDto aggregate(PrivateSpecialistResponseDto dto, ExternalManagedSpecialistResponseDto card);
 
     @Mapping(target = "id", source = "dto.id")
     @Mapping(target = "type", source = "dto.type")
     @Mapping(target = "fullName", source = "dto.fullName")
     @Mapping(target = "card", source = "card")
-    PublicSpecialistAggregatedResponseDto aggregate(PublicSpecialistResponseDto dto, ManagedSpecialistResponseDto card);
+    PublicSpecialistAggregatedResponseDto aggregate(PublicSpecialistResponseDto dto, ExternalManagedSpecialistResponseDto card);
 
     default List<PrivateSpecialistAggregatedResponseDto> aggregate(List<PrivateSpecialistResponseDto> dtoList,
-                                                           List<ManagedSpecialistResponseDto> managedDtoList) {
+                                                           List<ExternalManagedSpecialistResponseDto> managedDtoList) {
         List<PrivateSpecialistAggregatedResponseDto> aggregatedDtoList = new ArrayList<>();
-        Map<UUID, ManagedSpecialistResponseDto> managedDtoMap = managedDtoList.stream()
-                .collect(Collectors.toMap(ManagedSpecialistResponseDto::getOwnerId, Function.identity()));
+        Map<UUID, ExternalManagedSpecialistResponseDto> managedDtoMap = managedDtoList.stream()
+                .collect(Collectors.toMap(ExternalManagedSpecialistResponseDto::getOwnerId, Function.identity()));
         for (PrivateSpecialistResponseDto dto : dtoList) {
             PrivateSpecialistAggregatedResponseDto aggregatedDto = aggregate(dto, managedDtoMap.get(dto.getId()));
             aggregatedDtoList.add(aggregatedDto);
