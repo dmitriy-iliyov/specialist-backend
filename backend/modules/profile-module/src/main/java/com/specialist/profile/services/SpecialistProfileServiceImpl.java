@@ -48,7 +48,7 @@ public class SpecialistProfileServiceImpl implements SpecialistProfileService,
     @Transactional(readOnly = true)
     @Override
     public PageResponse<PrivateSpecialistResponseDto> findAll(ProfileFilter filter) {
-        PageRequest pageable = PageRequest.of(filter.pageNumber(), filter.pageSize());
+        PageRequest pageable = PageRequest.of(filter.getPageNumber(), filter.getPageSize());
         Page<SpecialistProfileEntity> entityPage = repository.findAll(pageable);
         return new PageResponse<>(
                 mapper.toPrivateDtoList(entityPage.getContent()),

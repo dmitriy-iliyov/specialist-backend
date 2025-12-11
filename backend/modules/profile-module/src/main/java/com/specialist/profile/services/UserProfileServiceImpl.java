@@ -70,13 +70,13 @@ public class UserProfileServiceImpl implements UserProfileService, ProfilePersis
     @Override
     public PageResponse<?> findAll(ScopeType scope, ProfileFilter filter) {
         Pageable pageable;
-        if (filter.asc() != null && filter.asc()) {
+        if (filter.isAsc() != null && filter.isAsc()) {
             pageable = org.springframework.data.domain.PageRequest.of(
-                    filter.pageNumber(), filter.pageSize(), Sort.by("creatorRating").ascending()
+                    filter.getPageNumber(), filter.getPageSize(), Sort.by("creatorRating").ascending()
             );
         } else {
             pageable = org.springframework.data.domain.PageRequest.of(
-                    filter.pageNumber(), filter.pageSize(), Sort.by("creatorRating").descending()
+                    filter.getPageNumber(), filter.getPageSize(), Sort.by("creatorRating").descending()
             );
         }
         Page<UserProfileEntity> entityPage = repository.findAll(pageable);
