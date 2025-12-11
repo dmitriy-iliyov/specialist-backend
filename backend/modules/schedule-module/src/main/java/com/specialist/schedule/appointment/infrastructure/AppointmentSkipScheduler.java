@@ -1,11 +1,12 @@
-package com.specialist.schedule.appointment.services;
+package com.specialist.schedule.appointment.infrastructure;
 
+import com.specialist.schedule.appointment.services.SystemAppointmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 @RequiredArgsConstructor
 public class AppointmentSkipScheduler {
 

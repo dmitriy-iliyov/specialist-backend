@@ -1,17 +1,16 @@
 package com.specialist.schedule.appointment.services;
 
-import com.specialist.contracts.notification.InternalAppointmentCancelEvent;
 import com.specialist.contracts.profile.ProfileType;
 import com.specialist.schedule.appointment.infrastructure.AppointmentService;
 import com.specialist.schedule.appointment.mapper.AppointmentMapper;
 import com.specialist.schedule.appointment.models.dto.*;
 import com.specialist.schedule.appointment.validation.AppointmentOwnershipValidator;
 import com.specialist.utils.pagination.PageResponse;
+import io.github.dmitriyiliyov.springoutbox.publisher.aop.OutboxPublish;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -23,7 +22,7 @@ public class AppointmentFacadeImpl implements AppointmentFacade {
     private final AppointmentService service;
     private final AppointmentAggregator aggregator;
     private final AppointmentMapper mapper;
-    private final ApplicationEventPublisher eventPublisher;
+    // private final ApplicationEventPublisher eventPublisher;
 
     @Override
     public AppointmentResponseDto save(UUID userId, AppointmentCreateDto dto) {
@@ -42,12 +41,13 @@ public class AppointmentFacadeImpl implements AppointmentFacade {
         return managementOrchestrator.complete(id, review);
     }
 
+    @Transactional
+    @OutboxPublish(eventType = "canceled-appointment-notification")
     @Override
     public AppointmentResponseDto cancel(UUID participantId, Long id) {
         ownershipValidator.validateForParticipant(participantId, id);
-        AppointmentResponseDto dto = managementOrchestrator.cancel(id);
-        eventPublisher.publishEvent(new InternalAppointmentCancelEvent(participantId, List.of(mapper.toSystemDto(dto))));
-        return dto;
+        // eventPublisher.publishEvent(new InternalAppointmentCancelEvent(participantId, List.of(mapper.toSystemDto(dto))));
+        return managementOrchestrator.cancel(id);
     }
 
     @Override

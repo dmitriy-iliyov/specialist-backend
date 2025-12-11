@@ -8,16 +8,16 @@ import org.springframework.data.domain.Sort;
 public final class PageableUtils {
 
     public static Pageable generatePageable(PageDataHolder holder) {
-        if (holder.asc() == null || !holder.asc()) {
+        if (holder.isAsc() == null || !holder.isAsc()) {
             return PageRequest.of(
-                    holder.pageNumber(),
-                    holder.pageSize(),
+                    holder.getPageNumber(),
+                    holder.getPageSize(),
                     Sort.by("date").descending()
             );
         }
         return PageRequest.of(
-                holder.pageNumber(),
-                holder.pageSize(),
+                holder.getPageNumber(),
+                holder.getPageSize(),
                 Sort.by("date").ascending()
         );
     }

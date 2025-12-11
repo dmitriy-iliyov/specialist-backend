@@ -28,17 +28,17 @@ public class AppointmentFilter implements PageDataHolder {
     protected final Integer pageSize;
 
     @Override
-    public Boolean asc() {
+    public Boolean isAsc() {
         return asc;
     }
 
     @Override
-    public Integer pageNumber() {
+    public Integer getPageNumber() {
         return pageNumber;
     }
 
     @Override
-    public Integer pageSize() {
+    public Integer getPageSize() {
         return pageSize;
     }
 }
