@@ -37,7 +37,7 @@ public class SpecialistFilter extends BaseSpecialistFilter implements Specialist
                                 Boolean asc,
                                 Integer pageNumber,
                                 Integer pageSize) {
-                super(asc, pageNumber, pageSize);
+                super(pageNumber, pageSize, asc);
                 this.city = city;
                 this.cityCode = cityCode;
                 this.typeId = typeId;

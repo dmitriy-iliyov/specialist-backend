@@ -13,7 +13,7 @@ public class SystemSpecialistFilter extends BaseSpecialistFilter {
 
     public SystemSpecialistFilter(Boolean asc, Integer pageNumber, Integer pageSize, SpecialistStatus status,
                                   SpecialistState state) {
-        super(asc, pageNumber, pageSize);
+        super(pageNumber, pageSize, asc);
         this.status = status;
         this.state = state;
     }
@@ -26,7 +26,6 @@ public class SystemSpecialistFilter extends BaseSpecialistFilter {
 
     @Override
     public boolean isEmpty() {
-        return status == null &&
-                state == null;
+        return status == null && state == null;
     }
 }

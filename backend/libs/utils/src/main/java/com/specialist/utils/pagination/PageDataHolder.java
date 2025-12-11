@@ -1,7 +1,7 @@
 package com.specialist.utils.pagination;
 
 public interface PageDataHolder {
-    Boolean asc();
-    Integer pageNumber();
-    Integer pageSize();
+    Boolean isAsc();
+    Integer getPageNumber();
+    Integer getPageSize();
 }

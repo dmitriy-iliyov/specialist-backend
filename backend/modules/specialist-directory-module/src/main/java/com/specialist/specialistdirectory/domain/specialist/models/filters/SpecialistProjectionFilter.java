@@ -1,6 +1,7 @@
 package com.specialist.specialistdirectory.domain.specialist.models.filters;
 
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistLanguage;
+import com.specialist.utils.pagination.BaseFilter;
 
 public interface SpecialistProjectionFilter extends BaseFilter {
     String getCity();
