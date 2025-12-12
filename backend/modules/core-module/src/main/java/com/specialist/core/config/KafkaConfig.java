@@ -12,7 +12,7 @@ import org.springframework.kafka.core.ProducerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
-@Configuration("coreKafkaConfig")
+//@Configuration("coreKafkaConfig")
 public class KafkaConfig {
 
     @Bean

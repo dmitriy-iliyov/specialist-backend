@@ -17,7 +17,7 @@ public class DefaultAccountDeleteFacade implements AccountDeleteFacade {
     @Override
     public void delete(UUID id) {
         String stringRole = accountService.findRoleById(id).toString();
-        accountService.deleteById(id);
+        accountService.softDeleteById(id);
         accountDeleteTaskService.save(id, stringRole);
     }
 }

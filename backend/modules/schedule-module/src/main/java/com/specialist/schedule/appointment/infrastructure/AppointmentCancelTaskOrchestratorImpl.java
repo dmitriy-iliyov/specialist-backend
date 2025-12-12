@@ -9,17 +9,22 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
+import java.util.function.Function;
+
 @Service
 public class AppointmentCancelTaskOrchestratorImpl implements AppointmentCancelTaskOrchestrator {
 
-    private final AppointmentBatchCancelService appointmentService;
     private final AppointmentCancelTaskService taskService;
+    private final Map<AppointmentCancelTaskType, Function<AppointmentCancelTaskResponseDto, BatchResponse<AppointmentResponseDto>>> operations;
 
-    public AppointmentCancelTaskOrchestratorImpl(@Qualifier("appointmentBatchCancelNotifyDecorator")
-                                                 AppointmentBatchCancelService appointmentService,
+    public AppointmentCancelTaskOrchestratorImpl(@Qualifier("appointmentBatchCancelNotifyDecorator") AppointmentBatchCancelService appointmentService,
                                                  AppointmentCancelTaskService taskService) {
-        this.appointmentService = appointmentService;
         this.taskService = taskService;
+        this.operations = Map.of(
+                AppointmentCancelTaskType.CANCEL_BATCH, (dto) -> appointmentService.cancelBatch(dto.participantId()),
+                AppointmentCancelTaskType.CANCEL_BATCH_BY_DATA, (dto) -> appointmentService.cancelBatchByDate(dto.participantId(), dto.date())
+        );
     }
 
     @Transactional
@@ -27,10 +32,11 @@ public class AppointmentCancelTaskOrchestratorImpl implements AppointmentCancelT
     public void cancelBatch(AppointmentCancelTaskType taskType) {
         AppointmentCancelTaskResponseDto dto = taskService.findFirstByType(taskType);
         if (dto != null) {
-            BatchResponse<AppointmentResponseDto> batch = switch (dto.type()) {
-                case CANCEL_BATCH -> appointmentService.cancelBatch(dto.participantId());
-                case CANCEL_BATCH_BY_DATA -> appointmentService.cancelBatchByDate(dto.participantId(), dto.date());
-            };
+            var operation = operations.get(dto.type());
+            if (operation == null) {
+                throw new IllegalStateException("Unexpected AppointmentCancelTaskType");
+            }
+            BatchResponse<AppointmentResponseDto> batch = operation.apply(dto);
             if (!batch.hasNext()) {
                 taskService.deleteById(dto.id());
             }

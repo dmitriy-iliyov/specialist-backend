@@ -14,10 +14,9 @@ import java.time.LocalTime;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
-@Service
 @RequiredArgsConstructor
 @Slf4j
-public class CreatorRatingEventSenderImpl implements CreatorRatingEventSender {
+public class KafkaCreatorRatingEventSender implements CreatorRatingEventSender {
 
     @Value("${api.kafka.topic.creator-rating}")
     public String TOPIC;

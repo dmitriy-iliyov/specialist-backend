@@ -11,6 +11,7 @@ import com.specialist.specialistdirectory.domain.specialist.services.SpecialistC
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistManagementStrategy;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistService;
 import com.specialist.specialistdirectory.exceptions.OwnershipException;
+import io.github.dmitriyiliyov.springoutbox.publisher.aop.OutboxPublish;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,7 @@ public class CreatorSpecialistManagementStrategy implements SpecialistManagement
     }
 
     @Transactional
+    @OutboxPublish(eventType = "validate-specialist")
     @Override
     public SpecialistResponseDto save(SpecialistCreateRequest request) {
         SpecialistCreateDto dto = request.dto();
@@ -43,14 +45,14 @@ public class CreatorSpecialistManagementStrategy implements SpecialistManagement
         SpecialistResponseDto responseDto = specialistService.save(dto);
         cacheService.evictCacheAfterSave(request.creatorId());
         bookmarkPersistService.saveAfterSpecialistCreate(new BookmarkCreateDto(responseDto.getOwnerId(), responseDto.getId()));
-        // outbox
         return responseDto;
     }
 
+    @Transactional
+    @OutboxPublish(eventType = "validate-specialist")
     @Override
     public SpecialistResponseDto update(SpecialistUpdateDto dto) {
         validate(dto.getAccountId(), dto.getId());
-        // outbox
         return specialistService.update(dto);
     }
 

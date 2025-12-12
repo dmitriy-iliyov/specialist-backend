@@ -19,10 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 
@@ -157,8 +154,8 @@ public class UnifiedIntervalService implements IntervalService, SystemIntervalSe
 
     @Transactional
     @Override
-    public void deleteAllBySpecialistId(UUID specialistId) {
-        repository.deleteAllBySpecialistId(specialistId);
+    public void deleteAllFutureBySpecialistId(UUID specialistId) {
+        repository.deleteAllFutureBySpecialistIdAndDateTime(specialistId, LocalDate.now(), LocalTime.now());
         // scan
         Set<String> toInvalidate = redisTemplate.keys(ScheduleCacheConfig.INTERVALS_BY_DATE_CACHE + "::" + specialistId + ":*");
         if (toInvalidate != null && !toInvalidate.isEmpty()) {

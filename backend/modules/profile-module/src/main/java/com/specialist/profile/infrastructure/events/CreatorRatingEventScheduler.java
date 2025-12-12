@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
 import java.util.UUID;
@@ -24,6 +25,7 @@ public class CreatorRatingEventScheduler {
     private final SystemCreatorRatingBufferService bufferService;
 
     @Scheduled(cron = "0 */2 1 * * *")
+    @Transactional
     public void notifyToResend() {
         Set<UUID> idsToResend = service.findBatchByStatus(ProcessingStatus.FAILED, NOTIFY_BATCH_SIZE);
         if (idsToResend.isEmpty()) {
@@ -33,6 +35,7 @@ public class CreatorRatingEventScheduler {
     }
 
     @Scheduled(cron = "0 */2 2 * * *")
+    @Transactional
     public void cleanUpProcessed() {
         Set<UUID> idsToDelete = service.findBatchByStatus(ProcessingStatus.PROCESSED, CLEAN_BATCH_SIZE);
         if (idsToDelete.isEmpty()) {

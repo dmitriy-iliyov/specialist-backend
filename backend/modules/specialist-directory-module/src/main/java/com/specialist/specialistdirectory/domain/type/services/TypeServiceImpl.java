@@ -3,6 +3,7 @@ package com.specialist.specialistdirectory.domain.type.services;
 import com.specialist.specialistdirectory.domain.type.TypeMapper;
 import com.specialist.specialistdirectory.domain.type.TypeRepository;
 import com.specialist.specialistdirectory.domain.type.models.TypeEntity;
+import com.specialist.specialistdirectory.domain.type.models.dtos.ValidateTypeEvent;
 import com.specialist.specialistdirectory.domain.type.models.dtos.ShortTypeResponseDto;
 import com.specialist.specialistdirectory.domain.type.models.dtos.TypeCreateDto;
 import com.specialist.specialistdirectory.domain.type.models.dtos.TypeResponseDto;
@@ -12,6 +13,7 @@ import com.specialist.specialistdirectory.exceptions.SpecialistTypeEntityNotFoun
 import com.specialist.specialistdirectory.exceptions.SpecialistTypeEntityNotFoundByTitleException;
 import com.specialist.utils.pagination.PageRequest;
 import com.specialist.utils.pagination.PageResponse;
+import io.github.dmitriyiliyov.springoutbox.publisher.OutboxPublisher;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -32,6 +34,7 @@ public class TypeServiceImpl implements TypeService {
     private final TypeRepository repository;
     private final TypeMapper mapper;
     private final TypeCacheService cacheService;
+    private final OutboxPublisher publisher;
 
     @CacheEvict(value = "specialists:types:approved:all", allEntries = true)
     @Transactional
@@ -57,8 +60,9 @@ public class TypeServiceImpl implements TypeService {
             TypeEntity entity = mapper.toEntity(dto);
             entity.setApproved(false);
             entity = repository.save(entity);
-            cacheService.putToSuggestedType(mapper.toDto(entity));
             id = entity.getId();
+            publisher.publish("validate-type", new ValidateTypeEvent(id, entity.getTitle()));
+            cacheService.putToSuggestedType(mapper.toDto(entity));
             cacheService.putToExists(id);
             return id;
         }
@@ -172,6 +176,6 @@ public class TypeServiceImpl implements TypeService {
 
     private Pageable generatePageable(PageRequest page) {
         return org.springframework.data.domain.PageRequest.of(
-                page.pageNumber(), page.pageSize(), Sort.by("id").ascending());
+                page.getPageNumber(), page.getPageSize(), Sort.by("id").ascending());
     }
 }

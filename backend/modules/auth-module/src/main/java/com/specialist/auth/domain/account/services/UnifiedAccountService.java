@@ -147,6 +147,12 @@ public class UnifiedAccountService implements AccountService {
 
     @Transactional
     @Override
+    public void softDeleteById(UUID id) {
+        repository.disableById(id, DisableReason.SOFT_DELETE);
+    }
+
+    @Transactional
+    @Override
     public void deleteById(UUID id) {
         repository.deleteById(id);
     }
@@ -154,20 +160,20 @@ public class UnifiedAccountService implements AccountService {
     @Transactional(readOnly = true)
     @Override
     public PageResponse<AccountResponseDto> findAllByFilter(AccountFilter filter) {
-        Specification<AccountEntity> specification = Specification.where(AccountSpecification.filterByIsLocked(filter.locked()))
-                .and(AccountSpecification.filterByLockeReason(LockReason.valueOf(filter.lockReason())))
-                .and(AccountSpecification.filterByIsEnable(filter.enable()))
-                .and(AccountSpecification.filterByUnableReason(DisableReason.valueOf(filter.disableReason())));
+        Specification<AccountEntity> specification = Specification.where(AccountSpecification.filterByIsLocked(filter.getLocked()))
+                .and(AccountSpecification.filterByLockeReason(LockReason.valueOf(filter.getLockReason())))
+                .and(AccountSpecification.filterByIsEnable(filter.getEnable()))
+                .and(AccountSpecification.filterByUnableReason(DisableReason.valueOf(filter.getDisableReason())));
         Page<AccountEntity> entityPage = repository.findAll(specification, generatePageable(filter));
         Map<UUID, List<Authority>> authoritiesMap = loadAuthorities(entityPage.getContent());
         return toPageResponse(entityPage, authoritiesMap);
     }
 
     private Pageable generatePageable(PageDataHolder holder) {
-        if (holder.asc() != null && holder.asc().equals(Boolean.TRUE)) {
-            return PageRequest.of(holder.pageNumber(), holder.pageSize(), Sort.by("createdAt").ascending());
+        if (holder.isAsc() != null && holder.isAsc().equals(Boolean.TRUE)) {
+            return PageRequest.of(holder.getPageNumber(), holder.getPageSize(), Sort.by("createdAt").ascending());
         }
-        return PageRequest.of(holder.pageNumber(), holder.pageSize(), Sort.by("createdAt").descending());
+        return PageRequest.of(holder.getPageNumber(), holder.getPageSize(), Sort.by("createdAt").descending());
     }
 
     private Map<UUID, List<Authority>> loadAuthorities(List<AccountEntity> entityList) {

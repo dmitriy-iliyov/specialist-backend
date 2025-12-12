@@ -102,8 +102,8 @@ public interface AppointmentRepository extends JpaRepository<AppointmentEntity, 
         RETURNING *
     """, nativeQuery = true)
     List<AppointmentEntity> findBatchByDateAndStatusAndProcessStatus(@Param("date") LocalDate date,
-                                                                      @Param("status") AppointmentStatus status,
-                                                                      @Param("old_process_status") ProcessStatus oldProcessStatus,
+                                                                      @Param("status") Integer status,
+                                                                      @Param("old_process_status") String oldProcessStatus,
                                                                       @Param("batch_size") int batchSize,
-                                                                      @Param("new_process_status") ProcessStatus newProcessStatus);
+                                                                      @Param("new_process_status") String newProcessStatus);
 }

@@ -8,7 +8,10 @@ import lombok.Getter;
 @Getter
 public class ProfileFilter extends PageRequest implements PageDataHolder {
 
+        private final ProfileType type;
+
         public ProfileFilter(Integer pageNumber, Integer pageSize, Boolean asc, ProfileType type) {
                 super(pageNumber, pageSize, asc);
+                this.type = type;
         }
 }

@@ -5,8 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.4</version>
-        <relativePath/>
+        <version>3.5.6</version>
     </parent>
     <groupId>com.specialist</groupId>
     <artifactId>specialist-backend</artifactId>
@@ -39,15 +38,11 @@
 
     <packaging>pom</packaging>
 
-    <scm>
-        <connection/>
-        <developerConnection/>
-        <tag/>
-        <url/>
-    </scm>
     <properties>
         <java.version>21</java.version>
+        <spring.boot.version>3.5.6</spring.boot.version>
     </properties>
+
     <dependencies>
         <!-- postgresql -->
         <dependency>
@@ -211,6 +206,17 @@
             <artifactId>spring-boot-test-autoconfigure</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>io.github.dmitriy-iliyov</groupId>
+            <artifactId>spring-outbox-core</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -241,6 +247,11 @@
                             <artifactId>lombok-mapstruct-binding</artifactId>
                             <version>0.2.0</version>
                         </dependency>
+                        <path>
+                            <groupId>org.springframework.boot</groupId>
+                            <artifactId>spring-boot-configuration-processor</artifactId>
+                            <version>${spring.boot.version}</version>
+                        </path>
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>

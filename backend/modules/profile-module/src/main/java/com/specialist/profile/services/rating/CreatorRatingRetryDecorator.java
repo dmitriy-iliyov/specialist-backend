@@ -23,7 +23,6 @@ public class CreatorRatingRetryDecorator implements CreatorRatingService {
     private final CreatorRatingService delegate;
     private final CreatorRatingEventService eventService;
 
-    @Autowired
     public CreatorRatingRetryDecorator(@Qualifier("defaultCreatorRatingService") CreatorRatingService delegate,
                                        CreatorRatingEventService eventService) {
         this.delegate = delegate;

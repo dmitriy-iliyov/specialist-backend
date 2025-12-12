@@ -13,4 +13,6 @@ public interface AccountDeleteTaskService {
     List<AccountDeleteEvent> findBatchByStatus(AccountDeleteTaskStatus status, int batchSize);
 
     void updateStatusBatchByIdIn(AccountDeleteTaskStatus status, Set<UUID> ids);
+
+    void deleteBatchByIds(List<UUID> ids);
 }

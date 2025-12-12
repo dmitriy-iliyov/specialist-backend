@@ -111,6 +111,7 @@ public class RedisConfig {
                 .withCacheConfiguration(ScheduleCacheConfig.INTERVALS_BY_DATE_CACHE, defaultConfig)
                 .withCacheConfiguration(ScheduleCacheConfig.INTERVALS_BY_DATE_INTERVAL_CACHE, defaultConfig)
                 .withCacheConfiguration(ScheduleCacheConfig.APPOINTMENT_CANCEL_TASK_EXISTS, defaultConfig)
+                .withCacheConfiguration("outbox-consumed-events", defaultConfig.entryTtl(Duration.ofHours(12)))
                 .build();
     }
 }

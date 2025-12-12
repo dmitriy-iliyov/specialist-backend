@@ -31,7 +31,14 @@ public interface IntervalRepository extends JpaRepository<IntervalEntity, Long> 
                                                               @Param("start") LocalDate start,
                                                               @Param("end") LocalDate end);
 
-    void deleteAllBySpecialistId(UUID specialistId);
+    @Modifying
+    @Query("""
+        DELETE FROM IntervalEntity i
+        WHERE i.specialistId = :specialistId AND i.date >= :date AND i.start >= :time
+    """)
+    void deleteAllFutureBySpecialistIdAndDateTime(@Param("specialistId") UUID specialistId,
+                                                  @Param("date") LocalDate date,
+                                                  @Param("time") LocalTime time);
 
     Optional<IntervalEntity> findFirstBySpecialistIdAndDateBetweenOrderByDateAscStartAsc(UUID specialistId, LocalDate start, LocalDate end);
 

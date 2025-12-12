@@ -21,9 +21,6 @@ public class CreatorRatingBufferScheduler {
     @Value("${api.creator-rating-buffer.clean.batch-size}")
     public int CLEAN_BATCH_SIZE;
 
-    @Value("${api.kafka.topic.creator-rating}")
-    public String TOPIC;
-
     public Long ACTUALIZE_BATCH_SIZE;
 
     public Long TTL_AFTER_LAST_UPDATE;

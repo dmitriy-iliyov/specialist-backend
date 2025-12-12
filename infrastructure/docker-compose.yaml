@@ -1,6 +1,7 @@
 version: "3.8"
 services:
-#  aid-compass-api:
+#  specialist-api:
+#    container_name: specialist-api
 #    build:
 #      context: .
 #      dockerfile: Dockerfile
@@ -10,8 +11,9 @@ services:
 #    env_file:
 #      - .docker-env
 
-  postgresql:
-    image: postgres:16.1-alpine3.19
+  specialist-postgresql:
+    image: postgres
+    container_name: specialist-postgresql
     networks:
       - default
     environment:
@@ -21,16 +23,17 @@ services:
     ports:
       - "5432:5432"
 
-  redis:
+  specialist-redis:
     image: redis
+    container_name: specialist-redis
     networks:
       - default
     ports:
       - "6379:6379"
 
-  kafka:
+  specialist-kafka:
     image: bitnami/kafka:latest
-    container_name: kafka
+    container_name: specialist-kafka
     ports:
       - "9092:9092"
     environment:

@@ -1,44 +1,45 @@
 outbox:
-  producer:
+  thread-pool-size: 8
+  tables:
+    auto-create: true
+  publisher:
     sender:
       type: kafka
-      bean-name: outboxKafkaTemplate
-
     defaults:
       batch-size: 100
-      initial-delay: 5s
-      fixed-delay: 30s
+      initial-delay: 2m
+      fixed-delay: 2s
       max-retries: 3
       backoff:
-        - delay: 3s
-        - multiplier: 10
-
+        delay: 5s
+        multiplier: 10
     events:
       account-delete:
-        topic: account-delete
-        batch-size: 10
-        fixed-delay: 10s
-        backoff:
-          - enabled: false
-
+        topic: accounts-deleted
+        fixed-delay: 1m
       rating-update:
-        topic: rating-update
-        batch-size: 50
-        fixed-delay: 20s
-
+        topic: ratings-updated
+      validate-review:
+        topic: reviews-for-validate
+        fixed-delay: 10s
+      validate-specialist:
+        topic: specialist-for-validate
+        fixed-delay: 2m
+      validate-specialist-action:
+        topic: specialists-action-for-validate
+      validate-type:
+        topic: types-for-validate
+        fixed-delay: 10m
     clean-up:
-      enable: true
-      batch-size: 20
-      threshold: 1h
-      initial-delay: 10s
-      fixed-delay: 1h
-
+      fixed-delay: 3s
     dlq:
       enabled: true
 
-    migrations:
-      enabled: true
-
   consumer:
-
-
+    enabled: true
+    cache:
+      enabled: true
+      cache-name: outbox-consumed-events
+    clean-up:
+      ttl: 24h
+      fixed-delay: 1m

@@ -11,7 +11,8 @@ public enum DisableReason {
     EMAIL_CONFIRMATION_REQUIRED(1),
     PERMANENTLY_SPAM(2),
     PERMANENTLY_ABUSE(3),
-    ATTACK_ATTEMPT_DETECTED(4);
+    ATTACK_ATTEMPT_DETECTED(4),
+    SOFT_DELETE(5);
 
     @Getter
     private final int code;

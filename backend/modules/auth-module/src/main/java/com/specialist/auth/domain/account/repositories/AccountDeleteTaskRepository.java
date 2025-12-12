@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -16,8 +17,23 @@ import java.util.UUID;
 @Repository
 public interface AccountDeleteTaskRepository extends JpaRepository<AccountDeleteTaskEntity, UUID> {
 
-    @Query(value = "SELECT e FROM AccountDeleteTaskEntity e WHERE e.status = :status")
-    List<AccountDeleteTaskEntity> findBatchByStatus(@Param("status") AccountDeleteTaskStatus status, Pageable pageable);
+    @Modifying
+    @Query(value = """
+        WITH to_lock AS(
+            SELECT * FROM account_delete_tasks
+            WHERE status = :status
+            ORDER BY creeted_at
+            LIMIT :batch_size
+            FOR UPDATE SKIP LOCKED
+        )
+        UPDATE account_delete_tasks
+        SET status = :lock_status
+        WHERE id IN (SELECT id FROM to_lock)
+        RETURNING *
+    """, nativeQuery = true)
+    List<AccountDeleteTaskEntity> findAndLockBatchByStatus(@Param("status") int statusCode,
+                                                           @Param("lock_status") int lockStatusCode,
+                                                           @Param("batch_size") int batchSize);
 
     @Modifying
     @Query(value = """

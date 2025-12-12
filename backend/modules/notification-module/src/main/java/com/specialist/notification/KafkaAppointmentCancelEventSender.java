@@ -12,7 +12,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class KafkaAppointmentCancelEventSender implements AppointmentCancelEventSender {
 
-    @Value("${api.kafka.topic.cancel-appointment}")
+    @Value("${api.kafka.topic.appointmetns-canceled}")
     private String TOPIC;
     private final KafkaTemplate<String, ExternalAppointmentCancelEvent> kafkaTemplate;
 

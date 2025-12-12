@@ -267,8 +267,8 @@ public class UnifiedAccountServiceUnitTests {
     @Test
     @DisplayName("UT: findAllByFilter() returns filtered paged response")
     void findAllByFilter_shouldReturnFilteredPageResponse() {
-        AccountFilter filter = new AccountFilter(true, "ABUSE", false,
-                "PERMANENTLY_SPAM",  0, 20, true
+        AccountFilter filter = new AccountFilter(0, 20, true, true, "ABUSE", false,
+                "PERMANENTLY_SPAM"
         );
 
         AccountEntity entity = new AccountEntity();

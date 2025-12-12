@@ -46,5 +46,6 @@ public class AppointmentCancelEventHandlerImpl implements AppointmentCancelEvent
                         })
                         .toList()
         );
+        // outbox
     }
 }

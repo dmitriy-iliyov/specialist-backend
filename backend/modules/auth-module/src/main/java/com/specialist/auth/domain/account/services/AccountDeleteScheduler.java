@@ -5,15 +5,16 @@ import com.specialist.contracts.auth.AccountDeleteEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -23,36 +24,35 @@ public class AccountDeleteScheduler {
     @Value("${api.account-delete.batch-size}")
     private int BATCH_SIZE;
 
-    @Value("${api.kafka.topic.account-delete}")
-    public String TOPIC;
-
     private final AccountDeleteTaskService service;
-    private final KafkaTemplate<String, AccountDeleteEvent> kafkaTemplate;
+    private final ApplicationEventPublisher eventPublisher;
+    private final TransactionTemplate transactionTemplate;
 
     @Scheduled(
             initialDelayString = "${api.account-delete.initial_delay}",
             fixedDelayString = "${api.account-delete.fixed_delay}"
     )
-    public void sendEvents() {
+    public void publishEvents() {
         List<AccountDeleteEvent> events = service.findBatchByStatus(AccountDeleteTaskStatus.READY_TO_SEND, BATCH_SIZE);
         if (events.isEmpty()) {
             return;
         }
-        // изменить состояние на в процессе
-        // отправить в кафку фсинхронно все
-        // выставить тайм аут
-        // обновить статус
-        Set<UUID> ids = new HashSet<>();
+        Set<UUID> successIds = new HashSet<>();
+        Set<UUID> failedIds = new HashSet<>();
         events.forEach(event -> {
             try {
-                kafkaTemplate.send(TOPIC, event).get(20, TimeUnit.SECONDS);
-                ids.add(event.id());
+                transactionTemplate.executeWithoutResult(status -> eventPublisher.publishEvent(event));
+                successIds.add(event.id());
             } catch (Exception e) {
                 log.error("Error send account delete event with id={}. ", event.id(), e);
+                failedIds.add(event.id());
             }
         });
-        if (!ids.isEmpty()) {
-            service.updateStatusBatchByIdIn(AccountDeleteTaskStatus.SENT, ids);
+        if (!successIds.isEmpty()) {
+            service.updateStatusBatchByIdIn(AccountDeleteTaskStatus.SENT, successIds);
+        }
+        if (!failedIds.isEmpty()) {
+            service.updateStatusBatchByIdIn(AccountDeleteTaskStatus.READY_TO_SEND, failedIds);
         }
     }
 }

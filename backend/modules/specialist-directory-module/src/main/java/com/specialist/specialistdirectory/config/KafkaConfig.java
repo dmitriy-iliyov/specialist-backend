@@ -11,10 +11,10 @@ import org.springframework.kafka.core.ProducerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
-@Configuration("specialistDirectoryModuleKafkaConfig")
+//@Configuration("specialistDirectoryModuleKafkaConfig")
 public class KafkaConfig {
 
-    @Bean
+    //@Bean
     public KafkaTemplate<String, CreatorRatingUpdateEvent> creatorRatingUpdateEventKafkaTemplate(
             ProducerFactory<String, Object> producerFactory
     ) {

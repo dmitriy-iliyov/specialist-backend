@@ -70,7 +70,7 @@ public class ProfileReadServiceImpl implements ProfileReadService {
 
     @Override
     public PageResponse<?> findAll(ScopeType scopeType, ProfileFilter filter) {
-        return resolveStrategy(filter.type()).findAll(scopeType, filter);
+        return resolveStrategy(filter.getType()).findAll(scopeType, filter);
     }
 
     private ProfileReadStrategy resolveStrategy(ProfileType type) {

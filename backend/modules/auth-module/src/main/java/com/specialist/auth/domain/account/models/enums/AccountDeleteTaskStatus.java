@@ -8,8 +8,9 @@ import java.util.Arrays;
 @Getter
 public enum AccountDeleteTaskStatus {
     READY_TO_SEND(1),
-    SENT(2),
-    FAILED(3);
+    SENDING(2),
+    SENT(3),
+    FAILED(4);
 
     private final int code;
 

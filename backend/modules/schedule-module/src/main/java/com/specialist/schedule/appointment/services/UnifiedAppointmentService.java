@@ -217,10 +217,10 @@ public class UnifiedAppointmentService implements AppointmentService, SystemAppo
         log.info("START selecting appointments to remind with batchSize={}, scheduledData={}", batchSize, scheduledData);
         List<AppointmentEntity> batch = repository.findBatchByDateAndStatusAndProcessStatus(
                 scheduledData,
-                AppointmentStatus.SCHEDULED,
-                ProcessStatus.NONE,
+                AppointmentStatus.SCHEDULED.getCode(),
+                ProcessStatus.NONE.name(),
                 batchSize,
-                ProcessStatus.TRYING_REMIND
+                ProcessStatus.TRYING_REMIND.name()
         );
         return new BatchResponse<>(
                 mapper.toDtoList(batch),

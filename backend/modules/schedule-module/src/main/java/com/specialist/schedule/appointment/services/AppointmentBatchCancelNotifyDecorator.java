@@ -1,6 +1,5 @@
 package com.specialist.schedule.appointment.services;
 
-import com.specialist.contracts.notification.InternalAppointmentCancelEvent;
 import com.specialist.schedule.appointment.mapper.AppointmentMapper;
 import com.specialist.schedule.appointment.models.dto.AppointmentResponseDto;
 import com.specialist.utils.pagination.BatchResponse;

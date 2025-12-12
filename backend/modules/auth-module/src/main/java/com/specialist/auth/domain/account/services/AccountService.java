@@ -31,5 +31,7 @@ public interface AccountService {
 
     ShortAccountResponseDto updateEmail(AccountEmailUpdateDto dto);
 
+    void softDeleteById(UUID id);
+
     void deleteById(UUID id);
 }

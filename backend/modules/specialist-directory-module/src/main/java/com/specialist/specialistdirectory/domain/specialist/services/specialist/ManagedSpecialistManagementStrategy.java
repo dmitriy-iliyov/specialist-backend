@@ -11,6 +11,7 @@ import com.specialist.specialistdirectory.domain.specialist.models.enums.Special
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistManagementStrategy;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistService;
 import com.specialist.specialistdirectory.exceptions.OwnershipException;
+import io.github.dmitriyiliyov.springoutbox.publisher.aop.OutboxPublish;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +33,7 @@ public class ManagedSpecialistManagementStrategy implements SpecialistManagement
     }
 
     @Transactional
+    @OutboxPublish(eventType = "validate-specialist")
     @Override
     public SpecialistResponseDto save(SpecialistCreateRequest request) {
         SpecialistCreateDto dto = request.dto();
@@ -44,15 +46,14 @@ public class ManagedSpecialistManagementStrategy implements SpecialistManagement
         accountDemoteService.demote(
                 new DemoteRequest(request.creatorId(), Set.of("SPECIALIST_CREATE"), request.request(), request.response())
         );
-        // outbox
         return responseDto;
     }
 
     @Transactional
+    @OutboxPublish(eventType = "validate-specialist")
     @Override
     public SpecialistResponseDto update(SpecialistUpdateDto dto) {
         validate(dto.getAccountId(), dto.getId());
-        // outbox
         return service.update(dto);
     }
 

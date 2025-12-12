@@ -11,10 +11,10 @@ import org.springframework.kafka.core.ProducerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
-@Configuration("authModuleKafkaConfig")
+//@Configuration("authModuleKafkaConfig")
 public class KafkaConfig {
 
-    @Bean
+    //@Bean
     public KafkaTemplate<String, AccountDeleteEvent> accountDeleteEventKafkaTemplate(
             ProducerFactory<String, Object> producerFactory) {
         Map<String, Object> properties = new HashMap<>(producerFactory.getConfigurationProperties());

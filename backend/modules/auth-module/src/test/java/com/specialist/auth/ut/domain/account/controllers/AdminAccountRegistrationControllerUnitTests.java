@@ -74,8 +74,8 @@ public class AdminAccountRegistrationControllerUnitTests {
     @Test
     @DisplayName("UT: findAllByFilter() when valid should return 200")
     void findAll_whenValid_shouldReturn200() {
-        AccountFilter filter = new AccountFilter(true, "USER_REQUEST", false,
-                "PASSWORD_EXPIRED",  0, 20, true
+        AccountFilter filter = new AccountFilter(0, 20, true, true, "USER_REQUEST", false,
+                "PASSWORD_EXPIRED"
         );
         PageResponse<AccountResponseDto> expected = new PageResponse<>(List.of(), 0);
 
@@ -91,8 +91,8 @@ public class AdminAccountRegistrationControllerUnitTests {
     @Test
     @DisplayName("UT: findAllByFilter() when service throws should throw exception")
     void findAll_whenInvalid_shouldThrowException() {
-        AccountFilter filter = new AccountFilter(true, "USER_REQUEST", false,
-                "PASSWORD_EXPIRED",  0, 20, true
+        AccountFilter filter = new AccountFilter(0, 20, true, true, "USER_REQUEST", false,
+                "PASSWORD_EXPIRED"
         );
 
         when(service.findAllByFilter(filter)).thenThrow(RuntimeException.class);

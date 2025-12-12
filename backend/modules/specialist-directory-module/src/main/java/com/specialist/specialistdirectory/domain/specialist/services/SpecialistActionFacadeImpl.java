@@ -13,6 +13,7 @@ import com.specialist.specialistdirectory.domain.specialist.repositories.Special
 import com.specialist.specialistdirectory.exceptions.CodeExpiredException;
 import com.specialist.specialistdirectory.exceptions.NoSuchSpecialistContactException;
 import com.specialist.utils.CodeGenerator;
+import io.github.dmitriyiliyov.springoutbox.publisher.aop.OutboxPublish;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -35,10 +36,11 @@ public class SpecialistActionFacadeImpl implements SpecialistActionFacade {
     private final SystemAccountDemoteFacade accountDemoteService;
 
     // TODO outbox & scheduler
-    @Value("${api.kafka.topic.specialist-action}")
+    @Value("${api.kafka.topic.specialists-action}")
     public String TOPIC;
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
+    @Transactional
     @Override
     public void recallRequest(UUID id, ContactType contactType) {
         SpecialistActionEntity specialistActionEntity = new SpecialistActionEntity(ActionType.RECALL, id, null, 300L);
@@ -52,6 +54,7 @@ public class SpecialistActionFacadeImpl implements SpecialistActionFacade {
         specialistStateService.recall(specialistActionEntity.getSpecialistId());
     }
 
+    @Transactional
     @Override
     public void manageRequest(UUID id, UUID accountId, ContactType contactType) {
         SpecialistActionEntity specialistActionEntity = new SpecialistActionEntity(ActionType.MANAGE, id, accountId, 600L);
@@ -67,7 +70,8 @@ public class SpecialistActionFacadeImpl implements SpecialistActionFacade {
         accountDemoteService.demote(new DemoteRequest(accountId, Set.of("SPECIALIST_CREATE"), request, response));
     }
 
-    private void requestHandle(SpecialistActionEntity specialistActionEntity, ContactType contactType) {
+    @OutboxPublish(eventType = "validate-specialist-action")
+    private SpecialistActionEvent requestHandle(SpecialistActionEntity specialistActionEntity, ContactType contactType) {
         String code = CodeGenerator.generate();
         SpecialistResponseDto specialistDto = specialistService.findById(specialistActionEntity.getSpecialistId());
         ContactDto contactDto = specialistDto.getContacts().stream()
@@ -76,16 +80,11 @@ public class SpecialistActionFacadeImpl implements SpecialistActionFacade {
                 .orElseThrow(NoSuchSpecialistContactException::new);
         specialistActionEntity.setCode(code);
         actionRepository.save(specialistActionEntity);
-
-        // outbox
-
-        kafkaTemplate.send(
-                TOPIC,
-                new SpecialistActionEvent(
-                        specialistActionEntity.getType(),
-                        contactDto.value(),
-                        contactDto.type(),
-                        code)
+        return new SpecialistActionEvent(
+                specialistActionEntity.getType(),
+                contactDto.value(),
+                contactDto.type(),
+                code
         );
     }
 

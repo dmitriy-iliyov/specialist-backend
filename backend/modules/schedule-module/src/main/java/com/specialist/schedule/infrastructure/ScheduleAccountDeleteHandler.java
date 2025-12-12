@@ -32,7 +32,7 @@ public class ScheduleAccountDeleteHandler implements AccountDeleteHandler {
     public void handle(AccountDeleteEvent event) {
         ProfileType profileType = ProfileType.fromStringRole(event.stringRole());
         if (profileType.equals(ProfileType.SPECIALIST)) {
-            intervalService.deleteAllBySpecialistId(event.accountId());
+            intervalService.deleteAllFutureBySpecialistId(event.accountId());
             appointmentDurationService.deleteBySpecialistId(event.accountId());
         }
         appointmentService.cancelBatch(event.accountId());

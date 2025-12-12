@@ -66,7 +66,7 @@ public class UnifiedServiceAccountService implements ServiceAccountService {
     @Override
     public PageResponse<ServiceAccountResponseDto> findAll(PageRequest pageRequest) {
         Page<ServiceAccountEntity> entityPage = repository.findAll(
-                Pageable.ofSize(pageRequest.pageSize()).withPage(pageRequest.pageNumber())
+                Pageable.ofSize(pageRequest.getPageSize()).withPage(pageRequest.getPageNumber())
         );
         List<ServiceAccountEntity> entityList = entityPage.getContent();
         Map<UUID, List<Authority>> authoritiesMap = authorityService.findAllByAccountIdIn(entityList.stream()
