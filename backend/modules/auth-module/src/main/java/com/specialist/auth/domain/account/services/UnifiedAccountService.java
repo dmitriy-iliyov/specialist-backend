@@ -33,6 +33,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -145,18 +146,6 @@ public class UnifiedAccountService implements AccountService {
         return repository.findProviderByEmail(email).orElseThrow(AccountNotFoundByEmailException::new);
     }
 
-    @Transactional
-    @Override
-    public void softDeleteById(UUID id) {
-        repository.disableById(id, DisableReason.SOFT_DELETE);
-    }
-
-    @Transactional
-    @Override
-    public void deleteById(UUID id) {
-        repository.deleteById(id);
-    }
-
     @Transactional(readOnly = true)
     @Override
     public PageResponse<AccountResponseDto> findAllByFilter(AccountFilter filter) {
@@ -167,6 +156,24 @@ public class UnifiedAccountService implements AccountService {
         Page<AccountEntity> entityPage = repository.findAll(specification, generatePageable(filter));
         Map<UUID, List<Authority>> authoritiesMap = loadAuthorities(entityPage.getContent());
         return toPageResponse(entityPage, authoritiesMap);
+    }
+
+    @Transactional
+    @Override
+    public void softDeleteById(UUID id) {
+        repository.disableById(id, DisableReason.SOFT_DELETE);
+    }
+
+    @Transactional
+    @Override
+    public void hardDeleteById(UUID id) {
+        repository.deleteById(id);
+    }
+
+    @Transactional
+    @Override
+    public void hardDeleteBatch(DisableReason reason, Instant threshold, int batchSize) {
+        repository.deleteBatchByDisableReasonAndThreshold(reason.getCode(), threshold, batchSize);
     }
 
     private Pageable generatePageable(PageDataHolder holder) {

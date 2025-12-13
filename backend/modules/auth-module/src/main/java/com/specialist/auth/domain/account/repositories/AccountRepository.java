@@ -83,4 +83,18 @@ public interface AccountRepository extends JpaRepository<AccountEntity, UUID>, J
     @EntityGraph(attributePaths = "type")
     @Query("SELECT a.role FROM AccountEntity a WHERE a.id = :id")
     Optional<RoleEntity> findRoleById(@Param("id") UUID id);
+
+    @Modifying
+    @Query(value = """
+        WITH to_delete AS (
+            SELECT id FROM accounts
+            WHERE disable_reason = :reasonCode AND updated_at <= :threshold
+            ORDER BY updated_at
+            LIMIT :batchSize
+            FOR UPDATE SKIP LOCKED
+        )
+        DELETE FROM accounts 
+        WHERE id IN (SELECT id FROM to_delete)
+    """, nativeQuery = true)
+    void deleteBatchByDisableReasonAndThreshold(int reasonCode, Instant threshold, int batchSize);
 }

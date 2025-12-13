@@ -5,10 +5,6 @@ import com.specialist.auth.domain.account.models.enums.LockReason;
 import com.specialist.utils.pagination.PageDataHolder;
 import com.specialist.utils.pagination.PageRequest;
 import com.specialist.utils.validation.annotation.ValidEnum;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Getter;
 
 @Getter

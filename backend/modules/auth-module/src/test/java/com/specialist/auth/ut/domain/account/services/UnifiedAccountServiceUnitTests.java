@@ -254,12 +254,12 @@ public class UnifiedAccountServiceUnitTests {
 
     @Test
     @DisplayName("UT: deleteById() delegates to repository")
-    void deleteById_shouldCallRepository() {
+    void hardDeleteById_shouldCallRepository() {
         UUID id = UUID.randomUUID();
 
         doNothing().when(repository).deleteById(id);
 
-        unifiedAccountService.deleteById(id);
+        unifiedAccountService.hardDeleteById(id);
 
         verify(repository, times(1)).deleteById(id);
     }

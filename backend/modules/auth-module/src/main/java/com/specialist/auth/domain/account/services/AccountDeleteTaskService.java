@@ -10,7 +10,7 @@ import java.util.UUID;
 public interface AccountDeleteTaskService {
     void save(UUID accountId, String stringRole);
 
-    List<AccountDeleteEvent> findBatchByStatus(AccountDeleteTaskStatus status, int batchSize);
+    List<AccountDeleteEvent> findBatchByStatus(AccountDeleteTaskStatus status, AccountDeleteTaskStatus lockStatus, int batchSize);
 
     void updateStatusBatchByIdIn(AccountDeleteTaskStatus status, Set<UUID> ids);
 

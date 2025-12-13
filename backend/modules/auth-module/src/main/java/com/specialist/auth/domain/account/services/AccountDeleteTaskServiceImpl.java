@@ -5,13 +5,9 @@ import com.specialist.auth.domain.account.models.enums.AccountDeleteTaskStatus;
 import com.specialist.auth.domain.account.repositories.AccountDeleteTaskRepository;
 import com.specialist.contracts.auth.AccountDeleteEvent;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Duration;
-import java.time.Instant;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -30,11 +26,8 @@ public class AccountDeleteTaskServiceImpl implements AccountDeleteTaskService {
 
     @Transactional
     @Override
-    public List<AccountDeleteEvent> findBatchByStatus(AccountDeleteTaskStatus status, int batchSize) {
-        if (status.equals(AccountDeleteTaskStatus.SENDING)) {
-            throw new IllegalArgumentException("Invalid status passed");
-        }
-        return repository.findAndLockBatchByStatus(status.getCode(), AccountDeleteTaskStatus.SENDING.getCode(), batchSize)
+    public List<AccountDeleteEvent> findBatchByStatus(AccountDeleteTaskStatus status, AccountDeleteTaskStatus lockStatus, int batchSize) {
+        return repository.findAndLockBatchByStatus(status.getCode(), lockStatus.getCode(), batchSize)
                 .stream()
                 .map(entity -> new AccountDeleteEvent(entity.getId(), entity.getAccountId(), entity.getStringRole()))
                 .toList();

@@ -3,10 +3,12 @@ package com.specialist.auth.domain.account.services;
 import com.specialist.auth.core.oauth2.models.Provider;
 import com.specialist.auth.domain.account.models.AccountFilter;
 import com.specialist.auth.domain.account.models.dtos.*;
+import com.specialist.auth.domain.account.models.enums.DisableReason;
 import com.specialist.auth.domain.authority.Authority;
 import com.specialist.auth.domain.role.Role;
 import com.specialist.utils.pagination.PageResponse;
 
+import java.time.Instant;
 import java.util.Set;
 import java.util.UUID;
 
@@ -33,5 +35,7 @@ public interface AccountService {
 
     void softDeleteById(UUID id);
 
-    void deleteById(UUID id);
+    void hardDeleteById(UUID id);
+
+    void hardDeleteBatch(DisableReason reason, Instant threshold, int batchSize);
 }
