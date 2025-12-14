@@ -5,14 +5,21 @@ import com.specialist.schedule.appointment.models.dto.AppointmentCancelTaskRespo
 import com.specialist.schedule.appointment.models.enums.AppointmentCancelTaskType;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 public interface AppointmentCancelTaskService {
-    void save(AppointmentCancelTaskCreateDto dto);
+    void save(Set<AppointmentCancelTaskCreateDto> dtos);
 
     Boolean existsByParticipantIdAndTypeAndDate(UUID participantId, AppointmentCancelTaskType type, LocalDate date);
 
+    Map<UUID, Boolean> existsByParticipantIdInAndType(Set<UUID> participantIds, AppointmentCancelTaskType type);
+
     void deleteById(UUID id);
 
-    AppointmentCancelTaskResponseDto findFirstByType(AppointmentCancelTaskType type);
+    List<AppointmentCancelTaskResponseDto> findBatchByType(AppointmentCancelTaskType type, int batchSize);
+
+    void deleteBatch(Set<UUID> ids);
 }

@@ -90,9 +90,19 @@ public class  AppointmentDurationServiceImpl implements AppointmentDurationServi
     }
 
     @CacheEvict(value = ScheduleCacheConfig.APPOINTMENT_DURATION_CACHE, key = "#specialistId")
-    @Transactional(readOnly = true)
+    @Transactional
     @Override
     public void deleteBySpecialistId(UUID specialistId) {
         repository.deleteBySpecialistId(specialistId);
+    }
+
+    @Transactional
+    @Override
+    public void deleteAllBySpecialistIds(Set<UUID> specialistIds) {
+        repository.deleteAllBySpecialistIdIn(specialistIds);
+        Cache cache = cacheManager.getCache(ScheduleCacheConfig.APPOINTMENT_DURATION_CACHE);
+        if (cache != null) {
+            specialistIds.forEach(cache::evict);
+        }
     }
 }

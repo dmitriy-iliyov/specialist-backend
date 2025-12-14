@@ -3,8 +3,6 @@ package com.specialist.schedule.appointment.repositories;
 
 import com.specialist.schedule.appointment.models.AppointmentEntity;
 import com.specialist.schedule.appointment.models.enums.AppointmentStatus;
-import com.specialist.schedule.appointment.models.enums.ProcessStatus;
-import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -33,30 +31,37 @@ public interface AppointmentRepository extends JpaRepository<AppointmentEntity, 
                                                                  @Param("start") LocalDate start,
                                                                  @Param("end") LocalDate end);
 
-    @Modifying
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query(value = """
         WITH to_update AS(
             SELECT id FROM appointments
-            WHERE (specialist_id = :participant_id OR user_id = :participant_id)
-              AND status = :old_status
+            WHERE status = :old_status
+            AND (
+                specialist_id = ANY(:participant_ids)
+                OR user_id = ANY(:participant_ids)
+            )
+            ORDER BY date
             LIMIT :batch_size
+            FOR UPDATE SKIP LOCKED
         )
         UPDATE appointments
             SET status = :new_status
         WHERE id IN (SELECT id FROM to_update)
         RETURNING *;
     """, nativeQuery = true)
-    List<AppointmentEntity> updateBatchStatusByParticipantIdAndStatus(@Param("batch_size") int batchSize,
-                                                                      @Param("participant_id") UUID participantId,
+    List<AppointmentEntity> updateAllStatusByStatusAndParticipantIdIn(@Param("batch_size") int batchSize,
+                                                                      @Param("participant_ids") UUID [] participantIds,
                                                                       @Param("old_status") Integer oldStatus,
                                                                       @Param("new_status") Integer newStatus);
 
-    @Modifying
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query(value = """
         WITH to_update AS(
             SELECT id FROM appointments
             WHERE (specialist_id = :participant_id OR user_id = :participant_id) 
               AND date = :date AND status = :old_status
+            ORDER BY date
             LIMIT :batch_size
         )
         UPDATE appointments
@@ -64,18 +69,43 @@ public interface AppointmentRepository extends JpaRepository<AppointmentEntity, 
         WHERE id IN (SELECT id FROM to_update)
         RETURNING *;
     """, nativeQuery = true)
-    List<AppointmentEntity> updateBatchStatusByStatusAndParticipantIdAndDate(@Param("batch_size") int batchSize,
+    List<AppointmentEntity> updateAllStatusByStatusAndDateAndParticipantId(@Param("batch_size") int batchSize,
+                                                                           @Param("old_status") Integer oldStatus,
+                                                                           @Param("participant_id") UUID participantId,
+                                                                           @Param("date") LocalDate date,
+                                                                           @Param("new_status") Integer status);
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query(value = """
+        WITH to_update AS(
+            SELECT id FROM appointments
+            WHERE date = :date AND status = :old_status
+            AND (
+                specialist_id = ANY(:participant_ids)
+                OR user_id = ANY(:participant_ids)
+            )
+            ORDER BY date
+            LIMIT :batch_size
+            FOR UPDATE SKIP LOCKED
+        )
+        UPDATE appointments
+            SET status = :new_status
+        WHERE id IN (SELECT id FROM to_update)
+        RETURNING *;
+    """, nativeQuery = true)
+    List<AppointmentEntity> updateAllStatusByStatusAndDateAndParticipantIdIn(@Param("batch_size") int batchSize,
                                                                              @Param("old_status") Integer oldStatus,
-                                                                             @Param("participant_id") UUID participantId,
+                                                                             @Param("participant_ids") UUID [] participantIds,
                                                                              @Param("date") LocalDate date,
                                                                              @Param("new_status") Integer status);
 
-    @Modifying(clearAutomatically = true)
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query(value = """
         WITH to_update AS (
             SELECT id FROM appointments
             WHERE date < :date_limit
             AND status = :old_status
+            ORDER BY date
             LIMIT :batch_size
             FOR UPDATE SKIP LOCKED
         )
@@ -84,15 +114,17 @@ public interface AppointmentRepository extends JpaRepository<AppointmentEntity, 
         WHERE id IN (SELECT id FROM to_update)
         RETURNING id
     """, nativeQuery = true)
-    List<Long> updateBatchStatusByStatusAndBeforeDate(@Param("batch_size") int batchSize,
-                                                      @Param("old_status") Integer oldStatus,
-                                                      @Param("date_limit") LocalDate dateLimit,
-                                                      @Param("new_status") Integer newStatus);
+    List<Long> updateAllStatusByStatusAndBeforeDate(@Param("batch_size") int batchSize,
+                                                    @Param("old_status") Integer oldStatus,
+                                                    @Param("date_limit") LocalDate dateLimit,
+                                                    @Param("new_status") Integer newStatus);
 
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query(value = """
         WITH to_select AS (
             SELECT * FROM appointments
             WHERE date = :date AND status = :status AND process_status = :old_process_status
+            ORDER BY date
             LIMIT :batch_size
             FOR UPDATE SKIP LOCKED
         )
@@ -101,9 +133,9 @@ public interface AppointmentRepository extends JpaRepository<AppointmentEntity, 
         WHERE id IN (SELECT id FROM to_select)
         RETURNING *
     """, nativeQuery = true)
-    List<AppointmentEntity> findBatchByDateAndStatusAndProcessStatus(@Param("date") LocalDate date,
-                                                                      @Param("status") Integer status,
-                                                                      @Param("old_process_status") String oldProcessStatus,
-                                                                      @Param("batch_size") int batchSize,
-                                                                      @Param("new_process_status") String newProcessStatus);
+    List<AppointmentEntity> findAllByDateAndStatusAndProcessStatus(@Param("date") LocalDate date,
+                                                                   @Param("status") Integer status,
+                                                                   @Param("old_process_status") String oldProcessStatus,
+                                                                   @Param("batch_size") int batchSize,
+                                                                   @Param("new_process_status") String newProcessStatus);
 }

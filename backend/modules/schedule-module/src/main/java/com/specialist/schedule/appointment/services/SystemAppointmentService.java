@@ -2,7 +2,6 @@ package com.specialist.schedule.appointment.services;
 
 import com.specialist.schedule.appointment.models.dto.AppointmentResponseDto;
 import com.specialist.utils.pagination.BatchResponse;
-import com.specialist.utils.pagination.PageRequest;
 
 import java.util.List;
 

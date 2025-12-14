@@ -16,4 +16,6 @@ public interface AppointmentDurationRepository extends JpaRepository<Appointment
     void deleteBySpecialistId(UUID specialistId);
 
     List<AppointmentDurationEntity> findAllBySpecialistIdIn(Set<UUID> specialistIds);
+
+    void deleteAllBySpecialistIdIn(Set<UUID> specialistIds);
 }

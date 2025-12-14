@@ -12,4 +12,6 @@ public interface AppointmentDurationService {
     Map<UUID, Long> findAllBySpecialistIdIn(Set<UUID> specialistIds);
 
     void deleteBySpecialistId(UUID specialistId);
+
+    void deleteAllBySpecialistIds(Set<UUID> specialistIds);
 }

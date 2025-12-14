@@ -19,7 +19,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.*;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 
@@ -156,15 +159,7 @@ public class UnifiedIntervalService implements IntervalService, SystemIntervalSe
     @Override
     public void deleteAllFutureBySpecialistId(UUID specialistId) {
         repository.deleteAllFutureBySpecialistIdAndDateTime(specialistId, LocalDate.now(), LocalTime.now());
-        // scan
-        Set<String> toInvalidate = redisTemplate.keys(ScheduleCacheConfig.INTERVALS_BY_DATE_CACHE + "::" + specialistId + ":*");
-        if (toInvalidate != null && !toInvalidate.isEmpty()) {
-            redisTemplate.delete(toInvalidate);
-        }
-        toInvalidate = redisTemplate.keys(ScheduleCacheConfig.INTERVALS_BY_DATE_INTERVAL_CACHE + "::" + specialistId);
-        if (toInvalidate != null && !toInvalidate.isEmpty()) {
-            redisTemplate.delete(toInvalidate);
-        }
+        evictAfterDelete(specialistId);
     }
 
     @Transactional
@@ -175,5 +170,24 @@ public class UnifiedIntervalService implements IntervalService, SystemIntervalSe
         List<Long> deletedIds = repository.deleteBatchBeforeDate(batchSize, weakStart);
         log.info("END deleting intervals, deleted id list={}", deletedIds);
         return deletedIds;
+    }
+
+    @Transactional
+    @Override
+    public void deleteAllFutureBySpecialistIds(Set<UUID> specialistIds) {
+        repository.deleteAllBySpecialistIdIn(specialistIds);
+        specialistIds.forEach(this::evictAfterDelete);
+    }
+
+    // scan
+    private void evictAfterDelete(UUID specialistId) {
+        Set<String> toInvalidate = redisTemplate.keys(ScheduleCacheConfig.INTERVALS_BY_DATE_CACHE + "::" + specialistId + ":*");
+        if (toInvalidate != null && !toInvalidate.isEmpty()) {
+            redisTemplate.delete(toInvalidate);
+        }
+        toInvalidate = redisTemplate.keys(ScheduleCacheConfig.INTERVALS_BY_DATE_INTERVAL_CACHE + "::" + specialistId);
+        if (toInvalidate != null && !toInvalidate.isEmpty()) {
+            redisTemplate.delete(toInvalidate);
+        }
     }
 }

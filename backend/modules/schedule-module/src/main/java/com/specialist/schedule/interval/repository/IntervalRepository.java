@@ -69,4 +69,6 @@ public interface IntervalRepository extends JpaRepository<IntervalEntity, Long> 
             RETURNING id
     """, nativeQuery = true)
     List<Long> deleteBatchBeforeDate(@Param("batch_size") int batchSize, @Param("weak_start") LocalDate weakStart);
+
+    void deleteAllBySpecialistIdIn(Set<UUID> ids);
 }

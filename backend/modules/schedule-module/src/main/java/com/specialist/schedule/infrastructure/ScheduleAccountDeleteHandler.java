@@ -11,6 +11,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 @Service
 @Slf4j
 public class ScheduleAccountDeleteHandler implements AccountDeleteHandler {
@@ -29,12 +35,20 @@ public class ScheduleAccountDeleteHandler implements AccountDeleteHandler {
 
     @Transactional
     @Override
-    public void handle(AccountDeleteEvent event) {
-        ProfileType profileType = ProfileType.fromStringRole(event.stringRole());
-        if (profileType.equals(ProfileType.SPECIALIST)) {
-            intervalService.deleteAllFutureBySpecialistId(event.accountId());
-            appointmentDurationService.deleteBySpecialistId(event.accountId());
+    public void handle(List<AccountDeleteEvent> events) {
+        Set<UUID> specialistAccountIds = new HashSet<>();
+        Set<UUID> accountIds = events.stream()
+                .map(event -> {
+                    if (ProfileType.fromStringRole(event.stringRole()).equals(ProfileType.SPECIALIST)) {
+                        specialistAccountIds.add(event.accountId());
+                    }
+                    return event.accountId();
+                })
+                .collect(Collectors.toSet());
+        if (!specialistAccountIds.isEmpty()) {
+            intervalService.deleteAllFutureBySpecialistIds(specialistAccountIds);
+            appointmentDurationService.deleteAllBySpecialistIds(specialistAccountIds);
         }
-        appointmentService.cancelBatch(event.accountId());
+        appointmentService.cancelBatch(accountIds);
     }
 }

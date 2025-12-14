@@ -1,8 +1,8 @@
 package com.specialist.schedule.availability;
 
+import com.specialist.schedule.appointment.infrastructure.AppointmentService;
 import com.specialist.schedule.appointment.models.dto.AppointmentResponseDto;
 import com.specialist.schedule.appointment.models.enums.AppointmentStatus;
-import com.specialist.schedule.appointment.infrastructure.AppointmentService;
 import com.specialist.schedule.appointment_duration.AppointmentDurationService;
 import com.specialist.schedule.interval.models.dto.IntervalResponseDto;
 import com.specialist.schedule.interval.services.IntervalService;

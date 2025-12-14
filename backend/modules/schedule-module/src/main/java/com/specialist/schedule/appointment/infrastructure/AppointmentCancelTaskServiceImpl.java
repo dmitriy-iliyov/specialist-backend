@@ -1,6 +1,7 @@
 package com.specialist.schedule.appointment.infrastructure;
 
 import com.specialist.core.config.ScheduleCacheConfig;
+import com.specialist.schedule.appointment.mapper.AppointmentCancelTaskMapper;
 import com.specialist.schedule.appointment.models.AppointmentCancelTaskEntity;
 import com.specialist.schedule.appointment.models.dto.AppointmentCancelTaskCreateDto;
 import com.specialist.schedule.appointment.models.dto.AppointmentCancelTaskResponseDto;
@@ -17,7 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,20 +28,20 @@ import java.util.UUID;
 public class AppointmentCancelTaskServiceImpl implements AppointmentCancelTaskService {
 
     private final AppointmentCancelTaskRepository repository;
+    private final AppointmentCancelTaskMapper mapper;
     private final CacheManager cacheManager;
 
-    @Transactional
     @Override
-    public void save(AppointmentCancelTaskCreateDto dto) {
+    public void save(Set<AppointmentCancelTaskCreateDto> dtos) {
         try {
-            repository.save(new AppointmentCancelTaskEntity(dto.participantId(), dto.type(), dto.date()));
-            Cache cache = cacheManager.getCache(ScheduleCacheConfig.APPOINTMENT_CANCEL_TASK_EXISTS);
-            if (cache != null) {
-                String key = dto.participantId().toString() + ':' + dto.type().toString() + ':' + dto.date().toString();
-                cache.put(key, true);
-            }
+            repository.saveAll(mapper.toEntityList(dtos));
+//            Cache cache = cacheManager.getCache(ScheduleCacheConfig.APPOINTMENT_CANCEL_TASK_EXISTS);
+//            if (cache != null) {
+//                String key = dto.participantId().toString() + ':' + dto.type().toString() + ':' + dto.date().toString();
+//                cache.put(key, true);
+//            }
         } catch (DataIntegrityViolationException e) {
-            log.info("Attempt to insert existed entity from dto={}", dto);
+            log.info("Attempt to insert existed entity from dtos={}", dtos);
         }
     }
 
@@ -47,6 +50,15 @@ public class AppointmentCancelTaskServiceImpl implements AppointmentCancelTaskSe
     @Override
     public Boolean existsByParticipantIdAndTypeAndDate(UUID participantId, AppointmentCancelTaskType type, LocalDate date) {
         return repository.existsByParticipantIdAndTypeAndDate(participantId, type, date);
+    }
+
+    // FIXME cache
+    @Transactional(readOnly = true)
+    @Override
+    public Map<UUID, Boolean> existsByParticipantIdInAndType(Set<UUID> participantIds, AppointmentCancelTaskType type) {
+        List<UUID> existsIds = repository.existsByTypeAndParticipantIdIn(participantIds, type);
+        return participantIds.stream()
+                .collect(Collectors.toMap(Function.identity(),existsIds::contains));
     }
 
     @Transactional
@@ -63,11 +75,17 @@ public class AppointmentCancelTaskServiceImpl implements AppointmentCancelTaskSe
 
     @Transactional(readOnly = true)
     @Override
-    public AppointmentCancelTaskResponseDto findFirstByType(AppointmentCancelTaskType type) {
-        AppointmentCancelTaskEntity entity = repository.findFirstByType(type).orElse(null);
-        if (entity == null) {
-            return null;
+    public List<AppointmentCancelTaskResponseDto> findBatchByType(AppointmentCancelTaskType type, int batchSize) {
+        List<AppointmentCancelTaskEntity> entities = repository.findAllByType(type.getCode(), batchSize);
+        if (entities == null) {
+            return Collections.emptyList();
         }
-        return new AppointmentCancelTaskResponseDto(entity.getId(), entity.getParticipantId(), entity.getType(), entity.getDate());
+        return mapper.toDtoList(entities);
+    }
+
+    @Transactional
+    @Override
+    public void deleteBatch(Set<UUID> ids) {
+        repository.deleteAllByIdIn(ids);
     }
 }

@@ -16,11 +16,12 @@ import com.specialist.utils.pagination.BatchResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
-import org.springframework.data.domain.Slice;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +40,7 @@ public class UnifiedAppointmentService implements AppointmentService, SystemAppo
     private final AppointmentRepository repository;
     private final AppointmentMapper mapper;
     private final RedisTemplate<String, AppointmentResponseDto> redisTemplate;
+    private final CacheManager cacheManager;
 
     @Caching(evict = {
             @CacheEvict(value = ScheduleCacheConfig.APPOINTMENTS_BY_DATE_AND_STATUS_CACHE,
@@ -151,15 +153,11 @@ public class UnifiedAppointmentService implements AppointmentService, SystemAppo
     @Transactional
     @Override
     public BatchResponse<AppointmentResponseDto> cancelBatchByDate(UUID participantId, LocalDate date) {
-        List<AppointmentEntity> entityList = repository.updateBatchStatusByStatusAndParticipantIdAndDate(
+        List<AppointmentEntity> entityList = repository.updateAllStatusByStatusAndDateAndParticipantId(
                 BATCH_SIZE, AppointmentStatus.SCHEDULED.getCode(), participantId, date, AppointmentStatus.CANCELED.getCode()
         );
         if (!entityList.isEmpty()) {
-            List<String> toInvalidate = entityList.stream()
-                    .map(AppointmentEntity::getId)
-                    .map(id -> ScheduleCacheConfig.APPOINTMENTS_KEY_TEMPLATE.formatted(String.valueOf(id)))
-                    .toList();
-            redisTemplate.delete(toInvalidate);
+            evictAfterDelete(entityList);
         }
         return new BatchResponse<>(
                 mapper.toDtoList(entityList),
@@ -168,12 +166,52 @@ public class UnifiedAppointmentService implements AppointmentService, SystemAppo
         );
     }
 
-    @CacheEvict(value = ScheduleCacheConfig.APPOINTMENTS_BY_DATE_INTERVAL_CACHE, key = "#participantId")
     @Transactional
     @Override
-    public BatchResponse<AppointmentResponseDto> cancelBatch(UUID participantId) {
-        List<AppointmentEntity> entityList = repository.updateBatchStatusByParticipantIdAndStatus(
-                BATCH_SIZE, participantId, AppointmentStatus.SCHEDULED.getCode(), AppointmentStatus.CANCELED.getCode()
+    public BatchResponse<AppointmentResponseDto> cancelBatchByDate(Set<UUID> participantIds, LocalDate date) {
+        List<AppointmentEntity> entityList = repository.updateAllStatusByStatusAndDateAndParticipantIdIn(
+                BATCH_SIZE,
+                AppointmentStatus.SCHEDULED.getCode(),
+                participantIds.toArray(new UUID[0]),
+                date,
+                AppointmentStatus.CANCELED.getCode()
+        );
+        if (!entityList.isEmpty()) {
+            String byDateAndStatusCacheKey = "%s:s%:CANCELED";
+            Cache cache = cacheManager.getCache(ScheduleCacheConfig.APPOINTMENTS_BY_DATE_AND_STATUS_CACHE);
+            if (cache != null) {
+                participantIds.forEach(id -> cache.evict(byDateAndStatusCacheKey.formatted(id, date)));
+            }
+            Cache intervalCache= cacheManager.getCache(ScheduleCacheConfig.APPOINTMENTS_BY_DATE_INTERVAL_CACHE);
+            if (intervalCache != null) {
+                participantIds.forEach(intervalCache::evict);
+            }
+            // FIXME invalidate all cache by ids
+            evictAfterDelete(entityList);
+        }
+        return new BatchResponse<>(
+                mapper.toDtoList(entityList),
+                entityList.size() == BATCH_SIZE,
+                entityList.size() == BATCH_SIZE ? 1 : null
+        );
+    }
+
+    private void evictAfterDelete(List<AppointmentEntity> entityList) {
+        List<String> toInvalidate = entityList.stream()
+                .map(AppointmentEntity::getId)
+                .map(id -> ScheduleCacheConfig.APPOINTMENTS_KEY_TEMPLATE.formatted(String.valueOf(id)))
+                .toList();
+        redisTemplate.delete(toInvalidate);
+    }
+
+    @Transactional
+    @Override
+    public BatchResponse<AppointmentResponseDto> cancelBatch(Set<UUID> participantIds) {
+        List<AppointmentEntity> entityList = repository.updateAllStatusByStatusAndParticipantIdIn(
+                BATCH_SIZE,
+                participantIds.toArray(new UUID[0]),
+                AppointmentStatus.SCHEDULED.getCode(),
+                AppointmentStatus.CANCELED.getCode()
         );
         if (!entityList.isEmpty()) {
             List<String> toInvalidate = entityList.stream()
@@ -181,11 +219,17 @@ public class UnifiedAppointmentService implements AppointmentService, SystemAppo
                     .map(id -> ScheduleCacheConfig.APPOINTMENTS_KEY_TEMPLATE.formatted(String.valueOf(id)))
                     .toList();
             redisTemplate.delete(toInvalidate);
-        }
-        Set<String> toInvalidate = redisTemplate.keys(
-                ScheduleCacheConfig.APPOINTMENTS_BY_DATE_AND_STATUS_CACHE + "::" + participantId + ":*:*");
-        if (toInvalidate != null && !toInvalidate.isEmpty()) {
-            redisTemplate.delete(toInvalidate);
+            Cache cache = cacheManager.getCache(ScheduleCacheConfig.APPOINTMENTS_BY_DATE_INTERVAL_CACHE);
+            if (cache != null && !participantIds.isEmpty()) {
+                participantIds.forEach(cache::evict);
+            }
+            for (UUID participantId : participantIds) {
+                Set<String> secondToInvalidate = redisTemplate.keys(
+                        ScheduleCacheConfig.APPOINTMENTS_BY_DATE_AND_STATUS_CACHE + "::" + participantId + ":*:*");
+                if (secondToInvalidate != null && !secondToInvalidate.isEmpty()) {
+                    redisTemplate.delete(secondToInvalidate);
+                }
+            }
         }
         return new BatchResponse<>(
                 mapper.toDtoList(entityList),
@@ -200,7 +244,7 @@ public class UnifiedAppointmentService implements AppointmentService, SystemAppo
     public List<Long> skipBatch(int batchSize) {
         LocalDate dateLimit = LocalDate.now().minusDays(1);
         log.info("START marking appointments as skipped with batchSize={}, dateLimit={}", batchSize, dateLimit);
-        List<Long> markedIds = repository.updateBatchStatusByStatusAndBeforeDate(
+        List<Long> markedIds = repository.updateAllStatusByStatusAndBeforeDate(
                 batchSize,
                 AppointmentStatus.SCHEDULED.getCode(),
                 dateLimit,
@@ -215,7 +259,7 @@ public class UnifiedAppointmentService implements AppointmentService, SystemAppo
     public BatchResponse<AppointmentResponseDto> findBatchToRemind(int batchSize) {
         LocalDate scheduledData = LocalDate.now().plusDays(1);
         log.info("START selecting appointments to remind with batchSize={}, scheduledData={}", batchSize, scheduledData);
-        List<AppointmentEntity> batch = repository.findBatchByDateAndStatusAndProcessStatus(
+        List<AppointmentEntity> batch = repository.findAllByDateAndStatusAndProcessStatus(
                 scheduledData,
                 AppointmentStatus.SCHEDULED.getCode(),
                 ProcessStatus.NONE.name(),
