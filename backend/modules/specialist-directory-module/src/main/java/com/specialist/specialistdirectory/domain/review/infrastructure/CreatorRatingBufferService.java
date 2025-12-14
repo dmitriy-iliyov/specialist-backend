@@ -1,7 +1,8 @@
-package com.specialist.specialistdirectory.domain.review.services;
+package com.specialist.specialistdirectory.domain.review.infrastructure;
 
 import com.specialist.specialistdirectory.domain.review.models.CreatorRatingBufferEntity;
 import com.specialist.specialistdirectory.domain.review.models.enums.DeliveryState;
+import com.specialist.specialistdirectory.domain.review.services.CreatorRatingUpdateService;
 
 import java.time.Instant;
 import java.util.List;

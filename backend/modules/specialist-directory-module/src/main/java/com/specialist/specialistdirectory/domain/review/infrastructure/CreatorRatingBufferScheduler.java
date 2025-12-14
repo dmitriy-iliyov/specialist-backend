@@ -3,7 +3,6 @@ package com.specialist.specialistdirectory.domain.review.infrastructure;
 import com.specialist.contracts.profile.CreatorRatingUpdateEvent;
 import com.specialist.specialistdirectory.domain.review.mappers.ReviewBufferMapper;
 import com.specialist.specialistdirectory.domain.review.models.enums.DeliveryState;
-import com.specialist.specialistdirectory.domain.review.services.CreatorRatingBufferService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

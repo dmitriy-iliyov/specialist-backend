@@ -1,4 +1,4 @@
-package com.specialist.specialistdirectory.domain.review.services;
+package com.specialist.specialistdirectory.domain.review.infrastructure;
 
 import com.specialist.specialistdirectory.domain.review.models.CreatorRatingBufferEntity;
 import com.specialist.specialistdirectory.domain.review.models.enums.DeliveryState;
