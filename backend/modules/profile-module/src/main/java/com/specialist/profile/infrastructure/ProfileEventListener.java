@@ -2,13 +2,14 @@ package com.specialist.profile.infrastructure;
 
 import com.specialist.contracts.auth.AccountDeleteEvent;
 import com.specialist.contracts.profile.CreatorRatingUpdateEvent;
-import com.specialist.contracts.profile.ProfileType;
 import com.specialist.profile.services.ProfileDeleteService;
 import com.specialist.profile.services.rating.CreatorRatingService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
+
+import java.util.List;
 
 @Component
 public class ProfileEventListener {
@@ -28,10 +29,7 @@ public class ProfileEventListener {
     }
 
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
-    public void listenAccountDelete(AccountDeleteEvent event) {
-        profileDeleteService.delete(
-                event.accountId(),
-                ProfileType.fromStringRole(event.stringRole())
-        );
+    public void listenAccountDelete(List<AccountDeleteEvent> events) {
+        profileDeleteService.delete(events);
     }
 }

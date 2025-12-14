@@ -5,6 +5,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface AvatarStorage {
@@ -17,4 +18,6 @@ public interface AvatarStorage {
     String resolveAvatarUrl(String avatarUrl);
 
     void deleteByUserId(UUID userId);
+
+    void deleteAllByUserIds(List<UUID> ids);
 }

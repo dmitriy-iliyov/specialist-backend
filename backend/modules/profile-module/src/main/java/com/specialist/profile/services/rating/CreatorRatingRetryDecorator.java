@@ -5,7 +5,6 @@ import com.specialist.profile.infrastructure.events.CreatorRatingEventService;
 import com.specialist.profile.models.enums.ProcessingStatus;
 import jakarta.persistence.OptimisticLockException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Recover;

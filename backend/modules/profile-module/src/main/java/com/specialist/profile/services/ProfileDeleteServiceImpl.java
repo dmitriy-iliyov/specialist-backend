@@ -1,5 +1,6 @@
 package com.specialist.profile.services;
 
+import com.specialist.contracts.auth.AccountDeleteEvent;
 import com.specialist.contracts.profile.ProfileType;
 import com.specialist.profile.exceptions.NullStrategyException;
 import com.specialist.profile.repositories.AvatarStorage;
@@ -7,9 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -28,13 +27,26 @@ public class ProfileDeleteServiceImpl implements ProfileDeleteService {
 
     @Transactional
     @Override
-    public void delete(UUID id, ProfileType type) {
-        ProfileDeleteStrategy strategy = strategyMap.get(type);
-        if (strategy == null) {
-            log.error("ProfileDeleteService for user type {} not found.", type);
-            throw new NullStrategyException();
+    public void delete(List<AccountDeleteEvent> events) {
+        Map<ProfileType, List<UUID>> ids = new HashMap<>();
+        for (AccountDeleteEvent event : events) {
+            ProfileType type = ProfileType.fromStringRole(event.stringRole());
+            ids.computeIfAbsent(type, k -> new ArrayList<>())
+                    .add(event.accountId());
         }
-        strategy.deleteById(id);
-        avatarStorage.deleteByUserId(id);
+        List<UUID> summaryIds = new ArrayList<>();
+        ids.keySet().forEach(
+                k -> {
+                    ProfileDeleteStrategy strategy = strategyMap.get(k);
+                    if (strategy == null) {
+                        log.error("ProfileDeleteService for user type {} not found.", k);
+                        throw new NullStrategyException();
+                    }
+                    List<UUID> currentIds = ids.get(k);
+                    strategy.deleteAllByIds(currentIds);
+                    summaryIds.addAll(currentIds);
+                }
+        );
+        avatarStorage.deleteAllByUserIds(summaryIds);
     }
 }

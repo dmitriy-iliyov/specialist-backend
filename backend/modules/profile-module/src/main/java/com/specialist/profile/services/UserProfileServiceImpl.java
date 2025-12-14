@@ -19,6 +19,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -94,7 +95,7 @@ public class UserProfileServiceImpl implements UserProfileService, ProfilePersis
 
     @Transactional
     @Override
-    public void deleteById(UUID id) {
-        repository.deleteById(id);
+    public void deleteAllByIds(List<UUID> ids) {
+        repository.deleteAllByIdIn(ids);
     }
 }

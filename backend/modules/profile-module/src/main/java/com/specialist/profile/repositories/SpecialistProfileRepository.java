@@ -54,4 +54,6 @@ public interface SpecialistProfileRepository extends JpaRepository<SpecialistPro
     @Modifying
     @Query("UPDATE SpecialistProfileEntity s SET s.hasCard = true, s.cardId =: cardId")
     void updateCardId(@Param("cardId") UUID cardId);
+
+    void deleteAllByIdIn(List<UUID> ids);
 }

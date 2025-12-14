@@ -43,4 +43,6 @@ public interface UserProfileRepository extends JpaRepository<UserProfileEntity, 
         WHERE u.id = : id
     """)
     void updateEmailById(@Param("id") UUID id, @Param("email") String email);
+
+    void deleteAllByIdIn(List<UUID> ids);
 }

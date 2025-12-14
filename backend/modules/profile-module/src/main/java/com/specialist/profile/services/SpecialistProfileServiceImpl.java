@@ -19,6 +19,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -69,8 +70,8 @@ public class SpecialistProfileServiceImpl implements SpecialistProfileService,
 
     @Transactional
     @Override
-    public void deleteById(UUID id) {
-        repository.deleteById(id);
+    public void deleteAllByIds(List<UUID> ids) {
+        repository.deleteAllByIdIn(ids);
     }
 
     @Transactional

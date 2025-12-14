@@ -12,6 +12,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -69,5 +70,11 @@ public class AvatarAzureBlobStorage implements AvatarStorage {
             log.error("Error when deleting file from cloud.");
             throw new RuntimeException("Error when deleting file from cloud:", e);
         }
+    }
+
+    @Async
+    @Override
+    public void deleteAllByUserIds(List<UUID> ids) {
+        ids.forEach(this::deleteByUserId);
     }
 }
