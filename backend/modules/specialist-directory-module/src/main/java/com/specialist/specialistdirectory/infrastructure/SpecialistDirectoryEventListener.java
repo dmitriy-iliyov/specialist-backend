@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
+import java.util.List;
+
 @Component
 public class SpecialistDirectoryEventListener {
 
@@ -17,7 +19,7 @@ public class SpecialistDirectoryEventListener {
     }
 
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
-    public void listen(AccountDeleteEvent event) {
+    public void listen(List<AccountDeleteEvent> event) {
         accountDeleteHandler.handle(event);
     }
 }
