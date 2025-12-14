@@ -8,8 +8,6 @@ import com.specialist.specialistdirectory.domain.review.models.enums.OperationTy
 import com.specialist.specialistdirectory.domain.review.models.enums.ReviewAgeType;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistRatingService;
 import com.specialist.specialistdirectory.domain.specialist.services.SystemSpecialistService;
-import io.github.dmitriyiliyov.springoutbox.publisher.OutboxPublisher;
-import io.github.dmitriyiliyov.springoutbox.publisher.aop.OutboxPublish;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Service;
@@ -26,10 +24,8 @@ public class DefaultReviewManagementFacade implements ReviewManagementFacade {
     private final SystemSpecialistService specialistService;
     private final SpecialistRatingService ratingService;
     private final CreatorRatingUpdateService creatorRatingUpdateService;
-    private final OutboxPublisher outboxPublisher;
 
     @Transactional
-    @OutboxPublish(eventType = "validate-review")
     @Override
     public ReviewResponseDto save(ReviewCreateDto dto) {
         ReviewResponseDto resultDto = reviewService.save(specialistService.getReferenceById(dto.getSpecialistId()), dto);
@@ -48,7 +44,6 @@ public class DefaultReviewManagementFacade implements ReviewManagementFacade {
             long resultRating = newDto.rating() - oldDto.rating();
             UUID specialistCreatorId = ratingService.updateRatingById(dto.getSpecialistId(), resultRating, OperationType.UPDATE);
             creatorRatingUpdateService.updateByCreatorId(specialistCreatorId, resultRating, OperationType.UPDATE);
-            outboxPublisher.publish("validate-review", newDto);
         }
         return newDto;
     }

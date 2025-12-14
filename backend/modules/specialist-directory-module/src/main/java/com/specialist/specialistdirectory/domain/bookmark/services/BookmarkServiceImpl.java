@@ -10,6 +10,8 @@ import com.specialist.specialistdirectory.domain.specialist.models.filters.Exten
 import com.specialist.specialistdirectory.domain.specialist.services.SystemSpecialistService;
 import com.specialist.utils.pagination.PageResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -28,6 +31,7 @@ public class BookmarkServiceImpl implements BookmarkService {
     private final SystemSpecialistService specialistService;
     private final BookmarkRepository bookmarkRepository;
     private final BookmarkCountService bookmarkCountService;
+    private final CacheManager cacheManager;
 
     @Caching(evict = {
             @CacheEvict(value = "specialists:bookmarks:count:total", key = "#dto.getOwnerId()"),
@@ -84,5 +88,19 @@ public class BookmarkServiceImpl implements BookmarkService {
     @Override
     public void deleteAllByOwnerId(UUID ownerId) {
         bookmarkRepository.deleteAllByOwnerId(ownerId);
+    }
+
+    @Transactional
+    @Override
+    public void deleteAllByOwnerIds(Set<UUID> ownerIds) {
+        bookmarkRepository.deleteAllByOwnerIdIn(ownerIds);
+        Cache totalCache = cacheManager.getCache("specialists:bookmarks:count:total");
+        if (totalCache != null) {
+            ownerIds.forEach(totalCache::evict);
+        }
+        Cache idPairsCache = cacheManager.getCache("specialists:bookmarks:id_pairs");
+        if (idPairsCache != null) {
+            ownerIds.forEach(idPairsCache::evict);
+        }
     }
 }

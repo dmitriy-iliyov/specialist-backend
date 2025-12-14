@@ -9,6 +9,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class SpecialistDirectoryAccountDeleteHandler implements AccountDeleteHandler {
@@ -19,10 +25,19 @@ public class SpecialistDirectoryAccountDeleteHandler implements AccountDeleteHan
     // DISCUSS schedule and if reviews count is big
     @Transactional
     @Override
-    public void handle(AccountDeleteEvent event) {
-        bookmarkService.deleteAllByOwnerId(event.accountId());
-        if (ProfileType.fromStringRole(event.stringRole()).equals(ProfileType.SPECIALIST)) {
-            specialistService.deleteByOwnerId(event.accountId());
+    public void handle(List<AccountDeleteEvent> events) {
+        Set<UUID> specialistAccountIds = new HashSet<>();
+        Set<UUID> accountIds = events.stream()
+                .map(event -> {
+                    if (ProfileType.fromStringRole(event.stringRole()).equals(ProfileType.SPECIALIST)) {
+                        specialistAccountIds.add(event.accountId());
+                    }
+                    return event.accountId();
+                })
+                .collect(Collectors.toSet());
+        bookmarkService.deleteAllByOwnerIds(accountIds);
+        if (!specialistAccountIds.isEmpty()) {
+            specialistService.deleteAllByOwnerIds(specialistAccountIds);
         }
     }
 }

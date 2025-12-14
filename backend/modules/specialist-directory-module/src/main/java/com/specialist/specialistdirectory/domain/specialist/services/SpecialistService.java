@@ -9,6 +9,7 @@ import com.specialist.specialistdirectory.domain.specialist.models.filters.Speci
 import com.specialist.utils.pagination.PageDataHolder;
 import com.specialist.utils.pagination.PageResponse;
 
+import java.util.Set;
 import java.util.UUID;
 
 public interface SpecialistService {
@@ -33,4 +34,6 @@ public interface SpecialistService {
     void deleteById(UUID id);
 
     void deleteByOwnerId(UUID ownerId);
+
+    void deleteAllByOwnerIds(Set<UUID> ownerIds);
 }

@@ -8,7 +8,9 @@ import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 @Repository
@@ -103,4 +105,13 @@ public interface SpecialistRepository extends JpaRepository<SpecialistEntity, UU
         WHERE s.id = :id
     """)
     void updateStatusById(@Param("id") UUID id, @Param("status") SpecialistStatus status);
+
+    void deleteAllByOwnerIdIn(Set<UUID> ownerIds);
+
+    @Query("""
+        SELECT new com.specialist.specialistdirectory.domain.specialist.models.dtos.ShortSpecialistInfo(s.id, s.creatorId, s.ownerId, s.status)
+        FROM SpecialistEntity s
+        WHERE s.ownerId IN :ownerIds
+    """)
+    List<ShortSpecialistInfo> findAllShortInfoByOwnerIdIn(@Param("ownerIds") Set<UUID> ownerIds);
 }

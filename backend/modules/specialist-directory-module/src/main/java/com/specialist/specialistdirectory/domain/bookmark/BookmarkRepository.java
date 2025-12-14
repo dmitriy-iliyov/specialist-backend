@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Repository
@@ -32,4 +33,6 @@ public interface BookmarkRepository extends JpaRepository<BookmarkEntity, UUID> 
     List<BookmarkIdPair> findAllIdPairByOwnerId(@Param("owner_id") UUID ownerId);
 
     void deleteAllByOwnerId(UUID ownerId);
+
+    void deleteAllByOwnerIdIn(Set<UUID> ownerIds);
 }

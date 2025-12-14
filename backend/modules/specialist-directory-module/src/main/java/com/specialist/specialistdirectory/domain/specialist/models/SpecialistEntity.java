@@ -13,8 +13,6 @@ import com.specialist.specialistdirectory.domain.type.models.TypeEntity;
 import com.specialist.utils.UuidUtils;
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

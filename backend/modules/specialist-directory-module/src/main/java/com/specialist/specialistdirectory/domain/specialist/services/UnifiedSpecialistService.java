@@ -32,6 +32,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -267,6 +268,14 @@ public class UnifiedSpecialistService implements SpecialistService, SystemSpecia
         );
         repository.deleteByOwnerId(ownerId);
         cacheService.evictCacheAfterDelete(info.id(), info.creatorId());
+    }
+
+    @Transactional
+    @Override
+    public void deleteAllByOwnerIds(Set<UUID> ownerIds) {
+        List<ShortSpecialistInfo> infos =  repository.findAllShortInfoByOwnerIdIn(ownerIds);
+        repository.deleteAllByOwnerIdIn(ownerIds);
+        infos.forEach(info -> cacheService.evictCacheAfterDelete(info.id(), info.creatorId()));
     }
 
     @Override

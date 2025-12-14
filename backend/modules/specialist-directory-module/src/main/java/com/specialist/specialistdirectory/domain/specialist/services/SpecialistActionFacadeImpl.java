@@ -13,12 +13,10 @@ import com.specialist.specialistdirectory.domain.specialist.repositories.Special
 import com.specialist.specialistdirectory.exceptions.CodeExpiredException;
 import com.specialist.specialistdirectory.exceptions.NoSuchSpecialistContactException;
 import com.specialist.utils.CodeGenerator;
-import io.github.dmitriyiliyov.springoutbox.publisher.aop.OutboxPublish;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,17 +32,14 @@ public class SpecialistActionFacadeImpl implements SpecialistActionFacade {
     private final SpecialistActionRepository actionRepository;
     private final SystemSpecialistProfileService specialistProfileService;
     private final SystemAccountDemoteFacade accountDemoteService;
-
-    // TODO outbox & scheduler
-    @Value("${api.kafka.topic.specialists-action}")
-    public String TOPIC;
-    private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
     @Override
     public void recallRequest(UUID id, ContactType contactType) {
         SpecialistActionEntity specialistActionEntity = new SpecialistActionEntity(ActionType.RECALL, id, null, 300L);
-        requestHandle(specialistActionEntity, contactType);
+        SpecialistActionEvent event = requestHandle(specialistActionEntity, contactType);
+        eventPublisher.publishEvent(event);
     }
 
     @Override
@@ -58,7 +53,8 @@ public class SpecialistActionFacadeImpl implements SpecialistActionFacade {
     @Override
     public void manageRequest(UUID id, UUID accountId, ContactType contactType) {
         SpecialistActionEntity specialistActionEntity = new SpecialistActionEntity(ActionType.MANAGE, id, accountId, 600L);
-        requestHandle(specialistActionEntity, contactType);
+        SpecialistActionEvent event = requestHandle(specialistActionEntity, contactType);
+        eventPublisher.publishEvent(event);
     }
 
     @Transactional
@@ -70,7 +66,6 @@ public class SpecialistActionFacadeImpl implements SpecialistActionFacade {
         accountDemoteService.demote(new DemoteRequest(accountId, Set.of("SPECIALIST_CREATE"), request, response));
     }
 
-    @OutboxPublish(eventType = "validate-specialist-action")
     private SpecialistActionEvent requestHandle(SpecialistActionEntity specialistActionEntity, ContactType contactType) {
         String code = CodeGenerator.generate();
         SpecialistResponseDto specialistDto = specialistService.findById(specialistActionEntity.getSpecialistId());

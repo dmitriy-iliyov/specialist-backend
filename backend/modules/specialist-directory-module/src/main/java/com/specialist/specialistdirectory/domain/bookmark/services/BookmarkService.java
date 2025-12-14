@@ -5,6 +5,7 @@ import com.specialist.specialistdirectory.domain.bookmark.models.BookmarkRespons
 import com.specialist.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
 import com.specialist.utils.pagination.PageResponse;
 
+import java.util.Set;
 import java.util.UUID;
 
 public interface BookmarkService {
@@ -17,4 +18,6 @@ public interface BookmarkService {
     PageResponse<BookmarkResponseDto> findAllByOwnerIdAndFilter(UUID ownerId, ExtendedSpecialistFilter filter);
 
     void deleteAllByOwnerId(UUID ownerId);
+
+    void deleteAllByOwnerIds(Set<UUID> ownerIds);
 }

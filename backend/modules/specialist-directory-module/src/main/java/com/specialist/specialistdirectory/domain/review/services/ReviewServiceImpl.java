@@ -8,7 +8,6 @@ import com.specialist.specialistdirectory.domain.review.models.dtos.ReviewUpdate
 import com.specialist.specialistdirectory.domain.review.models.enums.NextOperationType;
 import com.specialist.specialistdirectory.domain.review.models.enums.ReviewAgeType;
 import com.specialist.specialistdirectory.domain.review.models.enums.ReviewStatus;
-import com.specialist.specialistdirectory.domain.review.models.filters.AdminReviewSort;
 import com.specialist.specialistdirectory.domain.review.models.filters.ReviewSort;
 import com.specialist.specialistdirectory.domain.review.repositories.ReviewRepository;
 import com.specialist.specialistdirectory.domain.specialist.models.SpecialistEntity;
