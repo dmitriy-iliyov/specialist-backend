@@ -1,10 +1,10 @@
 package com.specialist.profile.services.system;
 
+import com.specialist.contracts.auth.AccountCreateEvent;
+import com.specialist.contracts.auth.AccountCreateHandler;
 import com.specialist.contracts.notification.SystemShortProfileResponseDto;
 import com.specialist.contracts.notification.SystemShortProfileService;
-import com.specialist.contracts.profile.SystemProfilePersistService;
 import com.specialist.contracts.profile.SystemProfileService;
-import com.specialist.contracts.profile.dto.ShortProfileCreateDto;
 import com.specialist.contracts.profile.dto.UnifiedProfileResponseDto;
 import com.specialist.profile.mappers.ProfileProjectionMapper;
 import com.specialist.profile.models.ShortProfileProjection;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class DefaultSystemProfileService implements SystemProfilePersistService, SystemProfileService, SystemShortProfileService {
+public class DefaultSystemProfileService implements AccountCreateHandler, SystemProfileService, SystemShortProfileService {
 
     private Long TTL = 300L;
     private final RedisTemplate<String, String> redisTemplate;
@@ -31,10 +31,11 @@ public class DefaultSystemProfileService implements SystemProfilePersistService,
     private final ProfileProjectionMapper mapper;
 
     @Override
-    public void save(ShortProfileCreateDto dto) {
+    public void handle(AccountCreateEvent event) {
+        System.out.println(event);
         redisTemplate.opsForValue().set(
-                "profiles:emails:%s".formatted(dto.id()),
-                dto.email(),
+                "profiles:emails:%s".formatted(event.id()),
+                event.email(),
                 Duration.ofSeconds(TTL)
         );
     }
