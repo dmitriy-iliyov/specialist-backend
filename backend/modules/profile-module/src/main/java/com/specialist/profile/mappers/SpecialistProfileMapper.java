@@ -1,9 +1,9 @@
 package com.specialist.profile.mappers;
 
 import com.specialist.contracts.specialistdirectory.dto.ExternalManagedSpecialistResponseDto;
+import com.specialist.picture.PictureStorage;
 import com.specialist.profile.models.SpecialistProfileEntity;
 import com.specialist.profile.models.dtos.*;
-import com.specialist.profile.repositories.AvatarStorage;
 import com.specialist.utils.InstantToLocalDataTimeConverter;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -19,14 +19,14 @@ import java.util.stream.Collectors;
 
 @Mapper(
         componentModel = MappingConstants.ComponentModel.SPRING,
-        uses = {InstantToLocalDataTimeConverter.class, AvatarStorage.class}
+        uses = {InstantToLocalDataTimeConverter.class, PictureStorage.class}
 )
 public interface SpecialistProfileMapper {
 
     SpecialistProfileEntity toEntity(SpecialistCreateDto dto);
 
     @Mapping(target = "fullName", expression = "java(entity.getFullName())")
-    @Mapping(target = "avatarUrl", source = "avatarUrl", qualifiedByName = "resolveAvatarUrl")
+    @Mapping(target = "avatarUrl", source = "avatarUrl", qualifiedByName = "resolvePictureUrl")
     @Mapping(target = "createdAt", source = "createdAt")
     @Mapping(target = "updatedAt", source = "updatedAt")
     PrivateSpecialistResponseDto toPrivateDto(SpecialistProfileEntity entity);
@@ -34,7 +34,7 @@ public interface SpecialistProfileMapper {
     List<PrivateSpecialistResponseDto> toPrivateDtoList(List<SpecialistProfileEntity> entityList);
 
     @Mapping(target = "fullName", expression = "java(entity.getFullName())")
-    @Mapping(target = "avatarUrl", source = "avatarUrl", qualifiedByName = "resolveAvatarUrl")
+    @Mapping(target = "avatarUrl", source = "avatarUrl", qualifiedByName = "resolvePictureUrl")
     PublicSpecialistResponseDto toPublicDto(SpecialistProfileEntity entity);
 
     List<PublicSpecialistResponseDto> toPublicDtoList(List<SpecialistProfileEntity> entityList);

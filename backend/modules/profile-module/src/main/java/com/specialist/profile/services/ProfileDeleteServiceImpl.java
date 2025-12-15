@@ -2,9 +2,10 @@ package com.specialist.profile.services;
 
 import com.specialist.contracts.auth.AccountDeleteEvent;
 import com.specialist.contracts.profile.ProfileType;
+import com.specialist.picture.PictureStorage;
 import com.specialist.profile.exceptions.NullStrategyException;
-import com.specialist.profile.repositories.AvatarStorage;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,12 +18,13 @@ import java.util.stream.Collectors;
 public class ProfileDeleteServiceImpl implements ProfileDeleteService {
 
     private final Map<ProfileType, ProfileDeleteStrategy> strategyMap;
-    private final AvatarStorage avatarStorage;
+    private final PictureStorage pictureStorage;
 
-    public ProfileDeleteServiceImpl(List<ProfileDeleteStrategy> profileDeleteStrategies, AvatarStorage avatarStorage) {
+    public ProfileDeleteServiceImpl(List<ProfileDeleteStrategy> profileDeleteStrategies,
+                                    @Qualifier("profilePictureStorage") PictureStorage pictureStorage) {
         this.strategyMap = profileDeleteStrategies.stream()
                 .collect(Collectors.toMap(ProfileDeleteStrategy::getType, Function.identity()));
-        this.avatarStorage = avatarStorage;
+        this.pictureStorage = pictureStorage;
     }
 
     @Transactional
@@ -47,6 +49,6 @@ public class ProfileDeleteServiceImpl implements ProfileDeleteService {
                     summaryIds.addAll(currentIds);
                 }
         );
-        avatarStorage.deleteAllByUserIds(summaryIds);
+        pictureStorage.deleteAllByAggregateId(summaryIds);
     }
 }

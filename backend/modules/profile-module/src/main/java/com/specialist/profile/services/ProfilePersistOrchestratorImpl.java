@@ -3,29 +3,46 @@ package com.specialist.profile.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.specialist.contracts.profile.ProfileCreateEvent;
+import com.specialist.picture.PictureStorage;
 import com.specialist.profile.exceptions.NullUserEmailException;
 import com.specialist.profile.models.dtos.*;
-import com.specialist.profile.repositories.AvatarStorage;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
 
 @Service
-@RequiredArgsConstructor
 public class ProfilePersistOrchestratorImpl implements ProfilePersistOrchestrator {
 
     private final ProfilePersistService<UserCreateDto, PrivateUserResponseDto> profilePersistService;
     private final ProfilePersistService<SpecialistCreateDto, PrivateSpecialistResponseDto> specialistPersistService;
     private final ObjectMapper mapper;
-    private final AvatarStorage avatarStorage;
+    private final PictureStorage pictureStorage;
     private final Validator validator;
     private final ApplicationEventPublisher eventPublisher;
     private final ProfileReadService profileReadService;
+
+    public ProfilePersistOrchestratorImpl(ProfilePersistService<UserCreateDto,
+                                          PrivateUserResponseDto> profilePersistService,
+                                          ProfilePersistService<SpecialistCreateDto,
+                                          PrivateSpecialistResponseDto> specialistPersistService,
+                                          ObjectMapper mapper,
+                                          @Qualifier("profilePictureStorage") PictureStorage pictureStorage,
+                                          Validator validator,
+                                          ApplicationEventPublisher eventPublisher,
+                                          ProfileReadService profileReadService) {
+        this.profilePersistService = profilePersistService;
+        this.specialistPersistService = specialistPersistService;
+        this.mapper = mapper;
+        this.pictureStorage = pictureStorage;
+        this.validator = validator;
+        this.eventPublisher = eventPublisher;
+        this.profileReadService = profileReadService;
+    }
 
     @Override
     public BasePrivateResponseDto save(CreateRequest request) throws JsonProcessingException {
@@ -54,7 +71,7 @@ public class ProfilePersistOrchestratorImpl implements ProfilePersistOrchestrato
         if (!errors.isEmpty()) {
             throw new ConstraintViolationException(errors);
         }
-        String avatarUrl = avatarStorage.save(dto.getAvatar(), dto.getId());
+        String avatarUrl = pictureStorage.save(dto.getAvatar(), dto.getId());
         dto.setAvatarUrl(avatarUrl);
         String email = profileReadService.findEmailById(dto.getId());
         if (email == null) {
