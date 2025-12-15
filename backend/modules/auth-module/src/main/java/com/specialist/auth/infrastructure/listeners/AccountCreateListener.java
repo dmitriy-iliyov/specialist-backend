@@ -1,6 +1,6 @@
 package com.specialist.auth.infrastructure.listeners;
 
-import com.specialist.auth.domain.account.models.events.AccountCreateEvent;
+import com.specialist.contracts.auth.AccountCreateEvent;
 import com.specialist.auth.infrastructure.message.services.ConfirmationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
