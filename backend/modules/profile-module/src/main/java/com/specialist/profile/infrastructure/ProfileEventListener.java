@@ -1,8 +1,10 @@
 package com.specialist.profile.infrastructure;
 
-import com.specialist.contracts.auth.AccountDeleteEvent;
+import com.specialist.contracts.auth.AccountCreateEvent;
+import com.specialist.contracts.auth.AccountCreateHandler;
+import com.specialist.contracts.auth.DeferAccountDeleteEvent;
+import com.specialist.contracts.auth.DeferAccountDeleteHandler;
 import com.specialist.contracts.profile.CreatorRatingUpdateEvent;
-import com.specialist.profile.services.ProfileDeleteService;
 import com.specialist.profile.services.rating.CreatorRatingService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -15,12 +17,20 @@ import java.util.List;
 public class ProfileEventListener {
 
     private final CreatorRatingService creatorRatingService;
-    private final ProfileDeleteService profileDeleteService;
+    private final DeferAccountDeleteHandler accountDeleteHandler;
+    private final AccountCreateHandler accountCreateHandler;
 
     public ProfileEventListener(@Qualifier("creatorRatingRetryDecorator") CreatorRatingService creatorRatingService,
-                                ProfileDeleteService profileDeleteService) {
+                                @Qualifier("profileAccountDeleteHandler") DeferAccountDeleteHandler accountDeleteHandler,
+                                @Qualifier("defaultSystemProfileService") AccountCreateHandler accountCreateHandler) {
         this.creatorRatingService = creatorRatingService;
-        this.profileDeleteService = profileDeleteService;
+        this.accountDeleteHandler = accountDeleteHandler;
+        this.accountCreateHandler = accountCreateHandler;
+    }
+
+    @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
+    public void listenAccountCreate(AccountCreateEvent event) {
+        accountCreateHandler.handle(event);
     }
 
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
@@ -29,7 +39,7 @@ public class ProfileEventListener {
     }
 
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
-    public void listenAccountDelete(List<AccountDeleteEvent> events) {
-        profileDeleteService.delete(events);
+    public void listenAccountDelete(List<DeferAccountDeleteEvent> events) {
+        accountDeleteHandler.handle(events);
     }
 }
