@@ -1,5 +1,6 @@
 package com.specialist.auth.domain.account.services;
 
+import com.specialist.auth.domain.account.infrastructure.AccountDeleteTaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

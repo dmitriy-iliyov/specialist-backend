@@ -2,8 +2,7 @@ package com.specialist.contracts.auth;
 
 import java.util.UUID;
 
-public record AccountDeleteEvent(
-        UUID id,
+public record DeferAccountDeleteEvent(
         UUID accountId,
         String stringRole
 ) { }

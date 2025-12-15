@@ -19,6 +19,7 @@ import com.specialist.auth.exceptions.AccountNotFoundByEmailException;
 import com.specialist.auth.exceptions.AccountNotFoundByIdException;
 import com.specialist.auth.exceptions.InvalidOldPasswordException;
 import com.specialist.auth.exceptions.RoleNotFoundException;
+import com.specialist.contracts.auth.DeferAccountDeleteEvent;
 import com.specialist.utils.pagination.PageDataHolder;
 import com.specialist.utils.pagination.PageResponse;
 import lombok.RequiredArgsConstructor;
@@ -82,7 +83,7 @@ public class UnifiedAccountService implements AccountService {
         return mapper.toShortResponseDto(repository.save(entity));
     }
 
-    @Cacheable(value = "accounts:emails", key = "#email")
+    //@Cacheable(value = "accounts:emails", key = "#email")
     @Transactional(readOnly = true)
     @Override
     public boolean existsByEmail(String email) {
@@ -160,20 +161,29 @@ public class UnifiedAccountService implements AccountService {
 
     @Transactional
     @Override
+    public List<DeferAccountDeleteEvent> findAllByDisableReasonAndThreshold(DisableReason disableReason, Instant threshold, int batchSize) {
+        return repository.findAllByDisableReasonAndThreshold(disableReason.getCode(), threshold, batchSize)
+                .stream()
+                .map(projection -> new DeferAccountDeleteEvent(projection.getId(), projection.getRole().toString()))
+                .toList();
+    }
+
+    @Transactional
+    @Override
     public void softDeleteById(UUID id) {
         repository.disableById(id, DisableReason.SOFT_DELETE);
     }
 
     @Transactional
     @Override
-    public void hardDeleteById(UUID id) {
+    public void deleteById(UUID id) {
         repository.deleteById(id);
     }
 
     @Transactional
     @Override
-    public void hardDeleteBatch(DisableReason reason, Instant threshold, int batchSize) {
-        repository.deleteBatchByDisableReasonAndThreshold(reason.getCode(), threshold, batchSize);
+    public void deleteAllByIdIn(Set<UUID> ids) {
+        repository.deleteAllByIdIn(ids);
     }
 
     private Pageable generatePageable(PageDataHolder holder) {

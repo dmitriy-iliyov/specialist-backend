@@ -2,6 +2,8 @@ package com.specialist.auth.domain.account.repositories;
 
 import com.specialist.auth.core.oauth2.models.Provider;
 import com.specialist.auth.domain.account.models.AccountEntity;
+import com.specialist.auth.domain.account.models.dtos.AccountResponseDto;
+import com.specialist.auth.domain.account.models.dtos.ShortAccountWithRoleProjection;
 import com.specialist.auth.domain.account.models.enums.DisableReason;
 import com.specialist.auth.domain.account.models.enums.LockReason;
 import com.specialist.auth.domain.role.RoleEntity;
@@ -14,7 +16,9 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 @Repository
@@ -84,17 +88,17 @@ public interface AccountRepository extends JpaRepository<AccountEntity, UUID>, J
     @Query("SELECT a.role FROM AccountEntity a WHERE a.id = :id")
     Optional<RoleEntity> findRoleById(@Param("id") UUID id);
 
-    @Modifying
+    void deleteAllByIdIn(Set<UUID> ids);
+
     @Query(value = """
-        WITH to_delete AS (
-            SELECT id FROM accounts
-            WHERE disable_reason = :reasonCode AND updated_at <= :threshold
-            ORDER BY updated_at
-            LIMIT :batchSize
-            FOR UPDATE SKIP LOCKED
-        )
-        DELETE FROM accounts 
-        WHERE id IN (SELECT id FROM to_delete)
+        SELECT id, r.role FROM accounts
+        JOIN roles r ON r.id = accounts.role_id
+        WHERE disable_reason = :reasonCode AND updated_at <= :threshold
+        ORDER BY updated_at
+        LIMIT :batchSize
+        FOR UPDATE SKIP LOCKED
     """, nativeQuery = true)
-    void deleteBatchByDisableReasonAndThreshold(int reasonCode, Instant threshold, int batchSize);
+    List<ShortAccountWithRoleProjection> findAllByDisableReasonAndThreshold(@Param("reasonCode") int reasonCode,
+                                                                            @Param("threshold") Instant threshold,
+                                                                            @Param("batchSize") int batchSize);
 }

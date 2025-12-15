@@ -1,7 +1,7 @@
-package com.specialist.auth.domain.account.services;
+package com.specialist.auth.domain.account.infrastructure;
 
 import com.specialist.auth.domain.account.models.enums.AccountDeleteTaskStatus;
-import com.specialist.contracts.auth.AccountDeleteEvent;
+import com.specialist.contracts.auth.ImmediatelyAccountDeleteEvent;
 
 import java.util.List;
 import java.util.Set;
@@ -10,7 +10,7 @@ import java.util.UUID;
 public interface AccountDeleteTaskService {
     void save(UUID accountId, String stringRole);
 
-    List<AccountDeleteEvent> findBatchByStatus(AccountDeleteTaskStatus status, AccountDeleteTaskStatus lockStatus, int batchSize);
+    List<ImmediatelyAccountDeleteEvent> findBatchByStatus(AccountDeleteTaskStatus status, AccountDeleteTaskStatus lockStatus, int batchSize);
 
     void updateStatusBatchByIdIn(AccountDeleteTaskStatus status, Set<UUID> ids);
 

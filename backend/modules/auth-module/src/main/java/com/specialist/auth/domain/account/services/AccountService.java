@@ -6,9 +6,11 @@ import com.specialist.auth.domain.account.models.dtos.*;
 import com.specialist.auth.domain.account.models.enums.DisableReason;
 import com.specialist.auth.domain.authority.Authority;
 import com.specialist.auth.domain.role.Role;
+import com.specialist.contracts.auth.DeferAccountDeleteEvent;
 import com.specialist.utils.pagination.PageResponse;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -29,13 +31,15 @@ public interface AccountService {
 
     PageResponse<AccountResponseDto> findAllByFilter(AccountFilter filter);
 
+    List<DeferAccountDeleteEvent> findAllByDisableReasonAndThreshold(DisableReason disableReason, Instant threshold, int batchSize);
+
     ShortAccountResponseDto updatePassword(AccountPasswordUpdateDto dto);
 
     ShortAccountResponseDto updateEmail(AccountEmailUpdateDto dto);
 
     void softDeleteById(UUID id);
 
-    void hardDeleteById(UUID id);
+    void deleteById(UUID id);
 
-    void hardDeleteBatch(DisableReason reason, Instant threshold, int batchSize);
+    void deleteAllByIdIn(Set<UUID> ids);
 }

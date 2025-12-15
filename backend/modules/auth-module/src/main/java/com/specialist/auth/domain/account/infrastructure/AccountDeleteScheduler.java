@@ -1,22 +1,23 @@
-package com.specialist.auth.domain.account.services;
+package com.specialist.auth.domain.account.infrastructure;
 
+import com.specialist.auth.domain.account.models.dtos.AccountResponseDto;
 import com.specialist.auth.domain.account.models.enums.AccountDeleteTaskStatus;
 import com.specialist.auth.domain.account.models.enums.DisableReason;
-import com.specialist.contracts.auth.AccountDeleteEvent;
+import com.specialist.auth.domain.account.services.AccountService;
+import com.specialist.contracts.auth.DeferAccountDeleteEvent;
+import com.specialist.contracts.auth.ImmediatelyAccountDeleteEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.support.TransactionTemplate;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -36,40 +37,28 @@ public class AccountDeleteScheduler {
     public int HARD_DELETE_BATCH_SIZE;
 
     private final AccountDeleteTaskService service;
-    private final ApplicationEventPublisher eventPublisher;
-    private final TransactionTemplate transactionTemplate;
+    private final AccountDeleteEventSender sender;
     private final AccountService accountService;
 
     @Scheduled(
             initialDelayString = "${api.account-delete.propagation.initial_delay}",
             fixedDelayString = "${api.account-delete.propagation.fixed_delay}"
     )
-    public void publishEvents() {
-        List<AccountDeleteEvent> events = service.findBatchByStatus(
+    public void publishSoftDeleteEvents() {
+        List<ImmediatelyAccountDeleteEvent> events = service.findBatchByStatus(
                 AccountDeleteTaskStatus.READY_TO_SEND, AccountDeleteTaskStatus.SENDING, DELETE_PROPAGATION_BATCH_SIZE
         );
         if (events.isEmpty()) {
             return;
         }
-        Set<UUID> successIds = new HashSet<>();
-        Set<UUID> failedIds = new HashSet<>();
+        Set<UUID> ids = events.stream().map(ImmediatelyAccountDeleteEvent::id).collect(Collectors.toSet());
         try {
-            events.forEach(event -> {
-                try {
-                    transactionTemplate.executeWithoutResult(status -> eventPublisher.publishEvent(event));
-                    successIds.add(event.id());
-                } catch (Exception e) {
-                    log.error("Error send account delete event with id={}. ", event.id(), e);
-                    failedIds.add(event.id());
-                }
-            });
+            sender.sendImmediately(events);
+        } catch (Exception e) {
+            log.error("Error send account delete event with id={}. ", ids, e);
+            service.updateStatusBatchByIdIn(AccountDeleteTaskStatus.READY_TO_SEND, ids);
         } finally {
-            if (!successIds.isEmpty()) {
-                service.updateStatusBatchByIdIn(AccountDeleteTaskStatus.SENT, successIds);
-            }
-            if (!failedIds.isEmpty()) {
-                service.updateStatusBatchByIdIn(AccountDeleteTaskStatus.READY_TO_SEND, failedIds);
-            }
+            service.updateStatusBatchByIdIn(AccountDeleteTaskStatus.SENT, ids);
         }
     }
 
@@ -87,8 +76,18 @@ public class AccountDeleteScheduler {
             initialDelayString = "${api.account-delete.hard-delete.initial_delay}",
             fixedDelayString = "${api.account-delete.hard-delete.fixed_delay}"
     )
-    public void hardDelete() {
+    public void publishHardDeleteEvents() {
         Instant threshold = Instant.now().minusSeconds(TTL_BEFORE_HARD_DELETE.toSeconds());
-        accountService.hardDeleteBatch(DisableReason.SOFT_DELETE, threshold, HARD_DELETE_BATCH_SIZE);
+        List<DeferAccountDeleteEvent> accounts = accountService.findAllByDisableReasonAndThreshold(
+                DisableReason.SOFT_DELETE,
+                threshold,
+                HARD_DELETE_BATCH_SIZE
+        );
+        accountService.deleteAllByIdIn(
+                accounts.stream()
+                        .map(DeferAccountDeleteEvent::accountId)
+                        .collect(Collectors.toSet())
+        );
+        sender.sendDefer(accounts);
     }
 }

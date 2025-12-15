@@ -1,9 +1,9 @@
-package com.specialist.auth.domain.account.services;
+package com.specialist.auth.domain.account.infrastructure;
 
 import com.specialist.auth.domain.account.models.AccountDeleteTaskEntity;
 import com.specialist.auth.domain.account.models.enums.AccountDeleteTaskStatus;
 import com.specialist.auth.domain.account.repositories.AccountDeleteTaskRepository;
-import com.specialist.contracts.auth.AccountDeleteEvent;
+import com.specialist.contracts.auth.ImmediatelyAccountDeleteEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,10 +26,10 @@ public class AccountDeleteTaskServiceImpl implements AccountDeleteTaskService {
 
     @Transactional
     @Override
-    public List<AccountDeleteEvent> findBatchByStatus(AccountDeleteTaskStatus status, AccountDeleteTaskStatus lockStatus, int batchSize) {
+    public List<ImmediatelyAccountDeleteEvent> findBatchByStatus(AccountDeleteTaskStatus status, AccountDeleteTaskStatus lockStatus, int batchSize) {
         return repository.findAndLockBatchByStatus(status.getCode(), lockStatus.getCode(), batchSize)
                 .stream()
-                .map(entity -> new AccountDeleteEvent(entity.getId(), entity.getAccountId(), entity.getStringRole()))
+                .map(entity -> new ImmediatelyAccountDeleteEvent(entity.getId(), entity.getAccountId(), entity.getStringRole()))
                 .toList();
     }
 
