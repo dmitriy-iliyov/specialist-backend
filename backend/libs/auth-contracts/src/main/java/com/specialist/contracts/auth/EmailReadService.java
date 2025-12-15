@@ -1,2 +1,7 @@
-package com.specialist.contracts.auth;public interface AccountEmailService {
+package com.specialist.contracts.auth;
+
+import java.util.UUID;
+
+public interface EmailReadService {
+    String findById(UUID id);
 }

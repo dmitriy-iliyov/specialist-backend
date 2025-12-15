@@ -1,5 +1,6 @@
 package com.specialist.profile.services;
 
+import com.specialist.contracts.auth.EmailReadService;
 import com.specialist.contracts.profile.ProfileType;
 import com.specialist.contracts.profile.dto.BaseResponseDto;
 import com.specialist.core.exceptions.models.BaseNotFoundException;
@@ -25,16 +26,22 @@ public class ProfileReadServiceImpl implements ProfileReadService {
 
     private final Map<ProfileType, ProfileReadStrategy> strategyMap;
     private final RedisTemplate<String, String> redisTemplate;
+    private final EmailReadService emailService;
 
-    public ProfileReadServiceImpl(List<ProfileReadStrategy> strategies, RedisTemplate<String, String> redisTemplate) {
+    public ProfileReadServiceImpl(List<ProfileReadStrategy> strategies, RedisTemplate<String, String> redisTemplate, EmailReadService emailService) {
         this.strategyMap = strategies.stream().
                 collect(Collectors.toMap(ProfileReadStrategy::getType, Function.identity()));
         this.redisTemplate = redisTemplate;
+        this.emailService = emailService;
     }
 
     @Override
     public String findEmailById(UUID id) {
-        return redisTemplate.opsForValue().getAndDelete("profiles:emails:%s".formatted(id));
+        String email = redisTemplate.opsForValue().getAndDelete("profiles:emails:%s".formatted(id));
+        if (email == null) {
+            email = emailService.findById(id);
+        }
+        return email;
     }
 
     @Override

@@ -12,10 +12,13 @@ public class AccountCacheServiceImpl implements AccountCacheService {
     private final CacheManager cacheManager;
 
     @Override
-    public void putEmailAsTrue(String email) {
+    public void putEmailExistAs(String email, Boolean value) {
+        if (value == null) {
+            throw new IllegalStateException("Email value cannot be null");
+        }
         Cache cache = cacheManager.getCache("accounts:emails");
         if (cache != null) {
-            cache.put(email, Boolean.TRUE);
+            cache.put(email, value);
         }
     }
 }

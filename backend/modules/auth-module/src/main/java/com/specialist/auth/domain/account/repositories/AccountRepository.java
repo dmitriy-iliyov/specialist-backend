@@ -101,4 +101,10 @@ public interface AccountRepository extends JpaRepository<AccountEntity, UUID>, J
     List<ShortAccountWithRoleProjection> findAllByDisableReasonAndThreshold(@Param("reasonCode") int reasonCode,
                                                                             @Param("threshold") Instant threshold,
                                                                             @Param("batchSize") int batchSize);
+
+    @Query("""
+        SELECT a.email FROM AccountEntity a
+        WHERE a.id = :id
+    """)
+    Optional<String> findEmailById(@Param("id") UUID id);
 }

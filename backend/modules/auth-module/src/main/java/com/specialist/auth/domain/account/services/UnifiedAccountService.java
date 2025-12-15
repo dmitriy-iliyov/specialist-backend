@@ -17,7 +17,7 @@ import com.specialist.auth.domain.role.RoleEntity;
 import com.specialist.auth.domain.role.RoleService;
 import com.specialist.auth.exceptions.AccountNotFoundByEmailException;
 import com.specialist.auth.exceptions.AccountNotFoundByIdException;
-import com.specialist.auth.exceptions.InvalidOldPasswordException;
+import com.specialist.auth.exceptions.InvalidPasswordException;
 import com.specialist.auth.exceptions.RoleNotFoundException;
 import com.specialist.contracts.auth.DeferAccountDeleteEvent;
 import com.specialist.utils.pagination.PageDataHolder;
@@ -64,7 +64,7 @@ public class UnifiedAccountService implements AccountService {
         entity.setEnabled(false);
         entity.setDisableReason(DisableReason.EMAIL_CONFIRMATION_REQUIRED);
         ShortAccountResponseDto responseDto = mapper.toShortResponseDto(repository.save(entity));
-        cacheService.putEmailAsTrue(responseDto.email());
+        cacheService.putEmailExistAs(responseDto.email(), Boolean.TRUE);
         return responseDto;
     }
 
@@ -80,10 +80,12 @@ public class UnifiedAccountService implements AccountService {
         entity.setAuthorities(authorities);
         entity.setLocked(false);
         entity.setEnabled(true);
-        return mapper.toShortResponseDto(repository.save(entity));
+        entity = repository.save(entity);
+        cacheService.putEmailExistAs(entity.getEmail(), Boolean.TRUE);
+        return mapper.toShortResponseDto(entity);
     }
 
-    //@Cacheable(value = "accounts:emails", key = "#email")
+    @Cacheable(value = "accounts:emails", key = "#email")
     @Transactional(readOnly = true)
     @Override
     public boolean existsByEmail(String email) {
@@ -101,7 +103,7 @@ public class UnifiedAccountService implements AccountService {
     public ShortAccountResponseDto updatePassword(AccountPasswordUpdateDto dto) {
         AccountEntity entity = repository.findById(dto.getId()).orElseThrow(AccountNotFoundByIdException::new);
         if (!passwordEncoder.matches(dto.getOldPassword(), entity.getPassword())) {
-            throw new InvalidOldPasswordException("old_password");
+            throw new InvalidPasswordException("old_password");
         }
         entity.setPassword(passwordEncoder.encode(dto.getNewPassword()));
         repository.save(entity);
@@ -112,13 +114,16 @@ public class UnifiedAccountService implements AccountService {
     @Override
     public ShortAccountResponseDto updateEmail(AccountEmailUpdateDto dto) {
         AccountEntity entity = repository.findById(dto.getId()).orElseThrow(AccountNotFoundByIdException::new);
+        String oldEmail = entity.getEmail();
         if (!passwordEncoder.matches(dto.getPassword(), entity.getPassword())) {
-            throw new InvalidOldPasswordException("password");
+            throw new InvalidPasswordException("password");
         }
         entity.setEmail(dto.getEmail());
         entity.setEnabled(false);
         entity.setDisableReason(DisableReason.EMAIL_CONFIRMATION_REQUIRED);
         repository.save(entity);
+        cacheService.putEmailExistAs(entity.getEmail(), Boolean.TRUE);
+        cacheService.putEmailExistAs(oldEmail, Boolean.FALSE);
         return mapper.toShortResponseDto(entity);
     }
 
@@ -145,6 +150,12 @@ public class UnifiedAccountService implements AccountService {
     @Override
     public Provider findProviderByEmail(String email) {
         return repository.findProviderByEmail(email).orElseThrow(AccountNotFoundByEmailException::new);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public String findEmailById(UUID id) {
+        return repository.findEmailById(id).orElseThrow(AccountNotFoundByIdException::new);
     }
 
     @Transactional(readOnly = true)

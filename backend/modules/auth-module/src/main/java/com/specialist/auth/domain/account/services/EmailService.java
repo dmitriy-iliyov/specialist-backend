@@ -3,36 +3,43 @@ package com.specialist.auth.domain.account.services;
 import com.specialist.auth.domain.account.models.dtos.AccountEmailUpdateDto;
 import com.specialist.auth.domain.account.models.dtos.ShortAccountResponseDto;
 import com.specialist.auth.domain.account.models.events.EmailUpdatedEvent;
+import com.specialist.auth.exceptions.NonUniqueEmailException;
+import com.specialist.contracts.auth.EmailReadService;
 import com.specialist.contracts.profile.ProfileEmailUpdateService;
-import jakarta.validation.ConstraintValidator;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Set;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class EmailUpdateFacadeImpl implements EmailUpdateFacade {
+public class EmailService implements EmailUpdateService, EmailReadService {
 
     private final AccountService accountService;
     private final ProfileEmailUpdateService profileEmailUpdateService;
     private final ApplicationEventPublisher eventPublisher;
 
-    // WARNING: till systemUserService in the same app context
+    // WARNING: till profileEmailUpdateService in the same app context
     @Transactional
     @Override
-    public ShortAccountResponseDto updateEmail(AccountEmailUpdateDto dto) {
-        if (dto.getId().equals(accountService.findIdByEmail(dto.getEmail()))) {}
+    public ShortAccountResponseDto update(AccountEmailUpdateDto dto) {
         if (accountService.existsByEmail(dto.getEmail())) {
-
+            if (dto.getId().equals(accountService.findIdByEmail(dto.getEmail()))) {
+                return new ShortAccountResponseDto(dto.getId(), dto.getEmail());
+            } else {
+                throw new NonUniqueEmailException();
+            }
         }
         ShortAccountResponseDto responseDto = accountService.updateEmail(dto);
         profileEmailUpdateService.updateById(dto.getType(), dto.getId(), dto.getEmail());
         eventPublisher.publishEvent(new EmailUpdatedEvent(dto.getEmail()));
         return responseDto;
+    }
+
+    @Override
+    public String findById(UUID id) {
+        return accountService.findEmailById(id);
     }
 }

@@ -6,7 +6,7 @@ import com.specialist.auth.domain.account.models.dtos.AccountEmailUpdateDto;
 import com.specialist.auth.domain.account.models.dtos.AccountPasswordUpdateDto;
 import com.specialist.auth.domain.account.services.AccountDeleteFacade;
 import com.specialist.auth.domain.account.services.AccountService;
-import com.specialist.auth.domain.account.services.EmailUpdateFacade;
+import com.specialist.auth.domain.account.services.EmailUpdateService;
 import com.specialist.contracts.auth.PrincipalDetails;
 import com.specialist.contracts.profile.ProfileType;
 import jakarta.servlet.http.HttpServletResponse;
@@ -26,15 +26,15 @@ import java.util.UUID;
 public class AccountManagementController {
 
     private final AccountService service;
-    private final EmailUpdateFacade emailUpdateFacade;
+    private final EmailUpdateService emailUpdateService;
     private final AccountDeleteFacade deleteFacade;
     private final SessionCookieManager sessionCookieManager;
 
-    public AccountManagementController(AccountService service, EmailUpdateFacade emailUpdateFacade,
+    public AccountManagementController(AccountService service, EmailUpdateService emailUpdateService,
                                        @Qualifier("defaultAccountDeleteFacade") AccountDeleteFacade deleteFacade,
                                        SessionCookieManager sessionCookieManager) {
         this.service = service;
-        this.emailUpdateFacade = emailUpdateFacade;
+        this.emailUpdateService = emailUpdateService;
         this.deleteFacade = deleteFacade;
         this.sessionCookieManager = sessionCookieManager;
     }
@@ -58,7 +58,7 @@ public class AccountManagementController {
         //  this is ok while auth-tokens don't depends on user email
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(emailUpdateFacade.updateEmail(dto));
+                .body(emailUpdateService.update(dto));
     }
 
     @DeleteMapping

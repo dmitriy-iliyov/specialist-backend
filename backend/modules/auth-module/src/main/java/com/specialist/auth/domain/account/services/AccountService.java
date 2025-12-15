@@ -27,6 +27,8 @@ public interface AccountService {
 
     Provider findProviderByEmail(String email);
 
+    String findEmailById(UUID id);
+
     UUID findIdByEmail(String email);
 
     PageResponse<AccountResponseDto> findAllByFilter(AccountFilter filter);
