@@ -11,8 +11,11 @@ import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -42,6 +45,19 @@ public class PictureAzureBlobStorage implements PictureStorage {
             log.error("Error when uploading picture to cloud.");
             throw new RuntimeException("Error when uploading picture to cloud:", e);
         }
+    }
+
+    @Override
+    public Map<UUID, String> saveAll(Map<UUID, MultipartFile> pictures) {
+        if (pictures == null || pictures.isEmpty()) {
+            return Collections.emptyMap();
+        }
+        return pictures.entrySet()
+                .stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        e -> save(e.getValue(), e.getKey())
+                ));
     }
 
     @Override
