@@ -1,7 +1,7 @@
 package com.specialist.specialistdirectory.infrastructure;
 
-import com.specialist.contracts.auth.AccountDeleteEvent;
-import com.specialist.contracts.auth.AccountDeleteHandler;
+import com.specialist.contracts.auth.DeferAccountDeleteEvent;
+import com.specialist.contracts.auth.DeferAccountDeleteHandler;
 import com.specialist.contracts.profile.ProfileType;
 import com.specialist.specialistdirectory.domain.bookmark.services.BookmarkService;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistService;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class SpecialistDirectoryAccountDeleteHandler implements AccountDeleteHandler {
+public class SpecialistDirectoryAccountDeleteHandler implements DeferAccountDeleteHandler {
 
     private final SpecialistService specialistService;
     private final BookmarkService bookmarkService;
@@ -25,7 +25,7 @@ public class SpecialistDirectoryAccountDeleteHandler implements AccountDeleteHan
     // DISCUSS schedule and if reviews count is big
     @Transactional
     @Override
-    public void handle(List<AccountDeleteEvent> events) {
+    public void handle(List<DeferAccountDeleteEvent> events) {
         Set<UUID> specialistAccountIds = new HashSet<>();
         Set<UUID> accountIds = events.stream()
                 .map(event -> {

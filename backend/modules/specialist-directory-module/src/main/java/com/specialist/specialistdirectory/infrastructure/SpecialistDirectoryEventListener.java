@@ -1,7 +1,9 @@
 package com.specialist.specialistdirectory.infrastructure;
 
-import com.specialist.contracts.auth.AccountDeleteEvent;
-import com.specialist.contracts.auth.AccountDeleteHandler;
+import com.specialist.contracts.auth.DeferAccountDeleteEvent;
+import com.specialist.contracts.auth.DeferAccountDeleteHandler;
+import com.specialist.contracts.auth.ImmediatelyAccountDeleteEvent;
+import com.specialist.contracts.auth.ImmediatelyAccountDeleteHandler;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
@@ -12,14 +14,14 @@ import java.util.List;
 @Component
 public class SpecialistDirectoryEventListener {
 
-    private final AccountDeleteHandler accountDeleteHandler;
+    private final DeferAccountDeleteHandler accountDeleteHandler;
 
-    public SpecialistDirectoryEventListener(@Qualifier("specialistDirectoryAccountDeleteHandler") AccountDeleteHandler accountDeleteHandler) {
+    public SpecialistDirectoryEventListener(@Qualifier("specialistDirectoryAccountDeleteHandler") DeferAccountDeleteHandler accountDeleteHandler) {
         this.accountDeleteHandler = accountDeleteHandler;
     }
 
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
-    public void listen(List<AccountDeleteEvent> event) {
-        accountDeleteHandler.handle(event);
+    public void listen(List<DeferAccountDeleteEvent> events) {
+        accountDeleteHandler.handle(events);
     }
 }
