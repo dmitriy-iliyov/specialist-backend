@@ -14,6 +14,8 @@ public record ReviewResponseDto(
 
         String description,
 
+        String reviewUrl,
+
         Integer rating,
 
         @JsonProperty("created_at")

@@ -2,7 +2,7 @@ package com.specialist.specialistdirectory.domain.review.controllers;
 
 import com.specialist.specialistdirectory.domain.review.models.filters.AdminReviewSort;
 import com.specialist.specialistdirectory.domain.review.services.AdminReviewManagementFacade;
-import com.specialist.utils.validation.annotation.ValidUuid;
+import com.specialist.utils.uuid.annotation.ValidUuid;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;

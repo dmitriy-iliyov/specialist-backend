@@ -4,7 +4,7 @@ import com.specialist.specialistdirectory.domain.review.models.enums.ReviewStatu
 import com.specialist.specialistdirectory.domain.specialist.mappers.ApproverTypeConverter;
 import com.specialist.specialistdirectory.domain.specialist.models.SpecialistEntity;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.ApproverType;
-import com.specialist.utils.UuidUtils;
+import com.specialist.utils.uuid.UuidUtils;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,6 +28,8 @@ public class ReviewEntity {
 
     @Column(nullable = false, length = 1000)
     private String description;
+
+    private String pictureUrl;
 
     @Column(nullable = false)
     private long rating;

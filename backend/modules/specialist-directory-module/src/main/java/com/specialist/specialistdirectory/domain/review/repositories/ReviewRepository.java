@@ -25,9 +25,9 @@ public interface ReviewRepository extends JpaRepository<ReviewEntity, UUID> {
 
     @Query("""
         SELECT r FROM ReviewEntity r
-        WHERE r.specialist.id = :specialist_id AND r.status =: status
+        WHERE r.specialist.id = :specialistId AND r.status =: status
     """)
-    Page<ReviewEntity> findAllBySpecialistIdAndStatus(@Param("specialist_id") UUID specialistId,
+    Page<ReviewEntity> findAllBySpecialistIdAndStatus(@Param("specialistId") UUID specialistId,
                                                       @Param("status") ReviewStatus status,
                                                       Pageable pageable);
 
@@ -38,4 +38,12 @@ public interface ReviewRepository extends JpaRepository<ReviewEntity, UUID> {
         WHERE r.id = :id
     """)
     void updateStatusById(@Param("id") UUID id, @Param("status") ReviewStatus status, @Param("approver") ApproverType approver);
+
+    @Modifying
+    @Query("""
+        UPDATE ReviewEntity r
+        SET r.pictureUrl = :pictureUrl
+        WHERE r.id = :id
+    """)
+    void updatePictureUrlById(@Param("id") UUID id, @Param("pictureUrl") String pictureUrl);
 }

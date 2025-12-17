@@ -15,6 +15,8 @@ import java.util.List;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, uses = {InstantToLocalDataTimeConverter.class})
 public interface ReviewMapper {
 
+
+
     ReviewEntity toEntity(ReviewCreateDto dto);
 
     @Mapping(target = "createdAt", source = "createdAt")

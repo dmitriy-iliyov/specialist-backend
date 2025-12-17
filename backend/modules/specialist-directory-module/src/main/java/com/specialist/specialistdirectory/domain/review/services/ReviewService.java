@@ -18,6 +18,8 @@ import java.util.UUID;
 public interface ReviewService {
     ReviewResponseDto save(SpecialistEntity specialist, ReviewCreateDto dto);
 
+    void updatePictureUrlById(UUID id, String pictureUrl);
+
     void approve(UUID specialistId, UUID id, ApproverType approver);
 
     Pair<NextOperationType, Map<ReviewAgeType, ReviewResponseDto>> update(ReviewUpdateDto dto);

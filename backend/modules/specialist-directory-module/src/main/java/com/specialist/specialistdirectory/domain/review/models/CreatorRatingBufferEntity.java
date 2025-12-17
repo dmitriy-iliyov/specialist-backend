@@ -2,7 +2,7 @@ package com.specialist.specialistdirectory.domain.review.models;
 
 import com.specialist.specialistdirectory.domain.review.mappers.DeliveryStateConverter;
 import com.specialist.specialistdirectory.domain.review.models.enums.DeliveryState;
-import com.specialist.utils.UuidUtils;
+import com.specialist.utils.uuid.UuidUtils;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

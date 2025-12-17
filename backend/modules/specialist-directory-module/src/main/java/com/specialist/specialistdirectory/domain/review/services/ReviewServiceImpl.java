@@ -48,6 +48,12 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Transactional
     @Override
+    public void updatePictureUrlById(UUID id, String pictureUrl) {
+        repository.updatePictureUrlById(id, pictureUrl);
+    }
+
+    @Transactional
+    @Override
     public void approve(UUID specialistId, UUID id, ApproverType approver) {
         ReviewEntity entity = repository.findById(id).orElseThrow(ReviewNotFoundByIdException::new );
         this.assertSpecialistAffiliation(entity.getSpecialist().getId(), specialistId);
@@ -62,13 +68,13 @@ public class ReviewServiceImpl implements ReviewService {
         Pair<NextOperationType, Map<ReviewAgeType, ReviewResponseDto>> resultPair;
         Map<ReviewAgeType, ReviewResponseDto> resultMap = new HashMap<>();
 
-        ReviewEntity existedReview = repository.findById(newReview.getId()).orElseThrow(ReviewNotFoundByIdException::new);
-        this.assertOwnership(existedReview.getCreatorId(), newReview.getCreatorId());
-        this.assertSpecialistAffiliation(existedReview.getSpecialist().getId(), newReview.getSpecialistId());
+        ReviewEntity existedReview = repository.findById(newReview.id()).orElseThrow(ReviewNotFoundByIdException::new);
+        this.assertOwnership(existedReview.getCreatorId(), newReview.creatorId());
+        this.assertSpecialistAffiliation(existedReview.getSpecialist().getId(), newReview.specialistId());
 
         resultMap.put(ReviewAgeType.OLD, mapper.toDto(existedReview));
-        if (existedReview.getRating() != newReview.getRating()) {
-            existedReview.setRating(newReview.getRating());
+        if (existedReview.getRating() != newReview.rating()) {
+            existedReview.setRating(newReview.rating());
             resultPair = Pair.of(NextOperationType.UPDATE, resultMap);
         } else {
             resultPair = Pair.of(NextOperationType.SKIP_UPDATE, resultMap);

@@ -1,15 +1,14 @@
 package com.specialist.specialistdirectory.domain.review.services;
 
-import com.specialist.specialistdirectory.domain.review.models.dtos.ReviewCreateDto;
+import com.specialist.specialistdirectory.domain.review.models.dtos.ReviewCreateRequest;
+import com.specialist.specialistdirectory.domain.review.models.dtos.ReviewDeleteRequest;
 import com.specialist.specialistdirectory.domain.review.models.dtos.ReviewResponseDto;
-import com.specialist.specialistdirectory.domain.review.models.dtos.ReviewUpdateDto;
-
-import java.util.UUID;
+import com.specialist.specialistdirectory.domain.review.models.dtos.ReviewUpdateRequest;
 
 public interface ReviewManagementFacade {
-    ReviewResponseDto save(ReviewCreateDto dto);
+    ReviewResponseDto save(ReviewCreateRequest request);
 
-    ReviewResponseDto update(ReviewUpdateDto dto);
+    ReviewResponseDto update(ReviewUpdateRequest request);
 
-    void delete(UUID creatorId, UUID specialistId, UUID id);
+    void delete(ReviewDeleteRequest request);
 }

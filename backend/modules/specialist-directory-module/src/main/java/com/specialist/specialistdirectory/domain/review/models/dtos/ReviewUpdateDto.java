@@ -1,33 +1,16 @@
 package com.specialist.specialistdirectory.domain.review.models.dtos;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
-
 import java.util.UUID;
 
-@RequiredArgsConstructor
-@Data
-public class ReviewUpdateDto {
+public record ReviewUpdateDto(
+        UUID id,
+        UUID specialistId,
+        UUID creatorId,
+        String description,
+        Integer rating
+) {
 
-    @JsonIgnore
-    private UUID id;
-
-    @JsonIgnore
-    private UUID creatorId;
-
-    @NotBlank(message = "Description is required.")
-    private final String description;
-
-    @NotNull(message = "Rating is required.")
-    @PositiveOrZero(message = "Rating should be positive.")
-    @Max(value = 5, message = "Max rating value is 5.")
-    private final Integer rating;
-
-    @JsonIgnore
-    private UUID specialistId;
+    public static ReviewUpdateDto of(ReviewUpdateRequest request, ReviewPayload payload) {
+        return new ReviewUpdateDto(request.id(), request.specialistId(), request.creatorId(), payload.description(), payload.rating());
+    }
 }
