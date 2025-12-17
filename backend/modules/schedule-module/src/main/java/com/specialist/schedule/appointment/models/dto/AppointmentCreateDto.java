@@ -5,7 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.specialist.schedule.appointment.models.enums.AppointmentType;
 import com.specialist.schedule.appointment.models.marker.AppointmentMarker;
-import com.specialist.utils.validation.annotation.ValidEnum;
+import com.specialist.utils.uuid.UUIDv7;
+import com.specialist.utils.validation.ValidEnum;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -23,6 +24,7 @@ public class AppointmentCreateDto implements AppointmentMarker {
 
         @JsonProperty("specialist_id")
         @NotNull(message = "Specialist id shouldn't be empty or blank!")
+        @UUIDv7(paramName = "specialistId", message = "Id should have valid format.")
         private final UUID specialistId;
 
         @JsonFormat(pattern = "yyyy-MM-dd")

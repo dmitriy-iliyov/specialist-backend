@@ -3,7 +3,7 @@ package com.specialist.auth.domain.service_account;
 import com.specialist.auth.domain.access_token.models.AccessTokenUserDetails;
 import com.specialist.auth.domain.service_account.models.ServiceAccountDto;
 import com.specialist.utils.pagination.PageRequest;
-import com.specialist.utils.validation.annotation.ValidUuid;
+import com.specialist.utils.uuid.UUIDv7;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -32,8 +32,7 @@ public class AdminServiceAccountController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@AuthenticationPrincipal AccessTokenUserDetails principal,
-                                    @PathVariable("id") @ValidUuid(paramName = "id", message = "Id should be valid format.")
-                                    String id,
+                                    @PathVariable("id") @UUIDv7(paramName = "id", message = "Id should have valid format.") String id,
                                     @RequestBody @Valid ServiceAccountDto dto) {
         dto.setId(UUID.fromString(id));
         return ResponseEntity
@@ -50,8 +49,7 @@ public class AdminServiceAccountController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@AuthenticationPrincipal AccessTokenUserDetails principal,
-                                    @PathVariable("id") @ValidUuid(paramName = "id", message = "Id should be valid format.")
-                                    String id) {
+                                    @PathVariable("id") @UUIDv7(paramName = "id", message = "Id should have valid format.") String id) {
         service.deleteById(UUID.fromString(id));
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)

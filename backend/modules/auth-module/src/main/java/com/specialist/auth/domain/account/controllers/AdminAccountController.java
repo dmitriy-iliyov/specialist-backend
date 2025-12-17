@@ -6,7 +6,7 @@ import com.specialist.auth.domain.account.models.dtos.DisableRequest;
 import com.specialist.auth.domain.account.models.dtos.LockRequest;
 import com.specialist.auth.domain.account.models.dtos.ManagedAccountCreateDto;
 import com.specialist.auth.domain.account.services.*;
-import com.specialist.utils.validation.annotation.ValidUuid;
+import com.specialist.utils.uuid.UUIDv7;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -54,9 +54,9 @@ public class AdminAccountController {
 
     @PatchMapping("/{id}/demote")
     public ResponseEntity<?> demote(@PathVariable("id")
-                                    @ValidUuid(paramName = "id", message = "Id should have valid format.") UUID id,
+                                    @UUIDv7(paramName = "id", message = "Id should have valid format.") String id,
                                     @RequestBody @Valid DemodeRequest request) {
-        request.setAccountId(id);
+        request.setAccountId(UUID.fromString(id));
         managementFacade.demoteById(request);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
@@ -66,9 +66,9 @@ public class AdminAccountController {
     @PreAuthorize("hasAnyAuthority('ACCOUNT_LOCK', 'ACCOUNT_MANAGER')")
     @PatchMapping("/{id}/lock")
     public ResponseEntity<?> lock(@PathVariable("id")
-                                  @ValidUuid(paramName = "id", message = "Id should have valid format.") UUID id,
+                                  @UUIDv7(paramName = "id", message = "Id should have valid format.") String id,
                                   @RequestBody @Valid LockRequest request) {
-        managementFacade.lockById(id, request);
+        managementFacade.lockById(UUID.fromString(id), request);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
@@ -77,8 +77,8 @@ public class AdminAccountController {
     @PreAuthorize("hasAnyAuthority('ACCOUNT_LOCK', 'ACCOUNT_MANAGER')")
     @PatchMapping("/{id}/unlock")
     public ResponseEntity<?> unlock(@PathVariable("id")
-                                    @ValidUuid(paramName = "id", message = "Id should have valid format.") UUID id) {
-        adminService.unlockById(id);
+                                    @UUIDv7(paramName = "id", message = "Id should have valid format.") String id) {
+        adminService.unlockById(UUID.fromString(id));
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
@@ -87,9 +87,9 @@ public class AdminAccountController {
     @PreAuthorize("hasAnyAuthority('ACCOUNT_DISABLE', 'ACCOUNT_MANAGER')")
     @PatchMapping("/{id}/disable")
     public ResponseEntity<?> disable(@PathVariable("id")
-                                     @ValidUuid(paramName = "id", message = "Id should have valid format.") UUID id,
+                                     @UUIDv7(paramName = "id", message = "Id should have valid format.") String id,
                                      @RequestBody @Valid DisableRequest request) {
-        managementFacade.disableById(id, request);
+        managementFacade.disableById(UUID.fromString(id), request);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
@@ -98,8 +98,8 @@ public class AdminAccountController {
     @PreAuthorize("hasAnyAuthority('ACCOUNT_DISABLE', 'ACCOUNT_MANAGER')")
     @PatchMapping("/{id}/enable")
     public ResponseEntity<?> enable(@PathVariable("id")
-                                    @ValidUuid(paramName = "id", message = "Id should have valid format.") UUID id) {
-        adminService.enableById(id);
+                                    @UUIDv7(paramName = "id", message = "Id should have valid format.") String id) {
+        adminService.enableById(UUID.fromString(id));
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
@@ -108,8 +108,8 @@ public class AdminAccountController {
     @PreAuthorize("hasAnyAuthority('ACCOUNT_DELETE', 'ACCOUNT_MANAGER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id")
-                                    @ValidUuid(paramName = "id", message = "Id should have valid format.") UUID id) {
-        deleteOrchestrator.delete(id);
+                                    @UUIDv7(paramName = "id", message = "Id should have valid format.") String id) {
+        deleteOrchestrator.delete(UUID.fromString(id));
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
