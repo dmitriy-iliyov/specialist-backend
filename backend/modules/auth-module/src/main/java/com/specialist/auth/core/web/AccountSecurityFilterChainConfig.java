@@ -78,6 +78,7 @@ public class AccountSecurityFilterChainConfig {
                         .requestMatchers("/api/v1/accounts/confirmation/**",
                                          "/api/v1/accounts/password-recovery/**").permitAll()
                         .requestMatchers("/api/v1/profiles/me", "/api/v1/profiles/me/avatar").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/profiles").hasRole("UNCOMPLETED_USER")
                         .requestMatchers("/api/v1/profiles", "/api/v1/profiles/**").permitAll()
                         .requestMatchers("/api/v1/me/bookmarks", "/api/v1/me/bookmarks/**").authenticated()
                         .requestMatchers("/api/v1/languages", "/api/v1/languages/**", "/api/v1/contacts/**").permitAll()
