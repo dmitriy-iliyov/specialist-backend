@@ -8,7 +8,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 
 @Service
 @RequiredArgsConstructor
-public final class AppointmentCancelEventListener {
+public class AppointmentCancelEventListener {
 
     private final AppointmentCancelEventHandler handler;
 

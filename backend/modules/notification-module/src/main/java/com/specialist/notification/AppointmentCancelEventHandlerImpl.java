@@ -23,7 +23,7 @@ public class AppointmentCancelEventHandlerImpl implements AppointmentCancelEvent
         Set<UUID> ids = new HashSet<>();
         for (SystemAppointmentResponseDto appointment : appointments) {
             int initiatorFlag;
-            if (!appointment.userId().equals(event.initiatorId())) {
+            if (!event.initiatorIds().contains(appointment.userId())) {
                 ids.add(appointment.userId());
                 initiatorFlag = 2;
             } else {
@@ -46,6 +46,5 @@ public class AppointmentCancelEventHandlerImpl implements AppointmentCancelEvent
                         })
                         .toList()
         );
-        // outbox
     }
 }
