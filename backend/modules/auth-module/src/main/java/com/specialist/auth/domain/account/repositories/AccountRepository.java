@@ -80,11 +80,11 @@ public interface AccountRepository extends JpaRepository<AccountEntity, UUID>, J
     """)
     void unlockById(UUID id);
 
-    @EntityGraph(attributePaths = {"type", "authorities"})
-    @Query("SELECT a FROM AccountEntity a WHERE a.id =: id")
+    @EntityGraph(attributePaths = {"role", "authorities"})
+    @Query("SELECT a FROM AccountEntity a WHERE a.id = :id")
     Optional<AccountEntity> findByIdWithRoleAndAuthorities(@Param("id") UUID id);
 
-    @EntityGraph(attributePaths = "type")
+    @EntityGraph(attributePaths = "role")
     @Query("SELECT a.role FROM AccountEntity a WHERE a.id = :id")
     Optional<RoleEntity> findRoleById(@Param("id") UUID id);
 
