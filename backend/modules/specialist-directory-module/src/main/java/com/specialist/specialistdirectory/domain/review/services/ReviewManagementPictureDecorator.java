@@ -16,7 +16,8 @@ public class ReviewManagementPictureDecorator implements ReviewManagementFacade 
     private final ReviewService reviewService;
 
     public ReviewManagementPictureDecorator(@Qualifier("reviewManagementRetryDecorator") ReviewManagementFacade delegate,
-                                            PictureStorage pictureStorage, ReviewService reviewService) {
+                                            @Qualifier("reviewPictureStorage") PictureStorage pictureStorage,
+                                            ReviewService reviewService) {
         this.delegate = delegate;
         this.pictureStorage = pictureStorage;
         this.reviewService = reviewService;
