@@ -1,6 +1,5 @@
 package com.specialist.picture;
 
-import org.mapstruct.Named;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -14,7 +13,6 @@ public interface PictureStorage {
 
     Map<UUID, String> saveAll(Map<UUID, MultipartFile> pictures);
 
-    @Named("resolvePictureUrl")
     String resolvePictureUrl(String avatarUrl);
 
     void deleteByAggregateId(UUID aggregateId);

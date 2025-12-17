@@ -6,7 +6,6 @@ import com.azure.storage.blob.models.BlobErrorCode;
 import com.azure.storage.blob.models.BlobStorageException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.mapstruct.Named;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
@@ -61,7 +60,6 @@ public class PictureAzureBlobStorage implements PictureStorage {
                 ));
     }
 
-    @Named("resolvePictureUrl")
     @Override
     public String resolvePictureUrl(String pictureUrl) {
         if (pictureUrl != null) {
