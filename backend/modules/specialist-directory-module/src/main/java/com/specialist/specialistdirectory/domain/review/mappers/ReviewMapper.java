@@ -1,28 +1,34 @@
 package com.specialist.specialistdirectory.domain.review.mappers;
 
+import com.specialist.picture.PictureStorage;
 import com.specialist.specialistdirectory.domain.review.models.ReviewEntity;
 import com.specialist.specialistdirectory.domain.review.models.dtos.ReviewCreateDto;
 import com.specialist.specialistdirectory.domain.review.models.dtos.ReviewResponseDto;
 import com.specialist.specialistdirectory.domain.review.models.dtos.ReviewUpdateDto;
 import com.specialist.utils.InstantToLocalDataTimeConverter;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingConstants;
-import org.mapstruct.MappingTarget;
+import org.mapstruct.*;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.List;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, uses = {InstantToLocalDataTimeConverter.class})
-public interface ReviewMapper {
+public abstract class ReviewMapper {
 
+    @Qualifier("reviewPictureStorage")
+    protected PictureStorage pictureStorage;
 
+    @Named("resolvePictureUrl")
+    protected String resolvePictureUrl(String avatarUrl) {
+        return pictureStorage.resolvePictureUrl(avatarUrl);
+    }
 
-    ReviewEntity toEntity(ReviewCreateDto dto);
+    public abstract ReviewEntity toEntity(ReviewCreateDto dto);
 
     @Mapping(target = "createdAt", source = "createdAt")
-    ReviewResponseDto toDto(ReviewEntity entity);
+    @Mapping(target = "pictureUrl", source = "pictureUrl", qualifiedByName = "resolvePictureUrl")
+    public abstract ReviewResponseDto toDto(ReviewEntity entity);
 
-    List<ReviewResponseDto> toDtoList(List<ReviewEntity> entityList);
+    public abstract List<ReviewResponseDto> toDtoList(List<ReviewEntity> entityList);
 
-    void updateEntityFromDto(ReviewUpdateDto dto, @MappingTarget ReviewEntity entity);
+    public abstract void updateEntityFromDto(ReviewUpdateDto dto, @MappingTarget ReviewEntity entity);
 }
