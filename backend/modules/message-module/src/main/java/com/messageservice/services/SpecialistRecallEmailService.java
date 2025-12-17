@@ -11,7 +11,7 @@ public class SpecialistRecallEmailService implements SpecialistRecallMessageServ
 
     private final MessageService service;
 
-    public SpecialistRecallEmailService(@Qualifier("emailService") MessageService service) {
+    public SpecialistRecallEmailService(@Qualifier("notificationEmailService") MessageService service) {
         this.service = service;
     }
 

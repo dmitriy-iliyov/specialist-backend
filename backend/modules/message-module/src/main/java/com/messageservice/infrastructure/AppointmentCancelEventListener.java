@@ -3,16 +3,17 @@ package com.messageservice.infrastructure;
 import com.messageservice.services.AppointmentCancelHandler;
 import com.specialist.contracts.notification.ExternalAppointmentCancelEvent;
 import lombok.RequiredArgsConstructor;
-import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 @Component
 @RequiredArgsConstructor
-public final class AppointmentCancelKafkaListener {
+public class AppointmentCancelEventListener {
 
     private final AppointmentCancelHandler appointmentCancelHandler;
 
-    @KafkaListener(topics = "${api.kafka.topic.cancel-appointment}", groupId = "${api.kafka.group_id}")
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void listen(ExternalAppointmentCancelEvent event) throws Exception {
         appointmentCancelHandler.handle(event);
     }

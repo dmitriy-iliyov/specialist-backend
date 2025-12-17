@@ -3,16 +3,17 @@ package com.messageservice.infrastructure;
 import com.messageservice.services.SpecialistActionEventHandler;
 import com.specialist.contracts.specialistdirectory.dto.SpecialistActionEvent;
 import lombok.RequiredArgsConstructor;
-import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 @Component
 @RequiredArgsConstructor
-public final class SpecialistActionKafkaListener {
+public class SpecialistActionEventListener {
 
     private final SpecialistActionEventHandler processor;
 
-    @KafkaListener(topics = "${api.kafka.topic.specialist-action}", groupId = "${api.kafka.group_id}")
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void listen(SpecialistActionEvent event) throws Exception {
         processor.handel(event);
     }

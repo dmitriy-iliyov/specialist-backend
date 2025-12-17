@@ -11,7 +11,8 @@ public class AppointmentCancelHandlerImpl implements AppointmentCancelHandler {
     private final MessageService messageService;
     private final MessageFactory messageFactory;
 
-    public AppointmentCancelHandlerImpl(@Qualifier("emailService") MessageService messageService, MessageFactory messageFactory) {
+    public AppointmentCancelHandlerImpl(@Qualifier("notificationEmailService") MessageService messageService,
+                                        MessageFactory messageFactory) {
         this.messageService = messageService;
         this.messageFactory = messageFactory;
     }

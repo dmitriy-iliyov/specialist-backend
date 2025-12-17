@@ -11,7 +11,7 @@ public class SpecialistManageEmailService implements SpecialistManageMessageServ
 
     private final MessageService service;
 
-    public SpecialistManageEmailService(@Qualifier("emailService") MessageService service) {
+    public SpecialistManageEmailService(@Qualifier("notificationEmailService") MessageService service) {
         this.service = service;
     }
 
