@@ -50,7 +50,7 @@ public class AdminAccountRegistrationControllerUnitTests {
     @DisplayName("UT: create() when dto valid should return 201")
     void create_whenDtoValid_shouldReturn201() {
         ManagedAccountCreateDto dto = new ManagedAccountCreateDto("test@mail.com", "securepass123", Role.ROLE_ADMIN, List.of(Authority.ACCOUNT_MANAGER));
-        ShortAccountResponseDto expected = new ShortAccountResponseDto(UUID.randomUUID(), "test@mail.com", LocalDateTime.now());
+        ShortAccountResponseDto expected = new ShortAccountResponseDto(UUID.randomUUID(), "test@mail.com");
 
         when(orchestrator.save(dto)).thenReturn(expected);
 

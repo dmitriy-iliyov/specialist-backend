@@ -148,7 +148,7 @@ class UnifiedServiceAccountServiceUnitTests {
 
     @Test
     @DisplayName("UT: deleteById() when entity not exists should throw exception")
-    void hardDeleteById_whenEntityNotExists_shouldThrow() {
+    void deleteById_whenEntityNotExists_shouldThrow() {
         UUID id = UUID.randomUUID();
 
         when(repository.existsById(id)).thenReturn(false);

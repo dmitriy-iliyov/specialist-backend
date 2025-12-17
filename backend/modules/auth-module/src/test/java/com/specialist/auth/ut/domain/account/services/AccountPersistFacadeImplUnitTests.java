@@ -4,14 +4,12 @@ package com.specialist.auth.ut.domain.account.services;
 import com.specialist.auth.domain.account.models.dtos.DefaultAccountCreateDto;
 import com.specialist.auth.domain.account.models.dtos.ManagedAccountCreateDto;
 import com.specialist.auth.domain.account.models.dtos.ShortAccountResponseDto;
-import com.specialist.auth.domain.account.models.events.AccountCreateEvent;
+import com.specialist.contracts.auth.AccountCreateEvent;
 import com.specialist.auth.domain.account.services.AccountPersistFacadeImpl;
 import com.specialist.auth.domain.account.services.AccountService;
 import com.specialist.auth.domain.authority.Authority;
 import com.specialist.auth.domain.role.Role;
 import com.specialist.auth.infrastructure.message.services.ConfirmationService;
-import com.specialist.contracts.profile.SystemProfilePersistService;
-import com.specialist.contracts.profile.dto.ShortProfileCreateDto;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -39,9 +37,6 @@ class AccountPersistFacadeImplUnitTests {
     ConfirmationService confirmationService;
 
     @Mock
-    SystemProfilePersistService persistService;
-
-    @Mock
     ApplicationEventPublisher eventPublisher;
 
     @InjectMocks
@@ -52,9 +47,8 @@ class AccountPersistFacadeImplUnitTests {
     void save_withDefaultAccountCreateDto_setsRoleAuthoritiesAndSendsConfirmation() {
         var dto = new DefaultAccountCreateDto("test@example.com", "pass");
 
-        var expectedResponse = new ShortAccountResponseDto(UUID.randomUUID(), "admin@example.com", LocalDateTime.now());
+        var expectedResponse = new ShortAccountResponseDto(UUID.randomUUID(), "admin@example.com");
         when(accountService.save(any(DefaultAccountCreateDto.class))).thenReturn(expectedResponse);
-        doNothing().when(persistService).save(any(ShortProfileCreateDto.class));
         doNothing().when(eventPublisher).publishEvent(any(AccountCreateEvent.class));
 
         var responseMock = mock(HttpServletResponse.class);
@@ -65,7 +59,6 @@ class AccountPersistFacadeImplUnitTests {
         assertEquals(List.of(), dto.getAuthorities());
 
         verify(accountService).save(dto);
-        verify(persistService, times(1)).save(any(ShortProfileCreateDto.class));
         verify(eventPublisher, times(1)).publishEvent(any(AccountCreateEvent.class));
         assertSame(expectedResponse, actual);
     }
@@ -79,9 +72,8 @@ class AccountPersistFacadeImplUnitTests {
                 List.of(Authority.SPECIALIST_CREATE, Authority.REVIEW_CREATE_UPDATE)
         );
 
-        var expectedResponse = new ShortAccountResponseDto(UUID.randomUUID(), "admin@example.com", LocalDateTime.now());
+        var expectedResponse = new ShortAccountResponseDto(UUID.randomUUID(), "admin@example.com");
         when(accountService.save(any(DefaultAccountCreateDto.class))).thenReturn(expectedResponse);
-        doNothing().when(persistService).save(any(ShortProfileCreateDto.class));
         doNothing().when(eventPublisher).publishEvent(any(AccountCreateEvent.class));
         var actual = orchestrator.save(dto);
 

@@ -47,8 +47,7 @@ public class AccountRegistrationControllerUnitTests {
         DefaultAccountCreateDto createDto = new DefaultAccountCreateDto("email@gmail.com", "securepassword");
 
         UUID fixedId = UUID.fromString("123e4567-e89b-12d3-a456-426614174000");
-        LocalDateTime fixedTime = LocalDateTime.of(2023, 1, 1, 12, 0);
-        ShortAccountResponseDto expectedResponse = new ShortAccountResponseDto(fixedId, "email@gmail.com", fixedTime);
+        ShortAccountResponseDto expectedResponse = new ShortAccountResponseDto(fixedId, "email@gmail.com");
 
         when(orchestrator.save(eq(createDto), any())).thenReturn(expectedResponse);
 
