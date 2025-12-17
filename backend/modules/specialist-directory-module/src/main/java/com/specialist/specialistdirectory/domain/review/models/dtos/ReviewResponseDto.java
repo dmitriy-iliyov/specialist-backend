@@ -14,9 +14,9 @@ public record ReviewResponseDto(
 
         String description,
 
-        String reviewUrl,
-
         Integer rating,
+
+        String pictureUrl,
 
         @JsonProperty("created_at")
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
