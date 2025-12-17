@@ -106,7 +106,7 @@ public class AdminAccountRegistrationControllerUnitTests {
         UUID id = UUID.randomUUID();
         LockRequest request = new LockRequest(LockReason.ABUSE, LocalDateTime.now());
 
-        ResponseEntity<?> response = controller.lock(id, request);
+        ResponseEntity<?> response = controller.lock(id.toString(), request);
 
         verify(adminAccountManagementFacade, times(1)).lockById(id, request);
         verifyNoMoreInteractions(adminAccountManagementFacade);
@@ -122,7 +122,7 @@ public class AdminAccountRegistrationControllerUnitTests {
 
         doThrow(RuntimeException.class).when(adminAccountManagementFacade).lockById(id, request);
 
-        assertThrows(RuntimeException.class, () -> controller.lock(id, request));
+        assertThrows(RuntimeException.class, () -> controller.lock(id.toString(), request));
     }
 
     @Test
@@ -131,7 +131,7 @@ public class AdminAccountRegistrationControllerUnitTests {
         UUID id = UUID.randomUUID();
         DisableRequest request = new DisableRequest(DisableReason.PERMANENTLY_ABUSE);
 
-        ResponseEntity<?> response = controller.disable(id, request);
+        ResponseEntity<?> response = controller.disable(id.toString(), request);
 
         verify(adminAccountManagementFacade, times(1)).disableById(id, request);
         verifyNoMoreInteractions(adminAccountManagementFacade);        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
@@ -146,7 +146,7 @@ public class AdminAccountRegistrationControllerUnitTests {
 
         doThrow(RuntimeException.class).when(adminAccountManagementFacade).disableById(id, request);
 
-        assertThrows(RuntimeException.class, () -> controller.disable(id, request));
+        assertThrows(RuntimeException.class, () -> controller.disable(id.toString(), request));
     }
 
     @Test
@@ -154,7 +154,7 @@ public class AdminAccountRegistrationControllerUnitTests {
     void delete_whenValid_shouldReturn204() {
         UUID id = UUID.randomUUID();
 
-        ResponseEntity<?> response = controller.delete(id);
+        ResponseEntity<?> response = controller.delete(id.toString());
 
         verify(accountDeleteFacade, times(1)).delete(id);
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
@@ -168,6 +168,6 @@ public class AdminAccountRegistrationControllerUnitTests {
 
         doThrow(RuntimeException.class).when(accountDeleteFacade).delete(id);
 
-        assertThrows(RuntimeException.class, () -> controller.delete(id));
+        assertThrows(RuntimeException.class, () -> controller.delete(id.toString()));
     }
 }
