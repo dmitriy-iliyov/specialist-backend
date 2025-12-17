@@ -1,6 +1,5 @@
-package com.specialist.utils.validation.annotation;
+package com.specialist.utils.validation;
 
-import com.specialist.utils.validation.EnumValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 

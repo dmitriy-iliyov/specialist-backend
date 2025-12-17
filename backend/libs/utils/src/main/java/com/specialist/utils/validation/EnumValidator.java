@@ -1,6 +1,5 @@
 package com.specialist.utils.validation;
 
-import com.specialist.utils.validation.annotation.ValidEnum;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
