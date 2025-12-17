@@ -7,6 +7,7 @@ import com.specialist.specialistdirectory.domain.review.models.dtos.ReviewUpdate
 import com.specialist.specialistdirectory.domain.review.models.filters.ReviewSort;
 import com.specialist.specialistdirectory.domain.review.services.ReviewAggregator;
 import com.specialist.specialistdirectory.domain.review.services.ReviewManagementFacade;
+import com.specialist.utils.uuid.UUIDv7;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -35,42 +36,48 @@ public class ReviewController {
     @PreAuthorize("hasAnyRole('USER', 'SPECIALIST') && hasAuthority('REVIEW_CREATE_UPDATE')")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> create(@AuthenticationPrincipal PrincipalDetails principal,
-                                    @PathVariable("specialist_id") UUID specialistId,
+                                    @PathVariable("specialist_id")
+                                    @UUIDv7(paramName = "specialist_id", message = "Id should have valid format.") String specialistId,
                                     @RequestParam("review") String rawPayload,
                                     @RequestParam("picture") MultipartFile picture) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(facade.save(ReviewCreateRequest.of(principal.getAccountId(), specialistId, rawPayload, picture)));
+                .body(facade.save(ReviewCreateRequest.of(principal.getAccountId(), UUID.fromString(specialistId), rawPayload, picture)));
     }
 
     @PreAuthorize("hasAnyRole('USER', 'SPECIALIST') && hasAuthority('REVIEW_CREATE_UPDATE')")
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@AuthenticationPrincipal PrincipalDetails principal,
-                                    @PathVariable("id") UUID id,
-                                    @PathVariable("specialist_id") UUID specialistId,
+                                    @PathVariable("id")
+                                    @UUIDv7(paramName = "id", message = "Id should have valid format.") String id,
+                                    @PathVariable("specialist_id")
+                                    @UUIDv7(paramName = "specialist_id", message = "Id should have valid format.") String specialistId,
                                     @RequestParam("review") String rawPayload,
                                     @RequestParam("picture") MultipartFile picture) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(facade.update(ReviewUpdateRequest.of(id, principal.getAccountId(), specialistId, rawPayload, picture)));
+                .body(facade.update(ReviewUpdateRequest.of(UUID.fromString(id), principal.getAccountId(), UUID.fromString(specialistId), rawPayload, picture)));
     }
 
     @PreAuthorize("hasAnyRole('USER', 'SPECIALIST')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@AuthenticationPrincipal PrincipalDetails principal,
-                                    @PathVariable("specialist_id") UUID specialistId,
-                                    @PathVariable("id") UUID id) {
-        facade.delete(ReviewDeleteRequest.of(id, specialistId, principal.getAccountId()));
+                                    @PathVariable("specialist_id")
+                                    @UUIDv7(paramName = "specialist_id", message = "Id should have valid format.") String specialistId,
+                                    @PathVariable("id")
+                                    @UUIDv7(paramName = "specialist_id", message = "Id should have valid format.") String id) {
+        facade.delete(ReviewDeleteRequest.of(UUID.fromString(id), UUID.fromString(specialistId), principal.getAccountId()));
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
     }
 
     @GetMapping
-    public ResponseEntity<?> getAll(@PathVariable("specialist_id") UUID specialistId,
+    public ResponseEntity<?> getAll(@PathVariable("specialist_id")
+                                    @UUIDv7(paramName = "specialist_id", message = "Id should have valid format.") String specialistId,
                                     @ModelAttribute @Valid ReviewSort sort) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(aggregator.findAllWithSortBySpecialistId(specialistId, sort));
+                .body(aggregator.findAllWithSortBySpecialistId(UUID.fromString(specialistId), sort));
     }
 }

@@ -2,7 +2,7 @@ package com.specialist.specialistdirectory.domain.review.controllers;
 
 import com.specialist.specialistdirectory.domain.review.models.filters.AdminReviewSort;
 import com.specialist.specialistdirectory.domain.review.services.AdminReviewManagementFacade;
-import com.specialist.utils.uuid.annotation.ValidUuid;
+import com.specialist.utils.uuid.UUIDv7;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -32,8 +32,10 @@ public class AdminReviewController {
     }
 
     @PatchMapping("/{id}/approve")
-    public ResponseEntity<?> approve(@PathVariable("specialist_id") String specialistId,
-                                     @PathVariable("id") @ValidUuid(paramName = "id") String id) {
+    public ResponseEntity<?> approve(@PathVariable("specialist_id")
+                                     @UUIDv7(paramName = "specialist_id", message = "Id should have valid format.") String specialistId,
+                                     @PathVariable("id")
+                                     @UUIDv7(paramName = "id", message = "Id should have valid format.") String id) {
         facade.approve(UUID.fromString(specialistId), UUID.fromString(id));
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -41,8 +43,10 @@ public class AdminReviewController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable("specialist_id") String specialistId,
-                                    @PathVariable("id") @ValidUuid(paramName = "id") String id) {
+    public ResponseEntity<?> delete(@PathVariable("specialist_id")
+                                    @UUIDv7(paramName = "specialist_id", message = "Id should have valid format.") String specialistId,
+                                    @PathVariable("id")
+                                    @UUIDv7(paramName = "id", message = "Id should have valid format.") String id) {
         facade.delete(UUID.fromString(specialistId), UUID.fromString(id));
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)

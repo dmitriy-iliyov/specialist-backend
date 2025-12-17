@@ -6,7 +6,7 @@ import com.specialist.specialistdirectory.domain.specialist.models.dtos.Speciali
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistCreateRequest;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistManagementOrchestrator;
-import com.specialist.utils.validation.annotation.ValidUuid;
+import com.specialist.utils.uuid.UUIDv7;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -44,7 +44,8 @@ public class SpecialistManagementController {
     @PreAuthorize("hasAuthority('SPECIALIST_UPDATE')")
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@AuthenticationPrincipal PrincipalDetails principal,
-                                    @PathVariable("id") @ValidUuid(paramName = "id") String id,
+                                    @PathVariable("id")
+                                    @UUIDv7(paramName = "id", message = "Id should have valid format.") String id,
                                     @RequestBody @Valid SpecialistUpdateDto dto) {
         dto.setAccountId(principal.getAccountId());
         dto.setId(UUID.fromString(id));
@@ -55,7 +56,8 @@ public class SpecialistManagementController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@AuthenticationPrincipal PrincipalDetails principal,
-                                    @PathVariable("id") @ValidUuid(paramName = "id") String id) {
+                                    @PathVariable("id")
+                                    @UUIDv7(paramName = "id", message = "Id should have valid format.") String id) {
         orchestrator.delete(principal.getAccountId(), UUID.fromString(id), ProfileType.fromStringRole(principal.getStringRole()));
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)

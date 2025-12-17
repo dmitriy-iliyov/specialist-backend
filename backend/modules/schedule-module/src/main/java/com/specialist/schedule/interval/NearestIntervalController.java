@@ -1,6 +1,7 @@
 package com.specialist.schedule.interval;
 
 import com.specialist.schedule.interval.services.NearestIntervalService;
+import com.specialist.utils.uuid.UUIDv7;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +20,11 @@ public class NearestIntervalController {
     private final NearestIntervalService service;
 
     @GetMapping
-    public ResponseEntity<?> getNearestInterval(@PathVariable("specialist_id") UUID specialistId) {
+    public ResponseEntity<?> getNearestInterval(@PathVariable("specialist_id")
+                                                @UUIDv7(paramName = "specialist_id", message = "Id should have valid format.")
+                                                String specialistId) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(service.findBySpecialistId(specialistId));
+                .body(service.findBySpecialistId(UUID.fromString(specialistId)));
     }
 }

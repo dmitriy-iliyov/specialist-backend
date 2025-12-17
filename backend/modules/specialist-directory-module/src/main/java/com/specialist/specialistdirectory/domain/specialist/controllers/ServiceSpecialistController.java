@@ -5,7 +5,7 @@ import com.specialist.specialistdirectory.domain.specialist.models.dtos.Speciali
 import com.specialist.specialistdirectory.domain.specialist.models.enums.ApproverType;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistStatusService;
 import com.specialist.specialistdirectory.domain.specialist.services.service.ServiceSpecialistService;
-import com.specialist.utils.validation.annotation.ValidUuid;
+import com.specialist.utils.uuid.UUIDv7;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -37,7 +37,8 @@ public class ServiceSpecialistController {
     @PreAuthorize("hasAuthority('SPECIALIST_APPROVE')")
     @PatchMapping("/approve/{id}")
     public ResponseEntity<?> approve(@AuthenticationPrincipal PrincipalDetails principal,
-                                     @PathVariable("id") @ValidUuid(paramName = "id") String id) {
+                                     @PathVariable("id")
+                                     @UUIDv7(paramName = "id", message = "Id should have valid format.") String id) {
         statusService.approve(UUID.fromString(id), principal.getAccountId(), ApproverType.SERVICE);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)

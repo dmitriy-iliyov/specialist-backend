@@ -1,6 +1,5 @@
 package com.specialist.utils.uuid;
 
-import com.specialist.utils.uuid.annotation.UUIDv7;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 

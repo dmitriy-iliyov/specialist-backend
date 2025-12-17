@@ -6,7 +6,7 @@ import com.specialist.specialistdirectory.domain.bookmark.services.BookmarkCount
 import com.specialist.specialistdirectory.domain.bookmark.services.BookmarkPersistService;
 import com.specialist.specialistdirectory.domain.bookmark.services.BookmarkService;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.ExtendedSpecialistFilter;
-import com.specialist.utils.validation.annotation.ValidUuid;
+import com.specialist.utils.uuid.UUIDv7;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -38,7 +38,8 @@ public class BookmarkController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@AuthenticationPrincipal PrincipalDetails principal,
-                                    @PathVariable("id") @ValidUuid(paramName = "id") String id) {
+                                    @PathVariable("id")
+                                    @UUIDv7(paramName = "id", message = "Id should have valid format.") String id) {
         service.deleteById(principal.getAccountId(), UUID.fromString(id));
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)

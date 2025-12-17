@@ -1,6 +1,7 @@
 package com.specialist.schedule.appointment_duration;
 
 import com.specialist.contracts.auth.PrincipalDetails;
+import com.specialist.utils.uuid.UUIDv7;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -49,9 +50,10 @@ public class AppointmentDurationController {
     }
 
     @GetMapping("/{specialist_id}")
-    public ResponseEntity<?> get(@PathVariable("specialist_id") UUID specialistId) {
+    public ResponseEntity<?> get(@PathVariable("specialist_id")
+                                 @UUIDv7(paramName = "specialist_id", message = "Id should have valid format.") String specialistId) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(service.findBySpecialistId(specialistId));
+                .body(service.findBySpecialistId(UUID.fromString(specialistId)));
     }
 }

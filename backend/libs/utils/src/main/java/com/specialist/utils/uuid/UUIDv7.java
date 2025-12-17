@@ -1,14 +1,13 @@
-package com.specialist.utils.uuid.annotation;
+package com.specialist.utils.uuid;
 
-import com.specialist.utils.uuid.UUIDv7Validator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
 import java.lang.annotation.*;
 
-@Target(ElementType.FIELD)
+@Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = UUIDv7Validator.class)
+@Constraint(validatedBy = {UUIDv7Validator.class, StringUUIDv7Validator.class})
 @Documented
 public @interface UUIDv7 {
     String message() default "Invalid UUID format";

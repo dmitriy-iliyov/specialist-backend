@@ -5,7 +5,7 @@ import com.specialist.specialistdirectory.domain.specialist.models.dtos.Speciali
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistUpdateDto;
 import com.specialist.specialistdirectory.domain.specialist.models.filters.AdminSpecialistFilter;
 import com.specialist.specialistdirectory.domain.specialist.services.admin.AdminSpecialistService;
-import com.specialist.utils.validation.annotation.ValidUuid;
+import com.specialist.utils.uuid.UUIDv7;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -33,7 +33,8 @@ public class AdminSpecialistController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> get(@PathVariable("id") @ValidUuid(paramName = "id") String id) {
+    public ResponseEntity<?> get(@PathVariable("id")
+                                 @UUIDv7(paramName = "id", message = "Id should have valid format.") String id) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(facade.findById(UUID.fromString(id)));
@@ -48,7 +49,8 @@ public class AdminSpecialistController {
 
     @PatchMapping("/approve/{id}")
     public ResponseEntity<?> approve(@AuthenticationPrincipal PrincipalDetails principal,
-                                     @PathVariable("id") @ValidUuid(paramName = "id") String id) {
+                                     @PathVariable("id")
+                                     @UUIDv7(paramName = "id", message = "Id should have valid format.") String id) {
         facade.approve(UUID.fromString(id), principal.getAccountId());
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
@@ -56,7 +58,8 @@ public class AdminSpecialistController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") @ValidUuid(paramName = "id") String id,
+    public ResponseEntity<?> update(@PathVariable("id")
+                                    @UUIDv7(paramName = "id", message = "Id should have valid format.") String id,
                                     @RequestBody @Valid SpecialistUpdateDto dto) {
         dto.setId(UUID.fromString(id));
         return ResponseEntity
@@ -65,7 +68,8 @@ public class AdminSpecialistController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") @ValidUuid(paramName = "id") String id) {
+    public ResponseEntity<?> delete(@PathVariable("id")
+                                    @UUIDv7(paramName = "id", message = "Id should have valid format.") String id) {
         facade.deleteById(UUID.fromString(id));
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
