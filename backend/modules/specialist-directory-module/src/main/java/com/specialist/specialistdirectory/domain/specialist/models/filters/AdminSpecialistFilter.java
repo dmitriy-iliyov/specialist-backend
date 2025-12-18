@@ -11,12 +11,8 @@ import lombok.Getter;
 @Getter
 public class AdminSpecialistFilter extends ExtendedSpecialistFilter {
 
-    @NotNull(message = "Status is required.")
     protected final SpecialistStatus status;
-
-    @NotNull(message = "Status is required.")
     protected final SpecialistState state;
-
     protected final Boolean aggregate;
 
     public AdminSpecialistFilter(String city, String cityCode, Long typeId, SpecialistLanguage lang, Integer minRating,
