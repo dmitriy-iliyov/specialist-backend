@@ -3,12 +3,10 @@
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.6-6DB33F?logo=springboot)
 ![Hibernate](https://img.shields.io/badge/Hibernate-8.0.1.Final-59666C?logo=hibernate)
 ![Maven](https://img.shields.io/badge/Maven-3+-C71A36?logo=apachemaven)
-
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16+-336791?logo=postgresql)
 ![Redis](https://img.shields.io/badge/Redis-7+-DC382D?logo=redis)
 ![Lua](https://img.shields.io/badge/Lua-Redis%20Scripts-2C2D72?logo=lua)
 ![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker)
-
 ![Prometheus](https://img.shields.io/badge/Prometheus-Metrics-E6522C?logo=prometheus)
 ![Grafana](https://img.shields.io/badge/Grafana-Dashboards-F46800?logo=grafana)
 
