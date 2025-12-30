@@ -4,7 +4,7 @@ import com.specialist.core.config.ScheduleCacheConfig;
 import com.specialist.core.exceptions.models.PassedListIsToLongException;
 import com.specialist.schedule.appointment_duration.models.AppointmentDurationEntity;
 import com.specialist.schedule.exceptions.appointment_duration.DurationNotFoundBySpecialistIdException;
-import com.specialist.utils.UuidUtils;
+import com.specialist.utils.uuid.UuidUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
@@ -44,11 +44,6 @@ public class  AppointmentDurationServiceImpl implements AppointmentDurationServi
     @Transactional(readOnly = true)
     @Override
     public Long findBySpecialistId(UUID specialistId) {
-//        Cache cache = cacheManager.getCache(GlobalRedisConfig.APPOINTMENT_DURATION_CACHE);
-//        Number duration = Objects.requireNonNull(cache).get(specialistId, Number.class);
-//        if (duration != null) {
-//            return duration.longValue();
-//        }
         return repository
                 .findBySpecialistId(specialistId)
                 .orElseThrow(DurationNotFoundBySpecialistIdException::new)

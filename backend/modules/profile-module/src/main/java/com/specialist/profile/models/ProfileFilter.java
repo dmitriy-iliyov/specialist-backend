@@ -1,7 +1,6 @@
 package com.specialist.profile.models;
 
 import com.specialist.contracts.profile.ProfileType;
-import com.specialist.utils.pagination.PageDataHolder;
 import com.specialist.utils.pagination.PageRequest;
 import lombok.Getter;
 

@@ -1,14 +1,10 @@
 package com.specialist.schedule.appointment.models.dto;
 
-import com.specialist.utils.pagination.PageDataHolder;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
-import lombok.Data;
+import com.specialist.utils.pagination.PageRequest;
+import lombok.Getter;
 
-@Data
-public class AppointmentFilter implements PageDataHolder {
+@Getter
+public class AppointmentFilter extends PageRequest {
 
     protected final Boolean scheduled;
 
@@ -16,29 +12,11 @@ public class AppointmentFilter implements PageDataHolder {
 
     protected final Boolean completed;
 
-    protected final Boolean asc;
-
-    @NotNull(message = "Page number is required.")
-    @PositiveOrZero(message = "Page number should be positive or zero.")
-    protected final Integer pageNumber;
-
-    @NotNull(message = "Page size is required.")
-    @Min(value = 10, message = "Min page size is 10.")
-    @Max(value = 50, message = "Min page size is 50.")
-    protected final Integer pageSize;
-
-    @Override
-    public Boolean isAsc() {
-        return asc;
-    }
-
-    @Override
-    public Integer getPageNumber() {
-        return pageNumber;
-    }
-
-    @Override
-    public Integer getPageSize() {
-        return pageSize;
+    public AppointmentFilter(Integer pageNumber, Integer pageSize, Boolean asc, Boolean scheduled, Boolean canceled,
+                             Boolean completed) {
+        super(pageNumber, pageSize, asc);
+        this.scheduled = scheduled;
+        this.canceled = canceled;
+        this.completed = completed;
     }
 }

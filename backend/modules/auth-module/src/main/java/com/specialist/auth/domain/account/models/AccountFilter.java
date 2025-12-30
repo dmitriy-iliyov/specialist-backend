@@ -2,9 +2,7 @@ package com.specialist.auth.domain.account.models;
 
 import com.specialist.auth.domain.account.models.enums.DisableReason;
 import com.specialist.auth.domain.account.models.enums.LockReason;
-import com.specialist.utils.pagination.PageDataHolder;
 import com.specialist.utils.pagination.PageRequest;
-import com.specialist.utils.validation.ValidEnum;
 import lombok.Getter;
 
 @Getter

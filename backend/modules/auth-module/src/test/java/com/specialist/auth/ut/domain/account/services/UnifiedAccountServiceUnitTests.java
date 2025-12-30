@@ -4,8 +4,12 @@ import com.specialist.auth.core.oauth2.models.Provider;
 import com.specialist.auth.domain.account.mappers.AccountMapper;
 import com.specialist.auth.domain.account.models.AccountEntity;
 import com.specialist.auth.domain.account.models.AccountFilter;
-import com.specialist.auth.domain.account.models.dtos.*;
+import com.specialist.auth.domain.account.models.dtos.AccountPasswordUpdateDto;
+import com.specialist.auth.domain.account.models.dtos.AccountResponseDto;
+import com.specialist.auth.domain.account.models.dtos.OAuth2AccountCreateDto;
+import com.specialist.auth.domain.account.models.dtos.ShortAccountResponseDto;
 import com.specialist.auth.domain.account.models.enums.DisableReason;
+import com.specialist.auth.domain.account.models.enums.LockReason;
 import com.specialist.auth.domain.account.repositories.AccountRepository;
 import com.specialist.auth.domain.account.services.AccountCacheService;
 import com.specialist.auth.domain.account.services.UnifiedAccountService;
@@ -33,7 +37,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -266,8 +269,8 @@ public class UnifiedAccountServiceUnitTests {
     @Test
     @DisplayName("UT: findAllByFilter() returns filtered paged response")
     void findAllByFilter_shouldReturnFilteredPageResponse() {
-        AccountFilter filter = new AccountFilter(0, 20, true, true, "ABUSE", false,
-                "PERMANENTLY_SPAM"
+        AccountFilter filter = new AccountFilter(0, 20, true, true, LockReason.ABUSE, false,
+                DisableReason.PERMANENTLY_ABUSE
         );
 
         AccountEntity entity = new AccountEntity();

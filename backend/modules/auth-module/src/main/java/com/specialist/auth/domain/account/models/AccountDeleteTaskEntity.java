@@ -2,7 +2,7 @@ package com.specialist.auth.domain.account.models;
 
 import com.specialist.auth.domain.account.mappers.AccountDeleteTaskStatusConverter;
 import com.specialist.auth.domain.account.models.enums.AccountDeleteTaskStatus;
-import com.specialist.utils.UuidUtils;
+import com.specialist.utils.uuid.UuidUtils;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

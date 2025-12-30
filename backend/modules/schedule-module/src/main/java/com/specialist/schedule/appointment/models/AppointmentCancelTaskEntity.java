@@ -2,7 +2,7 @@ package com.specialist.schedule.appointment.models;
 
 import com.specialist.schedule.appointment.models.enums.AppointmentCancelTaskType;
 import com.specialist.schedule.appointment.repositories.AppointmentCancelTaskTypeConverter;
-import com.specialist.utils.UuidUtils;
+import com.specialist.utils.uuid.UuidUtils;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

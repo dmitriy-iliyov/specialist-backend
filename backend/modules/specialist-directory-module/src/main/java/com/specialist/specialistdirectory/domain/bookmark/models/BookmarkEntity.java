@@ -1,7 +1,7 @@
 package com.specialist.specialistdirectory.domain.bookmark.models;
 
 import com.specialist.specialistdirectory.domain.specialist.models.SpecialistEntity;
-import com.specialist.utils.UuidUtils;
+import com.specialist.utils.uuid.UuidUtils;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

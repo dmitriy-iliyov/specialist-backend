@@ -6,7 +6,6 @@ import com.specialist.auth.domain.account.models.AccountEntity;
 import com.specialist.auth.domain.account.models.AccountFilter;
 import com.specialist.auth.domain.account.models.dtos.*;
 import com.specialist.auth.domain.account.models.enums.DisableReason;
-import com.specialist.auth.domain.account.models.enums.LockReason;
 import com.specialist.auth.domain.account.repositories.AccountRepository;
 import com.specialist.auth.domain.account.repositories.AccountSpecification;
 import com.specialist.auth.domain.authority.Authority;
@@ -161,10 +160,12 @@ public class UnifiedAccountService implements AccountService {
     @Transactional(readOnly = true)
     @Override
     public PageResponse<AccountResponseDto> findAllByFilter(AccountFilter filter) {
-        Specification<AccountEntity> specification = Specification.where(AccountSpecification.filterByIsLocked(filter.getLocked()))
-                .and(AccountSpecification.filterByLockeReason(LockReason.valueOf(filter.getLockReason())))
+        Specification<AccountEntity> nullableSpecification = Specification.unrestricted();
+        Specification<AccountEntity> specification = nullableSpecification
+                .and(AccountSpecification.filterByIsLocked(filter.getLocked()))
+                .and(AccountSpecification.filterByLockeReason(filter.getLockReason()))
                 .and(AccountSpecification.filterByIsEnable(filter.getEnable()))
-                .and(AccountSpecification.filterByUnableReason(DisableReason.valueOf(filter.getDisableReason())));
+                .and(AccountSpecification.filterByUnableReason(filter.getDisableReason()));
         Page<AccountEntity> entityPage = repository.findAll(specification, generatePageable(filter));
         Map<UUID, List<Authority>> authoritiesMap = loadAuthorities(entityPage.getContent());
         return toPageResponse(entityPage, authoritiesMap);

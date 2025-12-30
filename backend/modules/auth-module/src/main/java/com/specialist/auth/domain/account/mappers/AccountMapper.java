@@ -14,7 +14,6 @@ import java.util.List;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, uses = {InstantToLocalDataTimeConverter.class})
 public interface AccountMapper {
 
-    @Mapping(target = "createdAt", source = "createdAt")
     ShortAccountResponseDto toShortResponseDto(AccountEntity save);
 
     @Mapping(target = "role", source = "entity.role.role")

@@ -2,7 +2,6 @@ package com.specialist.auth.domain.account.repositories;
 
 import com.specialist.auth.core.oauth2.models.Provider;
 import com.specialist.auth.domain.account.models.AccountEntity;
-import com.specialist.auth.domain.account.models.dtos.AccountResponseDto;
 import com.specialist.auth.domain.account.models.dtos.ShortAccountWithRoleProjection;
 import com.specialist.auth.domain.account.models.enums.DisableReason;
 import com.specialist.auth.domain.account.models.enums.LockReason;

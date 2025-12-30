@@ -4,7 +4,7 @@ import com.specialist.specialistdirectory.domain.specialist.mappers.ApproverType
 import com.specialist.specialistdirectory.domain.specialist.mappers.CreatorTypeConverter;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.ApproverType;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.CreatorType;
-import com.specialist.utils.UuidUtils;
+import com.specialist.utils.uuid.UuidUtils;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

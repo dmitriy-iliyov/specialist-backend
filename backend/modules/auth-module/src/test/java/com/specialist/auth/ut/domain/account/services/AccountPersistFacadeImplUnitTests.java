@@ -4,12 +4,12 @@ package com.specialist.auth.ut.domain.account.services;
 import com.specialist.auth.domain.account.models.dtos.DefaultAccountCreateDto;
 import com.specialist.auth.domain.account.models.dtos.ManagedAccountCreateDto;
 import com.specialist.auth.domain.account.models.dtos.ShortAccountResponseDto;
-import com.specialist.contracts.auth.AccountCreateEvent;
 import com.specialist.auth.domain.account.services.AccountPersistFacadeImpl;
 import com.specialist.auth.domain.account.services.AccountService;
 import com.specialist.auth.domain.authority.Authority;
 import com.specialist.auth.domain.role.Role;
 import com.specialist.auth.infrastructure.message.services.ConfirmationService;
+import com.specialist.contracts.auth.AccountCreateEvent;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,7 +20,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationEventPublisher;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 

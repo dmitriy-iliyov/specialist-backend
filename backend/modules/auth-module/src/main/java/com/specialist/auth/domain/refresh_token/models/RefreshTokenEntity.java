@@ -1,6 +1,6 @@
 package com.specialist.auth.domain.refresh_token.models;
 
-import com.specialist.utils.UuidUtils;
+import com.specialist.utils.uuid.UuidUtils;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

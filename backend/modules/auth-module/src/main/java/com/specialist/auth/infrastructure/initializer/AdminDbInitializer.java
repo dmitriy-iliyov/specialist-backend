@@ -8,7 +8,7 @@ import com.specialist.auth.domain.authority.AuthorityEntity;
 import com.specialist.auth.domain.authority.AuthorityService;
 import com.specialist.auth.domain.role.Role;
 import com.specialist.auth.domain.role.RoleService;
-import com.specialist.utils.UuidUtils;
+import com.specialist.utils.uuid.UuidUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Profile;
@@ -38,8 +38,8 @@ public class AdminDbInitializer {
         );
         repository.save(new AccountEntity(
                 UuidUtils.generateV7(),
-                "",
-                passwordEncoder.encode(""),
+                "dmitriy.iliyov@gmail.com",
+                passwordEncoder.encode("dmitriy.iliyov@gmail.com"),
                 Provider.LOCAL,
                 roleService.getReferenceByRole(Role.ROLE_ADMIN),
                 authorityEntityList,

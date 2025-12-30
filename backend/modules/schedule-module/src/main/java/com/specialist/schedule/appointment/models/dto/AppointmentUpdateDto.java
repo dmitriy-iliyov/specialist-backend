@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.specialist.schedule.appointment.models.enums.AppointmentType;
 import com.specialist.schedule.appointment.models.marker.AppointmentMarker;
-import com.specialist.utils.validation.annotation.ValidEnum;
+import com.specialist.utils.validation.ValidEnum;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

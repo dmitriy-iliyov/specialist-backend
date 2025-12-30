@@ -10,7 +10,7 @@ import com.specialist.specialistdirectory.domain.specialist.models.enums.Special
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistState;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistStatus;
 import com.specialist.specialistdirectory.domain.type.models.TypeEntity;
-import com.specialist.utils.UuidUtils;
+import com.specialist.utils.uuid.UuidUtils;
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

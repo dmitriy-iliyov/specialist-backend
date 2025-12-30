@@ -2,8 +2,6 @@ package com.specialist.specialistdirectory.infrastructure;
 
 import com.specialist.contracts.auth.DeferAccountDeleteEvent;
 import com.specialist.contracts.auth.DeferAccountDeleteHandler;
-import com.specialist.contracts.auth.ImmediatelyAccountDeleteEvent;
-import com.specialist.contracts.auth.ImmediatelyAccountDeleteHandler;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;

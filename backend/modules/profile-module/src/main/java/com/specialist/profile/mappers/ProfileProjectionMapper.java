@@ -2,10 +2,11 @@ package com.specialist.profile.mappers;
 
 import com.specialist.contracts.notification.SystemShortProfileResponseDto;
 import com.specialist.contracts.profile.dto.UnifiedProfileResponseDto;
-import com.specialist.picture.PictureStorage;
 import com.specialist.profile.models.ShortProfileProjection;
-import org.mapstruct.*;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.mapstruct.InjectionStrategy;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingConstants;
 
 import java.util.List;
 

@@ -4,7 +4,6 @@ import com.specialist.specialistdirectory.domain.specialist.models.enums.Special
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistState;
 import com.specialist.specialistdirectory.domain.specialist.models.enums.SpecialistStatus;
 import com.specialist.specialistdirectory.domain.specialist.validation.SpecialistFilter;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
 @SpecialistFilter

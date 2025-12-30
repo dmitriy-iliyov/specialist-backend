@@ -1,6 +1,5 @@
 package com.specialist.auth.domain.account.infrastructure;
 
-import com.specialist.auth.domain.account.models.dtos.AccountResponseDto;
 import com.specialist.auth.domain.account.models.enums.AccountDeleteTaskStatus;
 import com.specialist.auth.domain.account.models.enums.DisableReason;
 import com.specialist.auth.domain.account.services.AccountService;

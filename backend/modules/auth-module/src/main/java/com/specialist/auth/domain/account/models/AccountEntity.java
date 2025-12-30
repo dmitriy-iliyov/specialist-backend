@@ -8,7 +8,7 @@ import com.specialist.auth.domain.account.models.enums.DisableReason;
 import com.specialist.auth.domain.account.models.enums.LockReason;
 import com.specialist.auth.domain.authority.AuthorityEntity;
 import com.specialist.auth.domain.role.RoleEntity;
-import com.specialist.utils.UuidUtils;
+import com.specialist.utils.uuid.UuidUtils;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -2,7 +2,7 @@ package com.specialist.auth.domain.service_account.models;
 
 import com.specialist.auth.domain.authority.AuthorityEntity;
 import com.specialist.auth.domain.role.RoleEntity;
-import com.specialist.utils.UuidUtils;
+import com.specialist.utils.uuid.UuidUtils;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
