@@ -7,5 +7,5 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public interface AccountLogoutService {
-    void logout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException;
+    void logout(HttpServletRequest request, HttpServletResponse response);
 }

@@ -1,4 +1,4 @@
-package com.specialist.auth.core.oauth2.services;
+package com.specialist.auth.core.web.oauth2.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;

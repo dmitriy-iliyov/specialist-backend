@@ -1,6 +1,6 @@
-package com.specialist.auth.core.oauth2.services;
+package com.specialist.auth.core.web.oauth2.services;
 
-import com.specialist.auth.core.oauth2.models.Provider;
+import com.specialist.auth.core.web.oauth2.models.Provider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;

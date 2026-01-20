@@ -1,6 +1,6 @@
 package com.specialist.auth.domain.account.services;
 
-import com.specialist.auth.core.oauth2.models.Provider;
+import com.specialist.auth.core.web.oauth2.models.Provider;
 import com.specialist.auth.domain.account.models.AccountFilter;
 import com.specialist.auth.domain.account.models.dtos.*;
 import com.specialist.auth.domain.account.models.enums.DisableReason;

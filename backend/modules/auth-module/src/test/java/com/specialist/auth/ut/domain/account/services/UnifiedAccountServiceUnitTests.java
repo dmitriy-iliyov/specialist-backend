@@ -1,6 +1,6 @@
 package com.specialist.auth.ut.domain.account.services;
 
-import com.specialist.auth.core.oauth2.models.Provider;
+import com.specialist.auth.core.web.oauth2.models.Provider;
 import com.specialist.auth.domain.account.mappers.AccountMapper;
 import com.specialist.auth.domain.account.models.AccountEntity;
 import com.specialist.auth.domain.account.models.AccountFilter;

@@ -1,6 +1,6 @@
-package com.specialist.auth.core.oauth2;
+package com.specialist.auth.core.web.oauth2;
 
-import com.specialist.auth.core.oauth2.models.OAuth2InitialRequestEntity;
+import com.specialist.auth.core.web.oauth2.models.OAuth2InitialRequestEntity;
 import org.springframework.data.keyvalue.repository.KeyValueRepository;
 import org.springframework.stereotype.Repository;
 

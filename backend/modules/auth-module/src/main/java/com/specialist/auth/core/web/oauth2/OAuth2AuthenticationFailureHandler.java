@@ -1,4 +1,4 @@
-package com.specialist.auth.core.oauth2;
+package com.specialist.auth.core.web.oauth2;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;

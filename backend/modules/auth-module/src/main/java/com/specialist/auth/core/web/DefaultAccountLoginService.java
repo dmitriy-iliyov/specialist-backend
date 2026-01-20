@@ -1,6 +1,6 @@
 package com.specialist.auth.core.web;
 
-import com.specialist.auth.core.oauth2.models.Provider;
+import com.specialist.auth.core.web.oauth2.models.Provider;
 import com.specialist.auth.domain.account.models.AccountUserDetails;
 import com.specialist.auth.domain.account.services.AccountService;
 import com.specialist.auth.exceptions.InvalidProviderException;

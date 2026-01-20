@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class BearerAccessTokenAuthenticationConverter implements AuthenticationConverter {
 
-    private final AccessTokenDeserializer deserializer;
+    private final AccessTokenDeserializer accessTokenDeserializer;
 
     @Override
     public Authentication convert(HttpServletRequest request) {
@@ -24,7 +24,7 @@ public class BearerAccessTokenAuthenticationConverter implements AuthenticationC
             if (header.startsWith("Bearer ")) {
                 String rawToken = header.substring("Bearer ".length()).trim();
                 if (!rawToken.isBlank()) {
-                    AccessToken accessToken = deserializer.deserialize(rawToken);
+                    AccessToken accessToken = accessTokenDeserializer.deserialize(rawToken);
                     if (accessToken == null) {
                         throw new AccessTokenExpiredException();
                     }

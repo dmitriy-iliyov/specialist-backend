@@ -54,7 +54,7 @@ public class AccountAuthController {
 
     @PreAuthorize("hasAnyRole('ADMIN', 'USER', 'SPECIALIST')")
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
         logoutService.logout(request, response);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)

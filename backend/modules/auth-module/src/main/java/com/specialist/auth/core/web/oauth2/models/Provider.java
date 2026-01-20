@@ -1,4 +1,4 @@
-package com.specialist.auth.core.oauth2.models;
+package com.specialist.auth.core.web.oauth2.models;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.specialist.auth.exceptions.UnsupportedProviderException;

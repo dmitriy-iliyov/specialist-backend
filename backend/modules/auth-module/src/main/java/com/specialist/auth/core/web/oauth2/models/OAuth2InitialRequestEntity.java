@@ -1,4 +1,4 @@
-package com.specialist.auth.core.oauth2.models;
+package com.specialist.auth.core.web.oauth2.models;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;

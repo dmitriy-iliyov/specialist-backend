@@ -1,6 +1,6 @@
-package com.specialist.auth.core.oauth2.services;
+package com.specialist.auth.core.web.oauth2.services;
 
-import com.specialist.auth.core.oauth2.models.Provider;
+import com.specialist.auth.core.web.oauth2.models.Provider;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 public interface OAuth2AccountPersistService {

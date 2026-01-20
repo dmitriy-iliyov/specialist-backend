@@ -1,7 +1,7 @@
 package com.specialist.auth.domain.account.models;
 
-import com.specialist.auth.core.oauth2.mappers.ProviderConverter;
-import com.specialist.auth.core.oauth2.models.Provider;
+import com.specialist.auth.core.web.oauth2.mappers.ProviderConverter;
+import com.specialist.auth.core.web.oauth2.models.Provider;
 import com.specialist.auth.domain.account.mappers.LockReasonTypeConverter;
 import com.specialist.auth.domain.account.mappers.UnableReasonTypeConverter;
 import com.specialist.auth.domain.account.models.enums.DisableReason;

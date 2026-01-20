@@ -25,9 +25,13 @@ public class CookieAccountLogoutService implements AccountLogoutService {
     }
 
     @Override
-    public void logout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void logout(HttpServletRequest request, HttpServletResponse response) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         sessionCookieLogoutHandler.logout(request, response, authentication);
-        logoutSuccessHandler.onLogoutSuccess(request, response, authentication);
+        try {
+            logoutSuccessHandler.onLogoutSuccess(request, response, authentication);
+        } catch (ServletException | IOException se) {
+            throw new RuntimeException(se);
+        }
     }
 }

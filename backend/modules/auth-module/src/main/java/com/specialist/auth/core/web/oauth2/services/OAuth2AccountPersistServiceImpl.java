@@ -1,9 +1,9 @@
-package com.specialist.auth.core.oauth2.services;
+package com.specialist.auth.core.web.oauth2.services;
 
-import com.specialist.auth.core.oauth2.OAuth2UserRepository;
-import com.specialist.auth.core.oauth2.mappers.OAuth2UserMapper;
-import com.specialist.auth.core.oauth2.models.OAuth2UserEntity;
-import com.specialist.auth.core.oauth2.models.Provider;
+import com.specialist.auth.core.web.oauth2.OAuth2UserRepository;
+import com.specialist.auth.core.web.oauth2.mappers.OAuth2UserMapper;
+import com.specialist.auth.core.web.oauth2.models.OAuth2UserEntity;
+import com.specialist.auth.core.web.oauth2.models.Provider;
 import com.specialist.auth.domain.account.services.AccountPersistFacade;
 import com.specialist.auth.domain.account.services.AccountService;
 import lombok.RequiredArgsConstructor;

@@ -1,8 +1,8 @@
-package com.specialist.auth.core.oauth2;
+package com.specialist.auth.core.web.oauth2;
 
-import com.specialist.auth.core.oauth2.models.OAuth2QueryParams;
-import com.specialist.auth.core.oauth2.models.Provider;
-import com.specialist.auth.core.oauth2.services.OAuth2AccountAuthorizeOrchestrator;
+import com.specialist.auth.core.web.oauth2.models.OAuth2QueryParams;
+import com.specialist.auth.core.web.oauth2.models.Provider;
+import com.specialist.auth.core.web.oauth2.services.OAuth2AccountAuthorizeOrchestrator;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

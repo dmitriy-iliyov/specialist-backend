@@ -1,6 +1,6 @@
-package com.specialist.auth.core.oauth2.mappers;
+package com.specialist.auth.core.web.oauth2.mappers;
 
-import com.specialist.auth.core.oauth2.models.Provider;
+import com.specialist.auth.core.web.oauth2.models.Provider;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 

@@ -3,7 +3,7 @@ package com.specialist.auth.ut.core;
 import com.specialist.auth.core.Token;
 import com.specialist.auth.core.TokenManagerImpl;
 import com.specialist.auth.core.TokenType;
-import com.specialist.auth.core.oauth2.models.Provider;
+import com.specialist.auth.core.web.oauth2.models.Provider;
 import com.specialist.auth.domain.access_token.AccessTokenFactory;
 import com.specialist.auth.domain.access_token.AccessTokenSerializer;
 import com.specialist.auth.domain.access_token.models.AccessToken;

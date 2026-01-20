@@ -1,7 +1,7 @@
-package com.specialist.auth.core.oauth2;
+package com.specialist.auth.core.web.oauth2;
 
 
-import com.specialist.auth.core.oauth2.services.ProviderService;
+import com.specialist.auth.core.web.oauth2.services.ProviderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
