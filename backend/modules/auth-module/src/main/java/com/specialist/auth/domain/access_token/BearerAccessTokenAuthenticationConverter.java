@@ -1,7 +1,6 @@
 package com.specialist.auth.domain.access_token;
 
 import com.specialist.auth.domain.access_token.models.AccessToken;
-import com.specialist.auth.exceptions.AccessTokenExpiredException;
 import com.specialist.auth.exceptions.AuthorizationHeaderFormatException;
 import com.specialist.auth.exceptions.BlankTokenException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,21 +18,24 @@ public class BearerAccessTokenAuthenticationConverter implements AuthenticationC
 
     @Override
     public Authentication convert(HttpServletRequest request) {
-        String header = request.getHeader("Authorization");
-        if (header != null) {
-            if (header.startsWith("Bearer ")) {
-                String rawToken = header.substring("Bearer ".length()).trim();
-                if (!rawToken.isBlank()) {
-                    AccessToken accessToken = accessTokenDeserializer.deserialize(rawToken);
-                    if (accessToken == null) {
-                        throw new AccessTokenExpiredException();
-                    }
-                    return new PreAuthenticatedAuthenticationToken(accessToken, rawToken);
-                }
-                throw new BlankTokenException();
-            }
-            throw new AuthorizationHeaderFormatException();
+        if ("/api/system/v1/auth/login".equals(request.getRequestURI())) {
+            return null;
         }
-        return null;
+        String header = request.getHeader("Authorization");
+        if (header == null) {
+            return null;
+        }
+        if (header.startsWith("Bearer ")) {
+            String rawToken = header.substring("Bearer ".length()).trim();
+            if (!rawToken.isBlank()) {
+                AccessToken accessToken = accessTokenDeserializer.deserialize(rawToken);
+                if (accessToken == null) {
+                    return null;
+                }
+                return new PreAuthenticatedAuthenticationToken(accessToken, "Bearer Token");
+            }
+            throw new BlankTokenException();
+        }
+        throw new AuthorizationHeaderFormatException();
     }
 }

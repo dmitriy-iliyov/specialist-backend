@@ -1,12 +1,6 @@
 package com.specialist.auth.core.web.handlers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.specialist.auth.core.TokenType;
-import com.specialist.auth.core.web.CookieManager;
-import com.specialist.auth.exceptions.AccessTokenExpiredException;
-import com.specialist.auth.exceptions.InvalidJwtSignatureException;
-import com.specialist.auth.exceptions.JwtParseException;
-import com.specialist.auth.exceptions.RefreshTokenExpiredException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,26 +19,12 @@ import java.util.Map;
 @Slf4j
 public class CookieAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
-    private final CookieManager cookieManager;
     private final ObjectMapper mapper;
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        if (authException instanceof RefreshTokenExpiredException) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            cookieManager.cleanAll(response);
-        } else if (authException instanceof AccessTokenExpiredException) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.addCookie(cookieManager.clean(TokenType.ACCESS.getCookieType()));
-        } else if (authException instanceof InvalidJwtSignatureException) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        } else if (authException instanceof JwtParseException) {
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            log.error("Jwt parse exception", authException);
-        } else {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        }
-        Map<String, String> body = new HashMap<>(Map.of("message", authException.getMessage()));
+        Map<String, String> body = new HashMap<>(Map.of("message", "Authentication required"));
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(mapper.writeValueAsString(body));

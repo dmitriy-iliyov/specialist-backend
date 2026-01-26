@@ -63,6 +63,10 @@ public class RedisConfig {
     public <K, V> RedisTemplate<K, V> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate<K, V> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory);
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+        redisTemplate.setHashValueSerializer(new GenericJackson2JsonRedisSerializer());
         redisTemplate.setDefaultSerializer(new GenericJackson2JsonRedisSerializer());
         return redisTemplate;
     }
@@ -96,7 +100,6 @@ public class RedisConfig {
                 .withCacheConfiguration("providers", defaultConfig)
                 .withCacheConfiguration("providers:paths", defaultConfig)
 
-                .withCacheConfiguration("refresh-tokens", defaultConfig)
                 .withCacheConfiguration("refresh-tokens:active", defaultConfig)
 
                 .withCacheConfiguration("users:events:creator-rating-update:processed", defaultConfig.entryTtl(Duration.ofSeconds(3600)))

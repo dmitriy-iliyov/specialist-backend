@@ -7,11 +7,13 @@ import com.specialist.auth.domain.refresh_token.models.RefreshToken;
 import com.specialist.auth.domain.refresh_token.models.RefreshTokenUserDetails;
 import com.specialist.auth.exceptions.RefreshTokenExpiredException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.StandardCharsets;
@@ -19,6 +21,7 @@ import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
+@Service
 @RequiredArgsConstructor
 public class AccessTokenUserDetailsService implements AuthenticationUserDetailsService<PreAuthenticatedAuthenticationToken> {
 
@@ -29,6 +32,9 @@ public class AccessTokenUserDetailsService implements AuthenticationUserDetailsS
     public UserDetails loadUserDetails(PreAuthenticatedAuthenticationToken token) throws UsernameNotFoundException {
         if (token != null) {
             Object principal = token.getPrincipal();
+            if (principal == null) {
+                throw new BadCredentialsException("principal is null");
+            }
             if (principal instanceof AccessToken accessToken) {
                 if (!service.isActiveById(accessToken.id())) {
                     throw new RefreshTokenExpiredException();

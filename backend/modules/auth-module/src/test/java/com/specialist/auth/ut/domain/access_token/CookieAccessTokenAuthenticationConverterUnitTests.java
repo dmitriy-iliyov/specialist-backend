@@ -3,7 +3,6 @@ package com.specialist.auth.ut.domain.access_token;
 import com.specialist.auth.domain.access_token.AccessTokenDeserializer;
 import com.specialist.auth.domain.access_token.CookieAccessTokenAuthenticationConverter;
 import com.specialist.auth.domain.access_token.models.AccessToken;
-import com.specialist.auth.exceptions.AccessTokenExpiredException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.DisplayName;
@@ -14,6 +13,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
+
+import java.time.Instant;
+import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -27,8 +30,9 @@ class CookieAccessTokenAuthenticationConverterUnitTests {
     @Mock
     private HttpServletRequest request;
 
-    @Mock
-    private AccessToken accessToken;
+    private final AccessToken accessToken = new AccessToken(
+            UUID.randomUUID(), UUID.randomUUID(), List.of(), Instant.now(), Instant.now()
+    );
 
     @InjectMocks
     private CookieAccessTokenAuthenticationConverter converter;
@@ -57,14 +61,15 @@ class CookieAccessTokenAuthenticationConverterUnitTests {
     }
 
     @Test
-    @DisplayName("UT: convert() should throw when deserializer returns null")
+    @DisplayName("UT: convert() should return null when deserializer returns null")
     void convert_matchingCookieButDeserializerReturnsNull_throws() {
         Cookie cookie = new Cookie("__Host-access-token", "tokenValue");
         when(request.getCookies()).thenReturn(new Cookie[]{cookie});
         when(deserializer.deserialize("tokenValue")).thenReturn(null);
 
-        assertThrows(AccessTokenExpiredException.class, () -> converter.convert(request));
+        Authentication authentication = converter.convert(request);
 
+        assertNull(authentication);
         verify(request, times(2)).getCookies();
         verify(deserializer, times(1)).deserialize("tokenValue");
     }
@@ -81,7 +86,6 @@ class CookieAccessTokenAuthenticationConverterUnitTests {
         assertNotNull(auth);
         assertTrue(auth instanceof PreAuthenticatedAuthenticationToken);
         assertEquals(accessToken, auth.getPrincipal());
-        assertEquals("tokenValue", auth.getCredentials());
 
         verify(request, times(2)).getCookies();
         verify(deserializer, times(1)).deserialize("tokenValue");

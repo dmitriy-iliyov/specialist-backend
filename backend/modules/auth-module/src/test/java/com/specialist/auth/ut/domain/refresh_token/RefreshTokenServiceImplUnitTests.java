@@ -90,12 +90,24 @@ class RefreshTokenServiceImplUnitTests {
     @DisplayName("UT: isActiveById() should delegate to repository")
     void isActiveById_shouldReturnRepositoryValue() {
         UUID id = UUID.randomUUID();
-        when(repository.existsById(id)).thenReturn(true);
+
+        when(cacheService.isActiveById(id)).thenReturn(null);
+        when(repository.findById(id)).thenReturn(
+                Optional.of(new RefreshTokenEntity(
+                        id,
+                        UUID.randomUUID(),
+                        "ROLE_USER",
+                        Instant.now(),
+                        Instant.now().plusSeconds(3600))
+                )
+        );
 
         boolean active = service.isActiveById(id);
 
         assertTrue(active);
-        verify(repository, times(1)).existsById(id);
+        verify(cacheService, times(1)).isActiveById(id);
+        verify(repository, times(1)).findById(id);
+        verify(cacheService, times(1)).putToActiveAsTrue(any(RefreshToken.class));
         verifyNoMoreInteractions(repository, cacheService);
     }
 
@@ -119,7 +131,6 @@ class RefreshTokenServiceImplUnitTests {
         );
 
         when(repository.findById(id)).thenReturn(Optional.of(entity));
-        when(cacheService.put(refreshToken)).thenReturn(refreshToken);
 
         RefreshToken result = service.findById(id);
 
@@ -136,13 +147,11 @@ class RefreshTokenServiceImplUnitTests {
     void findById_whenNotFound_shouldThrow() {
         UUID id = UUID.randomUUID();
         when(repository.findById(id)).thenReturn(Optional.empty());
-        doNothing().when(cacheService).putToActiveAsFalse(id);
 
         RefreshToken refreshToken = service.findById(id);
         assertEquals(refreshToken, null);
 
         verify(repository, times(1)).findById(id);
-        verify(cacheService, times(1)).putToActiveAsFalse(any(UUID.class));
         verifyNoMoreInteractions(repository, cacheService);
     }
 
@@ -150,12 +159,10 @@ class RefreshTokenServiceImplUnitTests {
     @DisplayName("UT: deleteById() should delete and put false into cache")
     void deleteById_shouldDeleteStatusAndPutFalseInCache() {
         UUID id = UUID.randomUUID();
-        doNothing().when(cacheService).putToActiveAsFalse(id);
 
         service.deleteById(id);
 
         verify(repository, times(1)).deleteById(id);
-        verify(cacheService, times(1)).putToActiveAsFalse(any(UUID.class));
         verifyNoMoreInteractions(repository, cacheService);
     }
 }

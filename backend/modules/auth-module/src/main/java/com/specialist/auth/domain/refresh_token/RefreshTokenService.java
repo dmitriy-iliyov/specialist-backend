@@ -3,6 +3,7 @@ package com.specialist.auth.domain.refresh_token;
 import com.specialist.auth.core.BaseUserDetails;
 import com.specialist.auth.domain.refresh_token.models.RefreshToken;
 
+import java.time.Instant;
 import java.util.UUID;
 
 public interface RefreshTokenService {
@@ -15,4 +16,6 @@ public interface RefreshTokenService {
     void deleteById(UUID id);
 
     void deleteAllByAccountId(UUID accountId);
+
+    void deleteBatchByExpiredAtThreshold(Instant threshold, Integer batchSize);
 }

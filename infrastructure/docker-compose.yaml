@@ -22,7 +22,7 @@ services:
       POSTGRES_USER: specialist_api
       POSTGRES_DB: specialist_database
     ports:
-      - "5432:5432"
+      - "5433:5432"
 
   specialist-redis:
     image: redis
@@ -30,7 +30,7 @@ services:
     networks:
       - default
     ports:
-      - "6379:6379"
+      - "6380:6379"
 
 volumes:
   kafka_data: {}

@@ -18,10 +18,6 @@ import com.specialist.auth.exceptions.RefreshTokenIdNullException;
 import com.specialist.auth.exceptions.UserDetailsNullException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.nio.charset.StandardCharsets;
@@ -35,20 +31,21 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
 public class TokenManagerImplUnitTests {
 
-    @Mock
-    RefreshTokenService refreshTokenService;
+    Long accessTokenTtl = 1800L;
+    RefreshTokenService refreshTokenService = mock(RefreshTokenService.class);
 
-    @Mock
-    AccessTokenFactory accessTokenFactory;
+    AccessTokenFactory accessTokenFactory = mock(AccessTokenFactory.class);
 
-    @Mock
-    AccessTokenSerializer accessTokenSerializer;
+    AccessTokenSerializer accessTokenSerializer = mock(AccessTokenSerializer.class);
 
-    @InjectMocks
-    TokenManagerImpl tokenManager;
+    TokenManagerImpl tokenManager = new TokenManagerImpl(
+            accessTokenTtl,
+            refreshTokenService,
+            accessTokenFactory,
+            accessTokenSerializer
+    );
 
     @Test
     @DisplayName("UT: generate(AccountUserDetails.class) when userDetails non null should return map of tokens")
@@ -131,14 +128,6 @@ public class TokenManagerImplUnitTests {
                 Instant.now().plusSeconds(300L)
         );
 
-        AccessToken accessToken = new AccessToken(
-                refreshToken.id(),
-                refreshToken.accountId(),
-                refreshToken.authorities(),
-                Instant.now(),
-                refreshToken.expiresAt()
-        );
-
         String rawAccessToken = "serialized-access-token";
 
         when(refreshTokenService.generateAndSave(userDetails)).thenReturn(refreshToken);
@@ -179,14 +168,14 @@ public class TokenManagerImplUnitTests {
                 tokenId,
                 UUID.randomUUID(),
                 List.of("ROLE_USER"),
-                Instant.now().plusSeconds(500L)
+                Instant.now().plusSeconds(accessTokenTtl + 10L)
         );
         AccessToken accessToken = new AccessToken(
                 tokenId,
                 refreshToken.accountId(),
                 refreshToken.authorities(),
                 Instant.now(),
-                Instant.now().plusSeconds(500L)
+                Instant.now().plusSeconds(accessTokenTtl + 10L)
         );
 
         String rawAccessToken = "serialized-token";

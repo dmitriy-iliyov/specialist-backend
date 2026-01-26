@@ -3,7 +3,6 @@ package com.specialist.auth.ut.domain.access_token;
 import com.specialist.auth.domain.access_token.AccessTokenDeserializer;
 import com.specialist.auth.domain.access_token.BearerAccessTokenAuthenticationConverter;
 import com.specialist.auth.domain.access_token.models.AccessToken;
-import com.specialist.auth.exceptions.AccessTokenExpiredException;
 import com.specialist.auth.exceptions.AuthorizationHeaderFormatException;
 import com.specialist.auth.exceptions.BlankTokenException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -37,6 +37,7 @@ class BearerAccessTokenAuthenticationConverterUnitTests {
 
         assertNull(converter.convert(request));
 
+        verify(request, times(1)).getRequestURI();
         verify(request, times(1)).getHeader("Authorization");
         verifyNoInteractions(deserializer);
         verifyNoMoreInteractions(request);
@@ -49,6 +50,7 @@ class BearerAccessTokenAuthenticationConverterUnitTests {
 
         assertThrows(AuthorizationHeaderFormatException.class, () -> converter.convert(request));
 
+        verify(request, times(1)).getRequestURI();
         verify(request, times(1)).getHeader("Authorization");
         verifyNoInteractions(deserializer);
         verifyNoMoreInteractions(request);
@@ -61,20 +63,23 @@ class BearerAccessTokenAuthenticationConverterUnitTests {
 
         assertThrows(BlankTokenException.class, () -> converter.convert(request));
 
+        verify(request, times(1)).getRequestURI();
         verify(request, times(1)).getHeader("Authorization");
         verifyNoInteractions(deserializer);
         verifyNoMoreInteractions(request);
     }
 
     @Test
-    @DisplayName("UT: convert() should throw AccessTokenExpiredException when deserializer returns null")
+    @DisplayName("UT: convert() should return null when deserializer returns null")
     void convert_shouldThrow_whenTokenExpired() {
         String token = "validToken";
         when(request.getHeader("Authorization")).thenReturn("Bearer " + token);
         when(deserializer.deserialize(token)).thenReturn(null);
 
-        assertThrows(AccessTokenExpiredException.class, () -> converter.convert(request));
+        Authentication authentication = converter.convert(request);
 
+        assertNull(authentication);
+        verify(request, times(1)).getRequestURI();
         verify(request, times(1)).getHeader("Authorization");
         verify(deserializer, times(1)).deserialize(token);
         verifyNoMoreInteractions(request, deserializer);
@@ -93,8 +98,9 @@ class BearerAccessTokenAuthenticationConverterUnitTests {
         assertNotNull(result);
         assertTrue(result instanceof PreAuthenticatedAuthenticationToken);
         assertEquals(accessToken, result.getPrincipal());
-        assertEquals("validToken", result.getCredentials());
+        assertEquals("Bearer Token", result.getCredentials());
 
+        verify(request, times(1)).getRequestURI();
         verify(request, times(1)).getHeader("Authorization");
         verify(deserializer, times(1)).deserialize(token);
         verifyNoMoreInteractions(request, deserializer);

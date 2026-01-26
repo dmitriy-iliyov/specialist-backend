@@ -1,4 +1,4 @@
-package com.specialist.auth.domain.access_token;
+package com.specialist.auth.core.web.handlers;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

@@ -11,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
@@ -39,14 +40,13 @@ class AccessTokenUserDetailsServiceUnitTests {
     }
 
     @Test
-    @DisplayName("UT: loadUserDetails() when principal is null should return null")
+    @DisplayName("UT: loadUserDetails() when principal is null should throw BadCredentialsException")
     void loadUserDetails_whenPrincipalNull_shouldReturnNull() {
         PreAuthenticatedAuthenticationToken token = mock(PreAuthenticatedAuthenticationToken.class);
         when(token.getPrincipal()).thenReturn(null);
 
-        UserDetails result = service.loadUserDetails(token);
+        assertThrows(BadCredentialsException.class, () -> service.loadUserDetails(token));
 
-        assertNull(result);
         verifyNoInteractions(refreshTokenService);
     }
 

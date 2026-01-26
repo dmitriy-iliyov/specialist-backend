@@ -2,7 +2,6 @@ package com.specialist.auth.core.web;
 
 import com.specialist.auth.domain.access_token.models.AccessTokenUserDetails;
 import com.specialist.auth.domain.refresh_token.models.RefreshTokenIdHolder;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -15,8 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/auth")

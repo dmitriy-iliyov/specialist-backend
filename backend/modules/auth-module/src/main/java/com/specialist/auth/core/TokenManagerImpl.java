@@ -11,7 +11,7 @@ import com.specialist.auth.exceptions.AccountIdNullException;
 import com.specialist.auth.exceptions.RefreshTokenExpiredException;
 import com.specialist.auth.exceptions.RefreshTokenIdNullException;
 import com.specialist.auth.exceptions.UserDetailsNullException;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
@@ -22,12 +22,22 @@ import java.util.Map;
 import java.util.UUID;
 
 @Component
-@RequiredArgsConstructor
 public class TokenManagerImpl implements TokenManager {
 
+    private final Long ACCESS_TOKEN_TTL;
     private final RefreshTokenService refreshTokenService;
     private final AccessTokenFactory accessTokenFactory;
     private final AccessTokenSerializer accessTokenSerializer;
+
+    public TokenManagerImpl(@Value("${api.access-token.ttl}") Long accessTokenTtl,
+                            RefreshTokenService refreshTokenService,
+                            AccessTokenFactory accessTokenFactory,
+                            AccessTokenSerializer accessTokenSerializer) {
+        this.ACCESS_TOKEN_TTL = accessTokenTtl;
+        this.refreshTokenService = refreshTokenService;
+        this.accessTokenFactory = accessTokenFactory;
+        this.accessTokenSerializer = accessTokenSerializer;
+    }
 
     @Override
     public Map<TokenType, Token> generate(AccountUserDetails userDetails) {
@@ -69,7 +79,7 @@ public class TokenManagerImpl implements TokenManager {
         RefreshToken refreshToken = refreshTokenService.findById(refreshTokenId);
         if (refreshToken != null) {
             long timeToExpiration = Duration.between(Instant.now(), refreshToken.expiresAt()).toSeconds();
-            if (timeToExpiration <= 120) {
+            if (timeToExpiration <= ACCESS_TOKEN_TTL) {
                 refreshTokenService.deleteById(refreshTokenId);
                 throw new RefreshTokenExpiredException();
             } else {
