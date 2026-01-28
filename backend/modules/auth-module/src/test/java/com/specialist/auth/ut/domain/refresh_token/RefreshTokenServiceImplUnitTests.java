@@ -12,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.time.Instant;
@@ -39,11 +40,11 @@ class RefreshTokenServiceImplUnitTests {
     @DisplayName("UT: generateAndSave() should save token and put into cache")
     void generateAndSave_shouldSaveTokenAndPutInCache() {
         UUID userId = UUID.randomUUID();
-        Collection authorities =
+        Collection<? extends GrantedAuthority> authorities =
                 List.of(new SimpleGrantedAuthority("ROLE_USER"));
         RefreshToken refreshToken = new RefreshToken(UUID.randomUUID(), userId, List.of("ROLE_USER"), Instant.now());
         when(userDetails.getId()).thenReturn(userId);
-        when(userDetails.getAuthorities()).thenReturn(authorities);
+        when(userDetails.getAuthorities()).thenReturn((Collection) authorities);
         when(cacheService.putToActiveAsTrue(any(RefreshToken.class))).thenReturn(refreshToken);
         when(repository.save(any(RefreshTokenEntity.class))).thenReturn(new RefreshTokenEntity(UUID.randomUUID(), userId, "ROLE_USER", Instant.now(), Instant.now()));
 
@@ -65,11 +66,11 @@ class RefreshTokenServiceImplUnitTests {
     @DisplayName("UT: generateAndSave() should save token and NOT put into cache")
     void generateAndSave_whenCacheNull_shouldSaveTokenAndPutInCache() {
         UUID userId = UUID.randomUUID();
-        Collection authorities =
+        Collection<? extends GrantedAuthority> authorities =
                 List.of(new SimpleGrantedAuthority("ROLE_USER"));
         RefreshToken refreshToken = new RefreshToken(UUID.randomUUID(), userId, List.of("ROLE_USER"), Instant.now());
         when(userDetails.getId()).thenReturn(userId);
-        when(userDetails.getAuthorities()).thenReturn(authorities);
+        when(userDetails.getAuthorities()).thenReturn((Collection) authorities);
         when(cacheService.putToActiveAsTrue(any(RefreshToken.class))).thenReturn(refreshToken);
         when(repository.save(any(RefreshTokenEntity.class))).thenReturn(new RefreshTokenEntity(UUID.randomUUID(), userId, "ROLE_USER", Instant.now(), Instant.now()));
         service.TOKEN_TTL = 3600L;
@@ -123,13 +124,6 @@ class RefreshTokenServiceImplUnitTests {
                 Instant.now().plusSeconds(3600)
         );
 
-        RefreshToken refreshToken = new RefreshToken(
-                entity.getId(),
-                entity.getAccountId(),
-                Arrays.asList(entity.getAuthorities().split(",")),
-                entity.getExpiresAt()
-        );
-
         when(repository.findById(id)).thenReturn(Optional.of(entity));
 
         RefreshToken result = service.findById(id);
@@ -149,7 +143,7 @@ class RefreshTokenServiceImplUnitTests {
         when(repository.findById(id)).thenReturn(Optional.empty());
 
         RefreshToken refreshToken = service.findById(id);
-        assertEquals(refreshToken, null);
+        assertNull(refreshToken);
 
         verify(repository, times(1)).findById(id);
         verifyNoMoreInteractions(repository, cacheService);
@@ -163,6 +157,34 @@ class RefreshTokenServiceImplUnitTests {
         service.deleteById(id);
 
         verify(repository, times(1)).deleteById(id);
+        verifyNoMoreInteractions(repository, cacheService);
+    }
+
+    @Test
+    @DisplayName("UT: deleteAllByAccountId() should evict cache and delete from repository")
+    void deleteAllByAccountId_shouldEvictCacheAndDeleteFromRepo() {
+        UUID accountId = UUID.randomUUID();
+        List<UUID> ids = List.of(UUID.randomUUID(), UUID.randomUUID());
+
+        when(repository.findAllIdByAccountId(accountId)).thenReturn(ids);
+
+        service.deleteAllByAccountId(accountId);
+
+        verify(repository, times(1)).findAllIdByAccountId(accountId);
+        verify(cacheService, times(1)).evictAllByIdIn(new HashSet<>(ids));
+        verify(repository, times(1)).deleteAllByAccountId(accountId);
+        verifyNoMoreInteractions(repository, cacheService);
+    }
+
+    @Test
+    @DisplayName("UT: deleteBatchByExpiredAtThreshold() should delegate to repository")
+    void deleteBatchByExpiredAtThreshold_shouldDelegateToRepo() {
+        Instant threshold = Instant.now();
+        Integer batchSize = 100;
+
+        service.deleteBatchByExpiredAtThreshold(threshold, batchSize);
+
+        verify(repository, times(1)).deleteBatchByExpiredAThreshold(threshold, batchSize);
         verifyNoMoreInteractions(repository, cacheService);
     }
 }
