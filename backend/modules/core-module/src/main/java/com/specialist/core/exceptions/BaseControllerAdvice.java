@@ -2,8 +2,8 @@ package com.specialist.core.exceptions;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.specialist.core.exceptions.mapper.ExceptionMapper;
-import com.specialist.core.exceptions.models.Exception;
 import com.specialist.core.exceptions.models.*;
+import com.specialist.core.exceptions.models.Exception;
 import com.specialist.core.exceptions.models.dto.ErrorDto;
 import com.specialist.core.exceptions.models.dto.ExceptionResponseDto;
 import io.lettuce.core.RedisConnectionException;
