@@ -1,4 +1,4 @@
-package com.specialist.auth.ut.core.oauth2;
+package com.specialist.auth.ut.core.web.oauth2;
 
 import com.specialist.auth.core.web.oauth2.services.ProviderServiceImpl;
 import org.junit.jupiter.api.DisplayName;

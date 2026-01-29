@@ -13,67 +13,44 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
-public class AdminAccountInfoControllerUnitTests {
+class AdminAccountInfoControllerUnitTests {
 
     @InjectMocks
-    AdminAccountInfoController controller;
+    private AdminAccountInfoController controller;
 
     @Test
-    @DisplayName("UT: getRoles() should return 200 and all enum values")
-    public void getRoles_shouldReturn200AndEnumValues() {
-        ResponseEntity<?> response = controller.getRoles();
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertNotNull(response.getBody());
-
-        Role[] expected = Role.values();
-        Role[] actual = (Role[]) response.getBody();
-
-        assertArrayEquals(expected, actual);
+    @DisplayName("UT: getRoles() should return all roles")
+    void getRoles_shouldReturnAllRoles() {
+        ResponseEntity<?> result = controller.getRoles();
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertArrayEquals(Role.values(), (Role[]) result.getBody());
     }
 
     @Test
-    @DisplayName("UT: getAuthorities() should return 200 and all enum values")
-    public void getAuthorities_shouldReturn200AndEnumValues() {
-        ResponseEntity<?> response = controller.getAuthorities();
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertNotNull(response.getBody());
-
-        Authority[] expected = Authority.values();
-        Authority[] actual = (Authority[]) response.getBody();
-
-        assertArrayEquals(expected, actual);
+    @DisplayName("UT: getAuthorities() should return all authorities")
+    void getAuthorities_shouldReturnAllAuthorities() {
+        ResponseEntity<?> result = controller.getAuthorities();
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertArrayEquals(Authority.values(), (Authority[]) result.getBody());
     }
 
     @Test
-    @DisplayName("UT: getUnableReasonTypes() should return 200 and all enum values")
-    public void getDisableReasonTypes_shouldReturn200AndEnumValues() {
-        ResponseEntity<?> response = controller.getDisableReasonTypes();
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertNotNull(response.getBody());
-
-        DisableReason[] expected = DisableReason.values();
-        DisableReason[] actual = (DisableReason[]) response.getBody();
-
-        assertArrayEquals(expected, actual);
+    @DisplayName("UT: getDisableReasonTypes() should return all disable reasons")
+    void getDisableReasonTypes_shouldReturnAllDisableReasons() {
+        ResponseEntity<?> result = controller.getDisableReasonTypes();
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertArrayEquals(DisableReason.values(), (DisableReason[]) result.getBody());
     }
 
     @Test
-    @DisplayName("UT: getLockReasonTypes() should return 200 and all enum values")
-    public void getLockReasonTypes_shouldReturn200AndEnumValues() {
-        ResponseEntity<?> response = controller.getLockReasonTypes();
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertNotNull(response.getBody());
-
-        LockReason[] expected = LockReason.values();
-        LockReason[] actual = (LockReason[]) response.getBody();
-
-        assertArrayEquals(expected, actual);
+    @DisplayName("UT: getLockReasonTypes() should return all lock reasons")
+    void getLockReasonTypes_shouldReturnAllLockReasons() {
+        ResponseEntity<?> result = controller.getLockReasonTypes();
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertArrayEquals(LockReason.values(), (LockReason[]) result.getBody());
     }
 }

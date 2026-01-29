@@ -12,29 +12,30 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 @ExtendWith(MockitoExtension.class)
-public class ServiceAccountAuthControllerUnitTests {
+class ServiceAccountAuthControllerUnitTests {
 
     @Mock
-    ServiceAccountLoginService service;
+    private ServiceAccountLoginService loginService;
 
     @InjectMocks
-    ServiceAccountAuthController controller;
+    private ServiceAccountAuthController controller;
 
     @Test
-    @DisplayName("UT: login() should call service.login() and return 204 NO_CONTENT")
-    public void login_shouldCallServiceAndReturnNoContent() {
-        ServiceLoginRequest requestDto = new ServiceLoginRequest("client-accountId", "client-secret");
+    @DisplayName("UT: login() should call service and return NO_CONTENT")
+    void login_shouldCallService() {
+        ServiceLoginRequest request = new ServiceLoginRequest(UUID.randomUUID().toString(), "secret");
 
-        ResponseEntity<?> response = controller.login(requestDto);
+        ResponseEntity<?> result = controller.login(request);
 
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
-        assertEquals(null, response.getBody());
-
-        verify(service, times(1)).login(requestDto);
-        verifyNoMoreInteractions(service);
+        assertEquals(HttpStatus.NO_CONTENT, result.getStatusCode());
+        verify(loginService).login(request);
+        verifyNoMoreInteractions(loginService);
     }
 }

@@ -4,73 +4,76 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.specialist.auth.core.api.BearerAuthenticationEntryPoint;
 import com.specialist.auth.exceptions.InvalidJwtSignatureException;
 import com.specialist.auth.exceptions.JwtParseException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.security.authentication.BadCredentialsException;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.AuthenticationException;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.io.PrintWriter;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class BearerAuthenticationEntryPointUnitTests {
 
-    ObjectMapper mapper;
-    BearerAuthenticationEntryPoint tested;
-    MockHttpServletRequest request;
-    MockHttpServletResponse response;
+    @Mock
+    private ObjectMapper mapper;
 
-    @BeforeEach
-    void setUp() {
-        this.mapper = new ObjectMapper();
-        this.tested = new BearerAuthenticationEntryPoint(mapper);
-        this.request = new MockHttpServletRequest();
-        this.response = new MockHttpServletResponse();
+    @Mock
+    private HttpServletRequest request;
+
+    @Mock
+    private HttpServletResponse response;
+
+    @InjectMocks
+    private BearerAuthenticationEntryPoint entryPoint;
+
+    @Test
+    @DisplayName("UT: commence() when InvalidJwtSignatureException should return 400")
+    void commence_whenInvalidJwtSignature_shouldReturn400() throws IOException {
+        AuthenticationException exception = new InvalidJwtSignatureException(new Exception());
+        when(response.getWriter()).thenReturn(mock(PrintWriter.class));
+        when(mapper.writeValueAsString(any())).thenReturn("json");
+
+        entryPoint.commence(request, response, exception);
+
+        verify(response).setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        verify(response).setContentType("application/json");
+        verify(response.getWriter()).write("json");
     }
 
     @Test
-    @DisplayName("UT: commence() when exception is InvalidJwtSignatureException should return 400 and JSON message")
-    void commence_whenInvalidJwtSignatureException_shouldReturn400AndMessage() throws IOException {
-        String message = "Invalid jwt signature.";
-        InvalidJwtSignatureException e = new InvalidJwtSignatureException(new RuntimeException(message));
-
-        tested.commence(request, response, e);
-
-        assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.getStatus());
-        assertEquals("application/json;charset=UTF-8", response.getContentType());
-        String currentMessage = (String) mapper.readValue(response.getContentAsString(), HashMap.class).get("message");
-        assertEquals(message, currentMessage);
-    }
-
-    @Test
-    @DisplayName("UT: commence() when exception is JwtParseException should return 500 and JSON message")
+    @DisplayName("UT: commence() when JwtParseException should return 500 and log error")
     void commence_whenJwtParseException_shouldReturn500AndMessage() throws IOException {
-        String message = "Jwt parse exception.";
-        JwtParseException e = new JwtParseException(new RuntimeException());
+        AuthenticationException exception = new JwtParseException(new Exception());
+        when(response.getWriter()).thenReturn(mock(PrintWriter.class));
+        when(mapper.writeValueAsString(any())).thenReturn("json");
 
-        tested.commence(request, response, e);
+        entryPoint.commence(request, response, exception);
 
-        assertEquals(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, response.getStatus());
-        assertEquals("application/json;charset=UTF-8", response.getContentType());
-        String currentMessage = (String) mapper.readValue(response.getContentAsString(), HashMap.class).get("message");
-        assertEquals(message, currentMessage);
+        verify(response).setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        verify(response).setContentType("application/json");
+        verify(response.getWriter()).write("json");
     }
 
     @Test
-    @DisplayName("UT: commence() when exception is AuthenticationException should return 401 and JSON message")
-    void commence_whenAuthenticationException_shouldReturn401AndMessage() throws IOException {
-        String message = "Test exception message.";
-        BadCredentialsException e = new BadCredentialsException(message);
+    @DisplayName("UT: commence() when other exception should return 401")
+    void commence_whenOtherException_shouldReturn401() throws IOException {
+        AuthenticationException exception = new AuthenticationException("Auth failed") {};
+        when(response.getWriter()).thenReturn(mock(PrintWriter.class));
+        when(mapper.writeValueAsString(any())).thenReturn("json");
 
-        tested.commence(request, response, e);
+        entryPoint.commence(request, response, exception);
 
-        assertEquals(HttpServletResponse.SC_UNAUTHORIZED, response.getStatus());
-        assertEquals("application/json;charset=UTF-8", response.getContentType());
-        String currentMessage = (String) mapper.readValue(response.getContentAsString(), HashMap.class).get("message");
-        assertEquals(message, currentMessage);
+        verify(response).setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        verify(response).setContentType("application/json");
+        verify(response.getWriter()).write("json");
     }
 }

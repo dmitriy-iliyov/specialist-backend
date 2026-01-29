@@ -4,6 +4,7 @@ import com.specialist.auth.domain.access_token.AccessTokenUserDetailsService;
 import com.specialist.auth.domain.access_token.models.AccessToken;
 import com.specialist.auth.domain.access_token.models.AccessTokenUserDetails;
 import com.specialist.auth.domain.refresh_token.RefreshTokenService;
+import com.specialist.auth.domain.role.Role;
 import com.specialist.auth.exceptions.RefreshTokenExpiredException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,11 +12,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -40,13 +41,14 @@ class AccessTokenUserDetailsServiceUnitTests {
     }
 
     @Test
-    @DisplayName("UT: loadUserDetails() when principal is null should throw BadCredentialsException")
-    void loadUserDetails_whenPrincipalNull_shouldReturnNull() {
+    @DisplayName("UT: loadUserDetails() when principal is not AccessToken should return null")
+    void loadUserDetails_whenPrincipalNotAccessToken_shouldReturnNull() {
         PreAuthenticatedAuthenticationToken token = mock(PreAuthenticatedAuthenticationToken.class);
-        when(token.getPrincipal()).thenReturn(null);
+        when(token.getPrincipal()).thenReturn(new Object());
 
-        assertThrows(BadCredentialsException.class, () -> service.loadUserDetails(token));
+        UserDetails userDetails = service.loadUserDetails(token);
 
+        assertNull(userDetails);
         verifyNoInteractions(refreshTokenService);
     }
 
@@ -64,7 +66,31 @@ class AccessTokenUserDetailsServiceUnitTests {
 
         assertThrows(RefreshTokenExpiredException.class, () -> service.loadUserDetails(token));
 
-        verify(refreshTokenService, times(1)).isActiveById(tokenId);
+        verify(refreshTokenService).isActiveById(tokenId);
+        verifyNoMoreInteractions(refreshTokenService);
+    }
+
+    @Test
+    @DisplayName("UT: loadUserDetails() with no authorities should return user with no authorities")
+    void loadUserDetails_withNoAuthorities_shouldReturnUserWithNoAuthorities() {
+        UUID tokenId = UUID.randomUUID();
+        UUID userId = UUID.randomUUID();
+        AccessToken accessToken = mock(AccessToken.class);
+        when(accessToken.id()).thenReturn(tokenId);
+        when(accessToken.accountId()).thenReturn(userId);
+        when(accessToken.authorities()).thenReturn(Collections.emptyList());
+
+        PreAuthenticatedAuthenticationToken token = mock(PreAuthenticatedAuthenticationToken.class);
+        when(token.getPrincipal()).thenReturn(accessToken);
+
+        when(refreshTokenService.isActiveById(tokenId)).thenReturn(true);
+
+        UserDetails userDetails = service.loadUserDetails(token);
+
+        assertNotNull(userDetails);
+        assertTrue(userDetails.getAuthorities().isEmpty());
+        verify(refreshTokenService).isActiveById(tokenId);
+        verifyNoMoreInteractions(refreshTokenService);
     }
 
     @Test
@@ -72,7 +98,7 @@ class AccessTokenUserDetailsServiceUnitTests {
     void loadUserDetails_whenRefreshTokenActive_shouldReturnUserDetails() {
         UUID tokenId = UUID.randomUUID();
         UUID userId = UUID.randomUUID();
-        List<String> authStrings = List.of("ROLE_USER", "ROLE_ADMIN");
+        List<String> authStrings = List.of(Role.ROLE_USER.name(), Role.ROLE_ADMIN.name());
 
         AccessToken accessToken = mock(AccessToken.class);
         when(accessToken.id()).thenReturn(tokenId);
@@ -97,6 +123,7 @@ class AccessTokenUserDetailsServiceUnitTests {
         assertTrue(details.getAuthorities().stream()
                 .allMatch(a -> a instanceof SimpleGrantedAuthority));
 
-        verify(refreshTokenService, times(1)).isActiveById(tokenId);
+        verify(refreshTokenService).isActiveById(tokenId);
+        verifyNoMoreInteractions(refreshTokenService);
     }
 }
