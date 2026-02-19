@@ -1,3 +1,7 @@
+[![CodeFactor](https://www.codefactor.io/repository/github/dmitriy-iliyov/specialist-backend/badge)](https://www.codefactor.io/repository/github/dmitriy-iliyov/specialist-backend)
+[![codecov](https://codecov.io/github/dmitriy-iliyov/specialist-backend/graph/badge.svg?token=UDCPIBRJQJ)](https://codecov.io/github/dmitriy-iliyov/specialist-backend)
+[![CI](https://github.com/dmitriy-iliyov/specialist-backend/actions/workflows/ci.yml/badge.svg)](https://github.com/dmitriy-iliyov/specialist-backend/actions/workflows/ci.yml)
+
 ![Java](https://img.shields.io/badge/Java-21-007396?logo=openjdk)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.6-6DB33F?logo=springboot)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16+-336791?logo=postgresql)
