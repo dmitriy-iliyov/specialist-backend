@@ -1,8 +1,6 @@
 package com.specialist.specialistdirectory.ut.domain.review.infrastructure;
 
 import com.specialist.specialistdirectory.domain.review.infrastructure.ReviewWarmUpService;
-import com.specialist.specialistdirectory.domain.review.models.dtos.ReviewResponseDto;
-import com.specialist.specialistdirectory.domain.review.models.filters.ReviewSort;
 import com.specialist.specialistdirectory.domain.review.services.ReviewAggregator;
 import com.specialist.specialistdirectory.domain.specialist.models.dtos.SpecialistResponseDto;
 import com.specialist.specialistdirectory.domain.specialist.services.SpecialistService;
@@ -19,12 +17,10 @@ import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
