@@ -31,6 +31,16 @@ The project is implemented using a classic **layered architecture** (Controller-
 - **Service Layer**: Contains the core business logic of the application.
 - **Repository Layer**: Responsible for interacting with the database (PostgreSQL) via Spring Data JPA.
 
+### Modules
+
+- **auth-module**: Manages user authentication and authorization. It handles JWT generation, refresh token logic, service accounts management, and role/authority management.
+- **core-module**: Provides core infrastructure used across the application, such as common configurations, shared exception handling.
+- **message-module**: Implements notification and messaging logic, including appointment reminders and system-generated messages.
+- **notification-module**: A dedicated module for handling real-time event-driven notifications (e.g., appointment cancellations).
+- **profile-module**: Manages user and specialist profiles, including personal data, contact information, and other profile-related details.
+- **schedule-module**: Handles all scheduling logic and appointment planning. It manages specialist availability, appointment intervals, and the complete booking lifecycle.
+- **specialist-directory-module**: Responsible for the public directory of specialists. This includes advanced search, filtering, specialist ratings, reviews, and bookmarking functionality.
+
 ## Non-functional Requirements
 
 ### Authentication & Security
@@ -46,10 +56,10 @@ The primary authentication mechanism is built on JSON Web Tokens (JWT), ensuring
 The platform also supports authentication through third-party providers (Google, Facebook), simplifying the registration and login process for users.
 
 #### Security Measures
+- **RBAC**: The system utilizes a flexible RBAC model where roles are composed of fine-grained permissions (authorities). This allows for granular control over specific actions and resources, rather than relying on simple role checks. Access to endpoints is strictly controlled based on the permissions assigned to a user's role.
+- **CSRF Protection**: A robust stateless CSRF protection mechanism is in place. The server generates a CSRF token and stores it in a secure, `HttpOnly` cookie, making it inaccessible to client-side scripts. The frontend application retrieves the token by making a dedicated API call to a specific endpoint. For every subsequent state-changing request (POST, PUT, DELETE), the client must include this token in a custom `X-XSRF-TOKEN` header for server-side validation.
+- **XSS Protection**: The application uses a custom filter that automatically sanitizes incoming request bodies to neutralize malicious scripts, preventing XSS attacks.
 - **Rate Limiting**: To protect against brute-force and DoS attacks, sensitive endpoints (like authentication) are rate-limited based on the client's IP address.
-- **XSS (Cross-Site Scripting) Protection**: The application uses a custom filter that automatically sanitizes incoming request bodies to neutralize malicious scripts, preventing XSS attacks.
-- **Role-Based Access Control (RBAC)**: The system utilizes a flexible RBAC model where roles are composed of fine-grained permissions (authorities). This allows for granular control over specific actions and resources, rather than relying on simple role checks. Access to endpoints is strictly controlled based on the permissions assigned to a user's role.
-- **HTTPS/TLS**: All communication between the client and server is encrypted using HTTPS/TLS to protect data in transit.
 
 ### Caching & Performance
 
@@ -99,12 +109,21 @@ The project uses Docker to run external dependencies (database, cache).
     DATABASE_URL=jdbc:postgresql://localhost:5432/specialist
     DATABASE_USERNAME=user
     DATABASE_PASSWORD=password
+    
     REDIS_HOST=localhost
     REDIS_PORT=6379
-    REDIS_PASSWORD=
+    
     SSL_KEY_STORE=path/to/your/keystore.p12
     SSL_KEY_STORE_PASSWORD=your_password
     SSL_KEY_PASSWORD=your_key_password
+    
+    AZURE_BLOB_AVATARS_CONTAINER_NAME=container_name
+    AZURE_BLOB_STORAGE_CONNECTION_STRING=connection_string
+    
+    AUTH_TOKEN_SECRET=access_token_secret
+    
+    COMPANY_MAIL=example.com@gmail.com
+    COMPANY_MAIL_PASS=password
     ```
 
 4.  **Build the project:**
