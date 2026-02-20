@@ -9,3 +9,118 @@
 ![Lua](https://img.shields.io/badge/Lua-Redis%20Scripts-2C2D72?logo=lua)
 ![Prometheus](https://img.shields.io/badge/Prometheus-Metrics-E6522C?logo=prometheus)
 ![Grafana](https://img.shields.io/badge/Grafana-Dashboards-F46800?logo=grafana)
+
+## Overview
+
+`specialist-backend` is a backend service for a platform designed to find specialists and manage appointments. It provides a RESTful API for managing user and specialist accounts, configuring their schedules, and handling the appointment booking process.
+
+## Key Features
+
+- User and specialist account management.
+- Advanced specialist search with filtering by various criteria.
+- Rating and review system for specialists, allowing users to leave feedback and comments.
+- Booking, cancellation, and rescheduling of appointments.
+- Personal schedule management for specialists.
+- RESTful API with interactive documentation powered by OpenAPI (Swagger).
+
+## Architecture
+
+The project is implemented using a classic **layered architecture** (Controller-Service-Repository), which ensures a clear separation of concerns and high maintainability.
+
+- **Controller Layer**: Handles HTTP requests, validates input, and invokes the service layer.
+- **Service Layer**: Contains the core business logic of the application.
+- **Repository Layer**: Responsible for interacting with the database (PostgreSQL) via Spring Data JPA.
+
+## Non-functional Requirements
+
+### Authentication & Security
+
+The application implements a multi-layered security model to protect user data and system resources.
+
+#### JWT-Based Authentication
+The primary authentication mechanism is built on JSON Web Tokens (JWT), ensuring a stateless approach and good scalability.
+- **Access & Refresh Tokens**: After a successful login, the client receives a short-lived `access token` for API access and a long-lived `refresh token` to renew the session.
+- **Refresh Token Rotation**: To enhance security, a rotation mechanism is used. When an `access token` expires, the client uses the `refresh token` to obtain a new pair of tokens. The old `refresh token` is immediately invalidated, preventing its reuse and reducing risks in case of compromise.
+
+#### Social Login (OAuth 2.0)
+The platform also supports authentication through third-party providers (Google, Facebook), simplifying the registration and login process for users.
+
+#### Security Measures
+- **Rate Limiting**: To protect against brute-force and DoS attacks, sensitive endpoints (like authentication) are rate-limited based on the client's IP address.
+- **XSS (Cross-Site Scripting) Protection**: The application uses a custom filter that automatically sanitizes incoming request bodies to neutralize malicious scripts, preventing XSS attacks.
+- **Role-Based Access Control (RBAC)**: The system utilizes a flexible RBAC model where roles are composed of fine-grained permissions (authorities). This allows for granular control over specific actions and resources, rather than relying on simple role checks. Access to endpoints is strictly controlled based on the permissions assigned to a user's role.
+- **HTTPS/TLS**: All communication between the client and server is encrypted using HTTPS/TLS to protect data in transit.
+
+### Caching & Performance
+
+- **Redis** is used for caching frequently accessed data, significantly reducing the load on PostgreSQL.
+- **Lua scripts** are used to perform atomic operations in Redis, ensuring consistency and high performance for complex scenarios (e.g., managing time slots).
+
+### Observability
+
+- The application exports metrics in **Prometheus** format for monitoring health and performance.
+- **Grafana** is used to visualize metrics and create dashboards.
+- The metrics endpoint is available at: `/api/system/actuator/prometheus`.
+
+## API Documentation
+
+Once the application is running, interactive API documentation is available at:
+**<https://localhost:8443/swagger-ui.html>**
+
+## Run
+
+The project uses Docker to run external dependencies (database, cache).
+
+### Prerequisites
+
+- JDK 21+
+- Maven 3.8+
+- Docker and Docker Compose
+
+### Instructions
+
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/dmitriy-iliyov/specialist-backend.git
+    cd specialist-backend
+    ```
+
+2.  **Start the environment:**
+    Run PostgreSQL and Redis using Docker Compose.
+    ```bash
+    docker-compose up -d
+    ```
+
+3.  **Configure environment variables:**
+    The application requires environment variables to be set for database, Redis, and SSL configuration. You can export them in your shell or use a `.env` file in the project root.
+
+    Example variables:
+    ```properties
+    DATABASE_URL=jdbc:postgresql://localhost:5432/specialist
+    DATABASE_USERNAME=user
+    DATABASE_PASSWORD=password
+    REDIS_HOST=localhost
+    REDIS_PORT=6379
+    REDIS_PASSWORD=
+    SSL_KEY_STORE=path/to/your/keystore.p12
+    SSL_KEY_STORE_PASSWORD=your_password
+    SSL_KEY_PASSWORD=your_key_password
+    ```
+
+4.  **Build the project:**
+    ```bash
+    mvn clean install
+    ```
+
+5.  **Run the application:**
+    ```bash
+    mvn spring-boot:run
+    ```
+    The application will be available at `https://localhost:8443`.
+
+## Testing
+
+To run all tests (unit and integration), execute the command:
+```bash
+mvn test
+```
