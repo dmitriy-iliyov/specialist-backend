@@ -20,8 +20,10 @@ public class CreatorRatingBufferScheduler {
     @Value("${api.creator-rating-buffer.clean.batch-size}")
     public int CLEAN_BATCH_SIZE;
 
+    @Value("${api.creator-rating-buffer.actualize.batch-size}")
     public Long ACTUALIZE_BATCH_SIZE;
 
+    @Value("${api.creator-rating-buffer.actualize.after-ttl}")
     public Long TTL_AFTER_LAST_UPDATE;
 
     private final CreatorRatingBufferService service;
