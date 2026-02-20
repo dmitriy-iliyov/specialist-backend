@@ -1,16 +1,18 @@
-version: "3.8"
 name: specialist-backend
 services:
-#  specialist-api:
-#    container_name: specialist-api
-#    build:
-#      context: .
-#      dockerfile: Dockerfile
-#    ports:
-#      - "8443:8443"
-#    image: aid-compass-api
-#    env_file:
-#      - .docker-env
+  specialist-api:
+    container_name: specialist-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8443:8443"
+    image: specialist-api
+    env_file:
+      - .docker-env
+    depends_on:
+      - specialist-postgresql
+      - specialist-redis
 
   specialist-postgresql:
     image: postgres
@@ -18,7 +20,7 @@ services:
     networks:
       - default
     environment:
-      POSTGRES_PASSWORD: qvakaydoma
+      POSTGRES_PASSWORD: root
       POSTGRES_USER: specialist_api
       POSTGRES_DB: specialist_database
     ports:

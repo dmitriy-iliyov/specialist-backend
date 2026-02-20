@@ -11,13 +11,6 @@
     <artifactId>specialist-backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>specialist-backend</name>
-    <url/>
-    <licenses>
-        <license/>
-    </licenses>
-    <developers>
-        <developer/>
-    </developers>
     <modules>
         <module>libs/utils</module>
         <module>libs/exceptions</module>

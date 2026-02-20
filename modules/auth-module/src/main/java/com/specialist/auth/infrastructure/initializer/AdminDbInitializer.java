@@ -38,8 +38,8 @@ public class AdminDbInitializer {
         );
         repository.save(new AccountEntity(
                 UuidUtils.generateV7(),
-                "dmitriy.iliyov@gmail.com",
-                passwordEncoder.encode("dmitriy.iliyov@gmail.com"),
+                "example@gmail.com",
+                passwordEncoder.encode("example@gmail.com"),
                 Provider.LOCAL,
                 roleService.getReferenceByRole(Role.ROLE_ADMIN),
                 authorityEntityList,
