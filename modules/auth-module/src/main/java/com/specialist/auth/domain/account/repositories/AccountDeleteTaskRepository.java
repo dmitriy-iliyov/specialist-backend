@@ -20,7 +20,7 @@ public interface AccountDeleteTaskRepository extends JpaRepository<AccountDelete
         WITH to_lock AS(
             SELECT * FROM account_delete_tasks
             WHERE status = :status
-            ORDER BY creeted_at
+            ORDER BY created_at
             LIMIT :batch_size
             FOR UPDATE SKIP LOCKED
         )

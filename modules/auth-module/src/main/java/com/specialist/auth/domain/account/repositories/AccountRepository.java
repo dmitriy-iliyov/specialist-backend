@@ -90,10 +90,10 @@ public interface AccountRepository extends JpaRepository<AccountEntity, UUID>, J
     void deleteAllByIdIn(Set<UUID> ids);
 
     @Query(value = """
-        SELECT id, r.role FROM accounts
-        JOIN roles r ON r.id = accounts.role_id
-        WHERE disable_reason = :reasonCode AND updated_at <= :threshold
-        ORDER BY updated_at
+        SELECT a.id, r.role FROM accounts a
+        JOIN roles r ON r.id = a.role_id
+        WHERE a.disable_reason = :reasonCode AND a.updated_at <= :threshold
+        ORDER BY a.updated_at
         LIMIT :batchSize
         FOR UPDATE SKIP LOCKED
     """, nativeQuery = true)
