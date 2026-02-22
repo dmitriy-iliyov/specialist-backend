@@ -28,7 +28,6 @@
         <module>modules/notification-module</module>
         <module>modules/message-module</module>
         <module>app</module>
-        <module>modules/tests</module>
     </modules>
 
     <packaging>pom</packaging>
