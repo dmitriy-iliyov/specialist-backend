@@ -1,10 +1,8 @@
-package com.specialist.auth.ut.core.api;
+package com.specialist.auth.core.api;
 
 import com.specialist.auth.core.Token;
 import com.specialist.auth.core.TokenManager;
 import com.specialist.auth.core.TokenType;
-import com.specialist.auth.core.api.ServiceAccountLoginServiceImpl;
-import com.specialist.auth.core.api.ServiceLoginRequest;
 import com.specialist.auth.domain.service_account.models.ServiceAccountUserDetails;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

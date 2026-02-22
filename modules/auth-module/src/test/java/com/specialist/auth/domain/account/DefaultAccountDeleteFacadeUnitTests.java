@@ -1,4 +1,4 @@
-package com.specialist.auth.ut.domain.account;
+package com.specialist.auth.domain.account;
 
 import com.specialist.auth.domain.account.infrastructure.AccountDeleteTaskService;
 import com.specialist.auth.domain.account.services.AccountService;

@@ -1,10 +1,8 @@
-package com.specialist.auth.ut.domain.service_account;
+package com.specialist.auth.domain.service_account;
 
 import com.specialist.auth.domain.access_token.models.AccessTokenUserDetails;
 import com.specialist.auth.domain.authority.Authority;
 import com.specialist.auth.domain.role.Role;
-import com.specialist.auth.domain.service_account.AdminServiceAccountController;
-import com.specialist.auth.domain.service_account.ServiceAccountService;
 import com.specialist.auth.domain.service_account.models.SecretServiceAccountResponseDto;
 import com.specialist.auth.domain.service_account.models.ServiceAccountDto;
 import com.specialist.auth.domain.service_account.models.ServiceAccountResponseDto;

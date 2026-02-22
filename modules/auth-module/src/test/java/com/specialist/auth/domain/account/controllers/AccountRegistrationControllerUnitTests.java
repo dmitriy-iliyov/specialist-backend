@@ -1,6 +1,5 @@
-package com.specialist.auth.ut.domain.account.controllers;
+package com.specialist.auth.domain.account.controllers;
 
-import com.specialist.auth.domain.account.controllers.AccountRegistrationController;
 import com.specialist.auth.domain.account.models.dtos.DefaultAccountCreateDto;
 import com.specialist.auth.domain.account.models.dtos.ShortAccountResponseDto;
 import com.specialist.auth.domain.account.services.AccountPersistFacade;

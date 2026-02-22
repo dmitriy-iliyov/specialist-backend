@@ -1,7 +1,5 @@
-package com.specialist.auth.ut.domain.authority;
+package com.specialist.auth.domain.authority;
 
-import com.specialist.auth.domain.authority.Authority;
-import com.specialist.auth.domain.authority.AuthorityCacheServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

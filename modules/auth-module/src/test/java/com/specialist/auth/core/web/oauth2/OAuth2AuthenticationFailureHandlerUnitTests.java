@@ -1,7 +1,6 @@
-package com.specialist.auth.ut.core.web.oauth2;
+package com.specialist.auth.core.web.oauth2;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.specialist.auth.core.web.oauth2.OAuth2AuthenticationFailureHandler;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;

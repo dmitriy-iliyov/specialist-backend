@@ -1,11 +1,9 @@
-package com.specialist.auth.ut.domain.service_account;
+package com.specialist.auth.domain.service_account;
 
 import com.specialist.auth.domain.authority.Authority;
 import com.specialist.auth.domain.authority.AuthorityEntity;
 import com.specialist.auth.domain.role.Role;
 import com.specialist.auth.domain.role.RoleEntity;
-import com.specialist.auth.domain.service_account.ServiceAccountRepository;
-import com.specialist.auth.domain.service_account.ServiceAccountUserDetailsService;
 import com.specialist.auth.domain.service_account.models.ServiceAccountEntity;
 import com.specialist.auth.domain.service_account.models.ServiceAccountUserDetails;
 import com.specialist.auth.exceptions.ServiceAccountNotFoundByIdException;

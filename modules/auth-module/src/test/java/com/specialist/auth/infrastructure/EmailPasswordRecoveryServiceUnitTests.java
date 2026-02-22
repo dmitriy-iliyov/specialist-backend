@@ -1,4 +1,4 @@
-package com.specialist.auth.ut.infrastructure;
+package com.specialist.auth.infrastructure;
 
 public class EmailPasswordRecoveryServiceUnitTests {
 }

@@ -1,6 +1,5 @@
-package com.specialist.auth.ut.domain.access_token;
+package com.specialist.auth.domain.access_token;
 
-import com.specialist.auth.domain.access_token.AccessTokenDeserializerImpl;
 import com.specialist.auth.domain.access_token.models.AccessToken;
 import com.specialist.auth.exceptions.AccessTokenExpiredException;
 import com.specialist.auth.exceptions.InvalidJwtSignatureException;

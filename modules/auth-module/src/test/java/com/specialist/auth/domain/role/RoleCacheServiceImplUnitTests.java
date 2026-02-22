@@ -1,7 +1,5 @@
-package com.specialist.auth.ut.domain.role;
+package com.specialist.auth.domain.role;
 
-import com.specialist.auth.domain.role.Role;
-import com.specialist.auth.domain.role.RoleCacheServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,8 +1,7 @@
-package com.specialist.auth.ut.domain.account.controllers;
+package com.specialist.auth.domain.account.controllers;
 
 import com.specialist.auth.core.web.SessionCookieManager;
 import com.specialist.auth.domain.access_token.models.AccessTokenUserDetails;
-import com.specialist.auth.domain.account.controllers.AccountManagementController;
 import com.specialist.auth.domain.account.models.dtos.AccountEmailUpdateDto;
 import com.specialist.auth.domain.account.models.dtos.AccountPasswordUpdateDto;
 import com.specialist.auth.domain.account.models.dtos.ShortAccountResponseDto;

@@ -1,9 +1,6 @@
-package com.specialist.auth.ut.domain.refresh_token;
+package com.specialist.auth.domain.refresh_token;
 
 import com.specialist.auth.core.BaseUserDetails;
-import com.specialist.auth.domain.refresh_token.RefreshTokenCacheService;
-import com.specialist.auth.domain.refresh_token.RefreshTokenRepository;
-import com.specialist.auth.domain.refresh_token.RefreshTokenServiceImpl;
 import com.specialist.auth.domain.refresh_token.models.RefreshToken;
 import com.specialist.auth.domain.refresh_token.models.RefreshTokenEntity;
 import com.specialist.auth.exceptions.RefreshTokenNotFoundByIdException;

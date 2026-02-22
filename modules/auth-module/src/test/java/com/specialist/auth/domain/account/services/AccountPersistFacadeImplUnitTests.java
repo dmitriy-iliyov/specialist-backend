@@ -1,11 +1,9 @@
-package com.specialist.auth.ut.domain.account.services;
+package com.specialist.auth.domain.account.services;
 
 
 import com.specialist.auth.domain.account.models.dtos.DefaultAccountCreateDto;
 import com.specialist.auth.domain.account.models.dtos.ManagedAccountCreateDto;
 import com.specialist.auth.domain.account.models.dtos.ShortAccountResponseDto;
-import com.specialist.auth.domain.account.services.AccountPersistFacadeImpl;
-import com.specialist.auth.domain.account.services.AccountService;
 import com.specialist.auth.domain.authority.Authority;
 import com.specialist.auth.domain.role.Role;
 import com.specialist.auth.infrastructure.message.services.ConfirmationService;

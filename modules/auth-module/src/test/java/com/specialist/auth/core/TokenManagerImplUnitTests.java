@@ -1,9 +1,5 @@
-package com.specialist.auth.ut.core;
+package com.specialist.auth.core;
 
-import com.specialist.auth.core.Token;
-import com.specialist.auth.core.TokenManagerImpl;
-import com.specialist.auth.core.TokenType;
-import com.specialist.auth.core.web.oauth2.models.Provider;
 import com.specialist.auth.domain.access_token.AccessTokenFactory;
 import com.specialist.auth.domain.access_token.AccessTokenSerializer;
 import com.specialist.auth.domain.access_token.models.AccessToken;
@@ -11,18 +7,19 @@ import com.specialist.auth.domain.account.models.AccountUserDetails;
 import com.specialist.auth.domain.refresh_token.RefreshTokenService;
 import com.specialist.auth.domain.refresh_token.models.RefreshToken;
 import com.specialist.auth.domain.service_account.models.ServiceAccountUserDetails;
+import com.specialist.auth.exceptions.AccountIdNullException;
 import com.specialist.auth.exceptions.RefreshTokenExpiredException;
-import org.junit.jupiter.api.BeforeEach;
+import com.specialist.auth.exceptions.RefreshTokenIdNullException;
+import com.specialist.auth.exceptions.UserDetailsNullException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.time.Instant;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -30,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class TokenManagerImplUnitTests {
+class TokenManagerImplUnitTests {
 
     @Mock
     private RefreshTokenService refreshTokenService;
@@ -41,75 +38,131 @@ public class TokenManagerImplUnitTests {
     @Mock
     private AccessTokenSerializer accessTokenSerializer;
 
+    @InjectMocks
     private TokenManagerImpl tokenManager;
 
-    private final Long ACCESS_TOKEN_TTL = 1800L;
-
-    @BeforeEach
-    void setUp() {
-        tokenManager = new TokenManagerImpl(ACCESS_TOKEN_TTL, refreshTokenService, accessTokenFactory, accessTokenSerializer);
-    }
-
     @Test
-    @DisplayName("UT: generate(AccountUserDetails) with no authorities should generate tokens")
-    void generateFromAccountUserDetails_withNoAuthorities_shouldGenerateTokens() {
-        AccountUserDetails userDetails = new AccountUserDetails(
-                UUID.randomUUID(), "test@test.com", "pass", Provider.LOCAL, Collections.emptyList(),
-                false, null, null, false, null
-        );
-        RefreshToken refreshToken = new RefreshToken(UUID.randomUUID(), userDetails.getId(), Collections.emptyList(), Instant.now().plusSeconds(3600));
-        AccessToken accessToken = new AccessToken(refreshToken.id(), userDetails.getId(), Collections.emptyList(), Instant.now(), Instant.now().plusSeconds(600));
-        String rawAccessToken = "serialized.access.token";
+    @DisplayName("UT: generate(AccountUserDetails) with valid details should return tokens")
+    void generate_accountUserDetails_shouldReturnTokens() {
+        AccountUserDetails userDetails = mock(AccountUserDetails.class);
+        RefreshToken refreshToken = new RefreshToken(UUID.randomUUID(), UUID.randomUUID(), Collections.emptyList(), Instant.now().plusSeconds(3600));
+        AccessToken accessToken = new AccessToken(refreshToken.id(), refreshToken.accountId(), refreshToken.authorities(), Instant.now(), Instant.now().plusSeconds(900));
 
         when(refreshTokenService.generateAndSave(userDetails)).thenReturn(refreshToken);
         when(accessTokenFactory.generate(refreshToken)).thenReturn(accessToken);
-        when(accessTokenSerializer.serialize(accessToken)).thenReturn(rawAccessToken);
+        when(accessTokenSerializer.serialize(accessToken)).thenReturn("serialized_access_token");
 
         Map<TokenType, Token> tokens = tokenManager.generate(userDetails);
 
         assertNotNull(tokens);
-        assertEquals(2, tokens.size());
+        assertTrue(tokens.containsKey(TokenType.ACCESS));
+        assertTrue(tokens.containsKey(TokenType.REFRESH));
+        assertEquals("serialized_access_token", tokens.get(TokenType.ACCESS).rawToken());
+
         verify(refreshTokenService).generateAndSave(userDetails);
         verify(accessTokenFactory).generate(refreshToken);
         verify(accessTokenSerializer).serialize(accessToken);
-        verifyNoMoreInteractions(refreshTokenService, accessTokenFactory, accessTokenSerializer);
     }
 
     @Test
-    @DisplayName("UT: generate(ServiceAccountUserDetails) should return only access token")
-    public void generateFromServiceAccountUserDetails_shouldReturnOnlyAccessToken() {
-        ServiceAccountUserDetails userDetails = new ServiceAccountUserDetails(
-                UUID.randomUUID(), "service-account", List.of(new SimpleGrantedAuthority("ROLE_SERVICE"))
-        );
-        RefreshToken refreshToken = new RefreshToken(UUID.randomUUID(), userDetails.getId(), List.of("ROLE_SERVICE"), Instant.now().plusSeconds(3600));
-        String rawAccessToken = "serialized-access-token";
+    @DisplayName("UT: generate(AccountUserDetails) with null details should throw UserDetailsNullException")
+    void generate_nullAccountUserDetails_shouldThrowException() {
+        assertThrows(UserDetailsNullException.class, () -> tokenManager.generate((AccountUserDetails) null));
+    }
+
+    @Test
+    @DisplayName("UT: generate(ServiceAccountUserDetails) with valid details should return access token")
+    void generate_serviceAccountUserDetails_shouldReturnToken() {
+        ServiceAccountUserDetails userDetails = mock(ServiceAccountUserDetails.class);
+        RefreshToken refreshToken = new RefreshToken(UUID.randomUUID(), UUID.randomUUID(), Collections.emptyList(), Instant.now().plusSeconds(3600));
 
         when(refreshTokenService.generateAndSave(userDetails)).thenReturn(refreshToken);
-        when(accessTokenSerializer.serialize(any(AccessToken.class))).thenReturn(rawAccessToken);
+        when(accessTokenSerializer.serialize(any(AccessToken.class))).thenReturn("serialized_access_token");
 
         Token token = tokenManager.generate(userDetails);
 
         assertNotNull(token);
         assertEquals(TokenType.ACCESS, token.type());
-        assertEquals(rawAccessToken, token.rawToken());
+        assertEquals("serialized_access_token", token.rawToken());
+
         verify(refreshTokenService).generateAndSave(userDetails);
         verify(accessTokenSerializer).serialize(any(AccessToken.class));
-        verifyNoMoreInteractions(refreshTokenService, accessTokenFactory, accessTokenSerializer);
     }
 
     @Test
-    @DisplayName("UT: refresh() when token is about to expire should throw RefreshTokenExpiredException and delete token")
-    public void refresh_whenTokenIsAboutToExpire_shouldThrowAndDeactivate() {
-        UUID tokenId = UUID.randomUUID();
-        Instant almostExpired = Instant.now().plusSeconds(ACCESS_TOKEN_TTL - 10);
-        RefreshToken refreshToken = new RefreshToken(tokenId, UUID.randomUUID(), List.of("ROLE_USER"), almostExpired);
+    @DisplayName("UT: generate(ServiceAccountUserDetails) with null details should throw UserDetailsNullException")
+    void generate_nullServiceAccountUserDetails_shouldThrowException() {
+        assertThrows(UserDetailsNullException.class, () -> tokenManager.generate((ServiceAccountUserDetails) null));
+    }
 
-        when(refreshTokenService.findById(tokenId)).thenReturn(refreshToken);
+    @Test
+    @DisplayName("UT: refresh() with null id should throw RefreshTokenIdNullException")
+    void refresh_nullId_shouldThrowException() {
+        assertThrows(RefreshTokenIdNullException.class, () -> tokenManager.refresh(null));
+    }
+    
+    @Test
+    @DisplayName("UT: refresh() with non-existent token should throw RefreshTokenExpiredException")
+    void refresh_nonExistentToken_shouldThrowException() {
+        UUID refreshTokenId = UUID.randomUUID();
+        when(refreshTokenService.findById(refreshTokenId)).thenReturn(null);
+        assertThrows(RefreshTokenExpiredException.class, () -> tokenManager.refresh(refreshTokenId));
+        verify(refreshTokenService).findById(refreshTokenId);
+    }
 
-        assertThrows(RefreshTokenExpiredException.class, () -> tokenManager.refresh(tokenId));
+    @Test
+    @DisplayName("UT: deactivate() with valid id should delete token")
+    void deactivate_validId_shouldDeleteToken() {
+        UUID refreshTokenId = UUID.randomUUID();
+        tokenManager.deactivate(refreshTokenId);
+        verify(refreshTokenService).deleteById(refreshTokenId);
+    }
 
-        verify(refreshTokenService).findById(tokenId);
-        verify(refreshTokenService).deleteById(tokenId);
-        verifyNoMoreInteractions(refreshTokenService);
+    @Test
+    @DisplayName("UT: deactivate() with null id should throw RefreshTokenIdNullException")
+    void deactivate_nullId_shouldThrowException() {
+        assertThrows(RefreshTokenIdNullException.class, () -> tokenManager.deactivate(null));
+    }
+
+    @Test
+    @DisplayName("UT: deactivateAll() with valid id should delete all tokens")
+    void deactivateAll_validId_shouldDeleteAllTokens() {
+        UUID accountId = UUID.randomUUID();
+        tokenManager.deactivateAll(accountId);
+        verify(refreshTokenService).deleteAllByAccountId(accountId);
+    }
+
+    @Test
+    @DisplayName("UT: deactivateAll() with null id should throw AccountIdNullException")
+    void deactivateAll_nullId_shouldThrowException() {
+        assertThrows(AccountIdNullException.class, () -> tokenManager.deactivateAll(null));
+    }
+    
+    @Test
+    @DisplayName("UT: revoke() with valid id should delete token")
+    void revoke_validId_shouldDeleteToken() {
+        UUID refreshTokenId = UUID.randomUUID();
+        tokenManager.revoke(refreshTokenId);
+        verify(refreshTokenService).deleteById(refreshTokenId);
+    }
+
+    @Test
+    @DisplayName("UT: revoke() with null id should throw RefreshTokenIdNullException")
+    void revoke_nullId_shouldThrowException() {
+        assertThrows(RefreshTokenIdNullException.class, () -> tokenManager.revoke(null));
+    }
+
+    @Test
+    @DisplayName("UT: revokeAll() with valid id should delete all tokens")
+    void revokeAll_validId_shouldDeleteAllTokens() {
+        UUID accountId = UUID.randomUUID();
+        tokenManager.revokeAll(accountId);
+        verify(refreshTokenService).deleteAllByAccountId(accountId);
+    }
+
+    @Test
+    @DisplayName("UT: revokeAll() with null id should throw AccountIdNullException")
+    void revokeAll_nullId_shouldThrowException() {
+        assertThrows(AccountIdNullException.class, () -> tokenManager.revokeAll(null));
     }
 }

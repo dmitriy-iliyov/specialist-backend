@@ -1,6 +1,5 @@
-package com.specialist.auth.ut.domain.account.mappers;
+package com.specialist.auth.domain.account.mappers;
 
-import com.specialist.auth.domain.account.mappers.AccountDeleteTaskStatusConverter;
 import com.specialist.auth.domain.account.models.enums.AccountDeleteTaskStatus;
 import com.specialist.auth.exceptions.UnexpectedAccountDeleteTaskStatusCodeException;
 import org.junit.jupiter.api.DisplayName;

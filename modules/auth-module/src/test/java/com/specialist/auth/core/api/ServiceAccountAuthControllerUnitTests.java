@@ -1,8 +1,5 @@
-package com.specialist.auth.ut.core.api;
+package com.specialist.auth.core.api;
 
-import com.specialist.auth.core.api.ServiceAccountAuthController;
-import com.specialist.auth.core.api.ServiceAccountLoginService;
-import com.specialist.auth.core.api.ServiceLoginRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,10 +8,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
@@ -35,6 +35,18 @@ class ServiceAccountAuthControllerUnitTests {
         ResponseEntity<?> result = controller.login(request);
 
         assertEquals(HttpStatus.NO_CONTENT, result.getStatusCode());
+        verify(loginService).login(request);
+        verifyNoMoreInteractions(loginService);
+    }
+
+    @Test
+    @DisplayName("UT: login() when service throws exception should throw exception")
+    void login_whenServiceThrowsException_shouldThrowException() {
+        ServiceLoginRequest request = new ServiceLoginRequest(UUID.randomUUID().toString(), "wrong-secret");
+        doThrow(new BadCredentialsException("bad credentials")).when(loginService).login(request);
+
+        assertThrows(BadCredentialsException.class, () -> controller.login(request));
+
         verify(loginService).login(request);
         verifyNoMoreInteractions(loginService);
     }

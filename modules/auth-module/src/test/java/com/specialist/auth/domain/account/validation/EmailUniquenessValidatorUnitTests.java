@@ -1,7 +1,6 @@
-package com.specialist.auth.ut.domain.account.validation;
+package com.specialist.auth.domain.account.validation;
 
 import com.specialist.auth.domain.account.services.AccountService;
-import com.specialist.auth.domain.account.validation.EmailUniquenessValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

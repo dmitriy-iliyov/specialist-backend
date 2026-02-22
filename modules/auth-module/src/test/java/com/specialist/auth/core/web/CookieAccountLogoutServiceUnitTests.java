@@ -1,6 +1,5 @@
-package com.specialist.auth.ut.core.web;
+package com.specialist.auth.core.web;
 
-import com.specialist.auth.core.web.CookieAccountLogoutService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

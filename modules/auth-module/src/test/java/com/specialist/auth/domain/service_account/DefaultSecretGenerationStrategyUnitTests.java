@@ -1,6 +1,5 @@
-package com.specialist.auth.ut.domain.service_account;
+package com.specialist.auth.domain.service_account;
 
-import com.specialist.auth.domain.service_account.DefaultSecretGenerationStrategy;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

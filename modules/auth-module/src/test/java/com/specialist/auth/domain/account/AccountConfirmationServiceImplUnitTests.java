@@ -1,4 +1,4 @@
-package com.specialist.auth.ut.domain.account;
+package com.specialist.auth.domain.account;
 
 import com.specialist.auth.domain.account.repositories.AccountRepository;
 import com.specialist.auth.domain.account.services.AccountConfirmationServiceImpl;

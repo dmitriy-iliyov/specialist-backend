@@ -1,4 +1,4 @@
-package com.specialist.auth.ut.domain.account.services;
+package com.specialist.auth.domain.account.services;
 
 import com.specialist.auth.core.web.oauth2.models.Provider;
 import com.specialist.auth.domain.account.mappers.AccountMapper;
@@ -11,8 +11,6 @@ import com.specialist.auth.domain.account.models.dtos.ShortAccountResponseDto;
 import com.specialist.auth.domain.account.models.enums.DisableReason;
 import com.specialist.auth.domain.account.models.enums.LockReason;
 import com.specialist.auth.domain.account.repositories.AccountRepository;
-import com.specialist.auth.domain.account.services.AccountCacheService;
-import com.specialist.auth.domain.account.services.UnifiedAccountService;
 import com.specialist.auth.domain.authority.Authority;
 import com.specialist.auth.domain.authority.AuthorityEntity;
 import com.specialist.auth.domain.authority.AuthorityService;

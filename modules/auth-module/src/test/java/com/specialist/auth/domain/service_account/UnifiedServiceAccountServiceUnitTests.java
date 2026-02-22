@@ -1,4 +1,4 @@
-package com.specialist.auth.ut.domain.service_account;
+package com.specialist.auth.domain.service_account;
 
 import com.specialist.auth.domain.authority.Authority;
 import com.specialist.auth.domain.authority.AuthorityEntity;
@@ -6,10 +6,6 @@ import com.specialist.auth.domain.authority.AuthorityService;
 import com.specialist.auth.domain.role.Role;
 import com.specialist.auth.domain.role.RoleEntity;
 import com.specialist.auth.domain.role.RoleService;
-import com.specialist.auth.domain.service_account.SecretGenerationStrategy;
-import com.specialist.auth.domain.service_account.ServiceAccountMapper;
-import com.specialist.auth.domain.service_account.ServiceAccountRepository;
-import com.specialist.auth.domain.service_account.UnifiedServiceAccountService;
 import com.specialist.auth.domain.service_account.models.SecretServiceAccountResponseDto;
 import com.specialist.auth.domain.service_account.models.ServiceAccountDto;
 import com.specialist.auth.domain.service_account.models.ServiceAccountEntity;

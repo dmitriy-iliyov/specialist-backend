@@ -1,8 +1,5 @@
-package com.specialist.auth.ut.core.web;
+package com.specialist.auth.core.web;
 
-import com.specialist.auth.core.web.DefaultAccountLoginService;
-import com.specialist.auth.core.web.LoginRequest;
-import com.specialist.auth.core.web.SessionCookieManager;
 import com.specialist.auth.core.web.oauth2.models.Provider;
 import com.specialist.auth.domain.account.models.AccountUserDetails;
 import com.specialist.auth.domain.account.services.AccountService;

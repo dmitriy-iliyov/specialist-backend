@@ -1,4 +1,4 @@
-package com.specialist.auth.ut.domain.account;
+package com.specialist.auth.domain.account;
 
 import com.specialist.auth.domain.account.mappers.AccountMapper;
 import com.specialist.auth.domain.account.models.AccountEntity;

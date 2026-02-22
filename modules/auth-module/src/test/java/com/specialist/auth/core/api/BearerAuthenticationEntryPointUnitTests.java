@@ -1,7 +1,6 @@
-package com.specialist.auth.ut.core.api;
+package com.specialist.auth.core.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.specialist.auth.core.api.BearerAuthenticationEntryPoint;
 import com.specialist.auth.exceptions.InvalidJwtSignatureException;
 import com.specialist.auth.exceptions.JwtParseException;
 import jakarta.servlet.http.HttpServletRequest;

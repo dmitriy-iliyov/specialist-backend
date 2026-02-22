@@ -1,6 +1,5 @@
-package com.specialist.auth.ut.domain.account.mappers;
+package com.specialist.auth.domain.account.mappers;
 
-import com.specialist.auth.domain.account.mappers.LockReasonQueryConverter;
 import com.specialist.auth.domain.account.models.enums.LockReason;
 import com.specialist.auth.exceptions.UnsupportedLockReasonException;
 import org.junit.jupiter.api.DisplayName;

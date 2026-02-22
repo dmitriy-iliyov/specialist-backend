@@ -1,11 +1,8 @@
-package com.specialist.auth.ut.core.web;
+package com.specialist.auth.core.web;
 
 import com.specialist.auth.core.Token;
 import com.specialist.auth.core.TokenManager;
 import com.specialist.auth.core.TokenType;
-import com.specialist.auth.core.web.CookieManager;
-import com.specialist.auth.core.web.CookieType;
-import com.specialist.auth.core.web.SessionCookieManagerImpl;
 import com.specialist.auth.core.web.csrf.CsrfTokenService;
 import com.specialist.auth.domain.account.models.AccountUserDetails;
 import com.specialist.auth.exceptions.RefreshTokenExpiredException;

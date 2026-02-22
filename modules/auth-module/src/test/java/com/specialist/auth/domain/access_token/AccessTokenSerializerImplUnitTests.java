@@ -1,6 +1,5 @@
-package com.specialist.auth.ut.domain.access_token;
+package com.specialist.auth.domain.access_token;
 
-import com.specialist.auth.domain.access_token.AccessTokenSerializerImpl;
 import com.specialist.auth.domain.access_token.models.AccessToken;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

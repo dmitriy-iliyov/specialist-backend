@@ -1,4 +1,4 @@
-package com.specialist.auth.ut.core.web.oauth2;
+package com.specialist.auth.core.web.oauth2;
 
 import com.specialist.auth.core.web.oauth2.models.Provider;
 import com.specialist.auth.core.web.oauth2.services.DefaultOAuth2UserServiceDecorator;

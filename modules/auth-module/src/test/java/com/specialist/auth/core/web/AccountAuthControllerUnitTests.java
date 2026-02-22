@@ -1,6 +1,5 @@
-package com.specialist.auth.ut.core.web;
+package com.specialist.auth.core.web;
 
-import com.specialist.auth.core.web.*;
 import com.specialist.auth.domain.access_token.models.AccessTokenUserDetails;
 import com.specialist.auth.domain.refresh_token.models.RefreshTokenIdHolder;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,12 +12,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class AccountAuthControllerUnitTests {
@@ -51,6 +51,17 @@ class AccountAuthControllerUnitTests {
         assertEquals(HttpStatus.NO_CONTENT, result.getStatusCode());
         verify(loginService).login(loginRequest, request, response);
     }
+    
+    @Test
+    @DisplayName("UT: login() when service throws exception should throw exception")
+    void login_whenServiceThrowsException_shouldThrowException() {
+        LoginRequest loginRequest = new LoginRequest("test@test.com", "wrong-pass");
+        doThrow(new BadCredentialsException("bad credentials")).when(loginService).login(loginRequest, request, response);
+
+        assertThrows(BadCredentialsException.class, () -> controller.login(loginRequest, request, response));
+
+        verify(loginService).login(loginRequest, request, response);
+    }
 
     @Test
     @DisplayName("UT: refresh() should call manager and return NO_CONTENT")
@@ -63,6 +74,18 @@ class AccountAuthControllerUnitTests {
         assertEquals(HttpStatus.NO_CONTENT, result.getStatusCode());
         verify(sessionCookieManager).refresh(refreshTokenId, response);
     }
+    
+    @Test
+    @DisplayName("UT: refresh() when manager throws exception should throw exception")
+    void refresh_whenManagerThrowsException_shouldThrowException() {
+        UUID refreshTokenId = UUID.randomUUID();
+        RefreshTokenIdHolder principal = () -> refreshTokenId;
+        doThrow(new RuntimeException("Refresh failed")).when(sessionCookieManager).refresh(refreshTokenId, response);
+
+        assertThrows(RuntimeException.class, () -> controller.refresh(principal, response));
+
+        verify(sessionCookieManager).refresh(refreshTokenId, response);
+    }
 
     @Test
     @DisplayName("UT: logout() should call service and return NO_CONTENT")
@@ -72,17 +95,40 @@ class AccountAuthControllerUnitTests {
         assertEquals(HttpStatus.NO_CONTENT, result.getStatusCode());
         verify(logoutService).logout(request, response);
     }
+    
+    @Test
+    @DisplayName("UT: logout() when service throws exception should throw exception")
+    void logout_whenServiceThrowsException_shouldThrowException() {
+        doThrow(new RuntimeException("Logout failed")).when(logoutService).logout(request, response);
+
+        assertThrows(RuntimeException.class, () -> controller.logout(request, response));
+
+        verify(logoutService).logout(request, response);
+    }
 
     @Test
     @DisplayName("UT: logoutFromAll() should call manager and return NO_CONTENT")
     void logoutFromAll_shouldCallManager() {
         UUID accountId = UUID.randomUUID();
-        AccessTokenUserDetails principal = org.mockito.Mockito.mock(AccessTokenUserDetails.class);
+        AccessTokenUserDetails principal = mock(AccessTokenUserDetails.class);
         when(principal.getAccountId()).thenReturn(accountId);
 
         ResponseEntity<?> result = controller.logoutFromAll(principal, response);
 
         assertEquals(HttpStatus.NO_CONTENT, result.getStatusCode());
+        verify(sessionCookieManager).terminateAll(accountId, response);
+    }
+    
+    @Test
+    @DisplayName("UT: logoutFromAll() when manager throws exception should throw exception")
+    void logoutFromAll_whenManagerThrowsException_shouldThrowException() {
+        UUID accountId = UUID.randomUUID();
+        AccessTokenUserDetails principal = mock(AccessTokenUserDetails.class);
+        when(principal.getAccountId()).thenReturn(accountId);
+        doThrow(new RuntimeException("Terminate all failed")).when(sessionCookieManager).terminateAll(accountId, response);
+
+        assertThrows(RuntimeException.class, () -> controller.logoutFromAll(principal, response));
+
         verify(sessionCookieManager).terminateAll(accountId, response);
     }
 }

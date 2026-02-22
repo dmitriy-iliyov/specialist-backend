@@ -1,6 +1,5 @@
-package com.specialist.auth.ut.domain.authority;
+package com.specialist.auth.domain.authority;
 
-import com.specialist.auth.domain.authority.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,7 +28,6 @@ class AuthorityServiceImplUnitTests {
     @DisplayName("UT: getReferenceAllByAuthorityIn() when cache hit should return references")
     void getReferenceAllByAuthorityIn_cacheHit_shouldReturnReferences() {
         List<Authority> authorities = List.of(Authority.ACCOUNT_CREATE);
-        // Use ArrayList to support contains(null) check
         List<Long> ids = new ArrayList<>(List.of(1L));
         AuthorityEntity entity = new AuthorityEntity();
         

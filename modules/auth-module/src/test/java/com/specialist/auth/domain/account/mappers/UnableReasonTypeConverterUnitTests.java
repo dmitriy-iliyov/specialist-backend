@@ -1,6 +1,5 @@
-package com.specialist.auth.ut.domain.account.mappers;
+package com.specialist.auth.domain.account.mappers;
 
-import com.specialist.auth.domain.account.mappers.UnableReasonTypeConverter;
 import com.specialist.auth.domain.account.models.enums.DisableReason;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

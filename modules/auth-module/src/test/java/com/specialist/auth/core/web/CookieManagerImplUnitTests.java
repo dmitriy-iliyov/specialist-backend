@@ -1,7 +1,5 @@
-package com.specialist.auth.ut.core.web;
+package com.specialist.auth.core.web;
 
-import com.specialist.auth.core.web.CookieManagerImpl;
-import com.specialist.auth.core.web.CookieType;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.DisplayName;

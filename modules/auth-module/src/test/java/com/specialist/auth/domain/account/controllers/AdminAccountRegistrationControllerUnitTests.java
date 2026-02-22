@@ -1,6 +1,5 @@
-package com.specialist.auth.ut.domain.account.controllers;
+package com.specialist.auth.domain.account.controllers;
 
-import com.specialist.auth.domain.account.controllers.AdminAccountController;
 import com.specialist.auth.domain.account.models.AccountFilter;
 import com.specialist.auth.domain.account.models.dtos.*;
 import com.specialist.auth.domain.account.models.enums.DisableReason;

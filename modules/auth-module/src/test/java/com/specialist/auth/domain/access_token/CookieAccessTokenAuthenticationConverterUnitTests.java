@@ -1,7 +1,5 @@
-package com.specialist.auth.ut.domain.access_token;
+package com.specialist.auth.domain.access_token;
 
-import com.specialist.auth.domain.access_token.AccessTokenDeserializer;
-import com.specialist.auth.domain.access_token.CookieAccessTokenAuthenticationConverter;
 import com.specialist.auth.domain.access_token.models.AccessToken;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,8 +1,6 @@
-package com.specialist.auth.ut.core.web.oauth2;
+package com.specialist.auth.core.web.oauth2;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.specialist.auth.core.web.oauth2.OAuth2AuthenticationSuccessHandler;
-import com.specialist.auth.core.web.oauth2.OAuth2UserRepository;
 import com.specialist.auth.core.web.oauth2.models.OAuth2UserEntity;
 import com.specialist.auth.domain.account.models.AccountUserDetails;
 import jakarta.servlet.http.HttpServletRequest;

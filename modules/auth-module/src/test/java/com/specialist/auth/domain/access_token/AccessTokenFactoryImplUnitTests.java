@@ -1,6 +1,5 @@
-package com.specialist.auth.ut.domain.access_token;
+package com.specialist.auth.domain.access_token;
 
-import com.specialist.auth.domain.access_token.AccessTokenFactoryImpl;
 import com.specialist.auth.domain.access_token.models.AccessToken;
 import com.specialist.auth.domain.refresh_token.models.RefreshToken;
 import org.junit.jupiter.api.DisplayName;

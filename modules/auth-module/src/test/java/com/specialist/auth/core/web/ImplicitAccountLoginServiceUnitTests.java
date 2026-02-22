@@ -1,8 +1,5 @@
-package com.specialist.auth.ut.core.web;
+package com.specialist.auth.core.web;
 
-import com.specialist.auth.core.web.ImplicitAccountLoginService;
-import com.specialist.auth.core.web.LoginRequest;
-import com.specialist.auth.core.web.SessionCookieManager;
 import com.specialist.auth.domain.account.models.AccountUserDetails;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -13,7 +10,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -46,5 +45,17 @@ class ImplicitAccountLoginServiceUnitTests {
 
         verify(userDetailsService).loadUserByUsername("test@test.com");
         verify(sessionCookieManager).create(userDetails, request, response);
+    }
+
+    @Test
+    @DisplayName("UT: login() when user not found should throw exception")
+    void login_whenUserNotFound_shouldThrowException() {
+        LoginRequest loginRequest = new LoginRequest("notfound@test.com", null);
+        when(userDetailsService.loadUserByUsername("notfound@test.com")).thenThrow(new UsernameNotFoundException("not found"));
+
+        assertThrows(UsernameNotFoundException.class, () -> service.login(loginRequest, request, response));
+
+        verify(userDetailsService).loadUserByUsername("notfound@test.com");
+        verifyNoInteractions(sessionCookieManager);
     }
 }

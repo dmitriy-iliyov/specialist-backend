@@ -1,9 +1,8 @@
-package com.specialist.auth.ut.core.web.oauth2.services;
+package com.specialist.auth.core.web.oauth2.services;
 
 import com.specialist.auth.core.web.oauth2.models.OAuth2InitialRequestEntity;
 import com.specialist.auth.core.web.oauth2.models.OAuth2QueryParams;
 import com.specialist.auth.core.web.oauth2.models.Provider;
-import com.specialist.auth.core.web.oauth2.services.OAuth2AuthenticationServiceImpl;
 import com.specialist.auth.domain.account.models.AccountUserDetails;
 import com.specialist.auth.exceptions.InvalidProviderException;
 import com.specialist.auth.exceptions.OAuth2UserNullEmailException;
