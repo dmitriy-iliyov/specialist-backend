@@ -5,7 +5,6 @@ import com.specialist.auth.domain.account.models.enums.DisableReason;
 import com.specialist.auth.domain.account.services.AccountService;
 import com.specialist.contracts.auth.DeferAccountDeleteEvent;
 import com.specialist.contracts.auth.ImmediatelyAccountDeleteEvent;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;

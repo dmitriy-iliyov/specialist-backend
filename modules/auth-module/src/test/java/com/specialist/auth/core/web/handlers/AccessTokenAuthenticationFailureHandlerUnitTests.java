@@ -21,7 +21,6 @@ import org.springframework.security.core.AuthenticationException;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
