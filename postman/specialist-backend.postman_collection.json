@@ -1,0 +1,1035 @@
+{
+  "info": {
+    "_postman_id": "e6216dcf-0418-4b96-a50b-1fb2346fc01b",
+    "name": "specialist-backend",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "31061267"
+  },
+  "item": [
+    {
+      "name": "auth",
+      "item": [
+        {
+          "name": "oauth2",
+          "item": [
+            {
+              "name": "authorize",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{PROTOCOL}}://{{DST_HOST}}/api/auth/oauth2/authorize?provider=google",
+                  "protocol": "{{PROTOCOL}}",
+                  "host": [
+                    "{{DST_HOST}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "oauth2",
+                    "authorize"
+                  ],
+                  "query": [
+                    {
+                      "key": "provider",
+                      "value": "google"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "provider",
+              "request": {
+                "method": "GET",
+                "header": []
+              },
+              "response": []
+            },
+            {
+              "name": "providers 2",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{PROTOCOL}}://{{DST_HOST}}/api/v1/info/providers/paths",
+                  "protocol": "{{PROTOCOL}}",
+                  "host": [
+                    "{{DST_HOST}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "info",
+                    "providers",
+                    "paths"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "admin",
+          "item": [
+            {
+              "name": "all",
+              "request": {
+                "method": "GET",
+                "header": []
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "registration",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"s2kr49@gmail.com\",\n    \"password\": \"s2kr49@gmail.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{PROTOCOL}}://{{DST_HOST}}/api/v1/accounts",
+              "protocol": "{{PROTOCOL}}",
+              "host": [
+                "{{DST_HOST}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "accounts"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "confirm request",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "confirm",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "get csrf",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-XSRF-TOKEN",
+                "value": "8yy0aCeYeDgqNNn8Sbh4jWIyawWxEM2YkruzjY07nuWewWvfkBWAXkb7GwAHVr-ZKJVM7wBXRjyDcq61pImL6L9ardD6-Fzo",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{PROTOCOL}}://{{DST_HOST}}/api/auth/logout",
+              "protocol": "{{PROTOCOL}}",
+              "host": [
+                "{{DST_HOST}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "logout"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-XSRF-TOKEN",
+                "value": "X9v6b50amxoiukQc8lJ4iw6ZPgqr4cOYU6193m6g5ogo24Hkb-KYX_t--XwPjCd4wH9MuGirEzKfhKa1ZcxJ6wiWh7wevefR",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"s2kr49@gmail.com\",\n    \"password\": \"s2kr49@gmail.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{PROTOCOL}}://{{DST_HOST}}/api/auth/login",
+              "protocol": "{{PROTOCOL}}",
+              "host": [
+                "{{DST_HOST}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "refresh",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "X-XSRF-TOKEN",
+                "value": "Ii7PkMY1i0ur7j-NACtt5YnK7qPIxrxYF4YxblUWukteWNx-EU2p8fZW6HuG1lzoNQZZ17uvw5v89Ip1L7cGVmV33nlsYOlK",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{PROTOCOL}}://{{DST_HOST}}/api/auth/refresh",
+              "protocol": "{{PROTOCOL}}",
+              "host": [
+                "{{DST_HOST}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "refresh"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "profile",
+      "item": [
+        {
+          "name": "create",
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {}
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-XSRF-TOKEN",
+                "value": "Xt2r9u1m1p2xZVUDOsPYDn1Tpk1H_uPAjgZaPk3Tkj-fX4SqOumblNUF4q-cBzY1Xu7saEoxi3UhndXttmc7Dy_nq1yrabzM",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "multipart/form-data",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "user",
+                  "value": "{\"first_name\": \"Dmytro\",\"second_name\": \"Andriyovich\",\"last_name\":\"Iliov\"}",
+                  "type": "text",
+                  "uuid": "99c34f12-b71f-4ca4-98f2-a567434bd1bf"
+                },
+                {
+                  "key": "avatar",
+                  "type": "file",
+                  "uuid": "9dafad83-d7b3-437d-bc93-4dcd013b5371",
+                  "src": "postman-cloud:///1f080f57-a6db-4b80-9b38-3dab9696b2a6"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{PROTOCOL}}://{{DST_HOST}}/api/v1/users/me",
+              "protocol": "{{PROTOCOL}}",
+              "host": [
+                "{{DST_HOST}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "me"
+              ],
+              "query": [
+                {
+                  "key": "user",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "avatar",
+                  "value": null,
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "udp",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "X-XSRF-TOKEN",
+                "value": "040VNhkhRCx4NJuE13T-snM_XIpIbsA4N2-u_xNMq2rf1RzisehwVHwTIU1VVqLi4lnKhEYOcbMpXfcVVgnPzyF9m1zn5y2D",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{PROTOCOL}}://{{DST_HOST}}/api/v1/users/me",
+              "protocol": "{{PROTOCOL}}",
+              "host": [
+                "{{DST_HOST}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get private",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "get admin",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "specialist-directory",
+      "item": [
+        {
+          "name": "types",
+          "item": [
+            {
+              "name": "admin",
+              "item": [
+                {
+                  "name": "all",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{PROTOCOL}}://{{DST_HOST}}/api/admin/v1/types",
+                      "protocol": "{{PROTOCOL}}",
+                      "host": [
+                        "{{DST_HOST}}"
+                      ],
+                      "path": [
+                        "api",
+                        "admin",
+                        "v1",
+                        "types"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "unapproved",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{PROTOCOL}}://{{DST_HOST}}/api/admin/v1/types/unapproved",
+                      "protocol": "{{PROTOCOL}}",
+                      "host": [
+                        "{{DST_HOST}}"
+                      ],
+                      "path": [
+                        "api",
+                        "admin",
+                        "v1",
+                        "types",
+                        "unapproved"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "approve",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "X-XSRF-TOKEN",
+                        "value": "CZkm_EJ9IgwBSRDdHVdQqT9ezWaGrgR6TJgefsOPFOpdoB51b64XzXMfEDUsKnG_JXpkkV5n4Ae0zTdXeKF9HPS3cdttkX1M",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{PROTOCOL}}://{{DST_HOST}}/api/admin/v1/types/approve/14",
+                      "protocol": "{{PROTOCOL}}",
+                      "host": [
+                        "{{DST_HOST}}"
+                      ],
+                      "path": [
+                        "api",
+                        "admin",
+                        "v1",
+                        "types",
+                        "approve",
+                        "14"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "create",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "X-XSRF-TOKEN",
+                        "value": "GP8bbP2HUZ2BENU7YQzuy7NXwR6dOQaHfGR-juhjswZXc5jEIMgoX57kYqWsIuIDByHa_osz7HyuCzaqSlBMtoxQg2RiFqjx",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"title\": \"NEWTYPE\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{PROTOCOL}}://{{DST_HOST}}/api/admin/v1/types",
+                      "protocol": "{{PROTOCOL}}",
+                      "host": [
+                        "{{DST_HOST}}"
+                      ],
+                      "path": [
+                        "api",
+                        "admin",
+                        "v1",
+                        "types"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "upd",
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "url": {
+                      "raw": "{{PROTOCOL}}://{{DST_HOST}}/api/admin/v1/types",
+                      "protocol": "{{PROTOCOL}}",
+                      "host": [
+                        "{{DST_HOST}}"
+                      ],
+                      "path": [
+                        "api",
+                        "admin",
+                        "v1",
+                        "types"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "del",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [
+                      {
+                        "key": "X-XSRF-TOKEN",
+                        "value": "4wr6BPrAdQkT2-xXjVevL46lkiRT_nG2BdqYhjDYqdVZBZPRhm6YMZilRWs-v9Vg7nqbGO2Rv0ZhxxWbMeOs51TvmuNoMqe3",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"first_name\": \"John\",\n  \"second_name\": \"Michael\",\n  \"last_name\": \"Doe\",\n  \"type_id\": 4,\n  \"house_number_and_street\": \"123 Main St\",\n  \"city_title\": \"Springfield\",\n  \"city_code\": \"SP01\",\n  \"contact_type\": \"EMAIL\",\n  \"contact\": \"john.doeex@ample.com\"\n}"
+                    },
+                    "url": {
+                      "raw": "{{PROTOCOL}}://{{DST_HOST}}/api/admin/v1/types",
+                      "protocol": "{{PROTOCOL}}",
+                      "host": [
+                        "{{DST_HOST}}"
+                      ],
+                      "path": [
+                        "api",
+                        "admin",
+                        "v1",
+                        "types"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "transtale",
+              "item": []
+            },
+            {
+              "name": "types for users json",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{PROTOCOL}}://{{DST_HOST}}/api/v1/types/json",
+                  "protocol": "{{PROTOCOL}}",
+                  "host": [
+                    "{{DST_HOST}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "types",
+                    "json"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "types for user map",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{PROTOCOL}}://{{DST_HOST}}/api/v1/types/map",
+                  "protocol": "{{PROTOCOL}}",
+                  "host": [
+                    "{{DST_HOST}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "types",
+                    "map"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "specialists",
+          "item": [
+            {
+              "name": "creator",
+              "item": [
+                {
+                  "name": "create",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "X-XSRF-TOKEN",
+                        "value": "ZTVd6g_RtM4fjHFqxmxcy5l4N5eJbyuqXwr5pNhd-BOWfQ0oVQFuiD-3hfky6EFcpUFoqahMGvawW0mHOTmdwLpuyXahHzQb",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"first_name\": \"erwthy\",\n  \"last_name\": \"frggrgrgrgrrgr\",\n  \"type_id\": 9,\n  \"another_type\": \"\",\n  \"house_number_and_street\": \"123 Main St\",\n  \"city_title\": \"Hedelberg\",\n  //\"city_code\": \"89001\",\n  \"contact_type\": \"EMAIL\",\n  \"contact\": \"john.doeex@ample.com\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{PROTOCOL}}://{{DST_HOST}}/api/v1/specialists",
+                      "protocol": "{{PROTOCOL}}",
+                      "host": [
+                        "{{DST_HOST}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "specialists"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "get Copy",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{PROTOCOL}}://{{DST_HOST}}/api/v1/specialists/0197f80b-395c-7529-a00c-a521de9512bc",
+                      "protocol": "{{PROTOCOL}}",
+                      "host": [
+                        "{{DST_HOST}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "specialists",
+                        "0197f80b-395c-7529-a00c-a521de9512bc"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "update Copy",
+                  "request": {
+                    "method": "PUT",
+                    "header": [
+                      {
+                        "key": "X-XSRF-TOKEN",
+                        "value": "v9_lpJEI6EECeO9MpAkG_YWcVwCr4BpOae79LXwLEh0HGcFCj-vdx6Fr0SAvTY0pxiQynuGqejid1XxjWIrOGElqIiwyLPJy",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"first_name\": \"John\",\n    \"second_name\": \"Michael\",\n    \"last_name\": \"Doew\",\n    \"type_title\": \"doradyra\",\n    \"house_number_and_street\": \"123 Main St\",\n    \"city_title\": \"Springfield\",\n    \"contact_type\": \"EMAIL\",\n    \"contact\": \"john.doe@example.com\",\n    \"site\": \"https://johndoe-services.com\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{PROTOCOL}}://{{DST_HOST}}/api/v1/specialists/0197f5ea-b41d-7ba7-9771-b988bf49c3f1",
+                      "protocol": "{{PROTOCOL}}",
+                      "host": [
+                        "{{DST_HOST}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "specialists",
+                        "0197f5ea-b41d-7ba7-9771-b988bf49c3f1"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "del Copy",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [
+                      {
+                        "key": "X-XSRF-TOKEN",
+                        "value": "WwBlmDrOnRIun-uAWqxnHp98eB9ejnonanw-moF4LDeMjgftYjJU-Qyqq3QD_t_haYFTffpIVX1o700KDhoM-OQZSFO0vzeP",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{PROTOCOL}}://{{DST_HOST}}/api/v1/me/specialists/019928e9-438c-71bf-be1d-09eb2c35c5e9",
+                      "protocol": "{{PROTOCOL}}",
+                      "host": [
+                        "{{DST_HOST}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "me",
+                        "specialists",
+                        "019928e9-438c-71bf-be1d-09eb2c35c5e9"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "get all created",
+                  "request": {
+                    "method": "GET",
+                    "header": []
+                  },
+                  "response": []
+                },
+                {
+                  "name": "count created",
+                  "request": {
+                    "method": "GET",
+                    "header": []
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "admin",
+              "item": [
+                {
+                  "name": "get all",
+                  "request": {
+                    "method": "GET",
+                    "header": []
+                  },
+                  "response": []
+                },
+                {
+                  "name": "approve",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [],
+                    "url": {
+                      "raw": "{{PROTOCOL}}://{{DST_HOST}}/api/admin/v1/specialists/approve/01992a2d-6791-7318-856b-1bebbc963acd",
+                      "protocol": "{{PROTOCOL}}",
+                      "host": [
+                        "{{DST_HOST}}"
+                      ],
+                      "path": [
+                        "api",
+                        "admin",
+                        "v1",
+                        "specialists",
+                        "approve",
+                        "01992a2d-6791-7318-856b-1bebbc963acd"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "get all",
+              "request": {
+                "method": "GET",
+                "header": []
+              },
+              "response": []
+            },
+            {
+              "name": "count all",
+              "request": {
+                "method": "GET",
+                "header": []
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "bookmark",
+          "item": [
+            {
+              "name": "create",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-XSRF-TOKEN",
+                    "value": "4wr6BPrAdQkT2-xXjVevL46lkiRT_nG2BdqYhjDYqdVZBZPRhm6YMZilRWs-v9Vg7nqbGO2Rv0ZhxxWbMeOs51TvmuNoMqe3",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"first_name\": \"John\",\n  \"second_name\": \"Michael\",\n  \"last_name\": \"Doe\",\n  \"type_id\": 4,\n  \"house_number_and_street\": \"123 Main St\",\n  \"city_title\": \"Springfield\",\n  \"city_code\": \"SP01\",\n  \"contact_type\": \"EMAIL\",\n  \"contact\": \"john.doeex@ample.com\"\n}"
+                },
+                "url": {
+                  "raw": "{{PROTOCOL}}://{{DST_HOST}}/api/v1/specialists/bookmarks",
+                  "protocol": "{{PROTOCOL}}",
+                  "host": [
+                    "{{DST_HOST}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "specialists",
+                    "bookmarks"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "get all",
+              "request": {
+                "method": "GET",
+                "header": []
+              },
+              "response": []
+            },
+            {
+              "name": "del",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "X-XSRF-TOKEN",
+                    "value": "B9hm6wlmZ54F5fuKBbYdGtb8QlVktPUlCQuAlgju_GbhdbiiP-kEjTEAUv0o0c7oYJspLrDMbzcHgs0IOG60omnexATUQoiR",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"first_name\": \"John\",\n  \"second_name\": \"Michael\",\n  \"last_name\": \"Doe\",\n  \"type_id\": 4,\n  \"house_number_and_street\": \"123 Main St\",\n  \"city_title\": \"Springfield\",\n  \"city_code\": \"SP01\",\n  \"contact_type\": \"EMAIL\",\n  \"contact\": \"john.doeex@ample.com\"\n}"
+                },
+                "url": {
+                  "raw": "{{PROTOCOL}}://{{DST_HOST}}/api/v1/specialists/bookmarks/01980828-0237-748e-82be-99d7431f7268",
+                  "protocol": "{{PROTOCOL}}",
+                  "host": [
+                    "{{DST_HOST}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "specialists",
+                    "bookmarks",
+                    "01980828-0237-748e-82be-99d7431f7268"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "get by filter",
+              "request": {
+                "method": "GET",
+                "header": []
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "review",
+          "item": [
+            {
+              "name": "review",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-XSRF-TOKEN",
+                    "value": "biC8tjy68qBoPIkuj6a4sK49jOAxywaPdsZfLp1AkbccosxAXRmNgQiDk5NFXbkWtouMiMwKoYEG_DaiEPU-H613qYN4kf1w",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{PROTOCOL}}://{{DST_HOST}}/api/v1/specialists/0198125f-baaf-74d2-8e35-18334efbe086/reviews",
+                  "protocol": "{{PROTOCOL}}",
+                  "host": [
+                    "{{DST_HOST}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "specialists",
+                    "0198125f-baaf-74d2-8e35-18334efbe086",
+                    "reviews"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "upd",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "X-XSRF-TOKEN",
+                    "value": "Clu2WIoYQjlFXrajjeG_LEqzkoWzYWaLMOIjlfrZuh2bW8eIOmPUO70pdw9oZoHCvcyLG33Rv-fWUQCmA4cTp87sj3-rafO7",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"description\": \"merzost2\",\n    \"rating\": 3\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{PROTOCOL}}://{{DST_HOST}}/api/v1/specialists/01981265-3fbc-7c8e-965b-dbfeac0730c3/reviews/0198365f-ba55-7e3c-9ad2-ea0426c7599d",
+                  "protocol": "{{PROTOCOL}}",
+                  "host": [
+                    "{{DST_HOST}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "specialists",
+                    "01981265-3fbc-7c8e-965b-dbfeac0730c3",
+                    "reviews",
+                    "0198365f-ba55-7e3c-9ad2-ea0426c7599d"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "del",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{PROTOCOL}}://{{DST_HOST}}/api/v1/specialists/0198125f-baaf-74d2-8e35-18334efbe086/reviews/019836af-e001-70c1-94b7-b090a1e91d5d",
+                  "protocol": "{{PROTOCOL}}",
+                  "host": [
+                    "{{DST_HOST}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "specialists",
+                    "0198125f-baaf-74d2-8e35-18334efbe086",
+                    "reviews",
+                    "019836af-e001-70c1-94b7-b090a1e91d5d"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "all",
+              "request": {
+                "method": "GET",
+                "header": []
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "langueges",
+          "item": [
+            {
+              "name": "all",
+              "request": {
+                "method": "GET",
+                "header": []
+              },
+              "response": []
+            },
+            {
+              "name": "set",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{PROTOCOL}}://{{DST_HOST}}/api/v1/languages/set/0",
+                  "protocol": "{{PROTOCOL}}",
+                  "host": [
+                    "{{DST_HOST}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "languages",
+                    "set",
+                    "0"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "PROTOCOL",
+      "value": "https",
+      "type": "string"
+    },
+    {
+      "key": "DST_HOST",
+      "value": "localhost:8443",
+      "type": "string"
+    }
+  ]
+}
