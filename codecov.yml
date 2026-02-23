@@ -4,14 +4,10 @@ codecov:
 coverage:
   status:
     project:
-      color:
-        high: green
-        medium: yellow
-        low: red
       default:
-        target: auto
-        threshold: 1%
+        target: 80%
+        threshold: 0%
     patch:
       default:
-        target: auto
-        threshold: 1%
+        target: 80%
+        threshold: 0%
