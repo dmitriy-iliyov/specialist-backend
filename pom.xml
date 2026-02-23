@@ -262,11 +262,6 @@
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <includes>
-                        <include>com/specialist/**</include>
-                    </includes>
-                </configuration>
             </plugin>
         </plugins>
     </build>
