@@ -1,7 +1,12 @@
 codecov:
+  notify:
+    wait_for_ci: false
   require_ci_to_pass: true
 
 coverage:
+  range:
+    - 10.0
+    - 60.0
   status:
     project:
       default:
