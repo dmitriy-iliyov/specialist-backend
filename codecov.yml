@@ -5,9 +5,9 @@ coverage:
   status:
     project:
       color:
-          high: green
-          medium: yellow
-          low: red
+        high: green
+        medium: yellow
+        low: red
       default:
         target: auto
         threshold: 1%
