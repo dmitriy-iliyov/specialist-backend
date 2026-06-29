@@ -37,7 +37,7 @@ public class SpecialistCacheServiceImpl implements SpecialistCacheService {
                 List.of("specialists:created:count:total::%s".formatted(creatorId),
                         "specialists:created:count:filter::%s".formatted(creatorId))
         );
-        Boolean result = redisTemplate.execute(evictAfterDeleteScript, keys);
+        Boolean result = redisTemplate.execute(evictAfterSaveScript, keys);
         if (result == null) {
             log.error("Script returned NULL for creatorId={}", creatorId);
         } else if (!result) {
@@ -70,7 +70,7 @@ public class SpecialistCacheServiceImpl implements SpecialistCacheService {
                         "specialists:created:count:total::%s".formatted(creatorId),
                         "specialists:created:count:filter::%s".formatted(creatorId))
         );
-        Boolean result = redisTemplate.execute(evictAfterSaveScript, keys);
+        Boolean result = redisTemplate.execute(evictAfterDeleteScript, keys);
         if (result == null) {
             log.error("Script returned NULL for id={}, creatorId={}", id, creatorId);
         } else if (!result) {
